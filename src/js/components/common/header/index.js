@@ -18,18 +18,18 @@ class Header extends React.Component {
 
     componentDidMount() {
         // 微信header只显示一个返回按钮，进入页面修改title
-        if (HYAPP.devinfo.isWeixin) {
-            document.title = this.props.title;
-        }
+        // if (HYAPP.devinfo.isWeixin) {
+        //     document.title = this.props.title;
+        // }
     }
 
     render() {
         // 如果是微信，header只显示为一个返回按钮
-        if (HYAPP.devinfo.isWeixin) {
-            return (
-                <div className="header-back-btn" onClick={this.props.back}></div>
-            );
-        }
+        // if (HYAPP.devinfo.isWeixin) {
+        //     return (
+        //         <div className="header-back-btn" onClick={this.props.back}></div>
+        //     );
+        // }
         return (
             <div>
                 {/* <div className="header ft46">

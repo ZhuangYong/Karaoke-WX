@@ -6,5 +6,6 @@
 module.exports = {
     appVersion: '1.1.1',
     environment: 'pre',
-    portHost: 'http://portal.j-make.cn/pre'
+    apiDomain: 'http://portal.j-make.cn/pre',
+    contextPath : "/"
 };

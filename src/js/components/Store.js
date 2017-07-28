@@ -2,11 +2,7 @@
 // 可以通过cross-env包来设置环境变量
 //
 if (process.env.NODE_ENV === 'production') {
-    // 生产环境store配置
     module.exports = require('./Store.prod');
 } else {
-    // 开发环境store配置
-    // dev环境下ContextPath指向根路径
-    HYAPP.ContextPath = '';
     module.exports = require('./Store.dev');
 }

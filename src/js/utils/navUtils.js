@@ -26,10 +26,10 @@ let navUtils = {
     // 页面导航前进
     forward: function (nextPath) {
         // 如果启用了sso登录，所有跳转到/login/signin都重定向到sso登录页面
-        if (HYAPP.ssoLogin && nextPath.match(/\/login\/signin(\/)?$/)) {
-            location.href = HYAPP.ssoLoginParam;
-            return;
-        }
+        // if (HYAPP.ssoLogin && nextPath.match(/\/login\/signin(\/)?$/)) {
+        //     location.href = HYAPP.ssoLoginParam;
+        //     return;
+        // }
         browserHistory.push(nextPath);
     },
     // 重定向当前页面，一般用于下面两种情况；

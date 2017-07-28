@@ -1,6 +1,7 @@
 // 一些通用的方法
-import JSEncrypt from 'jsencrypt';
+import {JSEncrypt} from 'jsencrypt';
 import md5 from 'md5';
+import sysConfig from "./sysConfig";
 
 /**
  * 根据时间戳返回对应的y，m，d
@@ -88,43 +89,6 @@ export function chkDevice() {
         isAndroid: isAndroid,
         isIos: isIos
     };
-}
-
-
-/**
- * 对半屏加iscroll列表的页面，计算iscroll列表区域高度
- *
- * 说明：
- * 对于一般iscroll的应用场景为顶部一个导航条，下面的空白区域全是iscroll列表显示的区域，这样列表区域的高度
- * 就等于屏幕高度减去顶部导航条的高度。但是对于页面顶部导航条，上部分有内容，下半部分才是iscroll的页面布局，
- * 会存在一个问题，如果iscroll列表高度设置为屏幕高度减去导航条高度，再减去上部分内容区域的高度，剩下的高度
- * 在有的屏幕上可能很低，显示不了多少列表的内容，如果允许翻转的话，计算出来的iscroll列表高度可能都是负值。
- *
- * 所以，对于上面这种情况在超宽屏幕，或者翻转后的屏幕上，需要允许页面滚屏。但是iscroll列表区域是不能滚动的，
- * 因此就需要设置iscroll列表的高度不超过屏幕高度减去顶部导航条的高度，这样即使滚动到底部，iscroll列表也不会
- * 占满屏幕，顶部还有一个导航条的高度可以滚动。
- *
- * @param  {[type]} upHeight     上部区域高度
- * @param  {[type]} expectHeight 期望的iscroll列表区域最小高度
- * @return {[type]}              [description]
- */
-export function getComplexScrollHeigth(upHeight, expectHeight) {
-    let scrollHeight;
-    // 如果是微信环境，没有header，upHeight需要减去1rem
-    if (HYAPP.devinfo.isWeixin) {
-        upHeight = upHeight - HYAPP.APP_W * 0.1;
-        upHeight = upHeight > 0 ? upHeight : 0;
-    }
-    // 如果屏幕高度减去上部的高度不够列表区域要求的高度，说明屏幕比较宽，列表区域高度等于屏幕高度减去顶部导航条的高度
-    // 如果屏幕高度减去上部的高度大于列表区域要求的高度，说明屏幕比较高，列表区域高度等于屏幕高度减去上半部分的高度
-    if (HYAPP.APP_H - upHeight < expectHeight) {
-        HYAPP.test1 = '111';
-        scrollHeight = HYAPP.APP_H - HYAPP.APP_W * 0.1 + 'px';
-    } else {
-        HYAPP.test1 = '222';
-        scrollHeight = HYAPP.APP_H - upHeight + 'px';
-    }
-    return scrollHeight;
 }
 
 /**
@@ -271,12 +235,13 @@ export function loadScript(url, callback) {
     document.head.appendChild(script);
 }
 
-export function getEncryptHeader(Oid = {}) {
+export function getEncryptHeader(Oid = {deviceId: "", wxId: ""}) {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
-    if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
+    //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
     return {
         appId: encrypt.encrypt('kalaebb34de801bb67fd'),
+        appVersion: sysConfig.appVersion,
         wxId: encrypt.encrypt(Oid.wxId),
         deviceId: encrypt.encrypt(Oid.deviceId),
         mac: encrypt.encrypt('mac'),
@@ -294,12 +259,13 @@ export function reqHeader(data, header) {
         isReturnSign = false;
     }
     let obj = Object.assign({}, header, data);
-    let str = Object.keys(obj).map((key) => {
+    let str = Object.keys(obj).sort().map((key) => {
         if (key !== 'sign') {
             return key + '=' + obj[key];
         }
     }).join("&");
     str += '&e93a7f98d53ec404931c87606ea0bd92';
+    console.log(str);
     if (isReturnSign) return md5(str);
     header.sign = md5(str);
     return header;

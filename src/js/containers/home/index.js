@@ -10,6 +10,7 @@ import NavItem from "../../components/home/navItem";
 import navUtils from "../../utils/navUtils";
 import * as userActions from "../../actions/userActions";
 import BaseComponent from "../../components/common/BaseComponent";
+import sysConfig from "../../utils/sysConfig";
 
 let navList = [
     {'info': '内链1', 'link': '/member/home', 'icon': 'hyzq', requireLogin: true},
@@ -91,24 +92,11 @@ class Home extends BaseComponent {
             location.href = link;
             return;
         } else {
-            fullLink = HYAPP.ContextPath + link;
+            fullLink = sysConfig.contextPath + link;
         }
 
         if (requireLogin) {
-            if (HYAPP.user.openId && HYAPP.user.token) {
-                if (link == '/subscription/topic') {
-                    this.subscriptionPathChk(link);
-                } else {
-                    navUtils.forward(fullLink);
-                }
-            } else {
-                // this.props.actions.loginFirst(fullLink);
-                if (HYAPP.ssoLogin) {
-                    this.toSsoLogin();
-                } else {
-                    navUtils.forward(HYAPP.ContextPath + '/login/signin');
-                }
-            }
+            navUtils.forward(sysConfig.contextPath + '/login');
         } else {
             navUtils.forward(fullLink);
         }
@@ -117,7 +105,7 @@ class Home extends BaseComponent {
 
     // 前往登录页面
     toLogin() {
-        navUtils.forward(HYAPP.ContextPath + '/login/signin');
+        navUtils.forward(sysConfig.contextPath + '/login/signin');
     }
 
     // 外链接，跳转到外部页面

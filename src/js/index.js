@@ -25,7 +25,7 @@ const browserHistory = createBrowserHistory({
 // });
 injectTapEventPlugin();
 
-HYAPP.devinfo = comUtils.chkDevice();
+// HYAPP.devinfo = comUtils.chkDevice();
 // 创建store
 let store = configStore();
 

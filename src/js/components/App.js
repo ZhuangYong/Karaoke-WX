@@ -1,7 +1,6 @@
 import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-import "../../config/init";
 import "../../sass/main.scss";
 import * as actions from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";

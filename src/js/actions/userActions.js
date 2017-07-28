@@ -5,9 +5,10 @@
 import {comFetch} from "../utils/fetchUtils";
 import api from "./apiUrl";
 import ActionTypes from "./actionTypes";
+import sysConfig from "../utils/sysConfig";
 
 export function login() {
-    const url = HYAPP.ApiDomain + api.API_LOGIN;
+    const url = sysConfig.apiDomain + api.API_LOGIN;
     return (dispatch) => {
         comFetch(dispatch, {}, {
             url: url,

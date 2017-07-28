@@ -120,7 +120,7 @@
     }
   },
   "scripts": {
-    "dev": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --history-api-fallback",
+    "dev": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --history-api-fallback",
     "dev:host": "cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host 10.0.3.30 --history-api-fallback",
     "build:test": "npm run copy:dev && cross-env NODE_ENV=production webpack --config ./src/config/webpack.config.js --env=prod",
     "build:pre": "npm run copy:dev && cross-env NODE_ENV=pre webpack --config ./src/config/webpack.config.js --env=prod.pre",
