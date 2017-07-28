@@ -1,0 +1,351 @@
+.areapicker, .header {
+    line-height: 1rem;
+    height: 1rem
+}
+
+.header, .App {
+    position: relative
+}
+
+.areapicker, .cascadePicker, .header > .back-btn, .header > .more-options {
+    display: inline-block
+}
+
+.loading-icon, .pullDown.loading .pullDownIcon, .pullUp.loading .pullUpIcon {
+    -webkit-animation-name: loading;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear
+}
+
+blockquote, body, button, dd, dl, dt, fieldset, form, h1, h2, h3, h4, h5, h6, hr, input, legend, li, ol, p, pre, td, textarea, th, ul {
+    margin: 0;
+    padding: 0;
+    font-family: "微软雅黑", "Microsoft YaHei"
+}
+
+.fl {
+    float: left
+}
+
+.fr {
+    float: right
+}
+
+.ft12 {
+    font-size: .111rem
+}
+
+.ft14 {
+    font-size: .13rem
+}
+
+.ft16 {
+    font-size: .148rem
+}
+
+.ft18 {
+    font-size: .167rem
+}
+
+.ft24 {
+    font-size: .222rem
+}
+
+.ft28 {
+    font-size: .259rem
+}
+
+.ft30 {
+    font-size: .278rem
+}
+
+.ft32 {
+    font-size: .296rem
+}
+
+.ft36 {
+    font-size: .333rem
+}
+
+.ft38 {
+    font-size: .352rem
+}
+
+.ft42 {
+    font-size: .389rem
+}
+
+.ft45 {
+    font-size: .42rem
+}
+
+.ft46 {
+    font-size: .426rem
+}
+
+.ft48 {
+    font-size: .444rem
+}
+
+.ft50 {
+    font-size: .463rem
+}
+
+.ft54 {
+    font-size: .5rem
+}
+
+.ft80 {
+    font-size: .741rem
+}
+
+.ftsm {
+    font-size: .111rem
+}
+
+.ftmd {
+    font-size: .167rem
+}
+
+.ftlg {
+    font-size: 222rem
+}
+
+.areapicker {
+    width: 6rem;
+    vertical-align: middle
+}
+
+.header {
+    background-color: #1c1b20;
+    color: #fff
+}
+
+.header > .back-btn {
+    width: .926rem;
+    height: 1rem;
+    float: left;
+    margin-left: .34rem;
+    padding-left: .278rem;
+    text-align: center;
+    background: url(../../img/back_arrow.png) left center no-repeat;
+    background-size: .278rem auto
+}
+
+.header > .title {
+    margin: 0 1.65rem;
+    text-align: center
+}
+
+.header > .more-options {
+    position: absolute;
+    top: 0;
+    right: .444rem;
+    width: .509rem;
+    height: 1rem;
+    float: right;
+    background: url(../../img/three_dots.png) center center no-repeat;
+    background-size: 100% auto
+}
+
+.header-back-btn {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1rem;
+    z-index: 200;
+    background: url(../../img/back_arrow.png) center center no-repeat;
+    background-color: rgba(39, 36, 36, .24);
+    background-size: auto .5rem
+}
+
+.tips-cover {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, .25);
+    z-index: 100
+}
+
+.tips-cover .tips-container {
+    width: 8.33333333rem;
+    min-height: 4.16666667rem;
+    margin-top: -2.77777778rem;
+    margin-left: -4.16666667rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #fff;
+    border-radius: .07407407rem;
+    overflow: hidden
+}
+
+.tips-cover .tips-text {
+    line-height: .59259259rem;
+    margin: .74074074rem 1.48148148rem .55555556rem
+}
+
+.tips-cover .btn {
+    margin: 0 .55555556rem .27777778rem;
+    height: 1.11111111rem;
+    line-height: 1.11111111rem;
+    text-align: center;
+    border-radius: .07407407rem
+}
+
+.tips-cover .btn-ok {
+    background: url(../../img/btn_login.png) center center no-repeat;
+    background-size: 100% 100%;
+    color: #fff
+}
+
+.tips-cover .btn-cancel {
+    background: url(../../img/btn_reg.png) center center no-repeat;
+    background-size: 100% 100%;
+    color: #f5716e
+}
+
+.loading-cover {
+    position: absolute;
+    width: 100%;
+    top: 1rem;
+    left: 0;
+    background-color: rgba(0, 0, 0, .25);
+    z-index: 100
+}
+
+.loading-icon {
+    width: 1rem;
+    height: 1rem;
+    margin-top: -.5rem;
+    margin-left: -.5rem;
+    overflow: hidden;
+    background: url(../../img/pull-icon@2x.png) left bottom no-repeat;
+    background-size: 100% auto;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: rotate(0) translateZ(0);
+    -webkit-transition-duration: 0s
+}
+
+@-webkit-keyframes loading {
+    0% {
+        -webkit-transform: rotate(0) translateZ(0)
+    }
+    100% {
+        -webkit-transform: rotate(360deg) translateZ(0)
+    }
+}
+
+.scroll-no-data {
+    height: 1rem;
+    line-height: 1rem;
+    padding: 0 .25rem
+}
+
+.rich-text-container img {
+    max-width: 100%
+}
+
+.iScroller {
+    position: absolute;
+    z-index: 1;
+    -webkit-tap-highlight-color: transparent;
+    width: 100%;
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none
+}
+
+.iScroller ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    text-align: left
+}
+
+.pullDown, .pullUp {
+    background: #fff;
+    height: 40px;
+    line-height: 40px;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ccc;
+    font-weight: 700;
+    color: #888;
+    margin-top: 0;
+    white-space: nowrap;
+    font-size: 14px
+}
+
+.pullDown.scrolledUp {
+    margin-top: -51px
+}
+
+.pullDown .pullDownLabel, .pullUp .pullUpLabel {
+    margin: 0 5px
+}
+
+.pullDown .pullDownIcon, .pullUp .pullUpIcon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: url(../../img/pull-icon@2x.png) no-repeat;
+    -webkit-background-size: 40px 80px;
+    background-size: 40px 80px;
+    -webkit-transition-property: -webkit-transform;
+    -webkit-transition-duration: 250ms;
+    vertical-align: middle;
+    margin: 0 5px
+}
+
+.pullDown .pullDownIcon {
+    -webkit-transform: rotate(0) translateZ(0)
+}
+
+.pullDown.flip .pullDownIcon, .pullUp .pullUpIcon {
+    -webkit-transform: rotate(-180deg) translateZ(0)
+}
+
+.pullUp.flip .pullUpIcon {
+    -webkit-transform: rotate(0) translateZ(0)
+}
+
+.pullDown.loading .pullDownIcon, .pullUp.loading .pullUpIcon {
+    background-position: 0 100%;
+    -webkit-transform: rotate(0) translateZ(0);
+    -webkit-transition-duration: 0s
+}
+
+.no-more .pullUpIcon {
+    background: 0 0
+}
+
+@-webkit-keyframes loading {
+    from {
+        -webkit-transform: rotate(0) translateZ(0)
+    }
+    to {
+        -webkit-transform: rotate(360deg) translateZ(0)
+    }
+}
+
+/*# sourceMappingURL=../maps/common/common.css.map */

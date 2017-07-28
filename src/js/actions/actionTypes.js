@@ -1,0 +1,27 @@
+//common relative
+const COMMON = {
+    COMMON_UPDATE_SCREEN: "COMMON_UPDATE_SCREEN"
+};
+
+//user relative
+const USER = {
+    API_LOGIN: "API_LOGIN"
+};
+
+//audio relative
+const AUDIO = {
+    ACTION_PLAY: "ACTION_PLAY",
+    ACTION_PAUSE: "ACTION_PAUSE",
+    ACTION_SET_TIME: "ACTION_SET_TIME",
+    ACTION_SET_ERROR: "ACTION_SET_ERROR",
+    ACTION_SET_PROGRESS: "ACTION_SET_PROGRESS",
+    API_GET_SHARE_AUDIO: "API_GET_SHARE_AUDIO",
+    ACTION_UPDATE_POSITION: "ACTION_UPDATE_POSITION"
+};
+export default {
+    COMMON,
+    USER,
+    AUDIO
+};
+
+
