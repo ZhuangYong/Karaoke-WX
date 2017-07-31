@@ -3,12 +3,14 @@
  */
 
 import {Component} from "react";
+import navUtils from "../../utils/navUtils";
 
 export default class BaseComponent extends Component {
 
     constructor(props) {
         super(props);
         this.bindState.bind(this);
+        navUtils.setHistory(this.props.history);
     }
 
     render() {
