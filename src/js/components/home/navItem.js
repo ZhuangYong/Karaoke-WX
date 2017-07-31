@@ -1,4 +1,19 @@
 import React from 'react';
+import {GridTile} from "material-ui/GridList";
+
+const style = {
+    tile: {
+        width: "90%",
+        height: "80%",
+        margin: "auto",
+        overflow: "hidden"
+    },
+    tileImg: {
+        height: "100%",
+        margin: "auto",
+        display: "inherit"
+    }
+};
 
 class NavItem extends React.Component {
     constructor(props) {
@@ -15,9 +30,17 @@ class NavItem extends React.Component {
         var item = this.props.item;
 
         return (
-            <div
-                className={"nav-item" + (this.props.middle ? ' middle' : '')}
-                onClick={this.linkTo}>{item.info}</div>
+
+            <GridTile
+                title={item.title}
+                titleStyle={{textAlign: "center", marginRight: "16px", marginTop: "20%", color: "black"}}
+                titleBackground="transparent"
+                onClick={this.linkTo}
+            >
+                <div style={style.tile}>
+                    <img src={item.icon} style={style.tileImg}/>
+                </div>
+            </GridTile>
         );
     }
 }
