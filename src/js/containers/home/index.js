@@ -11,7 +11,7 @@ import sysConfig from "../../utils/sysConfig";
 import defaultImg from "../../../img/common/tile_default.jpg";
 
 const navList = [
-    {title: '分类1', 'link': 'member/home', 'icon': defaultImg, requireLogin: false},
+    {title: '首页', 'link': 'home', 'icon': defaultImg, requireLogin: false},
     {title: 'share', 'link': 's/p/MzA3', 'icon': defaultImg, requireLogin: false},
     {title: '分类3', 'link': 'device/devhome', 'icon': defaultImg, requireLogin: false},
     {title: '分类4', 'link': 'subscription/topic', 'icon': defaultImg, requireLogin: false},
