@@ -11,11 +11,11 @@ import sysConfig from "../../utils/sysConfig";
 import defaultImg from "../../../img/common/tile_default.jpg";
 
 const navList = [
-    {title: '分类1', 'link': '/member/home', 'icon': defaultImg, requireLogin: true},
-    {title: '分类2', 'link': '/s/p', 'icon': defaultImg, requireLogin: false},
-    {title: '分类3', 'link': '/device/devhome', 'icon': defaultImg, requireLogin: true},
-    {title: '分类4', 'link': '/subscription/topic', 'icon': defaultImg, requireLogin: true},
-    {title: '分类5', 'link': 'http://github.com', 'icon': defaultImg, requireLogin: true},
+    {title: '分类1', 'link': 'member/home', 'icon': defaultImg, requireLogin: false},
+    {title: 'share', 'link': 's/p/MzA3', 'icon': defaultImg, requireLogin: false},
+    {title: '分类3', 'link': 'device/devhome', 'icon': defaultImg, requireLogin: false},
+    {title: '分类4', 'link': 'subscription/topic', 'icon': defaultImg, requireLogin: false},
+    {title: '分类5', 'link': 'http://github.com', 'icon': defaultImg, requireLogin: false},
 ];
 const style = {
     tile: {
@@ -136,6 +136,9 @@ class Home extends BaseComponent {
                             title={tile.title}
                             titleStyle={{textAlign: "center", marginRight: "16px", marginTop: "20%", color: "black"}}
                             titleBackground="transparent"
+                            onClick={() => {
+                                this.linkTo(tile.link, tile.requireLogin, null);
+                            }}
                         >
                             <div style={style.tile}>
                                 <img src={tile.icon} style={style.tileImg}/>
