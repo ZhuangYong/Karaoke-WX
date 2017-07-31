@@ -1,9 +1,8 @@
 import React from "react";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
-import {GridList} from "material-ui/GridList";
+import {GridList, GridTile} from "material-ui/GridList";
 import Header from "../../components/common/header";
-import NavItem from '../../components/home/navItem';
 
 import navUtils from "../../utils/navUtils";
 import BaseComponent from "../../components/common/BaseComponent";
@@ -89,14 +88,11 @@ class Home extends BaseComponent {
             fullLink = sysConfig.contextPath + link;
         }
 
-        console.log(fullLink);
-
-        navUtils.forward(fullLink);
-        // if (requireLogin) {
-        //     navUtils.forward(sysConfig.contextPath + '/login');
-        // } else {
-        //     navUtils.forward(fullLink);
-        // }
+        if (requireLogin) {
+            navUtils.forward(sysConfig.contextPath + '/login');
+        } else {
+            navUtils.forward(fullLink);
+        }
     }
 
     // 前往登录页面
@@ -120,18 +116,8 @@ class Home extends BaseComponent {
     }
 
     render() {
-        let _this = this;
         // 导航按钮块
         let navList = this.state.navList;
-        let navItems = [];
-        navList.forEach(function (item, index) {
-            navItems.push(
-                <NavItem
-                    linkTo={_this.linkTo}
-                    item={item}
-                    key={index}/>
-            );
-        });
 
         return (
 
@@ -144,7 +130,18 @@ class Home extends BaseComponent {
                     style={{margin: "6px"}}
                     cols={3}
                 >
-                    {navItems}
+                    {navList.map((tile) => (
+                        <GridTile
+                            key={tile.title}
+                            title={tile.title}
+                            titleStyle={{textAlign: "center", marginRight: "16px", marginTop: "20%", color: "black"}}
+                            titleBackground="transparent"
+                        >
+                            <div style={style.tile}>
+                                <img src={tile.icon} style={style.tileImg}/>
+                            </div>
+                        </GridTile>
+                    ))}
                 </GridList>
             </div>
         );
