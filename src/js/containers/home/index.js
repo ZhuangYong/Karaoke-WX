@@ -1,47 +1,40 @@
 import React from "react";
-import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
-
+import {GridList, GridTile} from "material-ui/GridList";
 import Header from "../../components/common/header";
-import Tips from "../../components/common/tips";
-import NavItem from "../../components/home/navItem";
 
 import navUtils from "../../utils/navUtils";
-import * as userActions from "../../actions/userActions";
 import BaseComponent from "../../components/common/BaseComponent";
 import sysConfig from "../../utils/sysConfig";
 
-let navList = [
-    {'info': '内链1', 'link': '/member/home', 'icon': 'hyzq', requireLogin: true},
-    {'info': 'play', 'link': '/s/p', 'icon': 'jfsc', requireLogin: false},
-    {'info': '内链2', 'link': '/device/devhome', 'icon': 'sbfw', requireLogin: true},
-    {
-        'info': '外链2',
-        'link': 'http://www.youku.com',
-        'icon': 'zswk',
-        requireLogin: true
-    },
-    {'info': '内链3', 'link': '/subscription/topic', 'icon': 'wddy', requireLogin: true},
-    {'info': '内链3', 'link': 'http://github.com', 'icon': 'cpsy', requireLogin: true},
+import defaultImg from "../../../img/common/tile_default.jpg";
+
+const navList = [
+    {title: '分类1', 'link': '/member/home', 'icon': defaultImg, requireLogin: true},
+    {title: '分类2', 'link': '/s/p', 'icon': defaultImg, requireLogin: false},
+    {title: '分类3', 'link': '/device/devhome', 'icon': defaultImg, requireLogin: true},
+    {title: '分类4', 'link': '/subscription/topic', 'icon': defaultImg, requireLogin: true},
+    {title: '分类5', 'link': 'http://github.com', 'icon': defaultImg, requireLogin: true},
 ];
-
-/*
- if (location.href.match(/test\.club\.changhong\.com/)) {
- navList[1].link = 'tjf.changhong.com:9090';
- navList[3].link = 'http://tbbs.chiq-cloud.com/portal.php?mod=list&catid=20';
- navList[5].link = 'http://tbbs.chiq-cloud.com/plugin.php?id=tryout';
- }
- */
-
+const style = {
+    tile: {
+        width: "90%",
+        height: "80%",
+        margin: "auto",
+        overflow: "hidden"
+    },
+    tileImg: {
+        height: "100%",
+        margin: "auto",
+        display: "inherit"
+    }
+};
 class Home extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
             defaultBack: '/',
-            showUnreadDot: 'none',
-            recomData: [],
-            noRecom: false,
             navList: navList,
             showMsg: false,
             msgText: ''
@@ -87,7 +80,7 @@ class Home extends BaseComponent {
      */
     linkTo(link, requireLogin, info) {
         let fullLink;
-        if (link.indexOf('http') == 0) {
+        if (link.indexOf('http') === 0) {
             fullLink = link;
             location.href = link;
             return;
@@ -102,10 +95,9 @@ class Home extends BaseComponent {
         }
     }
 
-
     // 前往登录页面
     toLogin() {
-        navUtils.forward(sysConfig.contextPath + '/login/signin');
+        navUtils.forward(sysConfig.contextPath + '/login');
     }
 
     // 外链接，跳转到外部页面
@@ -115,8 +107,6 @@ class Home extends BaseComponent {
 
 
     componentDidMount() {
-        let _this = this;
-
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -125,40 +115,9 @@ class Home extends BaseComponent {
     componentWillUnmount() {
     }
 
-    removeLoginCookie() {
-        (function delCookie(name) {
-            let exp = new Date();
-            exp.setTime(exp.getTime() - 1);
-            let reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-            let arr = document.cookie.match(reg);
-            if (arr) {
-                let cval = unescape(arr[2]);
-                (cval !== null) && (document.cookie = name + "=" + escape(cval) + ";path=/;expires=" + exp.toGMTString() + ";domain=.changhong.com");
-            }
-        })("KI4SO_SERVER_EC");
-    }
-
     render() {
-        let user = this.props.user || {} ;
-        let userinfo = user.userinfo && user.userinfo.code === '000000' && user.userinfo.data || {};
-        let scoreinfo = user.scoreinfo && user.scoreinfo.code === '000000' && user.scoreinfo.data || {};
-
         // 导航按钮块
         let navList = this.state.navList;
-        let navItems = [];
-        let linkTo = this.linkTo;
-        navList.forEach(function (item, index) {
-            navItems.push(
-                <NavItem
-                    linkTo={linkTo}
-                    item={item}
-                    middle={(index - 1) % 3 == 0}
-                    key={index}/>
-            );
-        });
-
-        let navItemUp = navItems.slice(0, 3);
-        let navItemDown = navItems.slice(3);
 
         return (
 
@@ -166,37 +125,24 @@ class Home extends BaseComponent {
 
                 <Header title={'标题2'} back={this.back}/>
 
-                <div className="info-board">
-                    <div className="user-info ft36">
-                        <div className="inline" onClick={this.userInfo}>
-                            <img className="home-avatar" src="" alt="头像"/>
-                            <span className="account-name">userAccountName</span>
-                        </div>
-
-
-                        <div className="inline msg-icon fr" onClick={this.toNews}>
-                            <span className="msg-dot" style={{display: this.state.showUnreadDot}}/>
-                        </div>
-
-                        <div className="inline login-btn fr" style={{display: 'none'}} onClick={this.toLogin}>登录</div>
-                        <div className="inline login-btn fr"
-                             onClick={this.toSsoLogin}>登录
-                        </div>
-                    </div>
-                </div>
-
-                <Link to='login'>test link</Link>
-                <div className="nav-board ft36">
-                    <div className="" style={{overflow: 'hidden'}}>{navItemUp}</div>
-                    <div className="" style={{overflow: 'hidden'}}>{navItemDown}</div>
-                </div>
-
-                <div className="gap"/>
-                <Tips
-                    show={this.state.showMsg}
-                    text={this.state.msgText}
-                    ok={this.msgOk}
-                />
+                <GridList
+                    cellHeight={100}
+                    style={{margin: "6px"}}
+                    cols={3}
+                >
+                    {navList.map((tile) => (
+                        <GridTile
+                            key={tile.title}
+                            title={tile.title}
+                            titleStyle={{textAlign: "center", marginRight: "16px", marginTop: "20%", color: "black"}}
+                            titleBackground="transparent"
+                        >
+                            <div style={style.tile}>
+                                <img src={tile.icon} style={style.tileImg}/>
+                            </div>
+                        </GridTile>
+                    ))}
+                </GridList>
             </div>
         );
     }
@@ -210,9 +156,7 @@ const mapStateToProps = (state, ownProps) => {
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        userAction: bindActionCreators(userActions, dispatch)
-    };
+    return {};
 };
 
 export default withRouter(connect(
