@@ -40,7 +40,7 @@ class Audio extends React.Component {
                     autoplay={true}
                     source={this.props.source}
                     onProgress={this.handleProgress.bind(this)}
-                    onTimeupdate={this.handleTimeupdate.bind(this)}
+                    onTimeupdate={this.handleTimeUpdate.bind(this)}
                 />
                 <Utilities
                     isPlaying={!paused}
@@ -68,9 +68,9 @@ class Audio extends React.Component {
         });
     }
 
-    handleTimeupdate() {
+    handleTimeUpdate() {
         const audio = this.state.audio;
-        if (!audio.duration) return;
+        if (!audio.duration || audio.paused) return;
         this.setState({
             percent: audio.currentTime / audio.duration
         });

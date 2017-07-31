@@ -25,9 +25,6 @@ class PlayAudio extends React.Component {
     componentWillMount() {
         const params = this.state.params;
         this.props.actions.getShareAudio(params, reqHeader(params));
-        this.setState({
-            audio: ReactDOM.findDOMNode(this.refs.audio)
-        });
     }
 
     render() {
