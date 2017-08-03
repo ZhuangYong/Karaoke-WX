@@ -15,6 +15,9 @@ import Login from '../containers/login';
 import Audio from "../containers/play/audio";
 import Bundle from "./Bundle";
 
+import Records from '../containers/me/records';
+import PhotoAlbum from '../containers/me/photoAlbum';
+
 const LoginContainer = () => (
     <Bundle load={Login}>
         {Component => <Component />}
@@ -29,6 +32,18 @@ const HomeContainer = () => (
 
 const AudioContainer = () => (
     <Bundle load={Audio}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const RecordsContainer = () => (
+    <Bundle load={Records}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const PhotoAlbumContainer = () => (
+    <Bundle load={PhotoAlbum}>
         {Component => <Component />}
     </Bundle>
 );
@@ -84,6 +99,8 @@ class App extends React.Component {
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
                         <Route path={`/login`} component={LoginContainer}/>
+                        <Route path={`/records`} component={RecordsContainer}/>
+                        <Route path={`/photoAlbum`} component={PhotoAlbumContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>

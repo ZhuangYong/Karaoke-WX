@@ -239,6 +239,7 @@ export function getEncryptHeader(Oid = {deviceId: "", wxId: ""}) {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
+    // Oid.deviceId = '5aff14de2397f47b8af33d0230c51630';
     return {
         appId: encrypt.encrypt('kalaebb34de801bb67fd'),
         appVersion: sysConfig.appVersion,
@@ -265,7 +266,7 @@ export function reqHeader(data, header) {
         }
     }).join("&");
     str += '&e93a7f98d53ec404931c87606ea0bd92';
-    console.log(str);
+    // console.log(str);
     if (isReturnSign) return md5(str);
     header.sign = md5(str);
     return header;

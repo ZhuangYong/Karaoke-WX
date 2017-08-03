@@ -18,10 +18,23 @@ const AUDIO = {
     API_GET_SHARE_AUDIO: "API_GET_SHARE_AUDIO",
     ACTION_UPDATE_POSITION: "ACTION_UPDATE_POSITION"
 };
+
+// recordsList
+const RECORDSLIST = {
+    API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST"
+};
+
+// photoAlbum
+const PHOTOALBUM = {
+    API_GET_PHOTOALBUM_LIST: "API_GET_PHOTOALBUM_LIST"
+};
+
 export default {
     COMMON,
     USER,
-    AUDIO
+    AUDIO,
+    RECORDSLIST,
+    PHOTOALBUM
 };
 
 
