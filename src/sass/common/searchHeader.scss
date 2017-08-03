@@ -1,0 +1,12 @@
+@import "variables";
+.search-header{
+    .search-words{
+        padding: $container-padding;
+        .hot-words{
+            display: flex;
+            .word{
+                margin-left: 4px!important;
+            }
+        }
+    }
+}

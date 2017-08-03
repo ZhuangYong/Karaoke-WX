@@ -36,7 +36,7 @@ export function cryptoFetch(options, succ, fail) {
 
 /**
  * 通用fetch方法，默认情况下开始请求时会dispatch一个pending的action，如果不需要可以在option中设置noTrackStatus为true
- * @param  {{type}}   dispatch [description]
+ * @param  {Function}   dispatch [description]
  * @param  {{type}}   param    请求参数
  * @param  {{type}}   options  请求选项
  *    options传入属性说明:
@@ -48,11 +48,17 @@ export function cryptoFetch(options, succ, fail) {
  * @param  {Function} callback 请求成功回调，用于接口请求成功后的操作(继续请求其他接口)
  * @return {[type]}          [description]
  */
-export function comFetch(dispatch, param, options, callback) {
+export function comFetch(dispatch, param, options = {
+    url: "",
+    headers: "",
+    action: "",
+    formData: "",
+    noTrackStatus: ""
+}, callback) {
 
     let url = options.url;
     let fetchOption = {
-        method: 'post'
+        method: 'POST'
     };
 
     if (options.headers) {
@@ -61,18 +67,26 @@ export function comFetch(dispatch, param, options, callback) {
     // 根据get/post请求方式设置请求参数，除非指定为get类型，默认都按post发送请求
     if (options.type === 'get') {
         fetchOption.method = 'get';
-        let qstr = [];
+        let queryStr = [];
         for (let k in param) {
-            qstr.push(encodeURIComponent(k) + '=' + encodeURIComponent(param[k]));
+            queryStr.push(encodeURIComponent(k) + '=' + encodeURIComponent(param[k]));
         }
-        qstr = qstr.join('&');
-        url += '?' + qstr;
-    } else {
+        queryStr = queryStr.join('&');
+        url += '?' + queryStr;
+    } else if (options.formData) {
         let form = new FormData();
         for (let k in param) {
             form.append(k, param[k]);
         }
         fetchOption.body = form;
+    } else {
+        let queryStr = [];
+        for (let k in param) {
+            queryStr.push(encodeURIComponent(k) + '=' + encodeURIComponent(param[k]));
+        }
+        queryStr = queryStr.join('&');
+
+        fetchOption.body = queryStr;
     }
     // 如果没有设置不跟踪请求状态，开始请求时分派pending的action
     if (!options.noTrackStatus) {
@@ -83,11 +97,13 @@ export function comFetch(dispatch, param, options, callback) {
             param: param
         });
     }
-    fetchOption.dataType = "json";
+    fetchOption.headers['content-type'] = "application/x-www-form-urlencoded; charset=UTF-8";
     // 发起请求
     fetch(url, fetchOption).then(function (response) {
         return response.json();
     }).then(function (json) {
+        const {status, msg} = json;
+        if (status === 0) throw Error(msg);
         try {
             dispatch({
                 type: options.action,

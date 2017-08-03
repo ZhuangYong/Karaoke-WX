@@ -28,7 +28,7 @@ export default class Input extends React.Component {
     }
 
     render() {
-        const {value, onChange, errorStyle, errorText, minLength, maxLength, bindState, validate, doValidate, ...other} = this.props;
+        const {onChange, errorStyle, errorText, minLength, maxLength, bindState, validate, doValidate, ...other} = this.props;
         return (
             <TextField
                 ref="input"

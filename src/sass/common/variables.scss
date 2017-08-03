@@ -24,6 +24,8 @@ $bar-base-height: 44px !default;
 $bar-tab-height: 50px !default;
 $bar-side-spacing: 10px !default;
 
+$container-padding: 12px !default;
+$container-margin: 12px !default;
 :export {
     barBaseHeight : $bar-base-height
 }

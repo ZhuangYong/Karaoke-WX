@@ -2,6 +2,7 @@
 import {JSEncrypt} from 'jsencrypt';
 import md5 from 'md5';
 import sysConfig from "./sysConfig";
+import navUtils from "./navUtils";
 
 /**
  * 根据时间戳返回对应的y，m，d
@@ -211,6 +212,29 @@ export function writeAnalyjs(len) {
     document.body.appendChild(oScript);
 }
 
+/**
+ * 前往指定的页面
+ * @param  {type} link         页面path
+ * @param  {bool} requireLogin 是否需要登录
+ * @return {type}              [description]
+ */
+export function linkTo(link, requireLogin, info) {
+    let fullLink;
+    if (link.indexOf('http') === 0) {
+        fullLink = link;
+        location.href = link;
+        return [];
+    } else {
+        fullLink = sysConfig.contextPath + link;
+    }
+
+    if (requireLogin) {
+        navUtils.forward(sysConfig.contextPath + '/login');
+    } else {
+        navUtils.forward(fullLink);
+    }
+}
+
 
 export function loadScript(url, callback) {
     const queryScript = document.querySelector("[src='" + url + "']");
@@ -235,7 +259,7 @@ export function loadScript(url, callback) {
     document.head.appendChild(script);
 }
 
-export function getEncryptHeader(Oid = {deviceId: "", wxId: ""}) {
+export function getEncryptHeader(Oid = {deviceId: "3c3cf52ccf882f55db3445524e60f10d", wxId: ""}) {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
@@ -265,8 +289,41 @@ export function reqHeader(data, header) {
         }
     }).join("&");
     str += '&e93a7f98d53ec404931c87606ea0bd92';
-    console.log(str);
     if (isReturnSign) return md5(str);
     header.sign = md5(str);
     return header;
+}
+
+export function setCookie(name, value, expireDays) {
+    let date = new Date();
+    date.setDate(date.getDate() + expireDays);
+    document.cookie = name + "=" + escape(value) + ((expireDays === null) ? "" : ";expires=" + date.toGMTString());
+}
+
+export function removeCookie(name) {
+    let exp = new Date();
+    exp.setTime(exp.getTime() - 100);
+    let val = this.getCookie(name);
+    if (val !== null)
+        document.cookie = name + "=" + val + ";expires=" + exp.toGMTString();
+}
+
+export function getCookie(name) {
+    if (document.cookie.length > 0) {
+        let cStart, cEnd;
+        cStart = document.cookie.indexOf(name + "=");
+        if (cStart !== -1) {
+            cStart = cStart + name.length + 1;
+            cEnd = document.cookie.indexOf(";", cStart);
+            if (cEnd === -1) cEnd = document.cookie.length;
+            return unescape(document.cookie.substring(cStart, cEnd));
+        }
+        return "";
+    }
+    return "";
+}
+
+export function expireT(time) {
+    let expireT = (time - new Date().getTime()) / (1000 * 60 * 60 * 24);
+    return expireT.toFixed(2);
 }
