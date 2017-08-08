@@ -1,45 +1,41 @@
 {
     "status": 1,
-    "msg": "成功",
+    "msg": "success",
     "data": [
         {
             "id": 1,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 2,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 3,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 4,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 5,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 6,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 7,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
+            "id": 8,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         },
         {
-            "id": 1,
-            "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
-        },
-        {
-            "id": 1,
+            "id": 9,
             "imgUrl": "http://wx.j-make.com.cn/img/logo.png"
         }
     ]

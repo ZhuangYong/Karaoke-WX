@@ -8,7 +8,7 @@ import sysConfig from "../utils/sysConfig";
 
 export function getPhotoAlbumList(data, headers) {
 
-    const url = 'http://192.168.137.31' + apiUrl.API_PHOTOALBUM_LIST;
+    const url = apiUrl.API_PHOTOALBUM_LIST;
 
     return (dispatch) => {
         comFetch(dispatch, data, {

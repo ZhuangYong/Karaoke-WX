@@ -14,6 +14,10 @@ import Home from "../containers/home";
 import Login from '../containers/login';
 import Audio from "../containers/play/audio";
 import Bundle from "./Bundle";
+import ChooseList from "../containers/song/chooseList";
+import SongController from "../containers/controller/songController";
+import User from "../containers/user";
+import Search from "../containers/song/search";
 
 import Records from '../containers/me/records';
 import PhotoAlbum from '../containers/me/photoAlbum';
@@ -32,6 +36,28 @@ const HomeContainer = () => (
 
 const AudioContainer = () => (
     <Bundle load={Audio}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const ChooseListContainer = () => (
+    <Bundle load={ChooseList}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const SongControllerContainer = () => (
+    <Bundle load={SongController}>
+        {Component => <Component />}
+    </Bundle>
+);
+const UserContainer = () => (
+    <Bundle load={User}>
+        {Component => <Component />}
+    </Bundle>
+);
+const SearchContainer = () => (
+    <Bundle load={Search}>
         {Component => <Component />}
     </Bundle>
 );
@@ -67,23 +93,12 @@ class App extends React.Component {
         this.showMsg = this.showMsg.bind(this);
     }
 
-    // 点击msg的ok按钮
-    msgOk() {
-        this.setState({
-            showMsg: false
-        });
-    }
-
-    // 显示弹框
-    showMsg(msg) {
-        this.setState({
-            showMsg: true,
-            msgText: msg
-        });
+    componentWillMount() {
+        console.log("App will mount");
     }
 
     componentDidMount() {
-        console.log("root component did mount ");
+        console.log("App component did mount ");
         this.removeAppLoading();
     }
 
@@ -92,16 +107,21 @@ class App extends React.Component {
     }
 
     render() {
+
         return (
             <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
                     <Switch>
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
+                        <Route path={`/controller`} component={SongControllerContainer}/>
+                        <Route path={`/user`} exact component={UserContainer}/>
                         <Route path={`/login`} component={LoginContainer}/>
                         <Route path={`/records`} component={RecordsContainer}/>
                         <Route path={`/photoAlbum`} component={PhotoAlbumContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
+                        <Route path={`/song/chooselist`} component={ChooseListContainer}/>
+                        <Route path={`/song/search`} component={SearchContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
                     {/*<Tips
@@ -120,11 +140,26 @@ class App extends React.Component {
         appLoadingStyle && appLoadingStyle.parentNode.removeChild(appLoadingStyle);
     }
 
+    // 点击msg的ok按钮
+    msgOk() {
+        this.setState({
+            showMsg: false
+        });
+    }
+
+    // 显示弹框
+    showMsg(msg) {
+        this.setState({
+            showMsg: true,
+            msgText: msg
+        });
+    }
+
 }
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        common: state.app.common
+        app: state.app
     };
 };
 // 映射dispatch到props

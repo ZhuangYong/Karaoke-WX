@@ -1,7 +1,6 @@
 import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import ReactDOM from "react-dom";
 import {withRouter} from "react-router-dom";
 
 import * as audioActions from "../../actions/audioActons";

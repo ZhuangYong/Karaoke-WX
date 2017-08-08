@@ -53,9 +53,10 @@ class Audio extends React.Component {
     }
 
     handleProgress() {
-        this.setState({
-            audio: ReactDOM.findDOMNode(this.refs.audio)
-        });
+        console.log("handleProgress");
+        // this.setState({
+        //     audio: ReactDOM.findDOMNode(this.refs.audio)
+        // });
     }
 
     handlePercentChange(_percent) {
