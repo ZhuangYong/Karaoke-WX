@@ -32,7 +32,12 @@ const RECORDSLIST = {
 
 // photoAlbum
 const PHOTOALBUM = {
-    API_GET_PHOTOALBUM_LIST: "API_GET_PHOTOALBUM_LIST"
+    // 查询我的相册列表
+    API_GET_PHOTOALBUM_LIST: "API_GET_PHOTOALBUM_LIST",
+    // 上传我的相册图片
+    API_PHOTOALBUM_UPLOAD: "API_PHOTOALBUM_UPLOAD",
+    // 删除我的相册图片
+    API_PHOTOALBUM_DELETE: "API_PHOTOALBUM_DELETE"
 };
 
 export default {

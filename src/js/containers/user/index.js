@@ -8,6 +8,8 @@ import {
     Avatar, BottomNavigation, BottomNavigationItem, Card, CardTitle, GridList, GridTile, List, ListItem,
     Paper
 } from "material-ui";
+import navUtils from '../../utils/navUtils';
+import sysConfig from '../../utils/sysConfig';
 
 const testaudio = [
     {title: '录音1', 'link': 'home', 'icon': defaultImg},
@@ -20,6 +22,8 @@ class UserIndex extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {};
+
+        this.linkTo = this.linkTo.bind(this);
     }
 
     render() {
@@ -46,8 +50,11 @@ class UserIndex extends BaseComponent {
                             icon={<img src={defaultImg}/>}
                         />
                         <BottomNavigationItem
-                            label="VIP充值"
+                            label="我的相册"
                             icon={<img src={defaultImg}/>}
+                            onClick={() => {
+                                this.linkTo('user/photoAlbum', false, null);
+                            }}
                         />
                         <BottomNavigationItem
                             label="意见反馈"
@@ -65,7 +72,12 @@ class UserIndex extends BaseComponent {
                         <CardTitle
                             style={{paddingBottom: "0"}}
                             title={
-                                <div style={{display: "inline-block", paddingBottom: "0"}}>
+                                <div
+                                    style={{display: "inline-block", paddingBottom: "0"}}
+                                    onClick={() => {
+                                        this.linkTo('user/records', false, null);
+                                    }}
+                                >
                                     <div style={{float: "left"}}>精品推荐</div>
                                     <div style={{float: "right"}}>more</div>
                                 </div>
@@ -98,6 +110,29 @@ class UserIndex extends BaseComponent {
                 <MBottomNavigation selectedIndex={2}/>
             </div>
         );
+    }
+
+    /**
+     * 前往指定的页面
+     * @param  {[type]} link         页面path
+     * @param  {[type]} requireLogin 是否需要登录
+     * @return {[type]}              [description]
+     */
+    linkTo(link, requireLogin, info) {
+        let fullLink;
+        if (link.indexOf('http') === 0) {
+            fullLink = link;
+            location.href = link;
+            return;
+        } else {
+            fullLink = sysConfig.contextPath + link;
+        }
+
+        if (requireLogin) {
+            navUtils.forward(sysConfig.contextPath + '/login');
+        } else {
+            navUtils.forward(fullLink);
+        }
     }
 
 }

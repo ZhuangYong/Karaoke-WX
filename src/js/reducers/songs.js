@@ -35,6 +35,12 @@ export default (state = initState, action = {}) => {
                 msg: "setSongTopMsg",
                 loading: "loading"
             });
+        case ActionTypes.RECORDSLIST.API_GET_RECORDS_LIST:
+            return fetchProcess(state, action, {
+                data: "recordsListData",
+                msg: "recordsListMsg",
+                loading: "recordsListLoading"
+            });
         default:
             return state;
     }

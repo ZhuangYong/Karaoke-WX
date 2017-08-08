@@ -19,3 +19,31 @@ export function getPhotoAlbumList(data, headers) {
         }, null);
     };
 }
+
+export function uploadImg(data, headers, callback) {
+
+    const url = apiUrl.API_PHOTOALBUM_UPLOAD;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "get",
+            headers: headers,
+            action: ActionTypes.PHOTOALBUM.API_PHOTOALBUM_UPLOAD
+        }, callback);
+    };
+}
+
+export function deleteImg(data, headers, callback) {
+
+    const url = apiUrl.API_PHOTOALBUM_DELETE;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "get",
+            headers: headers,
+            action: ActionTypes.PHOTOALBUM.API_PHOTOALBUM_DELETE
+        }, callback);
+    };
+}

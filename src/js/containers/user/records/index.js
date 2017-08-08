@@ -113,7 +113,7 @@ Records.propTypes = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        list: state.app.recordsList
+        list: state.app.songs
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

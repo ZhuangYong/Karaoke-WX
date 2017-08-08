@@ -3,19 +3,17 @@ import { combineReducers } from 'redux';
 import user from './user';
 import common from './common';
 import audio from './play/audio';
-import recordsList from './me/records';
-import photoAlbumList from './me/photoAlbum';
 import songs from './songs';
 import search from './search';
+import photoAlbum from './user/photoAlbum';
 
 let appReducer = combineReducers({
     user,
     common,
     audio,
-    recordsList,
-    photoAlbumList,
     songs,
-    search
+    search,
+    photoAlbum
 });
 
 export default appReducer;

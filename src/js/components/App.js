@@ -19,8 +19,9 @@ import SongController from "../containers/controller/songController";
 import User from "../containers/user";
 import Search from "../containers/song/search";
 
-import Records from '../containers/me/records';
-import PhotoAlbum from '../containers/me/photoAlbum';
+import Records from '../containers/user/records';
+import PhotoAlbum from '../containers/user/photoAlbum';
+import Preview from '../containers/user/photoAlbum/preview';
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -74,6 +75,12 @@ const PhotoAlbumContainer = () => (
     </Bundle>
 );
 
+const PreviewContainer = () => (
+    <Bundle load={Preview}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 /*const dynamicLoadFun = (container) => {
     return () => (
         <Bundle load={container}>
@@ -117,8 +124,9 @@ class App extends React.Component {
                         <Route path={`/controller`} component={SongControllerContainer}/>
                         <Route path={`/user`} exact component={UserContainer}/>
                         <Route path={`/login`} component={LoginContainer}/>
-                        <Route path={`/records`} component={RecordsContainer}/>
-                        <Route path={`/photoAlbum`} component={PhotoAlbumContainer}/>
+                        <Route path={`/user/records`} component={RecordsContainer}/>
+                        <Route path={`/user/photoAlbum`} component={PhotoAlbumContainer}/>
+                        <Route path={`/user/photoAlbumPreview/:index`} component={PreviewContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
                         <Route path={`/song/chooselist`} component={ChooseListContainer}/>
                         <Route path={`/song/search`} component={SearchContainer}/>

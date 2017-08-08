@@ -4,12 +4,10 @@ export default {
     "API_QUERY_USER_SOUND": "/user/qryUserSound",
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
-    // 查询我的相册列表
-    "API_PHOTOALBUM_LIST": "/api/getPhotoAlbum.json",
 
-    // 獲取歌曲分類
+    // 获取歌曲分类
     "API_QUERY_ALBUM": "/rank/album",
-    // 獲取歌曲推薦
+    // 获取歌曲推荐
     "API_QUERY_ALBUM_RECOMMEND": "/recommend/album",
 
     "API_PUSH": "/music/msgPush",
@@ -20,6 +18,12 @@ export default {
     // 推送
     "API_SET_SONG_TOP": "/music/msgPush",
     // 热门搜索关键字，cms后台可定义
-    "API_GET_HOT_WORD": "/music/searchKeyList"
+    "API_GET_HOT_WORD": "/music/searchKeyList",
 
+    // 查询我的相册列表
+    "API_PHOTOALBUM_LIST": "/api/getPhotoAlbum.json",
+    // 上传我的相册图片
+    "API_PHOTOALBUM_UPLOAD": "/api/photoAlbumUpload.json",
+    // 删除我的相册图片
+    "API_PHOTOALBUM_DELETE": "/api/photoAlbumDelete.json"
 };
