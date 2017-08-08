@@ -25,5 +25,11 @@ export default {
     // 上传我的相册图片
     "API_PHOTOALBUM_UPLOAD": "/api/photoAlbumUpload.json",
     // 删除我的相册图片
-    "API_PHOTOALBUM_DELETE": "/api/photoAlbumDelete.json"
+    "API_PHOTOALBUM_DELETE": "/api/photoAlbumDelete.json",
+    // 歌星
+    "API_GET_SINGER_CATEGORY_ALBUM": "/singer_catagory/album",
+    // 歌手歌曲列表
+    "API_GET_ACTORS_ALBUM": "/actors/album",
+    // 分类歌曲列表
+    "API_GET_CAT_ALBUM": "/cat/album"
 };

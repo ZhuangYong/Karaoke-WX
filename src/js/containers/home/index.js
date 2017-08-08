@@ -8,7 +8,7 @@ import BaseComponent from "../../components/common/BaseComponent";
 
 import {getRecommend, push} from "../../actions/audioActons";
 
-import SearchHead from "../../components/common/header/searchHeader";
+import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import navUtils from "../../utils/navUtils";
 import sysConfig from "../../utils/sysConfig";
 import {reqHeader, linkTo} from "../../utils/comUtils";
@@ -80,10 +80,9 @@ class Home extends BaseComponent {
         const {data} = this.props.songs.recommendSongs || {data: {result: []}};
         return (
             <div className='home' style={{marginBottom: "55px"}}>
-
-                <SearchHead title={'标题2'} back={this.back}/>
+                <SearchHeadFake back={this.back}/>
                 <Paper
-                    style={{paddingBottom: "28px"}}
+                    style={{paddingBottom: "28px", paddingTop: "65px"}}
                 >
                     <BottomNavigation
                         selectedIndex={this.state.selectedIndex}
@@ -91,14 +90,23 @@ class Home extends BaseComponent {
                         <BottomNavigationItem
                             label="分类"
                             icon={<img src={defaultImg}/>}
+                            onClick={() => {
+                                linkTo("catalbum", false, null);
+                            }}
                         />
                         <BottomNavigationItem
                             label="歌星"
                             icon={<img src={defaultImg}/>}
+                            onClick={() => {
+                                linkTo("singer/album", false, null);
+                            }}
                         />
                         <BottomNavigationItem
                             label="热歌"
                             icon={<img src={defaultImg}/>}
+                            onClick={() => {
+                                linkTo("hot/songs/48", false, null);
+                            }}
                         />
                     </BottomNavigation>
                 </Paper>

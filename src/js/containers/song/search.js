@@ -1,9 +1,13 @@
 import React from "react";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
+import {search} from "../../actions/searchActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeader from "../../components/common/header/searchHeader";
-import {Paper} from "material-ui";
+import {reqHeader} from "../../utils/comUtils";
+import {List, ListItem, Paper} from "material-ui";
+import {bindActionCreators} from "redux";
+import ReactDOM from "react-dom";
 
 
 class Search extends BaseComponent {
@@ -12,7 +16,8 @@ class Search extends BaseComponent {
         super(props);
         this.state = {
         };
-        this.search.bind(this);
+        this.search = this.search.bind(this);
+        this.handelTouchSearchList = this.handelTouchSearchList.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -22,25 +27,50 @@ class Search extends BaseComponent {
     }
 
     render() {
-
+        const {searchResult} = this.props.hotKeys;
         return (
-            <Paper>
-                <SearchHeader getSearchKey={this.search()}/>
+            <Paper zDepth={0}>
+                <SearchHeader getSearchKey={this.search}/>
+                <List
+                    style={{paddingTop: "66px", height: "100%"}}
+                    onTouchStart={this.handelTouchSearchList}
+                >
+                    {searchResult && searchResult.data.result.map((song) => (
+                        <ListItem
+                            key={song.id}
+                            primaryText={song.nameNorm + (song.charge ? "Vip" : "")}
+                            secondaryText={song.actor.map((actor) => (
+                                actor.nameNorm
+                            ))}
+                            rightToggle={<div onTouchTap={() => {
+                                this.pushSong(song);
+                            }}>点歌</div>}
+                        />
+                    ))}
+                </List>
             </Paper>
         );
     }
 
     search(keyword) {
-        console.log(keyword);
+        const param = {keyword: keyword, type: 'actorAndMedias'};
+        this.props.action_search(param, reqHeader(param));
+    }
+
+    handelTouchSearchList() {
+        const searchHeader = ReactDOM.findDOMNode(this.refs.searchHeader);
+        console.log(searchHeader);
     }
 }
 
 const mapStateToProps = (state, ownPorps) => {
     return {
+        hotKeys: state.app.search
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        action_search: bindActionCreators(search, dispatch)
     };
 };
 

@@ -214,8 +214,8 @@ export function writeAnalyjs(len) {
 
 /**
  * 前往指定的页面
- * @param  {type} link         页面path
- * @param  {bool} requireLogin 是否需要登录
+ * @param  {string} link         页面path
+ * @param  {boolean} requireLogin 是否需要登录
  * @return {type}              [description]
  */
 export function linkTo(link, requireLogin, info) {
