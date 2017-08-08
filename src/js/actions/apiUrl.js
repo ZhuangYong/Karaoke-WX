@@ -16,6 +16,11 @@ export default {
     // 推送
     "API_SET_SONG_TOP": "/music/msgPush",
     // 热门搜索关键字，cms后台可定义
-    "API_GET_HOT_WORD": "/music/searchKeyList"
-
+    "API_GET_HOT_WORD": "/music/searchKeyList",
+    // 歌星
+    "API_GET_SINGER_CATEGORY_ALBUM": "/singer_catagory/album",
+    // 歌手歌曲列表
+    "API_GET_ACTORS_ALBUM": "/actors/album",
+    // 分类歌曲列表
+    "API_GET_CAT_ALBUM": "/cat/album"
 };

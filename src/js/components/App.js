@@ -17,6 +17,13 @@ import Bundle from "./Bundle";
 import ChooseList from "../containers/song/chooseList";
 import SongController from "../containers/controller/songController";
 import User from "../containers/user";
+import SingerAlbum from "../containers/song/singerAlbum";
+import SingerList from "../containers/song/singerList";
+import SingerSongsList from "../containers/song/singerSongList";
+import CatSongsList from "../containers/song/CatSongList";
+import HotSongsList from "../containers/song/HotSongList";
+import CatAlbum from "../containers/song/catAlbum";
+
 import Search from "../containers/song/search";
 
 const LoginContainer = () => (
@@ -55,6 +62,36 @@ const UserContainer = () => (
 );
 const SearchContainer = () => (
     <Bundle load={Search}>
+        {Component => <Component />}
+    </Bundle>
+);
+const SingerAlbumContainer = () => (
+    <Bundle load={SingerAlbum}>
+        {Component => <Component />}
+    </Bundle>
+);
+const SingerListContainer = () => (
+    <Bundle load={SingerList}>
+        {Component => <Component />}
+    </Bundle>
+);
+const SingerSongsListContainer = () => (
+    <Bundle load={SingerSongsList}>
+        {Component => <Component />}
+    </Bundle>
+);
+const CatAlbumContainer = () => (
+    <Bundle load={CatAlbum}>
+        {Component => <Component />}
+    </Bundle>
+);
+const CatSongsListContainer = () => (
+    <Bundle load={CatSongsList}>
+        {Component => <Component />}
+    </Bundle>
+);
+const HotSongsListContainer = () => (
+    <Bundle load={HotSongsList}>
         {Component => <Component />}
     </Bundle>
 );
@@ -105,6 +142,12 @@ class App extends React.Component {
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
                         <Route path={`/song/chooselist`} component={ChooseListContainer}/>
                         <Route path={`/song/search`} component={SearchContainer}/>
+                        <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>
+                        <Route path={`/singer/:id`} exact component={SingerListContainer}/>
+                        <Route path={`/singer/songs/:id`} exact component={SingerSongsListContainer}/>
+                        <Route path={`/catalbum`} exact component={CatAlbumContainer}/>
+                        <Route path={`/cat/songs/:id`} exact component={CatSongsListContainer}/>
+                        <Route path={`/hot/songs/:id`} exact component={HotSongsListContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
                     {/*<Tips

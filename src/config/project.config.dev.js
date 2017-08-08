@@ -6,6 +6,6 @@
 module.exports = {
     appVersion: '1.1.1',// 版本号
     environment: 'test',
-    apiDomain: 'http://portaltest.j-make.com.cn',//http://portaltest.j-make.com.cn
+    apiDomain: 'http://portal.j-make.cn',//http://portaltest.j-make.com.cn
     contextPath : "/"
 };

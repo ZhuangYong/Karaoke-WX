@@ -1,11 +1,59 @@
 @import "variables";
-.search-header{
-    .search-words{
-        padding: $container-padding;
-        .hot-words{
-            display: flex;
-            .word{
-                margin-left: 4px!important;
+
+.search-header {
+    .search-bar-panel{
+        top: 0 ;
+        z-index: 6;
+        width: 100%;
+        color:white;
+        position: fixed;
+        padding: 14px 8px;
+        text-align: center;
+        height: $bar-base-height;
+        background-color:$bar-color;
+        display: inline-table!important;
+        .key-word-input{
+            margin: 6px;
+            padding: 2px 6px;
+            display:table-cell!important;
+            border-radius: 14px;
+            background-color:#fe9e62!important;
+            height: 34px!important;
+            border: 1px solid #fe9e62;
+            div:nth-child(1){
+                bottom: 4px !important;
+            }
+            hr{
+                display: none!important;
+            }
+        }
+        .search-button{
+            width:14%;
+            display:table-cell;
+        }
+    }
+    .search-panel {
+        width: 100%;
+        height:100%;
+        z-index: 2;
+        position: fixed;
+        background-color: white;
+        .search-words {
+            height:100%;
+            margin-top:40px;
+            padding: $container-padding;
+            .history-words{
+                height: 100%;
+                overflow: hidden;
+            }
+            .hot-words {
+                display: flex;
+                flex-wrap: wrap;
+                .word {
+                    margin:4px 0 0 4px !important;
+                }
+            }
+            .history-words-title{
             }
         }
     }

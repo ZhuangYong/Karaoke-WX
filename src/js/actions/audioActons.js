@@ -14,6 +14,12 @@ export function getShareAudio(data, headers) {
     };
 }
 
+/**
+ * 获取热歌
+ * @param data
+ * @param headers
+ * @returns {function(*=)}
+ */
 export function getRecommend(data, headers) {
     const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM;
     return (dispatch) => {
@@ -25,6 +31,12 @@ export function getRecommend(data, headers) {
     };
 }
 
+/**
+ * 推送
+ * @param data
+ * @param headers
+ * @returns {function(*=)}
+ */
 export function push(data, headers) {
     const url = sysConfig.apiDomain + apiUrl.API_PUSH;
     return (dispatch) => {
@@ -36,6 +48,12 @@ export function push(data, headers) {
     };
 }
 
+/**
+ * 获取已点歌曲列表
+ * @param data
+ * @param headers
+ * @returns {function(*=)}
+ */
 export function getChooseList(data, headers) {
     const url = sysConfig.apiDomain + apiUrl.API_CHOOSE_LIST;
     return (dispatch) => {
@@ -47,6 +65,13 @@ export function getChooseList(data, headers) {
     };
 }
 
+/**
+ * 置顶
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
 export function setSongTop(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_SET_SONG_TOP;
     return (dispatch) => {
@@ -54,6 +79,96 @@ export function setSongTop(data, headers, callback) {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_SET_SONG_TOP
+        }, callback);
+    };
+}
+
+/**
+ * 获取歌手分类列表
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getSingerCategoryAlbum(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_SINGER_CATEGORY_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_GET_SINGER_CATEGORY_ALBUM
+        }, callback);
+    };
+}
+
+/**
+ * 获取歌手列表
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getActorsAlbum(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_ACTORS_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_GET_ACTORS_ALBUM
+        }, callback);
+    };
+}
+
+/**
+ * 获取分类列表
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getCatAlbum(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_CAT_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_GET_CAT_ALBUM
+        }, callback);
+    };
+}
+
+/**
+ * 获取指定分类下的歌曲列表
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getCatSongList(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_CAT_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_GET_CAT_SONG_LIST
+        }, callback);
+    };
+}
+
+/**
+ * 获取热歌
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getRankAlbum(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_GET_RANK_ALBUM
         }, callback);
     };
 }
