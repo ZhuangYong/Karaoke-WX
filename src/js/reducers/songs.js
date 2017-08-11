@@ -9,6 +9,7 @@ let initState = {
     chooseListStamp: 0,
     getRankAlbumStamp: 0,
     getActorsAlbumStamp: 0,
+    recordsListStamp: 0,
     getCatSongListStamp: 0
 };
 export default (state = initState, action = {}) => {
@@ -71,9 +72,10 @@ export default (state = initState, action = {}) => {
                 msg: "getRankAlbumMsg",
                 loading: "loading"
             });
-        case ActionTypes.RECORDSLIST.API_GET_RECORDS_LIST:
+        case ActionTypes.USER.API_GET_RECORDS_LIST:
             return fetchProcess(state, action, {
                 data: "recordsListData",
+                stamp: "recordsListStamp",
                 msg: "recordsListMsg",
                 loading: "recordsListLoading"
             });

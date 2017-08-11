@@ -8,12 +8,10 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import {GridList, GridTile} from "material-ui/GridList";
-import * as recordsListAction from '../../../actions/recordsListAction';
-import {reqHeader} from "../../../utils/comUtils";
+import {getRecordsList} from '../../../actions/userActions';
+import {linkTo, reqHeader} from "../../../utils/comUtils";
 import defaultImg from "../../../../img/common/tile_default.jpg";
 
-import sysConfig from '../../../utils/sysConfig';
-import navUtils from '../../../utils/navUtils';
 import BaseComponent from "../../../components/common/BaseComponent";
 
 const style = {
@@ -32,7 +30,6 @@ const style = {
 class Records extends BaseComponent {
     constructor(props) {
         super(props);
-        this.linkTo = this.linkTo.bind(this);
     }
 
     componentWillMount() {
@@ -40,7 +37,7 @@ class Records extends BaseComponent {
             pageSize: 20,
             currentPage: 1
         };
-        this.props.actions.getRecordsList(params, reqHeader(params));
+        this.props.getRecordsListActions(params, reqHeader(params));
     }
 
     render() {
@@ -61,8 +58,8 @@ class Records extends BaseComponent {
                             title={tile.nameNorm}
                             titleStyle={{textAlign: "center", marginRight: "16px", marginTop: "20%", color: "black"}}
                             titleBackground="transparent"
-                            onClick={() => {
-                                this.linkTo(`s/p/${tile.uid}`, false, null);
+                            onTouchTap={() => {
+                                linkTo(`s/p/${tile.uid}`, false, null);
                             }}
                         >
                             <div style={style.tile}>
@@ -75,29 +72,6 @@ class Records extends BaseComponent {
                 </GridList>
             </div>
         );
-    }
-
-    /**
-     * 前往指定的页面
-     * @param  {[type]} link         页面path
-     * @param  {[type]} requireLogin 是否需要登录
-     * @return {[type]}              [description]
-     */
-    linkTo(link, requireLogin, info) {
-        let fullLink;
-        if (link.indexOf('http') === 0) {
-            fullLink = link;
-            location.href = link;
-            return;
-        } else {
-            fullLink = sysConfig.contextPath + link;
-        }
-
-        if (requireLogin) {
-            navUtils.forward(sysConfig.contextPath + '/login');
-        } else {
-            navUtils.forward(fullLink);
-        }
     }
 
 }
@@ -118,7 +92,7 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        actions: bindActionCreators(recordsListAction, dispatch)
+        getRecordsListActions: bindActionCreators(getRecordsList, dispatch)
     };
 };
 

@@ -10,21 +10,21 @@ let initState = {
 };
 export default (state = initState, action = {}) => {
     switch (action.type) {
-        case ActionTypes.PHOTOALBUM.API_GET_PHOTOALBUM_LIST:
+        case ActionTypes.USER.API_GET_PHOTO_ALBUM_LIST:
             return fetchProcess(state, action, {
                 data: "photoAlbumList",
                 msg: "photoAlbumListMsg",
                 stamp: "photoAlbumListStamp",
                 loading: "photoAlbumListLoading"
             });
-        case ActionTypes.PHOTOALBUM.API_PHOTOALBUM_UPLOAD:
+        case ActionTypes.USER.API_PHOTO_ALBUM_UPLOAD:
             return fetchProcess(state, action, {
                 data: "photoAlbumUpload",
                 msg: "photoAlbumUploadMsg",
                 stamp: "photoAlbumUploadStamp",
                 loading: "photoAlbumUploadLoading"
             });
-        case ActionTypes.PHOTOALBUM.API_PHOTOALBUM_DELETE:
+        case ActionTypes.USER.API_PHOTO_ALBUM_DELETE:
             return fetchProcess(state, action, {
                 data: "photoAlbumDelete",
                 msg: "photoAlbumDeleteMsg",

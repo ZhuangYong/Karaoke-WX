@@ -6,30 +6,25 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import * as photoAlbumActions from '../../../actions/photoAlbumActions';
-import {reqHeader} from "../../../utils/comUtils";
+import {getPhotoAlbumList, uploadImg, deleteImg} from "../../../actions/userActions";
+import {linkTo, reqHeader} from "../../../utils/comUtils";
 import BaseComponent from "../../../components/common/BaseComponent";
 import {findDOMNode} from "react-dom";
 import $ from 'jquery';
 import cropper from 'cropper';
 
-import sysConfig from '../../../utils/sysConfig';
-import navUtils from '../../../utils/navUtils';
-
 import '../../../../css/cropper.css';
-import RaisedButton from 'material-ui/RaisedButton';
-import {GridList, GridTile} from "material-ui/GridList";
 import AppBar from 'material-ui/AppBar';
-import {Card, CardTitle} from 'material-ui/Card';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
+import Badge from 'material-ui/Badge';
+import {GridList, GridTile} from "material-ui/GridList";
+import DoneIcon from "material-ui/svg-icons/action/done";
 
 import defaultImg from "../../../../img/common/tile_default.jpg";
 import addIcon from "../../../../img/iconfont-tianjia.png";
 
 const style = {
-    cropPage: {
-        width: '100%',
-        height: window.screen.width + 'px'
-    },
     tile: {
         width: "100%",
         height: "100%",
@@ -40,56 +35,26 @@ const style = {
     tileImg: {
         height: "100%",
         margin: "auto",
-        display: "inherit"
-    },
-    imgDelete: {
-        position: 'absolute',
-        display: 'inline-block',
-        right: '16px',
-        top: 0,
-        width: '20px',
-        height: '20px',
-        textAlign: 'center',
-        lineHeight: '20px',
-        borderRadius: '12px',
-        backgroundColor: '#FF5053',
-        color: '#f3f3f3',
-        border: 'solid 1px #FF5053',
-        fontSize: '9px',
-        fontWeight: 200,
-        zIndex: 1
-    },
-    addImgBtn: {
-        position: 'relative',
-        marginLeft: '16px',
-        width: '80px',
-        height: '80px',
-        boxSizing: 'border-box'
+        display: "block"
     },
     fileInp: {
-        position: 'absolute',
-        right: 0,
-        top: 0,
-        width: '100%',
-        height: '100%',
-        opacity: 0,
-        cursor: 'pointer',
-        zIndex: 0
+        display: 'none'
     }
 };
 
 const imgMax = {
-    maxSize: 600 * 1024,
-    maxWidth: 650,
-    maxHeight: 650,
-    screenW: window.screen.width,
-    screenH: window.screen.height,
+    size: 600 * 1024,
+    width: 650,
+    height: 650,
+    screenW: document.documentElement.clientWidth || document.body.clientWidth,
+    screenH: document.documentElement.clientHeight || document.body.clientHeight,
     scaleRate: 0.8
 };
 
 let options = {
     autoCrop: false,
     viewMode: 0,
+    // background: false,
     dragMode: 'move',
     zoomable: true,
     cropBoxResizable: false,
@@ -97,8 +62,11 @@ let options = {
     aspectRatio: 1 / 1,
     minCropBoxWidth: imgMax.screenW * imgMax.scaleRate,
     minCropBoxHeight: imgMax.screenW * imgMax.scaleRate,
-    minCanvasWidth: imgMax.screenW * imgMax.scaleRate,
-    ready: null
+    minCanvasWidth: imgMax.screenW,
+    ready: function () {
+        $(this).cropper('scale', imgMax.scaleRate, imgMax.scaleRate);
+        $(this).cropper('crop');
+    }
 };
 
 
@@ -107,19 +75,17 @@ class PhotoAlbum extends BaseComponent {
         super(props);
 
         this.state = {
+            data: [],
             isSelectAll: true,
             isDeletePage: false,
-            data: [],
             isPhotoAlbumListPage: true,
             cropPageImgUrl: null
         };
 
         this.listenInputChange = this.listenInputChange.bind(this);
         this.uploadImg = this.uploadImg.bind(this);
-        this.cropImg = this.cropImg.bind(this);
         this.updateList = this.updateList.bind(this);
-        this.updateUploadImg = this.updateUploadImg.bind(this);
-        this.linkTo = this.linkTo.bind(this);
+        this.updateAfterUploadImg = this.updateAfterUploadImg.bind(this);
     }
 
     get cropPageImgDom() {
@@ -141,19 +107,30 @@ class PhotoAlbum extends BaseComponent {
             this.updateList();
         }
         if (preProps.result.photoAlbumUploadStamp !== this.props.result.photoAlbumUploadStamp) {
-            this.updateUploadImg();
+            this.updateAfterUploadImg();
         }
     }
 
     componentDidMount() {
-        const param = {};
-        this.props.getPhotoAlbumListActions(param, reqHeader(param));
+        const params = {};
+        this.props.getPhotoAlbumListActions(params, reqHeader(params));
     }
 
     render() {
-        const data = this.state.data;
-        const addBtnDom = (<GridTile key="addBtnDom">
-                <img src={addIcon} style={style.tileImg} alt="添加"/>
+        const dataList = this.state.data;
+        const addBtnDom = (
+            <GridTile
+                key="addBtnDom"
+                onTouchTap={() => {
+                    if (dataList.length < 50) {
+                        return this.addImgInp.click();
+                    }
+                    return alert('最多只能添加50张照片哦');
+                }}
+            >
+                <div style={style.tile}>
+                    <img src={addIcon} style={style.tileImg} alt="添加图片按钮"/>
+                </div>
                 <input
                     ref="addImgInp"
                     type="file"
@@ -163,134 +140,83 @@ class PhotoAlbum extends BaseComponent {
                         this.listenInputChange();
                     }}
                 />
-            </GridTile>);
-
+            </GridTile>
+        );
         let PhotoList = [];
+
         if (!this.state.isDeletePage) {
             PhotoList.push(addBtnDom);
         }
-        data.forEach((val, ind) => {
+
+        dataList.forEach((val, ind) => {
+            let showBadge = dataList[ind].isDeleteImg ? 'block' : 'none';
             PhotoList.push(
-                <GridTile
+                <Badge
                     key={ind}
+                    style={style.tile}
+                    badgeStyle={{top: '10px', right: '30px', backgroundColor: '#a4c639', display: showBadge}}
+                    badgeContent={<DoneIcon
+                        color="#fff"
+                    />}
                 >
-                    {this.state.data[ind].isDeleteImg && (<div
-                        className="imgDelete"
-                        style={style.imgDelete}
-                        data-id={val.id}
-                        onTouchTap={(e) => {
-                            this.deleteImg(e.target);
+                    <img
+                        src={val.imgUrl}
+                        style={style.tileImg}
+                        onError={function (e) {
+                            e.target.src = defaultImg;
                         }}
-                    >X</div>)}
-                    <div style={style.tile}>
-                        <img
-                            src={val.imgUrl}
-                            style={style.tileImg}
-                            onError={function (e) {
-                                e.target.src = defaultImg;
-                            }}
-                            onTouchTap={() => {
-                                if (this.state.isDeletePage) {
-                                    this.state.data[ind].isDeleteImg = !this.state.data[ind].isDeleteImg;
-                                    this.setState({
-                                        data: this.state.data
-                                    });
-                                } else {
-                                    this.linkTo(`user/photoAlbumPreview/${ind}`, false, null);
-                                }
-                            }}
-                        />
-                    </div>
-                </GridTile>
+                        onTouchTap={() => {
+                            if (this.state.isDeletePage) {
+                                dataList[ind].isDeleteImg = !dataList[ind].isDeleteImg;
+                                this.setState({
+                                    data: dataList
+                                });
+                            } else {
+                                linkTo(`user/photoAlbumPreview/${val.id}`, false, null);
+                            }
+                        }}
+                    />
+                </Badge>
             );
         });
 
         return (
-            <div>
+            <Paper zDepth={1}>
                 {this.state.isPhotoAlbumListPage ? (
-                    <div
-                        className="photoAlbumPage"
-                    >
-                        <Card className="photoList">
-                            <CardTitle
-                                title="我的相册"
-                                subtitle={data.length > 0 && (
-                                    <div
-                                        style={{position: 'absolute', right: '20px', top: '12px'}}
-                                        onTouchTap={() => {
-                                            this.setState({
-                                                isSelectAll: true,
-                                                isDeletePage: !this.state.isDeletePage,
-                                                data: data.filter((item) => {
-                                                    item.isDeleteImg = false;
-                                                    return item;
-                                                })
-                                            });
-                                        }}
-                                    >{this.state.isDeletePage ? '取消' : '编辑'}</div>)}
-                            />
-                            <GridList
-                                cellHeight={100}
-                                style={{margin: "6px"}}
-                                cols={3}
-                            >
-
-                                {PhotoList}
-
-                                {/*{data.map((tile) => (
-                                    <GridTile
-                                        key={tile.id}
-                                        titleBackground="transparent"
-                                        onTouchStart={() => {
-                                            console.log('touchStart');
-                                            this.showDeleteBtnTimer = setTimeout(() => {
-                                                this.setState({
-                                                    isDeleteImg: true
-                                                });
-                                            }, 2000);
-                                        }}
-                                        onTouchEnd={() => {
-                                            console.log('touchEnd');
-                                            clearTimeout(this.showDeleteBtnTimer);
-                                        }}
-                                        onTouchMove={() => {
-                                            console.log('touchMove');
-                                            clearTimeout(this.showDeleteBtnTimer);
-                                        }}
-                                    >
-                                        {this.state.isDeleteImg && <div className="imgDelete" style={style.imgDelete}>X</div>}
-                                        <div style={style.tile}>
-                                            <img src={tile.imgUrl} style={style.tileImg} onError={function (e) {
-                                                e.target.src = defaultImg;
-                                            }}/>
-                                        </div>
-                                    </GridTile>
-                                ))}*/}
-                            </GridList>
-                        </Card>
-
-                        {/*<Card className="addImg">
-                            <CardTitle title="添加照片"/>
-                            <div className="addImgBtn" style={style.addImgBtn}>
-                                <img src={addIcon} style={style.tileImg} alt="添加"/>
-                                <input
-                                    ref="addImgInp"
-                                    type="file"
-                                    accept="image/*"
-                                    style={style.fileInp}
-                                    onChange={() => {
-                                        this.listenInputChange();
+                    <div>
+                        <AppBar
+                            style={{position: 'fixed', top: 0, left: 0}}
+                            title="我的相册"
+                            showMenuIconButton={false}
+                            iconElementRight={
+                                <RaisedButton
+                                    backgroundColor="#a4c639"
+                                    disabledBackgroundColor="#a4c630"
+                                    disabled={!dataList.length > 0}
+                                    onTouchTap={() => {
+                                        this.setState({
+                                            isSelectAll: true,
+                                            isDeletePage: !this.state.isDeletePage,
+                                            data: dataList.filter((item) => {
+                                                item.isDeleteImg = false;
+                                                return item;
+                                            })
+                                        });
                                     }}
-                                />
-                            </div>
-                        </Card>*/}
+                                >{this.state.isDeletePage ? '取消' : '编辑'}</RaisedButton>
+                            }
+                        />
 
+                        <GridList
+                            style={{paddingBottom: "65px", paddingTop: "65px"}}
+                            cellHeight={100}
+                            cols={3}
+                        >
+                            {PhotoList}
+                        </GridList>
                     </div>
                 ) : (
-                    <div
-                        className="cropPage"
-                        style={style.cropPage}
-                    >
+                    <div>
                         <div
                             style={{width: imgMax.screenW, height: imgMax.screenH}}
                         >
@@ -301,13 +227,11 @@ class PhotoAlbum extends BaseComponent {
                             />
                         </div>
 
-                        <div
+                        <AppBar
                             style={{position: 'fixed', bottom: 0, left: 0}}
-                        >
-                            <RaisedButton
-                                className="cropCancelBtn"
+                            iconElementLeft={<RaisedButton
+                                backgroundColor="#a4c639"
                                 label="取消"
-                                primary={true}
                                 onTouchTap={(e) => {
                                     e.preventDefault();
                                     this.setState({
@@ -315,67 +239,56 @@ class PhotoAlbum extends BaseComponent {
                                     });
                                     $(this.cropPageImgDom).cropper('destroy');
                                 }}
-                            />
-
-                            <RaisedButton
-                                className="cropBtn"
+                            />}
+                            iconElementRight={<RaisedButton
+                                backgroundColor="#a4c639"
                                 label="截图"
-                                primary={true}
                                 onTouchTap={(e) => {
                                     e.preventDefault();
                                     this.uploadImg(this.cropPageImgDom);
                                 }}
-                            />
-                        </div>
+                            />}
+                        />
                     </div>
                 )}
-
                 {this.state.isDeletePage && (<AppBar
-                    iconElementLeft={<div
+                    style={{position: 'fixed', bottom: 0, left: 0}}
+                    iconElementLeft={<RaisedButton
+                        backgroundColor="#a4c639"
                         onTouchTap={() => {
                             this.setState({
                                 isSelectAll: !this.state.isSelectAll,
-                                data: data.filter((item) => {
+                                data: dataList.filter((item) => {
                                     item.isDeleteImg = this.state.isSelectAll;
                                     return item;
                                 })
                             });
                         }}
-                    >{this.state.isSelectAll ? ('全部选择') : ('全部不选')}</div>}
+                    >{this.state.isSelectAll ? "全部选择" : "全部不选"}</RaisedButton>}
                     iconElementRight={<RaisedButton
+                        backgroundColor="#a4c639"
+                        disabledBackgroundColor="#a4c630"
                         label="删除"
-                        disabled={data.filter((item) => {
+                        disabled={dataList.filter((item) => {
                             if (item.isDeleteImg) {
                                 return item;
                             }
                         }).length <= 0}
                         onTouchTap={() => {
-                            this.setState({
-                                isSelectAll: false,
-                                isDeletePage: false,
-                                data: this.state.data.filter((item) => {
-                                    if (item.isDeleteImg) {
-                                        console.log(item);
-                                        return null;
-                                    }
-                                    return item;
-                                })
-                            });
+                            this.deleteImg();
                         }}
                     />}
                 />)}
-            </div>
+            </Paper>
         );
     }
 
-    updateUploadImg() {
+    updateAfterUploadImg() {
         const preStateData = this.state.data;
         const {data} = this.props.result.photoAlbumUpload || {data: {}};
+        data.isDeleteImg = false;
         this.setState({
-           data: [data, ...preStateData].filter((item) => {
-               item.isDeleteImg = false;
-               return item;
-           })
+           data: [data, ...preStateData]
         });
     }
 
@@ -389,43 +302,63 @@ class PhotoAlbum extends BaseComponent {
         });
     }
 
-    deleteImg(target) {
-        const param = {
-            id: target.dataset.id
-        };
-
-        this.props.deleteImgActions(param, reqHeader(param), () => {
-            let box = target.parentNode.parentNode;
-
-            box.parentNode.removeChild(box);
+    deleteImg() {
+        this.setState({
+            isSelectAll: false,
+            isDeletePage: false,
+            data: this.state.data.filter((item) => {
+                if (item.isDeleteImg) {
+                    console.log(item);
+                    return null;
+                }
+                return item;
+            })
         });
-    }
-
-    cropImg(img) {
-        $(img).cropper(options);
     }
 
     uploadImg(img) {
         console.log('clickSaveImg');
         let imgCanvas = $(img).cropper('getCroppedCanvas', {
-            width: 650,
-            fillColor: '#fff',
+            width: imgMax.width,
+            height: imgMax.height,
+            fillColor: '#000',
             imageSmoothingEnabled: false,
             imageSmoothingQuality: 'high'
         });
 
-        const param = {};
-        this.props.uploadImgActions(param, reqHeader(param), () => {
+        let imgBase64 = imgCanvas.toDataURL('image/jpeg', 1);
+
+        const params = this.dataURLtoBlob(imgBase64);
+        console.log(params);
+        this.props.uploadImgActions(params, reqHeader(params), () => {
             this.setState({
                 isPhotoAlbumListPage: true
             });
+            $(img).cropper('destroy');
         });
-        $(img).cropper('destroy');
 
-        imgCanvas.toBlob(blob => {
+        /*$(img).cropper('destroy');
+        this.setState({
+            cropPageImgUrl: imgBase64
+        });*/
+
+        /*imgCanvas.toBlob(blob => {
             console.log(blob);
+            alert('blob');
 
-        });
+            const param = blob;
+            this.props.uploadImgActions(param, reqHeader(param), () => {
+                this.setState({
+                    isPhotoAlbumListPage: true
+                });
+            });
+            $(img).cropper('destroy');
+
+        });*/
+    }
+
+    cropImg(img) {
+        $(img).cropper(options);
     }
 
     listenInputChange() {
@@ -439,17 +372,13 @@ class PhotoAlbum extends BaseComponent {
                 //处理 android 4.1 兼容问题
                 let base64 = reader.result.split(',')[1];
                 let dataUrl = 'data:image/png;base64,' + base64;
+
                 //加载图片获取图片真实宽度和高度
                 let image = new Image();
                 image.onload = function() {
                     let width = image.width;
                     let height = image.height;
-                    alert(width + '---' + height);
-
-                    options.ready = function () {
-                        $(this).cropper('scale', imgMax.scaleRate, imgMax.scaleRate);
-                        $(this).cropper('crop');
-                    };
+                    console.log(width + '---' + height);
 
                     _this.setState({
                         isPhotoAlbumListPage: false,
@@ -464,27 +393,17 @@ class PhotoAlbum extends BaseComponent {
         }
     }
 
-    /**
-     * 前往指定的页面
-     * @param  {[type]} link         页面path
-     * @param  {[type]} requireLogin 是否需要登录
-     * @return {[type]}              [description]
-     */
-    linkTo(link, requireLogin, info) {
-        let fullLink;
-        if (link.indexOf('http') === 0) {
-            fullLink = link;
-            location.href = link;
-            return;
-        } else {
-            fullLink = sysConfig.contextPath + link;
+    //**dataURL to blob**
+    dataURLtoBlob(dataUrl) {
+        let arr = dataUrl.split(','),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bStr = atob(arr[1]),
+            n = bStr.length,
+            u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bStr.charCodeAt(n);
         }
-
-        if (requireLogin) {
-            navUtils.forward(sysConfig.contextPath + '/login');
-        } else {
-            navUtils.forward(fullLink);
-        }
+        return new Blob([u8arr], { type: mime });
     }
 
 }
@@ -505,9 +424,9 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        getPhotoAlbumListActions: bindActionCreators(photoAlbumActions.getPhotoAlbumList, dispatch),
-        uploadImgActions: bindActionCreators(photoAlbumActions.uploadImg, dispatch),
-        deleteImgActions: bindActionCreators(photoAlbumActions.deleteImg, dispatch)
+        getPhotoAlbumListActions: bindActionCreators(getPhotoAlbumList, dispatch),
+        uploadImgActions: bindActionCreators(uploadImg, dispatch),
+        deleteImgActions: bindActionCreators(deleteImg, dispatch)
     };
 };
 

@@ -29,6 +29,8 @@ import Search from "../containers/song/search";
 import Records from '../containers/user/records';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import Preview from '../containers/user/photoAlbum/preview';
+import OrderForm from "../containers/user/orderForm/index";
+import Feedback from "../containers/user/feedback/index";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -118,6 +120,18 @@ const PreviewContainer = () => (
     </Bundle>
 );
 
+const OrderFormContainer = () => (
+    <Bundle load={OrderForm}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const FeedbackContainer = () => (
+    <Bundle load={Feedback}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 /*const dynamicLoadFun = (container) => {
     return () => (
         <Bundle load={container}>
@@ -160,11 +174,13 @@ class App extends React.Component {
                         <Route path={`/home`} component={HomeContainer}/>
                         <Route path={`/controller`} component={SongControllerContainer}/>
                         <Route path={`/user`} exact component={UserContainer}/>
-                        <Route path={`/login`} component={LoginContainer}/>
                         <Route path={`/user/records`} component={RecordsContainer}/>
-                        <Route path={`/user/photoAlbum`} component={PhotoAlbumContainer}/>
-                        <Route path={`/user/photoAlbumPreview/:index`} component={PreviewContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
+                        <Route path={`/user/photoAlbum`} component={PhotoAlbumContainer}/>
+                        <Route path={`/user/photoAlbumPreview/:imgId`} component={PreviewContainer}/>
+                        <Route path={`/user/orderForm`} component={OrderFormContainer}/>
+                        <Route path={`/user/feedback`} component={FeedbackContainer}/>
+                        <Route path={`/login`} component={LoginContainer}/>
                         <Route path={`/song/chooselist`} component={ChooseListContainer}/>
                         <Route path={`/song/search`} component={SearchContainer}/>
                         <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>

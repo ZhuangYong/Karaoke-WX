@@ -5,7 +5,18 @@ const COMMON = {
 
 //user relative
 const USER = {
-    API_LOGIN: "API_LOGIN"
+    // 获取用户信息
+    API_GET_USER_INFO: "API_GET_USER_INFO",
+    // 查询我的相册列表
+    API_GET_PHOTO_ALBUM_LIST: "API_GET_PHOTO_ALBUM_LIST",
+    // 上传我的相册图片
+    API_PHOTO_ALBUM_UPLOAD: "API_PHOTO_ALBUM_UPLOAD",
+    // 删除我的相册图片
+    API_PHOTO_ALBUM_DELETE: "API_PHOTO_ALBUM_DELETE",
+    // 获取录音分享列表
+    API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST",
+    // 获取我的订单列表
+    API_GET_ORDER_FORM: "API_GET_ORDER_FORM"
 };
 
 const SONG = {
@@ -29,30 +40,12 @@ const SEARCH = {
     API_SEARCH: "API_SEARCH"
 };
 
-
-// recordsList
-const RECORDSLIST = {
-    API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST"
-};
-
-// photoAlbum
-const PHOTOALBUM = {
-    // 查询我的相册列表
-    API_GET_PHOTOALBUM_LIST: "API_GET_PHOTOALBUM_LIST",
-    // 上传我的相册图片
-    API_PHOTOALBUM_UPLOAD: "API_PHOTOALBUM_UPLOAD",
-    // 删除我的相册图片
-    API_PHOTOALBUM_DELETE: "API_PHOTOALBUM_DELETE"
-};
-
 export default {
     COMMON,
     USER,
     AUDIO,
     SONG,
-    SEARCH,
-    RECORDSLIST,
-    PHOTOALBUM
+    SEARCH
 };
 
 

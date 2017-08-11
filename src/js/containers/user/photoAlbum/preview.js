@@ -9,23 +9,34 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import {getPhotoAlbumList} from '../../../actions/photoAlbumActions';
-import {reqHeader} from "../../../utils/comUtils";
+import {linkTo, reqHeader} from "../../../utils/comUtils";
+import {getPhotoAlbumList} from "../../../actions/userActions";
 
-import sysConfig from '../../../utils/sysConfig';
-import navUtils from '../../../utils/navUtils';
+const style = {
+    container: {
+      width: document.documentElement.clientWidth || document.body.clientWidth,
+      height: document.documentElement.clientHeight || document.body.clientHeight,
+      background: '#000'
+    },
+    img: {
+        position: 'absolute',
+        top: '20%',
+        left: '10%',
+        width: '80%',
+        height: 'auto'
+    }
+};
 
 class Preview extends BaseComponent {
     constructor(props) {
         super(props);
 
         this.state = {
-            index: this.props.match.params.index,
+            imgId: this.props.match.params.imgId,
             data: []
         };
 
         this.updateList = this.updateList.bind(this);
-        this.linkTo = this.linkTo.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -35,20 +46,28 @@ class Preview extends BaseComponent {
     }
 
     componentDidMount() {
-        const param = {};
-        this.props.actions(param, reqHeader(param));
+        const params = {};
+        this.props.actions(params, reqHeader(params));
     }
 
     render() {
-        const {imgUrl} = this.state.data[this.state.index] || {imgUrl: ''};
+        const imgItem = this.state.data.filter((item) => {
+            if (parseInt(item.id, 10) === parseInt(this.state.imgId, 10)) {
+                return item;
+            }
+        });
+        const {imgUrl} = imgItem[0] || {imgUrl: ''};
+
         return (
             <div
-                style={{width: window.screen.width, height: window.screen.height, background: '#000'}}
+                style={style.container}
                 onTouchTap={() => {
-                    this.linkTo('user/photoAlbum', false, null);
+                    // 在这里需要返回上一级导航，而不是前进
+                    linkTo('user/photoAlbum', false, null);
+                    // navUtils.goBack();
                 }}
             >
-                <img src={imgUrl} style={{position: 'absolute', top: '20%', left: '10%', width: '80%', height: 'auto'}} alt=""/>
+                <img src={imgUrl} style={style.img} alt=""/>
             </div>
         );
     }
@@ -58,29 +77,6 @@ class Preview extends BaseComponent {
         this.setState({
             data: data
         });
-    }
-
-    /**
-     * 前往指定的页面
-     * @param  {[type]} link         页面path
-     * @param  {[type]} requireLogin 是否需要登录
-     * @return {[type]}              [description]
-     */
-    linkTo(link, requireLogin, info) {
-        let fullLink;
-        if (link.indexOf('http') === 0) {
-            fullLink = link;
-            location.href = link;
-            return;
-        } else {
-            fullLink = sysConfig.contextPath + link;
-        }
-
-        if (requireLogin) {
-            navUtils.forward(sysConfig.contextPath + '/login');
-        } else {
-            navUtils.forward(fullLink);
-        }
     }
 }
 

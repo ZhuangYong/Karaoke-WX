@@ -259,7 +259,7 @@ export function loadScript(url, callback) {
     document.head.appendChild(script);
 }
 
-export function getEncryptHeader(Oid = {deviceId: "3c3cf52ccf882f55db3445524e60f10d", wxId: ""}) {
+export function getEncryptHeader(Oid = {deviceId: "", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
