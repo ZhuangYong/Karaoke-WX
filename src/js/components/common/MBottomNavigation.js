@@ -25,7 +25,7 @@ class MBottomNavigation extends BaseComponent {
         return (
             <BottomNavigation
                 selectedIndex={this.state.selectedIndex}
-                style={{position: "fixed", borderTop: "1px solid #efefef", bottom: "0"}}
+                style={{position: "fixed", borderTop: "1px solid #efefef", bottom: "0", zIndex: "2"}}
             >
                 <BottomNavigationItem
                     label="主页"
@@ -59,7 +59,7 @@ class MBottomNavigation extends BaseComponent {
                 linkTo("home", false, null);
                 break;
             case 1:
-                linkTo("controller/sc", false, null);
+                linkTo("controller/", false, null);
                 break;
             case 2:
                 linkTo("user", false, null);

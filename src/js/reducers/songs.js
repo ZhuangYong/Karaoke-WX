@@ -6,17 +6,23 @@ import {fetchProcess} from "../utils/fetchUtils";
 
 let initState = {
     recommendSongs: null,
+    getRanking: null,
+    getAlbumRecommend: null,
     chooseListStamp: 0,
     getRankAlbumStamp: 0,
     getActorsAlbumStamp: 0,
-    recordsListStamp: 0,
-    getCatSongListStamp: 0
+    getCatSongListStamp: 0,
+    searchResultStamp: 0,
+    recommendSongsStamp: 0,
+    getAlbumRecommendSongListStamp: 0,
+    recordsListStamp: 0
 };
 export default (state = initState, action = {}) => {
     switch (action.type) {
         case ActionTypes.SONG.API_GET_RECOMMEND:
             return fetchProcess(state, action, {
                 data: "recommendSongs",
+                stamp: "recommendSongsStamp",
                 msg: "recommendSongsMsg",
                 loading: "loading"
             });
@@ -58,6 +64,13 @@ export default (state = initState, action = {}) => {
                 msg: "getCatAlbumMsg",
                 loading: "loading"
             });
+        case ActionTypes.SEARCH.API_SEARCH :
+            return fetchProcess(state, action, {
+                data: "searchResult",
+                stamp: "searchResultStamp",
+                msg: "searchResultMsg",
+                loading: "loading"
+            });
         case ActionTypes.SONG.API_GET_CAT_SONG_LIST:
             return fetchProcess(state, action, {
                 data: "getCatSongList",
@@ -78,6 +91,25 @@ export default (state = initState, action = {}) => {
                 stamp: "recordsListStamp",
                 msg: "recordsListMsg",
                 loading: "recordsListLoading"
+            });
+        case ActionTypes.SONG.API_QUERY_ALBUM_RECOMMEND:
+            return fetchProcess(state, action, {
+                data: "getAlbumRecommend",
+                msg: "getAlbumRecommendMsg",
+                loading: "loading"
+            });
+        case ActionTypes.SONG.API_QUERY_ALBUM_RECOMMEND_SONG_LIST:
+            return fetchProcess(state, action, {
+                data: "getAlbumRecommendSongList",
+                stamp: "getAlbumRecommendSongListStamp",
+                msg: "getAlbumRecommendSongListMsg",
+                loading: "loading"
+            });
+        case ActionTypes.SONG.API_QUERY_RANKING:
+            return fetchProcess(state, action, {
+                data: "getRanking",
+                msg: "getRankingMsg",
+                loading: "loading"
             });
         default:
             return state;

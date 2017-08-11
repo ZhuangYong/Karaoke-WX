@@ -11,7 +11,7 @@ import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
 import NotFound from "../components/common/notfound";
 import Home from "../containers/home";
-import Login from '../containers/login';
+import Login from "../containers/login";
 import Audio from "../containers/play/audio";
 import Bundle from "./Bundle";
 import ChooseList from "../containers/song/chooseList";
@@ -19,13 +19,13 @@ import SongController from "../containers/controller/songController";
 import User from "../containers/user";
 import SingerAlbum from "../containers/song/singerAlbum";
 import SingerList from "../containers/song/singerList";
-import SingerSongsList from "../containers/song/singerSongList";
-import CatSongsList from "../containers/song/CatSongList";
-import HotSongsList from "../containers/song/HotSongList";
+import SongsList from "../containers/song/SongList";
+
 import CatAlbum from "../containers/song/catAlbum";
 
 import Search from "../containers/song/search";
 
+import AudioEffect from "../containers/controller/audioEffect";
 import Records from '../containers/user/records';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import Preview from '../containers/user/photoAlbum/preview';
@@ -81,27 +81,16 @@ const SingerListContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
-const SingerSongsListContainer = () => (
-    <Bundle load={SingerSongsList}>
-        {Component => <Component />}
-    </Bundle>
-);
 const CatAlbumContainer = () => (
     <Bundle load={CatAlbum}>
         {Component => <Component />}
     </Bundle>
 );
-const CatSongsListContainer = () => (
-    <Bundle load={CatSongsList}>
+const SongsListContainer = () => (
+    <Bundle load={SongsList}>
         {Component => <Component />}
     </Bundle>
 );
-const HotSongsListContainer = () => (
-    <Bundle load={HotSongsList}>
-        {Component => <Component />}
-    </Bundle>
-);
-
 const RecordsContainer = () => (
     <Bundle load={Records}>
         {Component => <Component />}
@@ -116,6 +105,11 @@ const PhotoAlbumContainer = () => (
 
 const PreviewContainer = () => (
     <Bundle load={Preview}>
+        {Component => <Component />}
+    </Bundle>
+);
+const AudioEffectContainer = () => (
+    <Bundle load={AudioEffect}>
         {Component => <Component />}
     </Bundle>
 );
@@ -172,7 +166,8 @@ class App extends React.Component {
                     <Switch>
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
-                        <Route path={`/controller`} component={SongControllerContainer}/>
+                        <Route path={`/controller/`} exact component={SongControllerContainer}/>
+                        <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>
                         <Route path={`/user`} exact component={UserContainer}/>
                         <Route path={`/user/records`} component={RecordsContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
@@ -185,10 +180,8 @@ class App extends React.Component {
                         <Route path={`/song/search`} component={SearchContainer}/>
                         <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>
                         <Route path={`/singer/:id`} exact component={SingerListContainer}/>
-                        <Route path={`/singer/songs/:id`} exact component={SingerSongsListContainer}/>
                         <Route path={`/catalbum`} exact component={CatAlbumContainer}/>
-                        <Route path={`/cat/songs/:id`} exact component={CatSongsListContainer}/>
-                        <Route path={`/hot/songs/:id`} exact component={HotSongsListContainer}/>
+                        <Route path={`/songs/:type/:id`} exact component={SongsListContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
                     {/*<Tips

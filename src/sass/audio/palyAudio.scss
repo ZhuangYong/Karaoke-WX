@@ -1,0 +1,45 @@
+.top-panel {
+    position: relative;
+    .swipe-panel {
+        .img-div {
+            width: 100%;
+            height: 100vw;
+            overflow: hidden;
+            img {
+                height: 100%;
+            }
+        }
+    }
+
+    .audio-item {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 20px;
+        .slider-panel {
+            width: 80%;
+            height: 40px;
+            background: linear-gradient(45deg, #3498DB 25%, #2980B9 0, #2980B9 50%, #3498DB 0%, #3498DB 75%, #2980B9 0);
+            padding: 15px;
+            color: white;
+            margin-left: 30px;
+            .current-time {
+                left: 0;
+                top: -16px;
+                font-size: 10px;
+                position: absolute;
+            }
+            .duration {
+                right: 0;
+                top: -16px;
+                font-size: 10px;
+                position: absolute;
+            }
+        }
+    }
+
+}
+
+.user-info {
+    margin-top: 10px;
+}

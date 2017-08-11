@@ -7,7 +7,7 @@ import navUtils from "./navUtils";
 /**
  * 根据时间戳返回对应的y，m，d
  * @param  {[type]} tNum [description]
- * @return {[type]}      [description]
+ * @return {string}      [description]
  */
 export function timeToYmd(tNum, sep) {
     let date = tNum ? new Date(tNum) : new Date();
@@ -15,7 +15,7 @@ export function timeToYmd(tNum, sep) {
     let m = (date.getMonth() + 101 + '').substring(1);
     let d = (date.getDate() + 100 + '').substring(1);
 
-    if (sep == '年月日') {
+    if (sep === '年月日') {
         return y + '年' + m + '月' + d + '日';
     } else if (typeof sep === 'string') {
         return [y, m, d].join(sep);
@@ -64,7 +64,7 @@ export function timeToRelative(tNum, curt) {
     } else if (diff < 3600000) {
         // 60*60*1000
         re = Math.round(diff / 60000) + '分钟之前';
-    } else if (diff < 86400000 && t.getDate() == cur.getDate()) {
+    } else if (diff < 86400000 && t.getDate() === cur.getDate()) {
         // 24小时之内，且天数和当前是同一天
         // 24*60*60*1000
         re = '今天 ' + dbHours + ':' + dbMinutes;
@@ -81,9 +81,9 @@ export function timeToRelative(tNum, curt) {
  */
 export function chkDevice() {
     let ua = navigator.userAgent.toLowerCase();
-    let isWeixin = ua.indexOf('micromessenger') != -1;
-    let isAndroid = ua.indexOf('android') != -1;
-    let isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
+    let isWeixin = ua.indexOf('micromessenger') !== -1;
+    let isAndroid = ua.indexOf('android') !== -1;
+    let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
 
     return {
         isWeixin: isWeixin,
@@ -98,7 +98,7 @@ export function chkDevice() {
  * 如果直接设置option.click为true，ios要双击才能触发单击事件，如果设置为false，ios可以触发单击事件，
  * 但是android又不能触发事件了，所以需要检测机型来设置。
  *
- * @return {[type]} [description]
+ * @return {boolean} [description]
  */
 export function iScrollClick() {
     if (/iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent))
@@ -114,8 +114,6 @@ export function iScrollClick() {
         if (parseFloat(s[0] + s[2]) < 44) {
             if (chromeVersion < 40) {
                 return false;
-            } else {
-                return true;
             }
         }
         return true;
@@ -130,8 +128,7 @@ export function iScrollClick() {
  * @return {[type]}         [description]
  */
 export function processRichText(rawText) {
-    let re = rawText.replace(/(style=.+?"|color=.+?")/g, '');
-    return re;
+    return rawText.replace(/(style=.+?"|color=.+?")/g, '');
 }
 
 /**
@@ -177,7 +174,7 @@ export function checkid(id) {
         readedIds = [];
     }
     for (let i = 0; i < readedIds.length; i++) {
-        if (readedIds[i] == id) {
+        if (readedIds[i] === id) {
             isread = true;
         }
     }
@@ -259,6 +256,12 @@ export function loadScript(url, callback) {
     document.head.appendChild(script);
 }
 
+/**
+ *
+ * @param Oid
+ * @returns {{appId: string, appVersion: string, wxId: string, deviceId: string, mac: string, terminalType: string, timeStamp: string, version: string, channel: string}}
+ * 测试默认 3c3cf52ccf882f55db3445524e60f10d
+ */
 export function getEncryptHeader(Oid = {deviceId: "", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
@@ -298,7 +301,7 @@ export function reqHeader(data, header) {
 export function setCookie(name, value, expireDays) {
     let date = new Date();
     date.setDate(date.getDate() + expireDays);
-    document.cookie = name + "=" + escape(value) + ((expireDays === null) ? "" : ";expires=" + date.toGMTString());
+    document.cookie = name + "=" + escape(value) + ((expireDays === null) ? "" : ";path=/;expires=" + date.toGMTString());
 }
 
 export function removeCookie(name) {
@@ -306,7 +309,7 @@ export function removeCookie(name) {
     exp.setTime(exp.getTime() - 100);
     let val = this.getCookie(name);
     if (val !== null)
-        document.cookie = name + "=" + val + ";expires=" + exp.toGMTString();
+        document.cookie = name + "=" + val + ";path=/;expires=" + exp.toGMTString();
 }
 
 export function getCookie(name) {
