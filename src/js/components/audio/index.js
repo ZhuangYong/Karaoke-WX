@@ -33,39 +33,69 @@ class Audio extends React.Component {
         } = audio || {};
         const paused = this.state.paused;
         const percent = this.state.percent * 100;
+        const {source, ...param} = this.props;
         return (
-            <div style={{marginTop: '100px'}}>
+            <div {...param}>
                 <ReactAudio
                     ref="audio"
                     autoplay={true}
                     source={this.props.source}
+                    onEnded={this.onEnded.bind(this)}
                     onProgress={this.handleProgress.bind(this)}
                     onTimeupdate={this.handleTimeUpdate.bind(this)}
                 />
                 <Utilities
                     isPlaying={!paused}
                     percent={percent}
+                    duration={audio.duration}
+                    currentTime={audio.currentTime}
                     progress={buffered}
                     handlePercentChange={this.handlePercentChange.bind(this)}
+                    handleAfterChange={this.handleAfterChange.bind(this)}
+                    handelReset={this.handelReset.bind(this)}
                     onPlay={this.handlePlay.bind(this)}/>
             </div>
         );
     }
 
     handleProgress() {
-        console.log("handleProgress");
-        // this.setState({
-        //     audio: ReactDOM.findDOMNode(this.refs.audio)
-        // });
     }
 
+    /**
+     * 手动修改播放时间
+     * @param _percent
+     */
     handlePercentChange(_percent) {
         const audio = this.state.audio;
+        this.setState({
+            manualChangeIng: true
+        });
         if (!audio.duration) return;
         audio.currentTime = _percent / 100 * audio.duration;
         this.setState({
             percent: _percent / 100,
             currentTime: audio.currentTime
+        });
+        if (_percent === 100) {
+            audio.pause();
+            this.onEnded();
+        }
+    }
+
+    /**
+     * 手动修改时间结束
+     */
+    handleAfterChange() {
+        const audio = this.state.audio;
+        const percent = this.state.percent;
+        if (audio.paused) {
+            audio.play();
+            this.setState({
+                paused: false
+            });
+        }
+        this.setState({
+            manualChangeIng: false
         });
     }
 
@@ -78,7 +108,7 @@ class Audio extends React.Component {
     }
 
     handleError(e) {
-        this.props.actions.setError(ReactDOM.findDOMNode(this.refs.audio));
+        // TODO should show error information here
     }
 
     handlePlay() {
@@ -94,11 +124,23 @@ class Audio extends React.Component {
         });
     }
 
-    handleLoadedData() {
-        const audio = ReactDOM.findDOMNode(this.refs.audio);
-        if (this.props.audio.isRepeating) {
-            this.props.play(audio);
-        }
+    handelReset() {
+        const manualChangeIng = this.state.manualChangeIng;
+        if (manualChangeIng) return;
+        const audio = this.state.audio;
+        audio.currentTime = 0;
+        audio.pause();
+        this.setState({
+            percent: 0,
+            paused: true
+        });
+    }
+
+    onEnded() {
+        this.setState({
+            percent: 100,
+            paused: true
+        });
     }
 
 }

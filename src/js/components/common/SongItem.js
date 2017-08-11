@@ -22,12 +22,19 @@ class SongItem extends BaseComponent {
         const song = this.props.song;
         return (
             <ListItem
+                className="song-item"
                 key={song.id}
-                primaryText={song.nameNorm + (song.charge ? "Vip" : "")}
-                secondaryText={song && song.actor && song.actor.map((actor) => (
-                    actor.nameNorm
-                ))}
-                rightToggle={<div onClick={this.pushSong}>点歌</div>}
+                primaryText={<div>
+                    <div className="song-title">{song.nameNorm}<i className="label-vip">{song.charge ? "VIP" : ""}</i></div>
+                </div>}
+                secondaryText={
+                    <div className="song-author">
+                        {song.actor && song.actor.map((actor) => (
+                            actor.nameNorm
+                        )).join(" ")}
+                    </div>
+                }
+                rightToggle={<div className="choose-button" onClick={this.pushSong}>点歌</div>}
             />
         );
     }

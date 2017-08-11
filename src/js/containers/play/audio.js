@@ -2,13 +2,22 @@ import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-
+import "../../../sass/audio/palyAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
 import {reqHeader} from "../../utils/comUtils";
 
+import SwipeAbleViews from 'react-swipeable-views';
+import {autoPlay} from 'react-swipeable-views-utils';
+import defaultImg from "../../../img/common/tile_default.jpg";
+import defaultImg2 from "../../../img/picture.jpg";
 import PropTypes from "prop-types";
+import {Avatar, Divider, ListItem, Subheader} from "material-ui";
 
+const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
+const style = {
+
+};
 class PlayAudio extends React.Component {
 
     constructor(props) {
@@ -28,9 +37,33 @@ class PlayAudio extends React.Component {
 
     render() {
         const {status, data, msg} = this.props.audio.audioInfo;
-        const {musicUrl} = data || {};
+        const {musicUrl, musicTime, nameNorm} = data || {};
         return (
-            <Audio source={musicUrl}/>
+            <div>
+                <div className="top-panel">
+                    <AutoPlaySwipeAbleViews className="swipe-panel">
+                        <div className="img-div"><img src={defaultImg}/></div>
+                        <div className="img-div"><img src={defaultImg2}/></div>
+                        <div className="img-div"><img src={defaultImg}/></div>
+                    </AutoPlaySwipeAbleViews>
+                    <Audio source={musicUrl} className="audio-item"/>
+                </div>
+                <ListItem
+                    className="user-info"
+                    disabled={true}
+                    leftAvatar={
+                        <Avatar src={defaultImg2} />
+                    }
+                >
+                    名字
+                </ListItem>
+                <Divider style={{width: "90%", marginLeft: "auto", marginRight: "auto"}}/>
+
+                <Subheader style={{lineHeight: "18px", marginTop: 10}}>
+                    一首好听的《{nameNorm}》，快去分享吧
+                    <p>{musicTime}</p>
+                </Subheader>
+            </div>
         );
     }
 

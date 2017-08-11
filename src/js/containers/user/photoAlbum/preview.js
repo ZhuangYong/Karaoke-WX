@@ -10,7 +10,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import {getPhotoAlbumList} from '../../../actions/photoAlbumActions';
-import {reqHeader} from "../../../utils/comUtils";
+import {linkTo, reqHeader} from "../../../utils/comUtils";
 
 import sysConfig from '../../../utils/sysConfig';
 import navUtils from '../../../utils/navUtils';
@@ -25,7 +25,6 @@ class Preview extends BaseComponent {
         };
 
         this.updateList = this.updateList.bind(this);
-        this.linkTo = this.linkTo.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -45,7 +44,7 @@ class Preview extends BaseComponent {
             <div
                 style={{width: window.screen.width, height: window.screen.height, background: '#000'}}
                 onTouchTap={() => {
-                    this.linkTo('user/photoAlbum', false, null);
+                    linkTo('user/photoAlbum', false, null);
                 }}
             >
                 <img src={imgUrl} style={{position: 'absolute', top: '20%', left: '10%', width: '80%', height: 'auto'}} alt=""/>
@@ -60,28 +59,6 @@ class Preview extends BaseComponent {
         });
     }
 
-    /**
-     * 前往指定的页面
-     * @param  {[type]} link         页面path
-     * @param  {[type]} requireLogin 是否需要登录
-     * @return {[type]}              [description]
-     */
-    linkTo(link, requireLogin, info) {
-        let fullLink;
-        if (link.indexOf('http') === 0) {
-            fullLink = link;
-            location.href = link;
-            return;
-        } else {
-            fullLink = sysConfig.contextPath + link;
-        }
-
-        if (requireLogin) {
-            navUtils.forward(sysConfig.contextPath + '/login');
-        } else {
-            navUtils.forward(fullLink);
-        }
-    }
 }
 
 Preview.defaultProps = {

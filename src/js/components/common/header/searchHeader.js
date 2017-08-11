@@ -1,8 +1,8 @@
 import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
-import variables from "../../../../sass/common/searchHeader.scss";
-import {AppBar, Chip, FlatButton, List, ListItem, Subheader} from "material-ui";
+import "../../../../sass/common/searchHeader.scss";
+import {Chip, List, ListItem, Subheader} from "material-ui";
 import SearchIcon from "material-ui/svg-icons/action/search";
 import {getHotWords} from "../../../actions/searchActons";
 import DelIcon from "material-ui/svg-icons/content/clear";
@@ -11,9 +11,8 @@ import {withRouter} from "react-router-dom";
 import Input from "../Input";
 import BaseComponent from "../BaseComponent";
 import PropTypes from "prop-types";
-import ReactIScroll from "react-iscroll";
-import iScroll from "iscroll";
 import * as ReactDOM from "react-dom";
+import Scroller from "silk-scroller";
 
 // 通用头部组件，包含标题和一个返回按钮
 class SearchHeader extends BaseComponent {
@@ -43,7 +42,7 @@ class SearchHeader extends BaseComponent {
     }
 
     render() {
-        const showHelper = this.state.inputting ? "block" : "none";
+        const showHelper = this.state.inputting ? "" : "none";
         const {hotKeyWords} = this.props.hotKeys;
         const searchHistory = this.state.searchHistory ? this.state.searchHistory.split(",").map((word) => decodeURIComponent(word)) : [];
 
@@ -52,7 +51,7 @@ class SearchHeader extends BaseComponent {
                 return (
                     <div className="search-button"
                          onClick={this.handelBlur}>
-                        返回
+                        取消
                     </div>
                 );
             } else if (this.state.inputting && this.state.searchKey) {
@@ -88,35 +87,40 @@ class SearchHeader extends BaseComponent {
                 </span>
 
                 <div className="search-panel" style={{display: showHelper}}>
-                    <div className="search-words">
-                        <Subheader>
-                            热门搜索
-                        </Subheader>
-                        <div className="hot-words">
-                            {hotKeyWords && hotKeyWords.data.list.map((word) => (
-                                <Chip className="word" key={word.tag} onTouchTap={() => {
-                                    this.handelHotSearch(word.tag);
-                                }}>
-                                    {word.tag}
-                                </Chip>
-                            ))}
-                        </div>
+                    <Scroller
+                        ref="scroller"
+                        containerStyle={{top: 55}}
+                        directionLockThreshold={1}
+                    >
+                        <div className="search-words">
+                            <Subheader>
+                                热门搜索
+                            </Subheader>
+                            <div className="hot-words">
+                                {hotKeyWords && hotKeyWords.data.list.map((word) => (
+                                    <Chip className="word" key={word.tag} onTouchTap={() => {
+                                        this.handelHotSearch(word.tag);
+                                    }}>
+                                        {word.tag}
+                                    </Chip>
+                                ))}
+                            </div>
 
-                        {
-                            this.state.searchHistory && (
-                                <div className="history-words-title">
-                                    <Subheader style={{position: "relative"}}>
-                                        搜索历史
-                                        <div style={{top: "0", right: "5%", position: "absolute"}}
-                                             onTouchTap={this.handelCleanSearchHistory.bind(this)}>清除搜索记录
-                                        </div>
-                                    </Subheader>
-                                </div>
-                            )
-                        }
+                            {
+                                this.state.searchHistory && (
+                                    <div className="history-words-title">
+                                        <Subheader style={{position: "relative"}}>
+                                            搜索历史
+                                            <div style={{top: "0", right: "5%", position: "absolute"}}
+                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}>清除搜索记录
+                                            </div>
+                                        </Subheader>
+                                    </div>
+                                )
+                            }
 
-                        <div className="history-words">
-                            <ReactIScroll iScroll={iScroll} style={{height: "100%"}}>
+                            <div className="history-words">
+
                                 <List>
                                     {searchHistory.map((word) => (
                                         <ListItem
@@ -134,9 +138,9 @@ class SearchHeader extends BaseComponent {
                                         />
                                     ))}
                                 </List>
-                            </ReactIScroll>
+                            </div>
                         </div>
-                    </div>
+                    </Scroller>
                 </div>
             </div>
 

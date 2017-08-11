@@ -1,0 +1,53 @@
+.effect{
+    height:100vh;
+    .top-area{
+        height:30vh;
+        display: flex;
+        justify-content: center;
+        .big-circle{
+            border:1px solid;
+            width:30vh;
+            height:30vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-border-radius:50%;
+            -moz-border-radius:50%;
+            border-radius:50%;
+            .inside-circle{
+                border:1px solid;
+                width:10vh;
+                height:10vh;
+                background-color: white;
+                -webkit-border-radius:50%;
+                -moz-border-radius:50%;
+                border-radius:50%;
+            }
+
+        }
+    }
+    .center-area{
+        height:20vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .fun-button{
+            margin:10vw;
+        }
+    }
+    .bottom-area{
+        height:30vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .fun-button{
+            width:33.333vh;
+            .haf-top-button{
+                min-width: 30px !important;
+            }
+            .haf-bottom-button{
+                min-width: 30px !important;
+            }
+        }
+    }
+}

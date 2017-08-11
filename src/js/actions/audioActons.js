@@ -15,7 +15,7 @@ export function getShareAudio(data, headers) {
 }
 
 /**
- * 获取热歌
+ * 首页下部推荐歌曲（获取热歌）
  * @param data
  * @param headers
  * @returns {function(*=)}
@@ -156,7 +156,7 @@ export function getCatSongList(data, headers, callback) {
 }
 
 /**
- * 获取热歌
+ * 获取热歌（子栏目）
  * @param data
  * @param headers
  * @param callback
@@ -169,6 +169,60 @@ export function getRankAlbum(data, headers, callback) {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_GET_RANK_ALBUM
+        }, callback);
+    };
+}
+
+/**
+ * 获取推荐（首页用）
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getAlbumRecommend(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM_RECOMMEND;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_QUERY_ALBUM_RECOMMEND
+        }, callback);
+    };
+}
+
+/**
+ * 获取推荐歌曲列表
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getAlbumRecommendSongList(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM_RECOMMEND;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_QUERY_ALBUM_RECOMMEND_SONG_LIST
+        }, callback);
+    };
+}
+
+/**
+ * 获取排行（首页用）
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getRanking(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_QUERY_RANKING
         }, callback);
     };
 }

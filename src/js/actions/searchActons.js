@@ -14,13 +14,13 @@ export function getHotWords(data, headers) {
     };
 }
 
-export function search(data, headers) {
+export function search(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_SEARCH;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SEARCH.API_SEARCH
-        }, null);
+        }, callback);
     };
 }

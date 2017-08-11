@@ -1,5 +1,4 @@
 @import "variables";
-
 .search-header {
     .search-bar-panel{
         top: 0 ;
@@ -13,18 +12,25 @@
         background-color:$bar-color;
         display: inline-table!important;
         .key-word-input{
-            margin: 6px;
-            padding: 2px 6px;
+            margin: 0;
+            padding: 0;
             display:table-cell!important;
             border-radius: 14px;
             background-color:#fe9e62!important;
             height: 34px!important;
             border: 1px solid #fe9e62;
             div:nth-child(1){
+                display: flex;
+                justify-content: center;
                 bottom: 4px !important;
             }
             hr{
                 display: none!important;
+            }
+            input{
+                height: 30px !important;
+                padding-left: 5%!important;
+                color: white!important;
             }
         }
         .search-button{
@@ -40,12 +46,7 @@
         background-color: white;
         .search-words {
             height:100%;
-            margin-top:40px;
             padding: $container-padding;
-            .history-words{
-                height: 100%;
-                overflow: hidden;
-            }
             .hot-words {
                 display: flex;
                 flex-wrap: wrap;

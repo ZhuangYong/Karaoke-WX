@@ -43,7 +43,7 @@ class SingerList extends BaseComponent {
                         <ListItem
                             key={singer.id}
                             onTouchTap={() => {
-                                linkTo(`singer/songs/${singer.id}`, false, null);
+                                linkTo(`songs/singerId/${singer.id}`, false, null);
                             }}
                             leftAvatar={
                                 <Avatar

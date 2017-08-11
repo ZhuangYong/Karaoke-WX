@@ -31,7 +31,8 @@ class SongController extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
-            playList: []
+            playList: [],
+            emptyChooseSongs: false
         };
     }
 
@@ -125,40 +126,50 @@ class SongController extends BaseComponent {
                     </Tab>
                     <Tab label="已点">
                         <div>
-                            <Paper>
-                                <List>
-                                    {
-                                        playingSong ? (
-                                            <ListItem
-                                                key={playingSong.musicNo}
-                                                primaryText={playingSong.musicName}
-                                                secondaryText={playingSong.actorName}
-                                                rightToggle={<div><PlayingIcon/></div>}
-                                            />
-                                        ) : ""
-                                    }
+                            {
+                                !this.state.emptyChooseSongs ? (
+                                    <Paper>
+                                        <List>
+                                            {
+                                                playingSong ? (
+                                                    <ListItem
+                                                        key={playingSong.musicNo}
+                                                        primaryText={playingSong.musicName}
+                                                        secondaryText={playingSong.actorName}
+                                                        rightToggle={<div><PlayingIcon/></div>}
+                                                    />
+                                                ) : ""
+                                            }
 
-                                    {playList.map((song) => (
-                                        <ListItem
-                                            key={song.musicNo}
-                                            primaryText={song.musicName}
-                                            secondaryText={song.actorName}
-                                            rightToggle={<div>
-                                                <PublishIcon
-                                                    onTouchTap={() => {
-                                                        this.setTop(song.musicNo);
-                                                    }}
+                                            {playList.map((song) => (
+                                                <ListItem
+                                                    key={song.musicNo}
+                                                    primaryText={song.musicName}
+                                                    secondaryText={song.actorName}
+                                                    rightToggle={<div>
+                                                        <PublishIcon
+                                                            onTouchTap={() => {
+                                                                this.setTop(song.musicNo);
+                                                            }}
+                                                        />
+                                                        <DeleteIcon
+                                                            onTouchTap={() => {
+                                                                this.unChoose();
+                                                            }}
+                                                        />
+                                                    </div>}
                                                 />
-                                                <DeleteIcon
-                                                    onTouchTap={() => {
-                                                        this.unChoose();
-                                                    }}
-                                                />
-                                            </div>}
-                                        />
-                                    ))}
-                                </List>
-                            </Paper>
+                                            ))}
+                                        </List>
+                                    </Paper>
+                                ) : (
+                                    <Paper>
+                                        没有已点歌曲
+                                    </Paper>
+                                )
+                            }
+
+
                         </div>
                     </Tab>
                 </Tabs>
@@ -170,12 +181,18 @@ class SongController extends BaseComponent {
 
     updateSong() {
         const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
-        let {list, playing} = this.handelList(data.recordJson);
-        if (typeof list === "string") list = JSON.parse(list);
-        this.setState({
-            playList: list,
-            playingSong: playing
-        });
+        if (!data) {
+            this.setState({
+                emptyChooseSongs: true
+            });
+        } else {
+            let {list, playing} = this.handelList(data.recordJson);
+            if (typeof list === "string") list = JSON.parse(list);
+            this.setState({
+                playList: list,
+                playingSong: playing
+            });
+        }
     }
 
     handelList(jsonStr) {

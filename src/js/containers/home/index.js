@@ -5,41 +5,65 @@ import {GridList, GridTile} from "material-ui/GridList";
 import Paper from "material-ui/Paper";
 import {Card, CardTitle} from "material-ui/Card";
 import BaseComponent from "../../components/common/BaseComponent";
-
-import {getRecommend, push} from "../../actions/audioActons";
+import "../../../sass/common/Scroller.scss";
+import {getAlbumRecommend, getRanking, getRecommend} from "../../actions/audioActons";
 
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
-import navUtils from "../../utils/navUtils";
-import sysConfig from "../../utils/sysConfig";
-import {reqHeader, linkTo} from "../../utils/comUtils";
+import {linkTo, reqHeader} from "../../utils/comUtils";
 
 import defaultImg from "../../../img/common/tile_default.jpg";
 import {BottomNavigation, BottomNavigationItem} from "material-ui/BottomNavigation";
-import {List, ListItem} from "material-ui";
+import {List, ListItem, RefreshIndicator} from "material-ui";
 import {bindActionCreators} from "redux";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
+import Scroller from "silk-scroller";
+import ScrollArea from "react-scrollbar";
+import ReactIScroll from "react-iscroll";
+import iScroll from "iscroll/build/iscroll-lite";
+import SongItem from "../../components/common/SongItem";
 
-const navList1 = [
-    {title: '首页', 'link': 'home', 'icon': defaultImg, requireLogin: false},
-    {title: 'share', 'link': 's/p/MzA3', 'icon': defaultImg, requireLogin: false},
-    {title: '分类3', 'link': 'device/devhome', 'icon': defaultImg, requireLogin: false}
-];
-const navList2 = [
-    {title: '首页', 'link': 'home', 'icon': defaultImg, requireLogin: false},
-    {title: 'share', 'link': 's/p/MzA3', 'icon': defaultImg, requireLogin: false},
-    {title: '分类3', 'link': 'device/devhome', 'icon': defaultImg, requireLogin: false}
-];
 const style = {
+    paper: {
+        margin: 4,
+        minHeight: 140
+    },
     tile: {
-        width: "90%",
-        height: "80%",
-        margin: "auto",
+        width: "100%",
         overflow: "hidden"
     },
     tileImg: {
-        height: "100%",
+        height: 70,
+        minWidth: 83,
         margin: "auto",
         display: "inherit"
+    },
+    gridList: {
+        display: 'flex',
+        flexWrap: 'nowrap',
+        overflowX: 'auto',
+        margin: "0 4px"
+    },
+    itemTitle: {
+        fontSize: 10,
+        lineHeight: "12px",
+        paddingTop: 6,
+        textAlign: "center"
+    },
+    loading: {
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        height: 30,
+        fontSize: "14px",
+        marginBottom: 62,
+        alignItems: "center"
+    },
+    loadingBar: {
+        boxShadow: "none",
+        top: "none",
+        left: "none",
+        transform: "none",
+        marginLeft: -50,
     }
 };
 
@@ -48,41 +72,69 @@ class Home extends BaseComponent {
         super(props);
         this.state = {
             defaultBack: '/',
-            navList1: navList1,
-            navList2: navList2,
             showMsg: false,
-            msgText: ''
+            msgText: '',
+            pageSize: 20,
+            pageData: [],
+            loading: false,
+            currentPage: 0,
+            lastPage: false,
         };
-
-        this.back = this.back.bind(this);
-        this.boundedUpdate = this.boundedUpdate.bind(this);
-        this.toExternal = this.toExternal.bind(this);
-        this.toLogin = this.toLogin.bind(this);
-        this.showMsg = this.showMsg.bind(this);
-        this.msgOk = this.msgOk.bind(this);
+        this.getRecommendSongsContent = this.getRecommendSongsContent.bind(this);
     }
 
     componentDidMount() {
-        const param = {id: '48'};
-        this.props.action_getRecommend(param, reqHeader(param));
+        const paramRank = {id: "home"};
+        const paramRecommend = paramRank;
+        //获取排行
+        this.props.action_getRanking(paramRank, reqHeader(paramRank));
+        //获取推荐
+        this.props.action_getAlbumRecommend(paramRecommend, reqHeader(paramRecommend));
+        if (this.state.currentPage === 0) this.loadMoreAction();
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        console.log("did updata");
+    componentDidUpdate(preProps) {
+        const stamp = this.state.stamp;
+        if (preProps.songs.recommendSongsStamp !== this.props.songs.recommendSongsStamp) {
+            const {data} = this.props.songs.recommendSongs || {data: {result: [], lastPage: false}};
+            const {result, lastPage} = data;
+            this.setState({
+                pageData: [...this.state.pageData, ...(result || [])],
+                lastPage: lastPage,
+                loading: false
+            });
+        }
     }
 
     componentWillUnmount() {
     }
 
     render() {
-        // 导航按钮块
-        let navList = this.state.navList;
-        const {data} = this.props.songs.recommendSongs || {data: {result: []}};
+        const getAlbumRecommendData = this.props.songs.getAlbumRecommend || {data: {result: []}};
+        const getRankingData = this.props.songs.getRanking || {data: {result: []}};
         return (
-            <div className='home' style={{marginBottom: "55px"}}>
+            <div className='home' style={{paddingTop: "66px", height: "100vh", overflowX: "auto"}}
+                 onScroll={this.onScroll.bind(this)}>
                 <SearchHeadFake back={this.back}/>
+                {/* <Scroller
+                 useLoadMore
+                 preventDefaultException={
+                 {tagName: /^(.GridList)$/}
+                 }
+                 containerStyle={{top: 66, bottom: 60}}
+                 directionLockThreshold={1}
+                 loadMoreAction={this.loadMoreAction.bind(this)}
+                 noMoreData={this.state.lastPage}
+                 >*/}
+                {/*<ReactIScroll
+
+                 className="ReactIScroll"
+                 iScroll={iScroll}
+                 options={{scrollbars: true}}
+                 >*/}
                 <Paper
-                    style={{paddingBottom: "28px", paddingTop: "65px"}}
+                    zDepth={0}
+                    style={{paddingBottom: "28px"}}
                 >
                     <BottomNavigation
                         selectedIndex={this.state.selectedIndex}
@@ -90,163 +142,168 @@ class Home extends BaseComponent {
                         <BottomNavigationItem
                             label="分类"
                             icon={<img src={defaultImg}/>}
-                            onClick={() => {
+                            onTouchTap={() => {
                                 linkTo("catalbum", false, null);
                             }}
                         />
                         <BottomNavigationItem
                             label="歌星"
                             icon={<img src={defaultImg}/>}
-                            onClick={() => {
+                            onTouchTap={() => {
                                 linkTo("singer/album", false, null);
                             }}
                         />
                         <BottomNavigationItem
                             label="热歌"
                             icon={<img src={defaultImg}/>}
-                            onClick={() => {
-                                linkTo("hot/songs/48", false, null);
+                            onTouchTap={() => {
+                                linkTo("songs/hotId/48", false, null);
                             }}
                         />
                     </BottomNavigation>
                 </Paper>
 
                 <Paper
-                    style={{marginTop: "8px"}}
+                    zDepth={0}
+                    style={style.paper}
                 >
-                    <Card>
-                        <CardTitle
-                            style={{paddingBottom: "0"}}
-                            title={
-                                <div style={{display: "inline-block", paddingBottom: "0"}}>
-                                    <div style={{float: "left"}}>精品推荐</div>
-                                    <div style={{float: "right"}}>more</div>
+                    <CardTitle
+                        style={{padding: "0 8px"}}
+                        titleStyle={{fontSize: 14}}
+                        title="精选推荐"/>
+                    <GridList
+                        cellHeight={100}
+                        style={style.gridList}
+                        cols={2.5}
+                        className="GridList"
+                    >
+                        {getAlbumRecommendData.data.result.map((recommend) => (
+                            <GridTile
+                                key={recommend.id}
+                                title=""
+                                titleStyle={{
+                                    textAlign: "center",
+                                    marginRight: "16px",
+                                    marginTop: "20%",
+                                    color: "black"
+                                }}
+                                titleBackground="transparent"
+                                onTouchTap={() => {
+                                    linkTo("songs/recommendId/" + recommend.id, false, null);
+                                }}
+                            >
+                                <div style={style.tile}>
+                                    <img src={recommend.imgurl} style={style.tileImg}/>
+                                    <div style={style.itemTitle}>{recommend.name}</div>
                                 </div>
-                            }/>
-                        <GridList
-                            cellHeight={100}
-                            style={{margin: "6px"}}
-                            cols={3}
-                        >
-                            {navList1.map((tile) => (
-                                <GridTile
-                                    key={tile.title}
-                                    title={tile.title}
-                                    titleStyle={{
-                                        textAlign: "center",
-                                        marginRight: "16px",
-                                        marginTop: "20%",
-                                        color: "black"
-                                    }}
-                                    titleBackground="transparent"
-                                    onClick={() => {
-                                        linkTo(tile.link, tile.requireLogin, null);
-                                    }}
-                                >
-                                    <div style={style.tile}>
-                                        <img src={tile.icon} style={style.tileImg}/>
-                                    </div>
-                                </GridTile>
-                            ))}
-                        </GridList>
-                    </Card>
-                </Paper>
-
-                <Paper>
-                    <Card>
-                        <CardTitle title={
-                            <div style={{display: "inline-block"}}>
-                                <div style={{float: "left"}}>精品推荐</div>
-                                <div style={{float: "right"}}>more</div>
-                            </div>
-                        }/>
-                        <GridList
-                            cellHeight={100}
-                            style={{margin: "6px"}}
-                            cols={3}
-                        >
-                            {navList2.map((tile) => (
-                                <GridTile
-                                    key={tile.title}
-                                    title={tile.title}
-                                    titleStyle={{
-                                        textAlign: "center",
-                                        marginRight: "16px",
-                                        marginTop: "20%",
-                                        color: "black"
-                                    }}
-                                    titleBackground="transparent"
-                                    onClick={() => {
-                                        linkTo(tile.link, tile.requireLogin, null);
-                                    }}
-                                >
-                                    <div style={style.tile}>
-                                        <img src={tile.icon} style={style.tileImg}/>
-                                    </div>
-                                </GridTile>
-                            ))}
-                        </GridList>
-                    </Card>
-                </Paper>
-
-                <Paper>
-                    <List>
-                        {data.result.map((song) => (
-                            <ListItem
-                                key={song.id}
-                                primaryText={song.nameNorm + (song.charge ? "Vip" : "")}
-                                secondaryText={song.actor.map((actor) => (
-                                    actor.nameNorm
-                                ))}
-                                rightToggle={<div onClick={() => {
-                                    this.pushSong(song);
-                                }}>点歌</div>}
-                            />
+                            </GridTile>
                         ))}
-                    </List>
+                    </GridList>
                 </Paper>
 
+                <Paper
+                    zDepth={0}
+                    style={style.paper}
+                >
+                    <CardTitle
+                        style={{padding: "0 8px"}}
+                        titleStyle={{fontSize: 14}}
+                        title="经典排行"
+                    />
+                    <GridList
+                        cellHeight={100}
+                        style={style.gridList}
+                        cols={2.5}
+                    >
+                        {getRankingData.data.result.map((rank) => (
+                            <GridTile
+                                key={rank.id}
+                                title=""
+                                titleBackground="transparent"
+                                onTouchTap={() => {
+                                    linkTo("songs/hotId/" + rank.id, false, null);
+                                }}
+                            >
+                                <div style={style.tile}>
+                                    <img src={rank.imgurl} style={style.tileImg}/>
+                                    <div style={style.itemTitle}>{rank.name}</div>
+                                </div>
+                            </GridTile>
+                        ))}
+                    </GridList>
+                </Paper>
+
+                <Paper
+                    zDepth={0}
+                    style={style.paper}
+                >
+                    <CardTitle
+                        style={{padding: "0 8px"}}
+                        titleStyle={{fontSize: 14}}
+                        title="个性化推荐"
+                    />
+                    <List className="song-list">
+                        {this.getRecommendSongsContent()}
+                    </List>
+                    {
+                        this.state.loading ? <div style={style.loading}><RefreshIndicator
+                            size={30}
+                            left={70}
+                            top={0}
+                            loadingColor="#FF9800"
+                            status="loading"
+                            style={style.loadingBar}
+                        />正在加载</div> : ""
+                    }
+
+                    {
+                        this.state.lastPage ? <div style={{...style.loading, marginBottom: 62}}>{"亲爱滴，已经到底了"}</div> : ""
+                    }
+                </Paper>
+                {/*</ReactIScroll>*/}
+                {/*</Scroller>*/}
                 <MBottomNavigation selectedIndex={0}/>
             </div>
         );
     }
 
-    pushSong(song) {
-        const param = {id: song, type: 4};
-        this.props.action_push(param, reqHeader(param));
+    onScroll(e) {
+        if (!this.state.loading) {
+            const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
+            if (betweenBottom < 50) {
+                this.loadMoreAction();
+            }
+        }
     }
 
-    msgOk() {
+    /**
+     * 上拉加载更多动作
+     * */
+    loadMoreAction(resolve, reject) {
+        if (this.state.loading || this.state.lastPage) return;
+        const currentPage = this.state.currentPage + 1;
+        const pageSize = this.state.pageSize;
+        this.state.loading = true;
+        let param = {currentPage: currentPage, pageSize: pageSize, id: '48'};
+        //个性化推荐
+        this.props.action_getRecommend(param, reqHeader(param), resolve);
         this.setState({
-            showMsg: false
+            currentPage: currentPage,
+            loading: true
         });
     }
 
-    showMsg(msg) {
-        this.setState({
-            msgText: msg,
-            showMsg: true
-        });
-    }
-
-    // 绑定到当前组件上的forceUpdate方法，微信登录成功后调用
-    boundedUpdate() {
-        this.forceUpdate();
-    }
-
-    // 后退
-    back() {
-        navUtils.goBack(this.state.defaultBack);
-    }
-
-    // 前往登录页面
-    toLogin() {
-        navUtils.forward(sysConfig.contextPath + '/login');
-    }
-
-    // 外链接，跳转到外部页面
-    toExternal(url, title, isBbs) {
-        location.href = url;
+    /**
+     * 获取列表内容
+     * */
+    getRecommendSongsContent() {
+        const pageData = this.state.pageData;
+        return pageData.map((song) => (
+            <SongItem
+                key={song.id}
+                song={song}
+            />)
+        );
     }
 
 }
@@ -261,7 +318,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         action_getRecommend: bindActionCreators(getRecommend, dispatch),
-        action_push: bindActionCreators(push, dispatch)
+        action_getAlbumRecommend: bindActionCreators(getAlbumRecommend, dispatch),
+        action_getRanking: bindActionCreators(getRanking, dispatch)
     };
 };
 

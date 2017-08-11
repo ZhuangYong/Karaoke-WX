@@ -4,23 +4,24 @@ import {withRouter} from "react-router-dom";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {Paper} from "material-ui";
-import SongList from "../../components/common/SongList";
+import DSongList from "../../components/common/SongList";
 
 
-class HotSongList extends BaseComponent {
+class SongList extends BaseComponent {
 
     constructor(props) {
         super(props);
     }
 
     render() {
-        const {id} = this.props.match.params;
-        const hotId = parseInt(id, 10);
+        let props = {};
+        const {type, id} = this.props.match.params;
+        props[type] = parseInt(id, 10);
         return (
             <Paper zDepth={0}
                    style={{paddingTop: "66px"}}>
                 <SearchHeadFake/>
-                <SongList hotId={hotId}/>
+                <DSongList containerStyle={{top: 66}} {...props}/>
             </Paper>
         );
     }
@@ -33,5 +34,5 @@ export default withRouter(connect(
     () => {
         return {};
     }
-)(HotSongList));
+)(SongList));
 
