@@ -36,3 +36,6 @@
         }
     }
 }
+input, textarea {
+    -webkit-user-select: text !important;
+}

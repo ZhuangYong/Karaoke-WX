@@ -27,6 +27,13 @@ export default {
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
 
+    // 意见反馈问题列表
+    "API_GET_FEEDBACK_QUESTION_LIST": "/feedback/listQuestion",
+    // 意见反馈上传图片
+    "API_UPLOAD_IMG_BASE64": "/upload/uploadImgBase64",
+    // 意见反馈提交
+    "API_GET_FEEDBACK_SUBMIT": "/feedback/feedbackSubmit",
+
     // 查询我的相册列表
     "API_PHOTO_ALBUM_LIST": "/api/getPhotoAlbum.json",
     // 上传我的相册图片

@@ -1,26 +1,20 @@
 /**
  * Created by walljack@163.com on 2017/7/24.
  */
+import { combineReducers } from 'redux';
 
-import ActionTypes from "../../../js/actions/actionTypes";
-import {fetchProcess} from "../../../js/utils/fetchUtils";
+import userInfo from './userInfo';
+import feedback from './feedback';
+import orderForm from './orderForm';
+import photoAlbum from './photoAlbum';
+import uploadImg from "./uploadImg";
 
-const initState = {
-    userInfoStamp: 0
-};
+let appReducer = combineReducers({
+    userInfo,
+    feedback,
+    orderForm,
+    photoAlbum,
+    uploadImg
+});
 
-let UserInfo = (state = initState, action) => {
-    switch (action.type) {
-        case ActionTypes.USER.API_GET_USER_INFO:
-            return fetchProcess(state, action, {
-                data: "userInfoData",
-                msg: "userInfoMsg",
-                loading: "userInfoLoading",
-                stamp: "userInfoStamp"
-            });
-        default:
-            return state;
-    }
-};
-
-export default UserInfo;
+export default appReducer;

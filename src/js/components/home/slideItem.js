@@ -7,18 +7,19 @@ class SlideItem extends React.Component {
     }
 
     handleClk() {
-        var item = this.props.item;
+        let item = this.props.item;
         this.props.skip(item.responseAddr, item.responseType, item.title, item.img, item);
     }
 
     render() {
-        var item = this.props.item;
+        let item = this.props.item;
 
         return (
             <div
                 className="slider-item"
                 onClick={this.handleClk}
-                style={{backgroundImage: 'url(' + item.img + ')'}}></div>
+                style={{backgroundImage: 'url(' + item.img + ')'}}>
+            </div>
         );
     }
 }
