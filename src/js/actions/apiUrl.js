@@ -27,6 +27,8 @@ export default {
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
 
+    "API_GET_USER_CONFIG": "/user/config",
+
     // 查询我的相册列表
     "API_PHOTO_ALBUM_LIST": "/api/getPhotoAlbum.json",
     // 上传我的相册图片

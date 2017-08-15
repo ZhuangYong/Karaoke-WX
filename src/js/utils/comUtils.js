@@ -331,3 +331,29 @@ export function expireT(time) {
     let expireT = (time - new Date().getTime()) / (1000 * 60 * 60 * 24);
     return expireT.toFixed(2);
 }
+
+export function wxConfig(data = {}) {
+    window.wx.config({
+        debug: false,
+        appId: data.appId,
+        timestamp: data.timestamp,
+        nonceStr: data.nonceStr,
+        signature: data.signature,
+        jsApiList: [
+            'getNetworkType',
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'onMenuShareQZone',
+            'scanQRCode',
+            'startRecord',
+            'stopRecord',
+            'translateVoice',
+            'chooseWXPay',
+            'chooseImage',
+            'getLocalImgData',
+            'uploadImage'
+        ]
+    });
+}

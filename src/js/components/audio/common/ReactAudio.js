@@ -74,25 +74,6 @@ class ReactAudio extends React.Component {
         }
     }
 
-    togglePlay() {
-        if (this.audio.paused)
-            this.audio.play();
-        else
-            this.audio.pause();
-    }
-
-    setPlaybackPercent(percent) {
-        this.audio.currentTime = percent * this.audio.duration;
-    }
-
-    changeCurrentTimeBy(amount) {
-        this.audio.currentTime += amount;
-    }
-
-    setVolume(percent) {
-        this.audio.volume = percent;
-    }
-
     render() {
         const audioUrl = this.props.source;
         return (

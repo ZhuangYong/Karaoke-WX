@@ -162,7 +162,7 @@ module.exports = {
 
         // 打开浏览器
         new OpenBrowserPlugin({
-            url: 'http://localhost:81'
+            url: 'http://wx.j-make.cn:81'
         })
     ]
 };

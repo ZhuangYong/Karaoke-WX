@@ -16,7 +16,9 @@ const USER = {
     // 获取录音分享列表
     API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST",
     // 获取我的订单列表
-    API_GET_ORDER_FORM: "API_GET_ORDER_FORM"
+    API_GET_ORDER_FORM: "API_GET_ORDER_FORM",
+
+    API_GET_USER_CONFIG: "API_GET_USER_CONFIG"
 };
 
 const SONG = {

@@ -3,7 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 
-import {reqHeader} from "../../utils/comUtils";
+import {linkTo, reqHeader} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {setSongTop, getChooseList} from "../../actions/audioActons";
@@ -32,6 +32,7 @@ class SongController extends BaseComponent {
         super(props);
         this.state = {
             playList: [],
+            historyPlayList: [],
             emptyChooseSongs: false
         };
     }
@@ -48,7 +49,7 @@ class SongController extends BaseComponent {
     }
 
     render() {
-        const playList = this.state.playList;
+        const {playList, historyPlayList} = this.state;
         const playingSong = this.state.playingSong;
         return (
             <div>
@@ -114,6 +115,9 @@ class SongController extends BaseComponent {
                                 secondary={true}
                                 style={{display: "table-cell", padding: "0 10%", boxShadow: "none", width: "50%"}}
                                 icon={<MusicStyleIcon/>}
+                                onTouchTap={() => {
+                                    linkTo('controller/barrage', false, null);
+                                }}
                             />
                             <RaisedButton
                                 label="音效"
@@ -165,6 +169,44 @@ class SongController extends BaseComponent {
                                 ) : (
                                     <Paper>
                                         没有已点歌曲
+                                    </Paper>
+                                )
+                            }
+
+
+                        </div>
+                    </Tab>
+
+                    <Tab label="最近唱过">
+                        <div>
+                            {
+                                !historyPlayList ? (
+                                    <Paper>
+                                        <List>
+                                            {historyPlayList.map((song) => (
+                                                <ListItem
+                                                    key={song.musicNo}
+                                                    primaryText={song.musicName}
+                                                    secondaryText={song.actorName}
+                                                    rightToggle={<div>
+                                                        <PublishIcon
+                                                            onTouchTap={() => {
+                                                                this.setTop(song.musicNo);
+                                                            }}
+                                                        />
+                                                        <DeleteIcon
+                                                            onTouchTap={() => {
+                                                                this.unChoose();
+                                                            }}
+                                                        />
+                                                    </div>}
+                                                />
+                                            ))}
+                                        </List>
+                                    </Paper>
+                                ) : (
+                                    <Paper>
+                                        没有最近唱过歌曲
                                     </Paper>
                                 )
                             }
@@ -226,7 +268,8 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         action_setSongTop: bindActionCreators(setSongTop, dispatch),
-        action_getChooseList: bindActionCreators(getChooseList, dispatch)
+        action_getChooseList: bindActionCreators(getChooseList, dispatch),
+        // action_getHistorySongList: bindActionCreators(getHistorySongList, dispatch)
     };
 };
 

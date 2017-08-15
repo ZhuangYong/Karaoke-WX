@@ -1,14 +1,16 @@
 @import "common/variables";
 @import "common/base";
+
+
 .song-list{
     .song-item{
-        padding-top:6px !important;
-        padding-bottom: 8px !important;
+        padding-top:16px !important;
+        padding-bottom: 12px !important;
         padding-left:6px !important;
         margin-left:6px !important;
         border-bottom:1px solid #e0e0e0;
         .song-title{
-            font-size: 14px;
+            font-size: 16px;
             .label-vip{
                 background-color:#ff6833;
                 padding:2px 8px;

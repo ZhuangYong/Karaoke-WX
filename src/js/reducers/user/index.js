@@ -18,6 +18,13 @@ let UserInfo = (state = initState, action) => {
                 loading: "userInfoLoading",
                 stamp: "userInfoStamp"
             });
+        case ActionTypes.USER.API_GET_USER_CONFIG:
+            return fetchProcess(state, action, {
+                data: "getUserConfig",
+                msg: "getUserConfigMsg",
+                loading: "loading",
+                stamp: "getUserConfigStamp"
+            });
         default:
             return state;
     }

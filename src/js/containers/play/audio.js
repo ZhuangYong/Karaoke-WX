@@ -15,9 +15,7 @@ import PropTypes from "prop-types";
 import {Avatar, Divider, ListItem, Subheader} from "material-ui";
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
-const style = {
-
-};
+const style = {};
 class PlayAudio extends React.Component {
 
     constructor(props) {
@@ -26,13 +24,27 @@ class PlayAudio extends React.Component {
             audio: {},
             params: this.props.match.params,
             percent: 0,
-            currentTime: 0
+            currentTime: 0,
+            wxTimer: -1,
+            musicUrl: ""
         };
     }
 
     componentWillMount() {
         const params = this.state.params;
         this.props.actions.getShareAudio(params, reqHeader(params));
+    }
+
+    componentDidUpdate() {
+        const {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            const {data} = this.props.audio.audioInfo;
+            if (data && data.musicUrl) {
+                window.wx.ready(() => {
+                    this.refs.audio.refs.audio.refs.audio.play();
+                });
+            }
+        }
     }
 
     render() {
@@ -46,13 +58,13 @@ class PlayAudio extends React.Component {
                         <div className="img-div"><img src={defaultImg2}/></div>
                         <div className="img-div"><img src={defaultImg}/></div>
                     </AutoPlaySwipeAbleViews>
-                    <Audio source={musicUrl} className="audio-item"/>
+                    <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>
                 <ListItem
                     className="user-info"
                     disabled={true}
                     leftAvatar={
-                        <Avatar src={defaultImg2} />
+                        <Avatar src={defaultImg2}/>
                     }
                 >
                     名字

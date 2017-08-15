@@ -20,6 +20,19 @@ export function getUserInfo(data, headers) {
 
 }
 
+export function getUserConfig(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_USER_CONFIG;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_GET_USER_CONFIG
+        }, callback);
+    };
+
+}
+
 export function getRecordsList(data, headers) {
 
     const url = sysConfig.apiDomain + apiUrl.API_RECORDS_LIST;

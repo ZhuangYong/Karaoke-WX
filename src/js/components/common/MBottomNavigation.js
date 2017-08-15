@@ -3,15 +3,79 @@
  */
 
 import React from "react";
-import IconLocationOn from "material-ui/svg-icons/communication/location-on";
-import HardwareKeyboardVoice from "material-ui/svg-icons/hardware/keyboard-voice";
-import Monitor from "material-ui/svg-icons/device/graphic-eq";
 import {BottomNavigation, BottomNavigationItem} from "material-ui";
 import {linkTo} from "../../utils/comUtils";
 import PropTypes from "prop-types";
 import BaseComponent from "./BaseComponent";
 import {withRouter} from "react-router";
 import {connect} from "react-redux";
+import navIndexIcon from "../../../img/common/nav_index.png";
+import navIndexOnIcon from "../../../img/common/nav_index_on.png";
+import navMeIcon from "../../../img/common/nav_me.png";
+import navMeOnIcon from "../../../img/common/nav_me_on.png";
+import navControllerIcon from "../../../img/common/nav_controll.png";
+
+const style = {
+    nav: {
+        height: 60,
+        position: "fixed",
+        borderTop: "1px solid #efeeef",
+        bottom: "0",
+        zIndex: "2",
+        playController: {
+            position: "relative",
+            paddingLeft: 0,
+            paddingRight: 0,
+            circle: {
+                position: "absolute",
+                top: -55,
+                height: 110,
+                arc: {
+                    border: "1px solid #efeeef",
+                    position: "absolute",
+                    marginLeft: -34,
+                    left: "50%",
+                    width: 68,
+                    height: 40,
+                    bottom: 40,
+                    borderRadius: "40px 40px 0 0",
+                    backgroundColor: "white"
+                },
+                maskLine: {
+                    height: 56,
+                    borderTop: "1px solid white",
+                    width: 64,
+                    position: "absolute",
+                    bottom: 0,
+                    left: "50%",
+                    marginLeft: -32,
+                    backgroundColor: "white"
+                },
+                maskArc: {
+                    height: 55,
+                    width: "100%",
+                    position: "absolute",
+                    bottom: 0,
+                    backgroundColor: "white"
+                },
+                icon: {
+                    position: "absolute",
+                    left: "50%",
+                    marginLeft: -28,
+                    width: 56,
+                    bottom: 18
+                }
+            }
+        },
+        label: {
+            position: "absolute",
+            width: "100%",
+            textAlign: "center",
+            bottom: 4,
+            left: 0
+        }
+    }
+};
 
 class MBottomNavigation extends BaseComponent {
     constructor(props) {
@@ -22,30 +86,44 @@ class MBottomNavigation extends BaseComponent {
     }
 
     render() {
+        const indexIcon = this.state.selectedIndex === 0 ? navIndexOnIcon : navIndexIcon;
+        const meIcon = this.state.selectedIndex === 2 ? navMeOnIcon : navMeIcon;
+        let labelColor = ["#999", "#999", "#999"];
+        labelColor[this.state.selectedIndex] = "#ff6832";
         return (
             <BottomNavigation
                 selectedIndex={this.state.selectedIndex}
-                style={{position: "fixed", borderTop: "1px solid #efefef", bottom: "0", zIndex: "2"}}
+                style={style.nav}
             >
                 <BottomNavigationItem
-                    label="主页"
-                    icon={<HardwareKeyboardVoice/>}
+                    label={<div style={{...style.nav.label, color: labelColor[0]}}>主页</div>}
+                    icon={
+                        <div style={{height: 30, marginBottom: 12}}>
+                            <img style={{height: "100%"}} src={indexIcon}/>
+                        </div>
+                    }
                     onTouchTap={() => this.navSelect(0)}
                 />
                 <BottomNavigationItem
-                    style={{}}
-                    label="遥控"
+                    style={style.nav.playController}
+                    label={<div style={{...style.nav.label, color: labelColor[1]}}>遥控</div>}
                     icon={
-                        <div>
-                            <Monitor
-                            />
+                        <div style={style.nav.playController.circle}>
+                            <div style={style.nav.playController.circle.arc}/>
+                            <div style={style.nav.playController.circle.maskLine}/>
+                            <div style={style.nav.playController.circle.maskArc}/>
+                            <img style={style.nav.playController.circle.icon} src={navControllerIcon}/>
                         </div>
                     }
                     onTouchTap={() => this.navSelect(1)}
                 />
                 <BottomNavigationItem
-                    label="我的"
-                    icon={<IconLocationOn/>}
+                    label={<div style={{...style.nav.label, color: labelColor[2]}}>我的</div>}
+                    icon={
+                        <div style={{height: 30, marginBottom: 12}}>
+                            <img style={{height: "100%"}} src={meIcon}/>
+                        </div>
+                    }
                     onTouchTap={() => this.navSelect(2)}
                 />
             </BottomNavigation>

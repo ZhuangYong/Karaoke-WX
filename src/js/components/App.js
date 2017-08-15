@@ -2,11 +2,11 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
-import * as actions from "../actions/common/actions";
+import {getUserConfig} from "../actions/userActions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
-
+import {chkDevice, loadScript, reqHeader, wxConfig} from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
 import NotFound from "../components/common/notfound";
@@ -26,6 +26,7 @@ import CatAlbum from "../containers/song/catAlbum";
 import Search from "../containers/song/search";
 
 import AudioEffect from "../containers/controller/audioEffect";
+import Barrage from "../containers/controller/barrage";
 import Records from '../containers/user/records';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import Preview from '../containers/user/photoAlbum/preview';
@@ -113,7 +114,11 @@ const AudioEffectContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
-
+const BarrageContainer = () => (
+    <Bundle load={Barrage}>
+        {Component => <Component />}
+    </Bundle>
+);
 const OrderFormContainer = () => (
     <Bundle load={OrderForm}>
         {Component => <Component />}
@@ -134,6 +139,8 @@ const FeedbackContainer = () => (
     );
 };*/
 
+window.sysInfo = chkDevice();
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -150,6 +157,14 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        const {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            const param = {url: location.href.split('#')[0]};
+            this.props.action_getUserConfig(param, reqHeader(param), (json) => {
+                const {data} = json;
+                wxConfig(data);
+            });
+        }
         console.log("App component did mount ");
         this.removeAppLoading();
     }
@@ -168,6 +183,7 @@ class App extends React.Component {
                         <Route path={`/home`} component={HomeContainer}/>
                         <Route path={`/controller/`} exact component={SongControllerContainer}/>
                         <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>
+                        <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
                         <Route path={`/user`} exact component={UserContainer}/>
                         <Route path={`/user/records`} component={RecordsContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
@@ -184,10 +200,6 @@ class App extends React.Component {
                         <Route path={`/songs/:type/:id`} exact component={SongsListContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
-                    {/*<Tips
-                     ok={this.msgOk}
-                     text={this.state.msgText}
-                     show={this.state.showMsg}/>*/}
                 </MuiThemeProvider>
             </div>
         );
@@ -219,14 +231,14 @@ class App extends React.Component {
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        app: state.app
+        user: state.app.user
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
-    let boundActionCreators = bindActionCreators(actions, dispatch);
+    let boundActionCreators = bindActionCreators(getUserConfig, dispatch);
     return {
-        actions: boundActionCreators
+        action_getUserConfig: boundActionCreators
     };
 };
 

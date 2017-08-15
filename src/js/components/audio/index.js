@@ -16,21 +16,41 @@ class Audio extends React.Component {
             paused: false,
             source: this.props.source,
             percent: 0,
-            currentTime: 0
+            currentTime: 0,
+            buffered: {},
+            loaded: false,
+            loadInterval: 0
         };
     }
 
     componentDidMount() {
+        const audio = ReactDOM.findDOMNode(this.refs.audio);
+        const {loaded, loadInterval} = this.state;
         this.setState({
-            audio: ReactDOM.findDOMNode(this.refs.audio)
+            audio: audio,
+            buffered: audio.buffered
         });
+        if (!loaded && !loadInterval) {
+            const bufferedEnd = audio.buffered.length ? audio.buffered.end(audio.buffered.length - 1) : 0;
+            if (bufferedEnd !== audio.duration) {
+                this.state.loadInterval = setInterval(() => {
+                    if (audio.buffered.length) console.log(this.state.loadInterval);
+                    const bufferedEnd = audio.buffered.length ? audio.buffered.end(audio.buffered.length - 1) : 0;
+                    if (bufferedEnd === audio.duration) {
+                        clearInterval(this.state.loadInterval);
+                    }
+                    this.setState({
+                        buffered: audio.buffered
+                    });
+                }, 500);
+            }
+        }
+
     }
 
     render() {
         const audio = this.state.audio;
-        const {
-            buffered
-        } = audio || {};
+        const buffered = this.state.buffered;
         const paused = this.state.paused;
         const percent = this.state.percent * 100;
         const {source, ...param} = this.props;
@@ -59,6 +79,7 @@ class Audio extends React.Component {
     }
 
     handleProgress() {
+
     }
 
     /**
