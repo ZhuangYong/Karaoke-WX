@@ -11,14 +11,14 @@ class RecomItem extends React.Component {
   }
 
   clkLink () {
-  	var url = this.props.item.url;
+  	let url = this.props.item.url;
     if (url) {
       this.props.toUrl(url, '', true);
     }
   }
 
   componentDidMount () {
-    var summary = this.refs.summary;
+    let summary = this.refs.summary;
     if (summary.clientHeight > summary.parentNode.clientHeight) {
       this.setState({
         showEllipsis: ''
@@ -27,7 +27,7 @@ class RecomItem extends React.Component {
   }
 
   render () {
-    var item = this.props.item;
+    let item = this.props.item;
 
   	return (
   		<div onClick={this.clkLink} className="recom-item">

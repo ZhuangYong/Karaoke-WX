@@ -90,7 +90,7 @@ Preview.propTypes = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        result: state.app.photoAlbum
+        result: state.app.user.photoAlbum
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

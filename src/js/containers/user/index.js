@@ -17,20 +17,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import OperateIcon from "material-ui/svg-icons/navigation/more-horiz";
 
-const style = {
-    tile: {
-        width: "90%",
-        height: "80%",
-        margin: "auto",
-        overflow: "hidden"
-    },
-    tileImg: {
-        height: "100%",
-        margin: "auto",
-        display: "inherit"
-    }
-};
-
 class UserIndex extends BaseComponent {
 
     constructor(props) {
@@ -46,12 +32,12 @@ class UserIndex extends BaseComponent {
         this.updateRecordsList = this.updateRecordsList.bind(this);
     }
 
-    get editRecord() {
+    /*get editRecord() {
         if (!this.refs)
             return {};
 
         return findDOMNode(this.refs.editRecord);
-    }
+    }*/
 
     componentDidUpdate(preProps) {
         if (preProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
@@ -158,12 +144,12 @@ class UserIndex extends BaseComponent {
                                     actionIcon={<OperateIcon
                                         color="#fff"
                                         onTouchTap={() => {
-                                            this.editRecord.style.bottom = 0;
-                                            this.editRecord.style.opacity = 1;
+
+                                            /*this.editRecord.style.bottom = 0;
+                                            this.editRecord.style.opacity = 1;*/
                                         }}
                                     />}
                                 >
-
                                     <img
                                         src={tile.image}
                                         onError={function (e) {
@@ -179,7 +165,7 @@ class UserIndex extends BaseComponent {
                     </Card>
                 </Paper>
 
-                <div
+                {/*<div
                     ref="editRecord"
                     style={{position: "fixed", bottom: "-80px", left: 0, width: "100%", height: "80px", backgroundColor: "red", zIndex: 1, opacity: 0, transition: "bottom 1s, opacity 1s"}}
                 >
@@ -194,7 +180,7 @@ class UserIndex extends BaseComponent {
                         label="删除"
                         style={{width: "50%", height: "100%"}}
                     />
-                </div>
+                </div>*/}
                 <MBottomNavigation selectedIndex={2}/>
             </div>
         );
@@ -250,7 +236,7 @@ UserIndex.propTypes = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        userInfo: state.app.user,
+        userInfo: state.app.user.userInfo,
         recordsList: state.app.songs
     };
 };

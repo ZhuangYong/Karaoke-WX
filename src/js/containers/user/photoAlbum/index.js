@@ -17,29 +17,14 @@ import '../../../../css/cropper.css';
 import AppBar from 'material-ui/AppBar';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
-import Badge from 'material-ui/Badge';
-import {GridList, GridTile} from "material-ui/GridList";
 import DoneIcon from "material-ui/svg-icons/action/done";
 
-import defaultImg from "../../../../img/common/tile_default.jpg";
-import addIcon from "../../../../img/iconfont-tianjia.png";
+import InputBox from "../../../components/photoAlbum";
 
-const style = {
-    tile: {
-        width: "100%",
-        height: "100%",
-        margin: "auto",
-        paddingTop: "6px",
-        overflow: "hidden"
-    },
-    tileImg: {
-        height: "100%",
-        margin: "auto",
-        display: "block"
-    },
-    fileInp: {
-        display: 'none'
-    }
+
+const addBtn = {
+    isShowAddBtn: true,
+    id: "addBtn"
 };
 
 const imgMax = {
@@ -82,10 +67,10 @@ class PhotoAlbum extends BaseComponent {
             cropPageImgUrl: null
         };
 
-        this.listenInputChange = this.listenInputChange.bind(this);
         this.uploadImg = this.uploadImg.bind(this);
         this.updateList = this.updateList.bind(this);
         this.updateAfterUploadImg = this.updateAfterUploadImg.bind(this);
+        this.inputChange = this.inputChange.bind(this);
     }
 
     get cropPageImgDom() {
@@ -93,13 +78,6 @@ class PhotoAlbum extends BaseComponent {
             return {};
 
         return findDOMNode(this.refs.cropPageImgDom);
-    }
-
-    get addImgInp() {
-        if (!this.refs)
-            return {};
-
-        return findDOMNode(this.refs.addImgInp);
     }
 
     componentDidUpdate(preProps) {
@@ -118,72 +96,11 @@ class PhotoAlbum extends BaseComponent {
 
     render() {
         const dataList = this.state.data;
-        const addBtnDom = (
-            <GridTile
-                key="addBtnDom"
-                onTouchTap={() => {
-                    if (dataList.length < 50) {
-                        return this.addImgInp.click();
-                    }
-                    return alert('最多只能添加50张照片哦');
-                }}
-            >
-                <div style={style.tile}>
-                    <img src={addIcon} style={style.tileImg} alt="添加图片按钮"/>
-                </div>
-                <input
-                    ref="addImgInp"
-                    type="file"
-                    accept="image/*"
-                    style={style.fileInp}
-                    onChange={() => {
-                        this.listenInputChange();
-                    }}
-                />
-            </GridTile>
-        );
-        let PhotoList = [];
-
-        if (!this.state.isDeletePage) {
-            PhotoList.push(addBtnDom);
-        }
-
-        dataList.forEach((val, ind) => {
-            let showBadge = dataList[ind].isDeleteImg ? 'block' : 'none';
-            PhotoList.push(
-                <Badge
-                    key={ind}
-                    style={style.tile}
-                    badgeStyle={{top: '10px', right: '30px', backgroundColor: '#a4c639', display: showBadge}}
-                    badgeContent={<DoneIcon
-                        color="#fff"
-                    />}
-                >
-                    <img
-                        src={val.imgUrl}
-                        style={style.tileImg}
-                        onError={function (e) {
-                            e.target.src = defaultImg;
-                        }}
-                        onTouchTap={() => {
-                            if (this.state.isDeletePage) {
-                                dataList[ind].isDeleteImg = !dataList[ind].isDeleteImg;
-                                this.setState({
-                                    data: dataList
-                                });
-                            } else {
-                                linkTo(`user/photoAlbumPreview/${val.id}`, false, null);
-                            }
-                        }}
-                    />
-                </Badge>
-            );
-        });
 
         return (
-            <Paper zDepth={1}>
+            <Paper zDepth={1} style={{backgroundColor: "#eee"}}>
                 {this.state.isPhotoAlbumListPage ? (
-                    <div>
+                    <div style={{paddingTop: "66px", paddingBottom: "66px"}}>
                         <AppBar
                             style={{position: 'fixed', top: 0, left: 0}}
                             title="我的相册"
@@ -192,13 +109,20 @@ class PhotoAlbum extends BaseComponent {
                                 <RaisedButton
                                     backgroundColor="#a4c639"
                                     disabledBackgroundColor="#a4c630"
-                                    disabled={!dataList.length > 0}
+                                    disabled={!(dataList.length > 1)}
                                     onTouchTap={() => {
+                                        const isDeletePage = this.state.isDeletePage;
+                                        if (!isDeletePage) {
+                                            dataList.shift();
+                                        } else {
+                                            dataList.unshift(addBtn);
+
+                                        }
                                         this.setState({
                                             isSelectAll: true,
-                                            isDeletePage: !this.state.isDeletePage,
+                                            isDeletePage: !isDeletePage,
                                             data: dataList.filter((item) => {
-                                                item.isDeleteImg = false;
+                                                item.isShowBadge = false;
                                                 return item;
                                             })
                                         });
@@ -207,13 +131,30 @@ class PhotoAlbum extends BaseComponent {
                             }
                         />
 
-                        <GridList
-                            style={{paddingBottom: "65px", paddingTop: "65px"}}
+                        <InputBox
                             cellHeight={100}
                             cols={3}
-                        >
-                            {PhotoList}
-                        </GridList>
+                            badgeContent={<DoneIcon color="#fff"/>}
+                            data={dataList}
+                            inputChange={this.inputChange}
+                            imgTouchTap={(target) => {
+                                if (this.state.isDeletePage) {
+                                    const newDataList = dataList.filter((item) => {
+                                        if (item.id === target.id) {
+                                            item.isShowBadge = !item.isShowBadge;
+                                            return item;
+                                        }
+                                        return item;
+                                    });
+                                    this.setState({
+                                        data: newDataList
+                                    });
+                                } else {
+                                    linkTo(`user/photoAlbumPreview/${target.id}`, false, null);
+                                }
+                            }}
+                        />
+
                     </div>
                 ) : (
                     <div>
@@ -259,7 +200,7 @@ class PhotoAlbum extends BaseComponent {
                             this.setState({
                                 isSelectAll: !this.state.isSelectAll,
                                 data: dataList.filter((item) => {
-                                    item.isDeleteImg = this.state.isSelectAll;
+                                    item.isShowBadge = this.state.isSelectAll;
                                     return item;
                                 })
                             });
@@ -270,7 +211,7 @@ class PhotoAlbum extends BaseComponent {
                         disabledBackgroundColor="#a4c630"
                         label="删除"
                         disabled={dataList.filter((item) => {
-                            if (item.isDeleteImg) {
+                            if (item.isShowBadge) {
                                 return item;
                             }
                         }).length <= 0}
@@ -286,28 +227,38 @@ class PhotoAlbum extends BaseComponent {
     updateAfterUploadImg() {
         const preStateData = this.state.data;
         const {data} = this.props.result.photoAlbumUpload || {data: {}};
-        data.isDeleteImg = false;
+        data.isShowBadge = false;
+        const addBtn = preStateData.shift();
         this.setState({
-           data: [data, ...preStateData]
+           data: [addBtn, data, ...preStateData]
         });
     }
 
     updateList() {
         const {data} = this.props.result.photoAlbumList || {data: []};
+        data.unshift(addBtn);
         this.setState({
             data: data.filter((item) => {
-                item.isDeleteImg = false;
+                item.isShowBadge = false;
                 return item;
             })
         });
     }
 
     deleteImg() {
+        let dataList = this.state.data;
+        const isDeletePage = this.state.isDeletePage;
+        if (!isDeletePage) {
+            dataList.shift();
+        } else {
+            dataList.unshift(addBtn);
+
+        }
         this.setState({
             isSelectAll: false,
             isDeletePage: false,
-            data: this.state.data.filter((item) => {
-                if (item.isDeleteImg) {
+            data: dataList.filter((item) => {
+                if (item.isShowBadge) {
                     console.log(item);
                     return null;
                 }
@@ -361,38 +312,6 @@ class PhotoAlbum extends BaseComponent {
         $(img).cropper(options);
     }
 
-    listenInputChange() {
-
-        let _this = this;
-
-        let file = this.addImgInp.files[0];
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = function() {
-                //处理 android 4.1 兼容问题
-                let base64 = reader.result.split(',')[1];
-                let dataUrl = 'data:image/png;base64,' + base64;
-
-                //加载图片获取图片真实宽度和高度
-                let image = new Image();
-                image.onload = function() {
-                    let width = image.width;
-                    let height = image.height;
-                    console.log(width + '---' + height);
-
-                    _this.setState({
-                        isPhotoAlbumListPage: false,
-                        cropPageImgUrl: dataUrl
-                    });
-
-                    _this.cropImg(_this.cropPageImgDom);
-                };
-                image.src = dataUrl;
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
     //**dataURL to blob**
     dataURLtoBlob(dataUrl) {
         let arr = dataUrl.split(','),
@@ -404,6 +323,25 @@ class PhotoAlbum extends BaseComponent {
             u8arr[n] = bStr.charCodeAt(n);
         }
         return new Blob([u8arr], { type: mime });
+    }
+
+    inputChange(dataUrl) {
+        let _this = this;
+        //加载图片获取图片真实宽度和高度
+        let image = new Image();
+        image.onload = function() {
+            let width = image.width;
+            let height = image.height;
+            console.log(width + '---' + height);
+
+            _this.setState({
+                isPhotoAlbumListPage: false,
+                cropPageImgUrl: dataUrl
+            });
+
+            _this.cropImg(_this.cropPageImgDom);
+        };
+        image.src = dataUrl;
     }
 
 }
@@ -419,7 +357,7 @@ PhotoAlbum.propTypes = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        result: state.app.photoAlbum
+        result: state.app.user.photoAlbum
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

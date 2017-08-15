@@ -7,6 +7,7 @@ import songs from './songs';
 import search from './search';
 import photoAlbum from './user/photoAlbum';
 import orderForm from './user/orderForm';
+import feedback from './user/feedback';
 
 let appReducer = combineReducers({
     user,

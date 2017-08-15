@@ -30,10 +30,10 @@ class Slider extends React.Component {
 
     handleMove(e) {
         if (e.touches && e.touches.length) {
-            var touch = e.touches[0];
-            var x = touch.clientX;
-            var y = touch.clientY;
-            if (this.startX == 0) {
+            let touch = e.touches[0];
+            let x = touch.clientX;
+            let y = touch.clientY;
+            if (parseInt(this.startX, 10) === 0) {
                 this.swipeStart = true;
                 this.startX = x;
                 this.startY = y;
@@ -49,11 +49,11 @@ class Slider extends React.Component {
             // console.log('图片正在移动中');
             return;
         } else if (e.changedTouches && e.changedTouches.length) {
-            var touch = e.changedTouches[0];
-            var x = touch.clientX;
-            var y = touch.clientY;
-            var diffX = Math.abs(x - this.startX);
-            var diffY = Math.abs(y - this.startY);
+            let touch = e.changedTouches[0];
+            let x = touch.clientX;
+            let y = touch.clientY;
+            let diffX = Math.abs(x - this.startX);
+            let diffY = Math.abs(y - this.startY);
             // console.log('diffX, diffY',diffX, diffY);
             // 如果x轴的唯一大于y轴，并且移动距离超过1/10屏幕宽度，图片滑动。
             // 向右滑，显示左边的图片，向左滑，显示右边的图片。
@@ -83,7 +83,7 @@ class Slider extends React.Component {
      * @param {[type]} showLeft 是否向右滑动，显示左边的图片
      */
     setCls(showLeft) {
-        var picData = this.props.slideData;
+        let picData = this.props.slideData;
         if (picData.length < 2) {
             return;
         }
@@ -103,7 +103,7 @@ class Slider extends React.Component {
             this.refs.slider_box.style.left = '-' + (10 * picData.length) + 'rem';
         }
         this.moving = true;
-        var _this = this;
+        let _this = this;
         clearTimeout(this.slideTimer2);
         clearTimeout(this.slideTimer3);
         this.slideTimer2 = setTimeout(this.setPos, 200);
@@ -114,10 +114,10 @@ class Slider extends React.Component {
 
     // 设置位置，开始动画
     setPos() {
-        var picData = this.props.slideData;
+        let picData = this.props.slideData;
         this.refs.slider_box.className = 'slider-box slider-trans';
         this.refs.slider_box.style.left = '-' + (10 * this.count) + 'rem';
-        var cur = this.count % picData.length;
+        let cur = this.count % picData.length;
         this.setState({
             cur: cur
         });
@@ -138,7 +138,7 @@ class Slider extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.slideData.length != prevProps.slideData.length) {
+        if (this.props.slideData.length !== prevProps.slideData.length) {
             this.setCarousel();
         }
     }
@@ -151,28 +151,31 @@ class Slider extends React.Component {
 
 
     render() {
-        var slideData = this.props.slideData;
-        var slideImgs = [];
-        var slideDots = [];
-        var slideW = '10rem';
-        var curCls = '';
+        let slideData = this.props.slideData;
+        let slideImgs = [];
+        let slideDots = [];
+        let slideW = '10rem';
+        let curCls = '';
 
-        for (var i = 0; i < slideData.length; i++) {
-            if (i == this.state.cur) {
+        for (let i = 0; i < slideData.length; i++) {
+            if (i === parseInt(this.state.cur, 10)) {
                 curCls = 'cur';
             } else {
                 curCls = '';
             }
             slideImgs.push(
-                <SlideItem skip={this.props.skip} key={i} item={slideData[i]}></SlideItem>
+                <SlideItem skip={this.props.skip} key={i} item={slideData[i]}>
+                </SlideItem>
             );
             slideDots.push(
-                <span key={i} className={"slider-dot " + curCls}></span>
+                <span key={i} className={"slider-dot " + curCls}>
+                </span>
             );
         }
         if (slideData.length > 0) {
             slideImgs.push(
-                <SlideItem skip={this.props.skip} key={slideData.length} item={slideData[0]}></SlideItem>
+                <SlideItem skip={this.props.skip} key={slideData.length} item={slideData[0]}>
+                </SlideItem>
             );
             slideW = (slideData.length + 1) * 10 + 'rem';
         }
