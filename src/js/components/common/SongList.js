@@ -14,7 +14,19 @@ import Scroller from "silk-scroller";
 import "../../../sass/common/Scroller.scss";
 import {getActorsAlbum, getCatSongList, getRankAlbum, getAlbumRecommendSongList} from "../../actions/audioActons";
 import {search} from "../../actions/searchActons";
+import NoResultImg from "../../../img/common/bg_no_result.png";
 
+const style = {
+    noResult: {
+        height: "100%",
+        position: "absolute",
+        zIndex: -1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column"
+    }
+};
 class SongList extends BaseComponent {
     constructor(props) {
         super(props);
@@ -46,6 +58,7 @@ class SongList extends BaseComponent {
             pageSize: 20,
             stamp: stamp,
             pageData: [],
+            noData: false,
             loading: false,
             currentPage: 0,
             lastPage: false,
@@ -70,11 +83,21 @@ class SongList extends BaseComponent {
         if (preProps.songs[stamp] !== this.props.songs[stamp]) {
             const {data} = this.props.songs[this.state.dataKey] || {data: {result: [], lastPage: false}};
             const {result, lastPage} = data;
+            const pageData = [...this.state.pageData, ...(result || [])];
             this.setState({
-                pageData: [...this.state.pageData, ...(result || [])],
+                pageData: pageData,
                 lastPage: lastPage,
                 loading: false
             });
+            if (this.state.currentPage > 0 && pageData.length === 0) {
+                this.setState({
+                    noData: true
+                });
+            } else {
+                this.setState({
+                    noData: false
+                });
+            }
         }
         if (this.props.keyword && preProps.keyword !== this.props.keyword) {
             this.refreshPage();
@@ -82,22 +105,32 @@ class SongList extends BaseComponent {
     }
 
     render() {
+        const {noData} = this.state;
         const {singerId, catId, hotId, ...others} = this.props;
-        return (
-            <Scroller
-                {...others}
-                ref="scroller"
-                directionLockThreshold={1}
-                containerStyle={this.props.containerStyle}
-                usePullRefresh
-                pullRefreshAction={this.pullRefreshAction.bind(this)}
-                useLoadMore
-                loadMoreAction={this.loadMoreAction.bind(this)}
-                noMoreData={this.state.lastPage}
-            >
-                <List className="song-list">{this.getContent()}</List>
-            </Scroller>
-        );
+        if (noData) {
+            return (
+                <div style={style.noResult}>
+                    <img src={NoResultImg} style={{maxWidth: "98%"}}/>
+                    <p style={{color: "#7e7e7e"}}>没有任何东东哟</p>
+                </div>
+            );
+        } else {
+            return (
+                <Scroller
+                    {...others}
+                    ref="scroller"
+                    directionLockThreshold={1}
+                    containerStyle={this.props.containerStyle}
+                    usePullRefresh
+                    pullRefreshAction={this.pullRefreshAction.bind(this)}
+                    useLoadMore
+                    loadMoreAction={this.loadMoreAction.bind(this)}
+                    noMoreData={this.state.lastPage}
+                >
+                    <List className="song-list">{this.getContent()}</List>
+                </Scroller>
+            );
+        }
     }
 
     /**
@@ -125,6 +158,8 @@ class SongList extends BaseComponent {
                 <SongItem
                     key={song.id}
                     song={song}
+                    onPushSongSuccess={this.props.onPushSongSuccess}
+                    onPushSongFail={this.props.onPushSongFail}
                 />
             )
         );
@@ -184,7 +219,9 @@ SongList.propTypes = {
     hotId: PropTypes.number,
     recommendId: PropTypes.number,
     keyword: PropTypes.string,
-    search: PropTypes.bool
+    search: PropTypes.bool,
+    onPushSongSuccess: PropTypes.func,
+    onPushSongFail: PropTypes.func
 };
 
 // 映射state到props

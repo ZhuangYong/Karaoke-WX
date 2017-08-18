@@ -37,14 +37,14 @@ export function getRecommend(data, headers) {
  * @param headers
  * @returns {function(*=)}
  */
-export function push(data, headers) {
+export function push(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_PUSH;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_PUSH
-        }, null);
+        }, callback, failBack);
     };
 }
 
@@ -61,6 +61,23 @@ export function getChooseList(data, headers) {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_CHOOSE_LIST
+        }, null);
+    };
+}
+
+/**
+ * 获取已唱过的歌曲列表
+ * @param data
+ * @param headers
+ * @returns {function(*=)}
+ */
+export function getHistorySongList(data, headers) {
+    const url = sysConfig.apiDomain + apiUrl.API_CHOOSE_LIST;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_CHOOSE_HISTORY_LIST
         }, null);
     };
 }

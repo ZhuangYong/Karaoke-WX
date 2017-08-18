@@ -5,7 +5,7 @@ import {search} from "../../actions/searchActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeader from "../../components/common/header/searchHeader";
 import {reqHeader} from "../../utils/comUtils";
-import {List, ListItem, Paper} from "material-ui";
+import {List, ListItem, Paper, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
 import ReactDOM from "react-dom";
 import SongList from "../../components/common/SongList";
@@ -19,7 +19,6 @@ class Search extends BaseComponent {
             keyword: ""
         };
         this.search = this.search.bind(this);
-        // this.handelTouchSearchList = this.handelTouchSearchList.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -29,45 +28,25 @@ class Search extends BaseComponent {
     }
 
     render() {
-        // const {searchResult} = this.props.hotKeys;
         return (
             <Paper zDepth={0}>
                 <SearchHeader getSearchKey={this.search}/>
-                {/*<List
-                 style={{paddingTop: "66px", height: "100%"}}
-                 onTouchStart={this.handelTouchSearchList}
-                 >
-                 {searchResult && searchResult.data.result.map((song) => (
-                 <ListItem
-                 key={song.id}
-                 primaryText={song.nameNorm + (song.charge ? "Vip" : "")}
-                 secondaryText={song.actor.map((actor) => (
-                 actor.nameNorm
-                 ))}
-                 rightToggle={<div onTouchTap={() => {
-                 this.pushSong(song);
-                 }}>点歌</div>}
-                 />
-                 ))}
-                 </List>*/}
+                {this.state.keyword ? <Paper style={{position: "absolute", top: 44, width: "100%", zIndex: 4}}>
+                    <Subheader>
+                        “{this.state.keyword}” 的搜索结果
+                    </Subheader>
+                </Paper> : ""}
+                <SongList containerStyle={{top: 86}} keyword={this.state.keyword} search={true}/>
 
-                <SongList containerStyle={{top: 66}} keyword={this.state.keyword} search={true}/>
             </Paper>
         );
     }
 
     search(keyword) {
-        // const param = {keyword: keyword, type: 'actorAndMedias'};
-        // this.props.action_search(param, reqHeader(param));
         this.setState({
             keyword: keyword
         });
     }
-
-    // handelTouchSearchList() {
-    //     const searchHeader = ReactDOM.findDOMNode(this.refs.searchHeader);
-    //     console.log(searchHeader);
-    // }
 }
 
 const mapStateToProps = (state, ownPorps) => {

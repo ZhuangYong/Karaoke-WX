@@ -19,6 +19,7 @@ class ChooseList extends BaseComponent {
         this.state = {
             playList: []
         };
+        this.unChoose = this.unChoose.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -63,7 +64,7 @@ class ChooseList extends BaseComponent {
                                 />
                                 <DeleteIcon
                                     onTouchTap={() => {
-                                        this.unChoose();
+                                        this.unChoose(song.musicNo);
                                     }}
                                 />
                             </div>}
@@ -105,8 +106,16 @@ class ChooseList extends BaseComponent {
         });
     }
 
-    unChoose() {
-
+    unChoose(musicNo) {
+        const param = {type: 13, id: musicNo};
+        let playList = this.state.playList;
+        this.props.action_setSongTop(param, reqHeader(param), () => {
+            this.setState({
+                playList: playList.filter((song) => {
+                    return song.musicNo !== musicNo;
+                })
+            });
+        });
     }
 }
 

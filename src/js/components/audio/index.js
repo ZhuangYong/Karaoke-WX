@@ -38,6 +38,7 @@ class Audio extends React.Component {
                     const bufferedEnd = audio.buffered.length ? audio.buffered.end(audio.buffered.length - 1) : 0;
                     if (bufferedEnd === audio.duration) {
                         clearInterval(this.state.loadInterval);
+                        this.state.loadInterval = 0;
                     }
                     this.setState({
                         buffered: audio.buffered
@@ -45,7 +46,13 @@ class Audio extends React.Component {
                 }, 500);
             }
         }
+    }
 
+    componentWillUnmount() {
+        if (this.state.loadInterval) {
+            clearInterval(this.state.loadInterval);
+            this.state.loadInterval = 0;
+        }
     }
 
     render() {

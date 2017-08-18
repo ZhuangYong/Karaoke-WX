@@ -13,7 +13,7 @@ import {linkTo, reqHeader} from "../../utils/comUtils";
 import IconCate from "../../../img/common/icon_catelog.png";
 import IconHotSong from "../../../img/common/icon_hot_song.png";
 import IconSinger from "../../../img/common/icon_singer.png";
-import {List, RefreshIndicator} from "material-ui";
+import {List, RefreshIndicator, Snackbar} from "material-ui";
 import {bindActionCreators} from "redux";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import SongItem from "../../components/common/SongItem";
@@ -76,7 +76,7 @@ const style = {
         justifyContent: "center",
         height: 30,
         fontSize: "14px",
-        marginBottom: 62,
+        marginBottom: 88,
         alignItems: "center"
     },
     loadingBar: {
@@ -100,7 +100,11 @@ class Home extends BaseComponent {
             loading: false,
             currentPage: 0,
             lastPage: false,
+            barrageSendToast: false,
+            barrageToastMsg: ""
         };
+        this.onPushSongFail = this.onPushSongFail.bind(this);
+        this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
         this.getRecommendSongsContent = this.getRecommendSongsContent.bind(this);
     }
 
@@ -259,6 +263,16 @@ class Home extends BaseComponent {
                         </div>
                     </Paper>
                 </div>
+                <Snackbar
+                    open={this.state.barrageSendToast}
+                    message={this.state.barrageToastMsg}
+                    autoHideDuration={500}
+                    onRequestClose={() => {
+                        this.setState({
+                            barrageSendToast: false
+                        });
+                    }}
+                />
                 <MBottomNavigation selectedIndex={0}/>
             </div>
         );
@@ -299,8 +313,25 @@ class Home extends BaseComponent {
             <SongItem
                 key={song.id}
                 song={song}
+                onPushSongSuccess={this.onPushSongSuccess}
+                onPushSongFail={this.onPushSongFail}
             />)
         );
+    }
+
+    onPushSongSuccess(song) {
+        const {nameNorm} = song;
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: nameNorm + " 点歌成功"
+        });
+    }
+
+    onPushSongFail(msg) {
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: msg
+        });
     }
 
 }

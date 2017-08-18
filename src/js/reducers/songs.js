@@ -9,6 +9,7 @@ let initState = {
     getRanking: null,
     getAlbumRecommend: null,
     chooseListStamp: 0,
+    getHistorySongListStamp: 0,
     getRankAlbumStamp: 0,
     getActorsAlbumStamp: 0,
     getCatSongListStamp: 0,
@@ -37,6 +38,13 @@ export default (state = initState, action = {}) => {
                 data: "chooseList",
                 msg: "chooseListMsg",
                 stamp: "chooseListStamp",
+                loading: "loading"
+            });
+        case ActionTypes.SONG.API_CHOOSE_HISTORY_LIST:
+            return fetchProcess(state, action, {
+                data: "getHistorySongList",
+                msg: "getHistorySongListMsg",
+                stamp: "getHistorySongListStamp",
                 loading: "loading"
             });
         case ActionTypes.SONG.API_SET_SONG_TOP:

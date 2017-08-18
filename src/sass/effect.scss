@@ -1,52 +1,112 @@
-.effect{
-    height:100vh;
-    .top-area{
-        height:30vh;
+.effect {
+    height: 100vh;
+    .top-area {
         display: flex;
+        padding-top: 20px;
         justify-content: center;
-        .big-circle{
-            border:1px solid;
-            width:30vh;
-            height:30vh;
+        .big-circle {
+            border: 1px solid #f9eae7;
+            width: 30vh;
+            height: 30vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            -webkit-border-radius:50%;
-            -moz-border-radius:50%;
-            border-radius:50%;
-            .inside-circle{
-                border:1px solid;
-                width:10vh;
-                height:10vh;
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius: 50%;
+            .inside-circle {
+                border: 1px solid #f9eae7;
+                width: 16vh;
+                height: 16vh;
+                font-size: 12px;
+                display: flex;
+                color: #f96d32;
+                justify-content: center;
+                align-items: center;
                 background-color: white;
-                -webkit-border-radius:50%;
-                -moz-border-radius:50%;
-                border-radius:50%;
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius: 50%;
             }
 
         }
     }
-    .center-area{
-        height:20vh;
+    .center-area {
         display: flex;
         justify-content: center;
         align-items: center;
-        .fun-button{
-            margin:10vw;
+        padding-top: 20px;
+        .fun-button {
+            width: 33.33%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            .button {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 50px;
+                height: 50px;
+                border: 1px solid #fbeae5;
+                -webkit-border-radius: 60px;
+                -moz-border-radius: 60px;
+                border-radius: 60px;
+                transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+            }
+            .button:active {
+                background-color: #fbeae5;
+            }
+            .label {
+                color: #f09c83;
+                font-size:14px;
+            }
         }
     }
-    .bottom-area{
-        height:30vh;
+    .bottom-area {
+        height: 30vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        .fun-button{
-            width:33.333vh;
-            .haf-top-button{
+        .fun-button {
+            width: 33.333vh;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            .haf-top-button {
+                border: 1px solid;
+                border-bottom: none;
+                -webkit-border-radius: 23px 23px 0 0;
+                -moz-border-radius: 23px 23px 0 0;
+                border-radius: 23px 23px 0 0;
+                width: 46px;
+                height: 55px;
+                display: flex;
+                color: #fbeae5;
+                align-items: center;
+                justify-content: center;
+                min-width: 30px !important;
+                transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+            }
+            .haf-bottom-button {
+                border: 1px solid;
+                width: 46px;
+                height: 55px;
+                display: flex;
+                color: #fbeae5;
+                align-items: center;
+                justify-content: center;
+                -webkit-border-radius: 0 0 23px 23px;
+                -moz-border-radius: 0 0 23px 23px;
+                border-radius: 0 0 23px 23px;
                 min-width: 30px !important;
             }
-            .haf-bottom-button{
-                min-width: 30px !important;
+            .haf-top-button:active, .haf-bottom-button:active {
+                background-color: #fbeae5;
+            }
+            .label {
+                color: #f09c83;
+                font-size:14px;
             }
         }
     }

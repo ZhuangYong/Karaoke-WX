@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
-import {Paper} from "material-ui";
+import {Paper, Snackbar} from "material-ui";
 import DSongList from "../../components/common/SongList";
 
 
@@ -11,6 +11,12 @@ class SongList extends BaseComponent {
 
     constructor(props) {
         super(props);
+        this.state = {
+            barrageSendToast: false,
+            barrageToastMsg: ""
+        };
+        this.onPushSongFail = this.onPushSongFail.bind(this);
+        this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
     }
 
     render() {
@@ -21,9 +27,38 @@ class SongList extends BaseComponent {
             <Paper zDepth={0}
                    style={{paddingTop: "66px"}}>
                 <SearchHeadFake/>
-                <DSongList containerStyle={{top: 66}} {...props}/>
+                <DSongList
+                    onPushSongSuccess={this.onPushSongSuccess}
+                    onPushSongFail={this.onPushSongFail}
+                    containerStyle={{top: 66}}
+                    {...props}/>
+                <Snackbar
+                    open={this.state.barrageSendToast}
+                    message={this.state.barrageToastMsg}
+                    autoHideDuration={500}
+                    onRequestClose={() => {
+                        this.setState({
+                            barrageSendToast: false
+                        });
+                    }}
+                />
             </Paper>
         );
+    }
+
+    onPushSongSuccess(song) {
+        const {nameNorm} = song;
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: nameNorm + " 点歌成功"
+        });
+    }
+
+    onPushSongFail(msg) {
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: msg
+        });
     }
 }
 

@@ -260,9 +260,13 @@ export function loadScript(url, callback) {
  *
  * @param Oid
  * @returns {{appId: string, appVersion: string, wxId: string, deviceId: string, mac: string, terminalType: string, timeStamp: string, version: string, channel: string}}
- * 测试默认 3c3cf52ccf882f55db3445524e60f10d
+ * 测试默认 3c3cf52ccf882f55db3445524e60f10d //guang pu
+ * 2f8ea06784194d56c19d96d4d75a1b6b // jin biao
+ * 7ec58553c6bdcca24eb7a33bfcd84bd3 // a du
+ * 0ab25001ad1cd646887242fcaebf752f //xiong xiao song
+ *
  */
-export function getEncryptHeader(Oid = {deviceId: "2f8ea06784194d56c19d96d4d75a1b6b", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
+export function getEncryptHeader(Oid = {deviceId: "0ab25001ad1cd646887242fcaebf752f", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");

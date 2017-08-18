@@ -9,51 +9,9 @@ class ReactAudio extends React.Component {
 
     constructor(props) {
         super(props);
-        props = Object.assign({}, props, {
-            autoplay: false,
-            preload: true,
-            source: "",
-            loop: false,
-            volume: 0.8,
-            onTimeupdate: null,
-            onError: null,
-            onProgress: null,
-            onEnded: null
-        });
         this.state = {
             listeners: []
         };
-    }
-
-    get audio() {
-        if (!this.refs)
-            return {};
-
-        return ReactDOM.findDOMNode(this.refs.audio);
-    }
-
-    set audio(a) {
-        this.audio = a;
-    }
-
-    handler(e, func) {
-        if (isFunction(func)) {
-            func(e);
-        }
-    }
-
-    addListener(event, func) {
-        let audio = ReactDOM.findDOMNode(this.refs.audio);
-        audio.addEventListener(event, partialRight(this.handler, func));
-        this.state.listeners.push({event: event, func: func});
-    }
-
-    removeAllListeners() {
-        let audio = ReactDOM.findDOMNode(this.refs.audio);
-        forEach(this.state.listeners, (obj) => {
-            audio.removeEventListener(obj.event, obj.func);
-        });
-        this.state.listeners = [];
     }
 
     componentDidMount() {
@@ -87,7 +45,50 @@ class ReactAudio extends React.Component {
                     src={audioUrl}/>
         );
     }
+
+    get audio() {
+        if (!this.refs)
+            return {};
+
+        return ReactDOM.findDOMNode(this.refs.audio);
+    }
+
+    set audio(a) {
+        this.audio = a;
+    }
+
+    handler(e, func) {
+        if (isFunction(func)) {
+            func(e);
+        }
+    }
+
+    addListener(event, func) {
+        let audio = ReactDOM.findDOMNode(this.refs.audio);
+        audio.addEventListener(event, partialRight(this.handler, func));
+        this.state.listeners.push({event: event, func: func});
+    }
+
+    removeAllListeners() {
+        let audio = ReactDOM.findDOMNode(this.refs.audio);
+        forEach(this.state.listeners, (obj) => {
+            audio.removeEventListener(obj.event, obj.func);
+        });
+        this.state.listeners = [];
+    }
 }
+ReactAudio.defaultProps = {
+    autoplay: false,
+    preload: true,
+    source: "",
+    loop: false,
+    volume: 0.8,
+    onTimeupdate: null,
+    onError: null,
+    onProgress: null,
+    onEnded: null
+};
+
 ReactAudio.propTypes = {
     autoplay: PropTypes.bool,
     preload: PropTypes.bool,

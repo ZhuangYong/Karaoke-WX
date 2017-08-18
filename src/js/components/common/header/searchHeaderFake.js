@@ -1,11 +1,12 @@
 import React from "react";
 import "../../../../sass/common/searchHeader.scss";
 import {connect} from "react-redux";
-import SearchIcon from "material-ui/svg-icons/action/search";
 import Input from "../Input";
 import BaseComponent from "../BaseComponent";
 import {linkTo} from "../../../utils/comUtils";
 import {withRouter} from "react-router-dom";
+import VoiceIcon from "../../../../img/common/icon_voice.png";
+import SearchIcon from "../../../../img/common/icon_search.png";
 
 class SearchHeaderFake extends BaseComponent {
     constructor(props) {
@@ -22,12 +23,13 @@ class SearchHeaderFake extends BaseComponent {
                         className="key-word-input"
                         hintText={
                             <div>
-                                <SearchIcon style={{color: "white"}}/>
+                                <img className="search" src={SearchIcon}/>
                                 <font>请输入你要找的歌曲或歌星</font>
+                                <img className="voice" src={VoiceIcon}/>
                             </div>
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}
-                        onClick={
+                        onTouchTap={
                             () => {
                                 linkTo('song/search', false, null);
                             }

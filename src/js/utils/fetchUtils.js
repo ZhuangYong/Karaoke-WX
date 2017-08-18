@@ -54,7 +54,7 @@ export function comFetch(dispatch, param, options = {
     action: "",
     formData: "",
     noTrackStatus: ""
-}, callback) {
+}, callback, failCallback) {
 
     let url = options.url;
     let fetchOption = {
@@ -83,6 +83,7 @@ export function comFetch(dispatch, param, options = {
         let queryStr = [];
         for (let k in param) {
             queryStr.push(encodeURIComponent(k) + '=' + encodeURIComponent(param[k]));
+            // queryStr.push(k + '=' + param[k]);
         }
         queryStr = queryStr.join('&');
 
@@ -127,6 +128,7 @@ export function comFetch(dispatch, param, options = {
             error: err,
             param: param
         });
+        failCallback && failCallback('网络不给力，请稍后再试', err);
     });
 }
 

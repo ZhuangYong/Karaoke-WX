@@ -3,7 +3,6 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import "../../../../sass/common/searchHeader.scss";
 import {Chip, List, ListItem, Subheader} from "material-ui";
-import SearchIcon from "material-ui/svg-icons/action/search";
 import {getHotWords} from "../../../actions/searchActons";
 import DelIcon from "material-ui/svg-icons/content/clear";
 import {getCookie, reqHeader, setCookie} from "../../../utils/comUtils";
@@ -13,6 +12,8 @@ import BaseComponent from "../BaseComponent";
 import PropTypes from "prop-types";
 import * as ReactDOM from "react-dom";
 import Scroller from "silk-scroller";
+import VoiceIcon from "../../../../img/common/icon_voice.png";
+import SearchIcon from "../../../../img/common/icon_search.png";
 
 // 通用头部组件，包含标题和一个返回按钮
 class SearchHeader extends BaseComponent {
@@ -74,8 +75,9 @@ class SearchHeader extends BaseComponent {
                         //autoFocus="autoFocus"
                         hintText={
                             <div>
-                                <SearchIcon style={{color: "white"}}/>
+                                <img className="search" src={SearchIcon}/>
                                 <font>请输入你要找的歌曲或歌星</font>
+                                <img className="voice" src={VoiceIcon}/>
                             </div>
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}
@@ -89,7 +91,7 @@ class SearchHeader extends BaseComponent {
                 <div className="search-panel" style={{display: showHelper}}>
                     <Scroller
                         ref="scroller"
-                        containerStyle={{top: 55}}
+                        containerStyle={{top: 33}}
                         directionLockThreshold={1}
                     >
                         <div className="search-words">
