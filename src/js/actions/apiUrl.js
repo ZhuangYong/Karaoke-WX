@@ -1,4 +1,13 @@
 export default {
+    // OTT登录
+    "API_OTT_LOGIN": "/user/loginAuth",
+
+    // 获取支付列表
+    "API_GET_PAY_LIST": "/music/listPayProduct",
+    // 支付宝支付
+    "API_ALI_PAY": "/pay/alipayPay",
+    // 获取微信支付参数
+    "API_GET_WX_PAY_PARAMS": "/pay/jsPay",
 
     /**
      * 获取用户信息
@@ -21,18 +30,21 @@ export default {
      * vipStatus: vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
      */
     "API_GET_USER_INFO": "/user/info",
+    // 获取微信js sdk config参数
+    "API_GET_USER_CONFIG": "/user/config",
 
     // 录音分享播放详情
     "API_QUERY_USER_SOUND": "/user/qryUserSound",
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
 
-    "API_GET_USER_CONFIG": "/user/config",
+    // base64上传图片
+    "API_UPLOAD_IMG_BASE64": "/upload/uploadImgBase64",
+    // 微信API上传图片
+    "API_UPLOAD_IMG_WX": "/upload/uploadWeixin",
 
     // 意见反馈问题列表
     "API_GET_FEEDBACK_QUESTION_LIST": "/feedback/listQuestion",
-    // 意见反馈上传图片
-    "API_UPLOAD_IMG_BASE64": "/upload/uploadImgBase64",
     // 意见反馈提交
     "API_GET_FEEDBACK_SUBMIT": "/feedback/feedbackSubmit",
 

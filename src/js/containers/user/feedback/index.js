@@ -8,13 +8,15 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
-import {getFeedbackQuestionList, uploadImg64} from "../../../actions/userActions";
-import {reqHeader} from "../../../utils/comUtils";
+import {feedbackSubmit, getFeedbackQuestionList, uploadImgWeiXin} from "../../../actions/userActions";
+import {getEncryptHeader, reqHeader} from "../../../utils/comUtils";
 
 import {GridList, GridTile} from "material-ui/GridList";
 import RaisedButton from 'material-ui/RaisedButton';
 import ClearIcon from "material-ui/svg-icons/content/clear";
 import InputBox from "../../../components/photoAlbum";
+import SubmitSuccessIcon from "../../../../img/submitSuccess.png";
+import navUtils from "../../../utils/navUtils";
 
 const styles = {
     sectionHeader: {
@@ -92,26 +94,33 @@ class Feedback extends BaseComponent {
     constructor(props) {
         super(props);
 
+
         this.state = {
+            matchParams: this.props.match.params,
             questionList: [],
             imgList: [addBtn],
             submitParams: {
-                questionId: null,
-                questionDesc: "",
-                imgId: null,
-                contact: null
+                questionIds: null,
+                content: "",
+                imgIds: null,
+                tel: null
             }
         };
 
-        this.inputChange = this.inputChange.bind(this);
+        this.addBtnClick = this.addBtnClick.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
     componentDidUpdate(preProps) {
         if (preProps.questionList.questionListStamp !== this.props.questionList.questionListStamp) {
             this.updateQuestionList();
         }
-        if (preProps.uploadImgData.uploadImgStamp !== this.props.uploadImgData.uploadImgStamp) {
-            this.updateUploadImg();
+
+        const matchParams = this.props.match.params;
+        if (preProps.match.params.state !== matchParams.state) {
+            this.setState({
+                matchParams: matchParams
+            });
         }
     }
 
@@ -137,7 +146,7 @@ class Feedback extends BaseComponent {
                        return tile;
                     });
                     let submitParams = this.state.submitParams;
-                    submitParams.questionId = item.id;
+                    submitParams.questionIds = item.id;
                     this.setState({
                         submitParams: submitParams,
                         questionList: newList
@@ -150,120 +159,272 @@ class Feedback extends BaseComponent {
 
         return (
             <div>
-                <section
-                    style={{backgroundColor: "#eee"}}
-                >
-                    <header>
-                        <div
-                            style={styles.sectionHeader}
-                        >问题类型</div>
-                    </header>
-
-                    <GridList
-                        cellHeight={40}
-                        cols={3}
-                        padding={0}
-                        style={{paddingLeft: "5px", paddingRight: "5px"}}
+                {this.matchState() ? (<div>
+                    <section
+                        style={{backgroundColor: "#eee"}}
                     >
-                        {QuestionList}
-                    </GridList>
+                        <header>
+                            <div
+                                style={styles.sectionHeader}
+                            >问题类型</div>
+                        </header>
 
-                </section>
-                <section
-                    style={{backgroundColor: "#eee"}}
-                >
-                    <header>
-                        <div
-                            style={styles.sectionHeader}
-                        >问题描述</div>
-                    </header>
-                    <textarea
-                        style={styles.questionDesc}
-                        placeholder="亲爱的麦粉，把你遇到的问题或建议写下来吧......"
-                        maxLength="200"
-                        onChange={(e) => {
-                            let submitParams = this.state.submitParams;
-                            submitParams.questionDesc = e.target.value;
-                            this.setState({
-                                submitParams: submitParams
-                            });
-                        }}
+                        <GridList
+                            cellHeight={40}
+                            cols={3}
+                            padding={0}
+                            style={{paddingLeft: "5px", paddingRight: "5px"}}
+                        >
+                            {QuestionList}
+                        </GridList>
+
+                    </section>
+                    <section
+                        style={{backgroundColor: "#eee"}}
                     >
-                    </textarea>
-                    <div>
-                        <div style={styles.questionDescTip}>
-                            {this.state.submitParams.questionDesc.length <= 0 ? "至少10个字，最多200字，不然宝宝要生气!" : `${this.state.submitParams.questionDesc.length}/200`}
+                        <header>
+                            <div
+                                style={styles.sectionHeader}
+                            >问题描述</div>
+                        </header>
+                        <textarea
+                            style={styles.questionDesc}
+                            placeholder="亲爱的麦粉，把你遇到的问题或建议写下来吧......"
+                            maxLength="200"
+                            onChange={(e) => {
+                                let submitParams = this.state.submitParams;
+                                submitParams.content = e.target.value;
+                                this.setState({
+                                    submitParams: submitParams
+                                });
+                            }}
+                        >
+                </textarea>
+                        <div>
+                            <div style={styles.questionDescTip}>
+                                {this.state.submitParams.content.length <= 0 ? "至少10个字，最多200字，不然宝宝要生气!" : `${this.state.submitParams.content.length}/200`}
+                            </div>
                         </div>
-                    </div>
-                </section>
-                <section
-                    style={{backgroundColor: "#eee"}}
-                >
-                    <header>
-                        <span
-                            style={styles.sectionHeader}
-                        >上传照片</span>
-                        <span style={{marginLeft: "5px", fontSize: "12px", color: "#808080"}}>最多5张</span>
-                    </header>
-
-                    <InputBox
-                        cellHeight={70}
-                        cols={5}
-                        badgeBackgroundColor="#ce0000"
-                        badgeContent={<ClearIcon color="#fff"/>}
-                        badgeStyle={{top: "-5px", right: "-5px"}}
-                        data={this.state.imgList}
-                        inputChange={this.inputChange}
-                    />
-
-                </section>
-                <section
-                    style={{backgroundColor: "#eee"}}
-                >
-                    <header>
-                        <div
-                            style={styles.sectionHeader}
-                        >联系方式</div>
-                    </header>
-                    <div
-                        style={{paddingLeft: "10px", paddingRight: "10px"}}
+                    </section>
+                    <section
+                        style={{backgroundColor: "#eee"}}
                     >
-                        <input
-                            type="text"
-                            placeholder="手机、QQ或邮箱"
-                            style={{width: "100%", height: "50px", backgroundColor: "#fff", border: "none", fontSize: "18px", textIndent: "10px", borderRadius: "4px"}}
+                        <header>
+                    <span
+                        style={styles.sectionHeader}
+                    >上传照片</span>
+                            <span style={{marginLeft: "5px", fontSize: "12px", color: "#808080"}}>最多5张</span>
+                        </header>
+
+                        <InputBox
+                            cellHeight={70}
+                            cols={5}
+                            badgeBackgroundColor="#ce0000"
+                            badgeContent={<ClearIcon
+                                style={{width: "20px", height: "20px"}}
+                                color="#fff"
+                                onClick={(e) => {
+                                    const deleteId = e.target.parentNode.parentNode.dataset.id;
+                                    let imgList = this.state.imgList.filter((tile) => {
+                                        if (parseInt(tile.id, 10) !== parseInt(deleteId, 10)) {
+                                            return tile;
+                                        }
+                                    });
+                                    if (imgList.length >= 4 && imgList[imgList.length - 1].isShowBadge) {
+                                        imgList.push(addBtn);
+                                    }
+                                    this.setState({
+                                        imgList: imgList
+                                    });
+                                }}
+                            />}
+                            badgeStyle={{top: "-3px", right: "-3px", width: "20px", height: "20px"}}
+                            data={this.state.imgList}
+                            addBtnTouchTap={this.addBtnClick}
                         />
-                    </div>
-                </section>
-                <section
-                    style={{backgroundColor: "#eee", padding: "20px 10px"}}
-                >
-                    <RaisedButton
-                        backgroundColor="#ff8632"
-                        disabledBackgroundColor="#ccc"
-                        disabled={this.state.submitParams.questionId === null || this.state.submitParams.questionDesc.length < 10}
-                        label="提交"
-                        style={styles.submitBtn}
-                        buttonStyle={styles.submitBtn}
-                        labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
-                    />
-                </section>
+                    </section>
+                    <section
+                        style={{backgroundColor: "#eee"}}
+                    >
+                        <header>
+                            <div
+                                style={styles.sectionHeader}
+                            >联系方式</div>
+                        </header>
+                        <div
+                            style={{paddingLeft: "10px", paddingRight: "10px"}}
+                        >
+                            <input
+                                type="text"
+                                placeholder="手机、QQ或邮箱"
+                                style={{width: "100%", height: "50px", backgroundColor: "#fff", border: "none", fontSize: "18px", textIndent: "10px", borderRadius: "4px"}}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    const submitParams = this.state.submitParams;
+                                    submitParams.tel = val;
+                                    this.setState({
+                                        submitParams: submitParams
+                                    });
+                                }}
+                            />
+                        </div>
+                    </section>
+                    <section
+                        style={{backgroundColor: "#eee", padding: "20px 10px"}}
+                    >
+                        <RaisedButton
+                            backgroundColor="#ff8632"
+                            disabledBackgroundColor="#ccc"
+                            disabled={this.state.submitParams.questionIds === null || this.state.submitParams.content.length < 10}
+                            label="提交"
+                            style={styles.submitBtn}
+                            buttonStyle={styles.submitBtn}
+                            labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
+                            onClick={this.submit}
+                        />
+                    </section>
+                </div>) : (<div>
+                    <section
+                        style={{padding: "20px 10px"}}
+                    >
+                        <img
+                            src={SubmitSuccessIcon}
+                            alt="成功"
+                            style={{
+                                display: "block",
+                                margin: "35% auto 0",
+                                width: "100px",
+                                height: "100px"
+                            }}
+                        />
+                        <p style={{
+                            textAlign: "center",
+                            color: "#ff8632",
+                            fontSize: "16px"
+                        }}>提交成功</p>
+                        <p style={{
+                            textAlign: "center",
+                            color: "#807f7e",
+                            fontSize: "14px"
+                        }}>我们将会在第一时间处理，感谢您的反馈！</p>
+                    </section>
+                    <section
+                        style={{position: "absolute", bottom: "10%", left: 0, padding: "20px 10px", width: "100%"}}
+                    >
+                        <RaisedButton
+                            backgroundColor="#ff8632"
+                            disabledBackgroundColor="#ccc"
+                            label="关闭"
+                            style={styles.submitBtn}
+                            buttonStyle={styles.submitBtn}
+                            labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
+                            onTouchTap={() => {
+                                const matchParams = this.state.matchParams;
+                                if (matchParams.deviceId.toString() !== "undefined") {
+                                    window.WeixinJSBridge.call('closeWindow');
+                                } else {
+                                    window.history.back();
+                                }
+                            }}
+                        />
+                    </section>
+                </div>)}
             </div>
         );
     }
 
-    // 图片input onChange
-    inputChange(dataUrl) {
-        const params = {
-            imgBase: dataUrl,
-            imgSuffix: "png"
-        };
-        this.props.uploadImgAction(params, reqHeader(params));
+
+    matchState() {
+        let res = null;
+        const matchParams = this.props.match.params;
+        switch (matchParams.state) {
+            case "home":
+                res = true;
+                break;
+            case "success":
+                res = false;
+                break;
+            default:
+                navUtils.replace("/*");
+                break;
+        }
+        return res;
     }
 
-    // 上传图片后数据更新
-    updateUploadImg() {
-        const {data} = this.props.uploadImgData;
+    // 提交
+    submit() {
+        let header = null;
+
+        const submitParams = this.state.submitParams;
+        let imgListIds = [];
+        this.state.imgList.forEach((tile, ind) => {
+            if (!tile.isShowAddBtn) {
+                imgListIds.push(tile.id);
+            }
+        });
+
+        submitParams.imgIds = imgListIds.join(',');
+
+        const matchParams = this.state.matchParams;
+        if (typeof matchParams.deviceId !== "undefined") {
+            const encryptHeader = getEncryptHeader({
+                deviceId: matchParams.deviceId,
+                wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"
+            });
+
+            header = reqHeader(submitParams, encryptHeader);
+        } else {
+            header = reqHeader(submitParams);
+        }
+
+        this.props.feedbackSubmitAction(submitParams, header, (res) => {
+            const {status} = res;
+
+            if (parseInt(status, 10) === 1) {
+                navUtils.replace(`/user/feedback/success/${matchParams.deviceId}`);
+            }
+        });
+    }
+
+    // 图片input onChange
+    addBtnClick() {
+        const _this = this;
+        const {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            window.wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: function (res) {
+                    const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    localIds.map((item) => {
+                        window.wx.uploadImage({
+                            localId: item, // 需要上传的图片的本地ID，由chooseImage接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: function (res) {
+                                const params = {
+                                    mediaId: res.serverId // 返回图片的服务器端ID
+                                };
+                                _this.props.uploadImgAction(params, reqHeader(params), (res) => {
+                                    const {data} = res;
+                                    data[0].isShowBadge = true;
+                                    let imgList = _this.state.imgList;
+                                    if (imgList.length >= 5 && imgList[imgList.length - 1].isShowAddBtn) {
+                                        imgList.pop();
+                                    }
+
+                                    _this.setState({
+                                       imgList: [data[0], ...imgList]
+                                    });
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+        } else {
+            alert("请在微信客户端上传图片");
+        }
     }
 
     // 问题类型数据更新
@@ -273,12 +434,10 @@ class Feedback extends BaseComponent {
         result[0].isSelected = true;
 
         let submitParams = this.state.submitParams;
-        submitParams.questionId = result[0].id;
-        this.setState({
-            submitParams: submitParams
-        });
+        submitParams.questionIds = result[0].id;
 
         this.setState({
+            submitParams: submitParams,
             questionList: result.filter((item) => {
                 if (!item.isSelected) item.isSelected = false;
                 return item;
@@ -306,7 +465,8 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getFeedbackQuestionListAction: bindActionCreators(getFeedbackQuestionList, dispatch),
-        uploadImgAction: bindActionCreators(uploadImg64, dispatch)
+        uploadImgAction: bindActionCreators(uploadImgWeiXin, dispatch),
+        feedbackSubmitAction: bindActionCreators(feedbackSubmit, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Feedback));

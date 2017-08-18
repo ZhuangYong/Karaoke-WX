@@ -7,7 +7,6 @@ import {GridList} from "material-ui/GridList";
 import Badge from 'material-ui/Badge';
 
 import defaultImg from "../../../img/common/tile_default.jpg";
-import addIcon from "../../../img/iconfont-tianjia.png";
 
 const style = {
     tile: {
@@ -60,6 +59,7 @@ class InputBox extends React.Component {
      *  isLoadImg: 是否允许上传图片
      *  disabledTip: 禁止上传图片提示语
      * }
+     * addBtnTouchTap: 添加按钮点击事件
      * style: GridList样式
      * itemStyle: item样式
      * badgeStyle: Badge样式
@@ -80,6 +80,7 @@ class InputBox extends React.Component {
                 {this.props.data.map((item) => (
                     <Badge
                         key={item.id}
+                        data-id={item.id}
                         style={Object.assign({}, style.tile, this.props.itemStyle)}
                         badgeStyle={Object.assign({}, {
                             display: item.isShowBadge ? "block" : "none",
@@ -101,7 +102,9 @@ class InputBox extends React.Component {
                             }}
                         />) : (<div
                             style={style.tile}
-                            onTouchTap={this.addBtnTouchTap}
+                            onClick={() => {
+                                this.addBtnTouchTap();
+                            }}
                         >
                             {/*<img src={addIcon} style={style.tileImg} alt="添加图片按钮"/>*/}
                             <div
@@ -134,8 +137,13 @@ class InputBox extends React.Component {
 
     // 添加按钮点击事件
     addBtnTouchTap() {
+        const addBtnTouchTap = this.props.addBtnTouchTap;
+        if (addBtnTouchTap) {
+            addBtnTouchTap();
+            return;
+        }
         const addBtn = this.props.addBtn;
-        if (typeof this.props.addBtn === "undefined" || addBtn.isLoadImg === true) {
+        if (addBtn || addBtn.isLoadImg === true) {
             return this.addImgInp.click();
         }
         return alert(addBtn.disabledTip || '不能再添加图片咯');

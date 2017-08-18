@@ -75,7 +75,11 @@ class UserIndex extends BaseComponent {
                                 <Avatar src={userInfo.headerImg}/>
                             }
                             primaryText={userInfo.nickName}
-                            secondaryText={<RaisedButton>
+                            secondaryText={<RaisedButton
+                                onTouchTap={() => {
+                                    linkTo(`pay/home`, false, null);
+                                }}
+                            >
                                 {this.showVIPStatus()}
                             </RaisedButton>}
                         />
@@ -101,7 +105,7 @@ class UserIndex extends BaseComponent {
                             label="意见反馈"
                             icon={<img src={defaultImg}/>}
                             onTouchTap={() => {
-                                linkTo('user/feedback', false, null);
+                                linkTo('user/feedback/home', false, null);
                             }}
                         />
                         <BottomNavigationItem

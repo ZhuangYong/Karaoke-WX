@@ -9,7 +9,7 @@ const initState = {
     userInfoStamp: 0
 };
 
-let UserInfo = (state = initState, action) => {
+export default (state = initState, action) => {
     switch (action.type) {
         case ActionTypes.USER.API_GET_USER_INFO:
             return fetchProcess(state, action, {
@@ -22,5 +22,3 @@ let UserInfo = (state = initState, action) => {
             return state;
     }
 };
-
-export default UserInfo;

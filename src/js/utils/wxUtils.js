@@ -9,11 +9,11 @@
  */
 export function getWxOpenId(code, callback) {
     // var url = HYAPP.ApiDomain + '/weChat/getWechatWebAccessToken';
-    var url = HYAPP.ApiDomain + '/weChat/getBbsWxOpenId';
-    var fetchOption = {
+    let url = HYAPP.ApiDomain + '/weChat/getBbsWxOpenId';
+    let fetchOption = {
         method: 'post',
     };
-    var form = new FormData();
+    let form = new FormData();
     form.append('code', code);
     // 测试用，获取WxopenId接口一开始要传bbs的access_token
     // form.append('access_token', 'ee47c1f14108c38ff23fd45534a3a4c8');

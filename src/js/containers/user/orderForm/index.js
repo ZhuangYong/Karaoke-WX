@@ -104,7 +104,7 @@ OrderForm.propTypes = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        result: state.app.orderForm
+        result: state.app.user.orderForm
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

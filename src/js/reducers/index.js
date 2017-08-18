@@ -5,9 +5,7 @@ import common from './common';
 import audio from './play/audio';
 import songs from './songs';
 import search from './search';
-import photoAlbum from './user/photoAlbum';
-import orderForm from './user/orderForm';
-import feedback from './user/feedback';
+import pay from './pay';
 
 let appReducer = combineReducers({
     user,
@@ -15,8 +13,7 @@ let appReducer = combineReducers({
     audio,
     songs,
     search,
-    photoAlbum,
-    orderForm
+    pay
 });
 
 export default appReducer;
