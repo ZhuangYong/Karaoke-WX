@@ -8,7 +8,7 @@ const initState = {
     questionListStamp: 0
 };
 
-let FeedBack = (state = initState, action) => {
+export default (state = initState, action) => {
     switch (action.type) {
         case ActionTypes.USER.API_GET_FEEDBACK_QUESTION_LIST:
             return fetchProcess(state, action, {
@@ -27,5 +27,3 @@ let FeedBack = (state = initState, action) => {
             return state;
     }
 };
-
-export default FeedBack;

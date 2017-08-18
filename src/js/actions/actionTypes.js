@@ -5,6 +5,9 @@ const COMMON = {
 
 //user relative
 const USER = {
+    // OTT登录
+    API_OTT_LOGIN: "API_OTT_LOGIN",
+
     // 获取用户信息
     API_GET_USER_INFO: "API_GET_USER_INFO",
 
@@ -22,11 +25,14 @@ const USER = {
 
     // 意见反馈问题列表
     API_GET_FEEDBACK_QUESTION_LIST: "API_GET_FEEDBACK_QUESTION_LIST",
-    // 意见反馈上传图片
-    API_UPLOAD_IMG_BASE64: "API_UPLOAD_IMG_BASE64",
     // 意见反馈提交
     API_GET_FEEDBACK_SUBMIT: "API_GET_FEEDBACK_SUBMIT",
 
+    // base64上传图片
+    API_UPLOAD_IMG_BASE64: "API_UPLOAD_IMG_BASE64",
+    // 微信API上传图片
+    API_UPLOAD_IMG_WX: "API_UPLOAD_IMG_WX",
+    // 获取微信js sdk config参数
     API_GET_USER_CONFIG: "API_GET_USER_CONFIG"
 };
 
@@ -56,12 +62,22 @@ const SEARCH = {
     API_SEARCH: "API_SEARCH"
 };
 
+const Pay = {
+    // 获取支付列表
+    API_GET_PAY_LIST: "API_GET_PAY_LIST",
+    // 支付宝支付
+    API_ALI_PAY: "API_ALI_PAY",
+    // 获取微信支付参数
+    API_GET_WX_PAY_PARAMS: "API_GET_WX_PAY_PARAMS",
+};
+
 export default {
     COMMON,
     USER,
     AUDIO,
     SONG,
-    SEARCH
+    SEARCH,
+    Pay
 };
 
 

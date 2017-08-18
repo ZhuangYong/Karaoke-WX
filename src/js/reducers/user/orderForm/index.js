@@ -8,7 +8,7 @@ const initState = {
     orderFormStamp: 0
 };
 
-let OrderForm = (state = initState, action) => {
+export default (state = initState, action) => {
     switch (action.type) {
         case ActionTypes.USER.API_GET_ORDER_FORM:
             return fetchProcess(state, action, {
@@ -21,5 +21,3 @@ let OrderForm = (state = initState, action) => {
             return state;
     }
 };
-
-export default OrderForm;

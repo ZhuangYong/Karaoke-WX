@@ -2,32 +2,22 @@
  * Created by walljack@163.com on 2017/7/24.
  */
 
-import ActionTypes from "../../../js/actions/actionTypes";
-import {fetchProcess} from "../../../js/utils/fetchUtils";
+import { combineReducers } from 'redux';
 
-const initState = {
-    userInfoStamp: 0
-};
+import feedback from "./feedback";
+import orderForm from "./orderForm";
+import photoAlbum from "./photoAlbum";
+import uploadImg from "./uploadImg";
+import userInfo from "./userInfo";
+import userConfig from "./userConfig";
+import ottLogin from "./ottLogin";
 
-let UserInfo = (state = initState, action) => {
-    switch (action.type) {
-        case ActionTypes.USER.API_GET_USER_INFO:
-            return fetchProcess(state, action, {
-                data: "userInfoData",
-                msg: "userInfoMsg",
-                loading: "userInfoLoading",
-                stamp: "userInfoStamp"
-            });
-        case ActionTypes.USER.API_GET_USER_CONFIG:
-            return fetchProcess(state, action, {
-                data: "getUserConfig",
-                msg: "getUserConfigMsg",
-                loading: "loading",
-                stamp: "getUserConfigStamp"
-            });
-        default:
-            return state;
-    }
-};
-
-export default UserInfo;
+export default combineReducers({
+    feedback,
+    orderForm,
+    photoAlbum,
+    uploadImg,
+    userConfig,
+    userInfo,
+    ottLogin
+});

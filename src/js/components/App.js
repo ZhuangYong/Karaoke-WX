@@ -32,6 +32,10 @@ import PhotoAlbum from '../containers/user/photoAlbum';
 import Preview from '../containers/user/photoAlbum/preview';
 import OrderForm from "../containers/user/orderForm/index";
 import Feedback from "../containers/user/feedback/index";
+import VoiceSearch from "../containers/voiceSearch";
+import Pay from "../containers/Pay";
+import Protocol from "../containers/Pay/Protocol";
+
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -131,6 +135,24 @@ const FeedbackContainer = () => (
     </Bundle>
 );
 
+const VoiceSearchContainer = () => (
+    <Bundle load={VoiceSearch}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const PayContainer = () => (
+    <Bundle load={Pay}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const ProtocolContainer = () => (
+    <Bundle load={Protocol}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 /*const dynamicLoadFun = (container) => {
     return () => (
         <Bundle load={container}>
@@ -181,23 +203,43 @@ class App extends React.Component {
                     <Switch>
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
+                        {/*
+                        *state: home/alipaySucess/alipayFailed(页面状态)
+                        * openid: 用户微信openId
+                        * pollingId: OTT轮询id
+                        * deviceId: OTT设备id
+                        */}
+                        <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={PayContainer}/>
+                        <Route path={`/protocol`} component={ProtocolContainer}/>
                         <Route path={`/controller/`} exact component={SongControllerContainer}/>
                         <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>
                         <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
                         <Route path={`/user`} exact component={UserContainer}/>
-                        <Route path={`/user/records`} component={RecordsContainer}/>
+                        <Route path={`/user/records`} exact component={RecordsContainer}/>
                         <Route path={`/s/p/:uid`} component={AudioContainer}/>
-                        <Route path={`/user/photoAlbum`} component={PhotoAlbumContainer}/>
-                        <Route path={`/user/photoAlbumPreview/:imgId`} component={PreviewContainer}/>
-                        <Route path={`/user/orderForm`} component={OrderFormContainer}/>
-                        <Route path={`/user/feedback`} component={FeedbackContainer}/>
-                        <Route path={`/login`} component={LoginContainer}/>
-                        <Route path={`/song/chooselist`} component={ChooseListContainer}/>
-                        <Route path={`/song/search`} component={SearchContainer}/>
+                        <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
+                        {/*imgId: 预览图片id*/}
+                        <Route path={`/user/photoAlbumPreview/:imgId`} exact component={PreviewContainer}/>
+                        <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>
+                        {/*
+                        *state: home/success(页面状态)
+                        *deviceId: 绑定设备号
+                        * */}
+                        <Route path={`/user/feedback/:state/:deviceId?`} exact component={FeedbackContainer}/>
+                        {/*
+                        *state: home/success/failed/invalid(页面状态)
+                        *uuid: 扫码登录参数/用户微信unionId
+                        * userId: 服务器给用户的id
+                        * deviceId: 设备id
+                        */}
+                        <Route path={`/login/:state/:uuid?/:userId?/:deviceId?`} component={LoginContainer}/>
+                        <Route path={`/song/chooselist`} exact component={ChooseListContainer}/>
+                        <Route path={`/song/search/:keyword?`} exact component={SearchContainer}/>
                         <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>
                         <Route path={`/singer/:id`} exact component={SingerListContainer}/>
-                        <Route path={`/catalbum`} exact component={CatAlbumContainer}/>
+                        <Route path={`/catAlbum`} exact component={CatAlbumContainer}/>
                         <Route path={`/songs/:type/:id`} exact component={SongsListContainer}/>
+                        <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
                 </MuiThemeProvider>
@@ -231,7 +273,7 @@ class App extends React.Component {
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        user: state.app.user
+        user: state.app.user.userConfig
     };
 };
 // 映射dispatch到props

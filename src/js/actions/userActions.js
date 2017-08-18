@@ -7,7 +7,19 @@ import apiUrl from "./apiUrl";
 import ActionTypes from "./actionTypes";
 import sysConfig from "../utils/sysConfig";
 
-export function getUserInfo(data, headers) {
+export function OTTLogin(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_OTT_LOGIN;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_OTT_LOGIN
+        }, callback);
+    };
+}
+
+export function getUserInfo(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_USER_INFO;
     return (dispatch) => {
         comFetch(dispatch, data, {
@@ -15,9 +27,8 @@ export function getUserInfo(data, headers) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_GET_USER_INFO
-        }, null);
+        }, callback);
     };
-
 }
 
 export function getUserConfig(data, headers, callback) {
@@ -115,7 +126,7 @@ export function getFeedbackQuestionList(data, headers) {
 
 }
 
-export function uploadImg64(data, headers) {
+export function uploadImgBase64(data, headers, callback) {
 
     const url = sysConfig.apiDomain + apiUrl.API_UPLOAD_IMG_BASE64;
 
@@ -125,7 +136,21 @@ export function uploadImg64(data, headers) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_UPLOAD_IMG_BASE64
-        }, null);
+        }, callback);
+    };
+}
+
+export function uploadImgWeiXin(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_UPLOAD_IMG_WX;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_UPLOAD_IMG_WX
+        }, callback);
     };
 }
 

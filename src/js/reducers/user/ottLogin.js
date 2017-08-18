@@ -1,22 +1,19 @@
 /**
- * Created by Zed on 2017/8/14.
+ * Created by Zed on 2017/8/15.
  */
 
 import ActionTypes from "../../../js/actions/actionTypes";
 import {fetchProcess} from "../../../js/utils/fetchUtils";
 
-const initState = {
-    userInfoStamp: 0
-};
+const initState = {};
 
 export default (state = initState, action) => {
     switch (action.type) {
-        case ActionTypes.USER.API_GET_USER_INFO:
+        case ActionTypes.USER.API_OTT_LOGIN:
             return fetchProcess(state, action, {
-                data: "userInfoData",
-                msg: "userInfoMsg",
-                loading: "userInfoLoading",
-                stamp: "userInfoStamp"
+                data: "ottLoginData",
+                msg: "ottLoginMsg",
+                loading: "ottLoginLoading"
             });
         default:
             return state;
