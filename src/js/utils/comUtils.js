@@ -3,6 +3,7 @@ import {JSEncrypt} from 'jsencrypt';
 import md5 from 'md5';
 import sysConfig from "./sysConfig";
 import navUtils from "./navUtils";
+import {getUserInfo} from "../actions/userActions";
 
 /**
  * 根据时间戳返回对应的y，m，d
@@ -85,11 +86,48 @@ export function chkDevice() {
     let isAndroid = ua.indexOf('android') !== -1;
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
 
+    // 微信id和设备id信息
+    let wxInfo = {
+        wxId: getQueryString("uuid"),
+        deviceId: getQueryString("deviceId")
+    };
+
+    if (wxInfo.wxId === null) {
+        wxInfo.wxId = window.sessionStorage.getItem("wxId");
+        wxInfo.deviceId = window.sessionStorage.getItem("deviceId");
+
+        if (wxInfo.wxId === null) {
+            const params = {
+                url: window.location.href.split("#")[0]
+            };
+
+            getUserInfo(params, reqHeader(params), (res) => {
+                const {status, data, msg} = res;
+                if (parseInt(status, 10) === 302) {
+                    window.location.href = data;
+                } else if (parseInt(status, 10) === 1) {
+                    window.sessionStorage.setItem("wxInfo", JSON.stringify(data));
+                }
+            });
+        }
+    }
+
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,
         isIos: isIos
     };
+}
+
+
+// 获取url?后某参数
+export function getQueryString(name) {
+    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    let r = window.location.search.substr(1).match(reg);
+    if (r !== null) {
+        return /*unescape(*/r[2]/*)*/;
+    }
+    return null;
 }
 
 /**
@@ -266,7 +304,13 @@ export function loadScript(url, callback) {
  * 0ab25001ad1cd646887242fcaebf752f //xiong xiao song
  *
  */
-export function getEncryptHeader(Oid = {deviceId: "0ab25001ad1cd646887242fcaebf752f", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
+export function getEncryptHeader(Oid = {deviceId: "3c3cf52ccf882f55db3445524e60f10d", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
+    let sessionOid = {
+        wxId: window.sessionStorage.getItem("wxId"),
+        deviceId: window.sessionStorage.getItem("deviceId")
+    };
+    Oid = Object.assign({}, sessionOid, Oid);
+
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
@@ -283,11 +327,9 @@ export function getEncryptHeader(Oid = {deviceId: "0ab25001ad1cd646887242fcaebf7
     };
 }
 
-export function reqHeader(data, header) {
-    let isReturnSign = true;
+export function reqHeader(data, header, isReturnSign) {
     if (typeof header === 'undefined') {
         header = getEncryptHeader();
-        isReturnSign = false;
     }
     let obj = Object.assign({}, header, data);
     let str = Object.keys(obj).sort().map((key) => {
@@ -360,4 +402,14 @@ export function wxConfig(data = {}) {
             'uploadImage'
         ]
     });
+}
+
+// 去除字符串所有标点
+export function stripScript(s) {
+    let pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+    let rs = "";
+    for (let i = 0; i < s.length; i++) {
+        rs = rs + s.substr(i, 1).replace(pattern, '');
+    }
+    return rs;
 }
