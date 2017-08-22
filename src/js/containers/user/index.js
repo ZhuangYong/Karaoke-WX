@@ -41,17 +41,12 @@ class UserIndex extends BaseComponent {
     }*/
 
     componentDidUpdate(preProps) {
-        // if (preProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
-        //     this.updateUserInfo();
-        // }
         if (preProps.recordsList.recordsListStamp !== this.props.recordsList.recordsListStamp) {
             this.updateRecordsList();
         }
     }
 
     componentDidMount() {
-        // const userInfoParams = {};
-        // this.props.userInfoAction(userInfoParams, reqHeader(userInfoParams));
 
         const getRecordsListParams = {
             pageSize: 9,
@@ -229,9 +224,9 @@ class UserIndex extends BaseComponent {
     }
 
     showVIPStatus() {
-        const userInfo = this.state.userInfoData;
+        const {data} = this.props.userInfo.userInfoData || {data: []};
         let vipStatus = '';
-        switch (userInfo.vipStatus) {
+        switch (data.vipStatus) {
             case -1:
                 vipStatus = "暂时不是VIP哟";
                 break;
@@ -239,7 +234,7 @@ class UserIndex extends BaseComponent {
                 vipStatus = "VIP已过期";
                 break;
             case 1:
-                vipStatus = 'VIP到期时间: ' + timeToYmd(userInfo.expireTime);
+                vipStatus = 'VIP到期时间: ' + timeToYmd(data.expireTime);
                 break;
             default:
                 vipStatus = "VIP";

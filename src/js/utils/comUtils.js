@@ -281,10 +281,7 @@ export function loadScript(url, callback) {
  * 607a674586b0024ac5343e2cb8b82e4c // 蒋程
  * 59a3254c724a852d10052c65c2c5dfd1 // 朱琴
  */
-export function getEncryptHeader(Oid = {
-    deviceId: "",
-    wxId: ""
-}) {
+export function getEncryptHeader(Oid) {
     let sessionOid = {};
     const userInfo = getWxinfoFromSession();
     if (userInfo.status === 1) {
@@ -294,7 +291,8 @@ export function getEncryptHeader(Oid = {
             deviceId: data.deviceId
         };
     }
-    Oid = Object.assign({}, sessionOid, Oid);
+    Oid && (Oid = Object.assign({}, sessionOid, Oid));
+    !Oid && (Oid = sessionOid);
 
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');

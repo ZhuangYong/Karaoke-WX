@@ -131,31 +131,7 @@ class Feedback extends BaseComponent {
 
     render() {
         const questionList = this.state.questionList;
-        let QuestionList = [];
-        questionList.forEach((item, ind) => {
-            QuestionList.push(<GridTile
-                key={item.id}
-                style={styles.questionsTile}
-                onTouchTap={() => {
-                    const newList = questionList.filter((tile) => {
-                       if (tile.id === item.id) {
-                           tile.isSelected = true;
-                           return tile;
-                       }
-                       tile.isSelected = false;
-                       return tile;
-                    });
-                    let submitParams = this.state.submitParams;
-                    submitParams.questionIds = item.id;
-                    this.setState({
-                        submitParams: submitParams,
-                        questionList: newList
-                    });
-                }}
-            >
-                <div style={questionList[ind].isSelected ? styles.questionsContentActive : styles.questionsContent}>{item.questionName}</div>
-            </GridTile>);
-        });
+        const submitParams = this.state.submitParams;
 
         return (
             <div>
@@ -175,7 +151,19 @@ class Feedback extends BaseComponent {
                             padding={0}
                             style={{paddingLeft: "5px", paddingRight: "5px"}}
                         >
-                            {QuestionList}
+                            {questionList.map((item) => (<GridTile
+                                key={item.id}
+                                style={styles.questionsTile}
+                                onTouchTap={() => {
+
+                                    submitParams.questionIds = item.id;
+                                    this.setState({
+                                        submitParams: submitParams
+                                    });
+                                }}
+                            >
+                                <div style={submitParams.questionIds === item.id ? styles.questionsContentActive : styles.questionsContent}>{item.questionName}</div>
+                            </GridTile>))}
                         </GridList>
 
                     </section>
@@ -192,7 +180,6 @@ class Feedback extends BaseComponent {
                             placeholder="亲爱的麦粉，把你遇到的问题或建议写下来吧......"
                             maxLength="200"
                             onChange={(e) => {
-                                let submitParams = this.state.submitParams;
                                 submitParams.content = e.target.value;
                                 this.setState({
                                     submitParams: submitParams
@@ -260,7 +247,6 @@ class Feedback extends BaseComponent {
                                 style={{width: "100%", height: "50px", backgroundColor: "#fff", border: "none", fontSize: "18px", textIndent: "10px", borderRadius: "4px"}}
                                 onChange={(e) => {
                                     const val = e.target.value;
-                                    const submitParams = this.state.submitParams;
                                     submitParams.tel = val;
                                     this.setState({
                                         submitParams: submitParams
@@ -333,7 +319,6 @@ class Feedback extends BaseComponent {
         );
     }
 
-
     // 页面状态识别
     matchPages() {
         let res = null;
@@ -369,8 +354,7 @@ class Feedback extends BaseComponent {
         const matchParams = this.state.matchParams;
         if (typeof matchParams.deviceId !== "undefined") {
             const encryptHeader = getEncryptHeader({
-                deviceId: matchParams.deviceId,
-                wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"
+                deviceId: matchParams.deviceId
             });
 
             header = reqHeader(submitParams, encryptHeader);
@@ -432,17 +416,13 @@ class Feedback extends BaseComponent {
     updateQuestionList() {
         const {data} = this.props.questionList.questionListData || {data: {}};
         const {result} = data || {result: []};
-        result[0].isSelected = true;
 
         let submitParams = this.state.submitParams;
         submitParams.questionIds = result[0].id;
 
         this.setState({
             submitParams: submitParams,
-            questionList: result.filter((item) => {
-                if (!item.isSelected) item.isSelected = false;
-                return item;
-            })
+            questionList: result
         });
     }
 }
