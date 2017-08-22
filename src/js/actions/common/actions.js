@@ -6,3 +6,10 @@ export function updateScreen() {
         info: 'update screen w, h'
     };
 }
+
+export function getUserInfoFromSession() {
+    return {
+        type: ActionTypes.COMMON.COMMON_UPDATE_USER_INFO,
+        info: 'update user info'
+    };
+}

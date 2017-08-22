@@ -26,9 +26,37 @@ import EffectIcon from "../../../img/common/icon_effect.png";
 const style = {
     controllerBtn: {
         width: "50%",
-        height: "100px",
+        height: "3rem",
         textAlign: "center",
-        marginTop: "14px"
+        marginTop: ".5rem"
+    },
+    extArea: {
+        border: "none",
+        boxShadow: "none",
+        width: "100%",
+        display: "flex",
+        marginTop: "30%",
+        padding: '0 1.4rem',
+        justifyContent: "center",
+        alignItems: "center",
+        btn: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            border: "1px solid #ff6832",
+            borderRadius: '1rem',
+            width: '2.2rem',
+            height: '1.2rem',
+            icon: {
+                height: "20px",
+                marginRight: '.1rem'
+            },
+            label: {
+                margin: 0,
+                fontSize: '.45rem',
+                color: "#ff6832"
+            }
+        }
     },
     tabs: {
         leftTab: {
@@ -201,39 +229,35 @@ class SongController extends BaseComponent {
 
                         </div>
 
-                        <Paper style={{
-                            border: "none",
-                            boxShadow: "none",
-                            width: "100%",
-                            display: "flex",
-                            marginTop: "30%",
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}>
-                            <div
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    border: "1px solid",
-                                    borderRadius: 12
-                                }}
-                                onTouchTap={() => {
-                                    linkTo('controller/barrage', false, null);
-                                }}
-                            >
-                                <img src={BarrageIcon} style={{height: "20px"}}/>
-                                <p style={{margin: 0}}>弹幕</p>
+                        <Paper style={style.extArea}>
+                            <div style={{
+                                width: '50%',
+                                display: 'flex',
+                                justifyContent: 'center'}}>
+                                <div
+                                    style={style.extArea.btn}
+                                    onTouchTap={() => {
+                                        linkTo('controller/barrage', false, null);
+                                    }}
+                                >
+                                    <img src={BarrageIcon} style={style.extArea.btn.icon}/>
+                                    <p style={style.extArea.btn.label}>弹幕</p>
+                                </div>
                             </div>
-                            <RaisedButton
-                                label="音效"
-                                secondary={true}
-                                style={{display: "table-cell", padding: "0 10%", boxShadow: "none", width: "50%"}}
-                                icon={<MusicStyleIcon/>}
-                                onTouchTap={() => {
-                                    linkTo('controller/effect', false, null);
-                                }}
-                            />
+                            <div style={{
+                                width: '50%',
+                                display: 'flex',
+                                justifyContent: 'center'}}>
+                                <div
+                                    style={style.extArea.btn}
+                                    onTouchTap={() => {
+                                        linkTo('controller/effect', false, null);
+                                    }}
+                                >
+                                    <img src={BarrageIcon} style={style.extArea.btn.icon}/>
+                                    <p style={style.extArea.btn.label}>音效</p>
+                                </div>
+                            </div>
                         </Paper>
 
                     </Tab>
@@ -250,7 +274,7 @@ class SongController extends BaseComponent {
                         <div>
                             {
                                 !this.state.emptyChooseSongs ? (
-                                    <Paper>
+                                    <Paper style={style.chooseList}>
                                         <List>
                                             {
                                                 playingSong ? (
@@ -294,7 +318,7 @@ class SongController extends BaseComponent {
                                         </List>
                                     </Paper>
                                 ) : (
-                                    <Paper>
+                                    <Paper style={style.chooseList}>
                                         没有已点歌曲
                                     </Paper>
                                 )
@@ -311,7 +335,7 @@ class SongController extends BaseComponent {
                         <div>
                             {
                                 historySongList ? (
-                                    <Paper>
+                                    <Paper className="history-song-list">
                                         <List className="song-list">
                                             {historySongList.map((song) => (
                                                 <SongItem
@@ -323,7 +347,7 @@ class SongController extends BaseComponent {
                                         </List>
                                     </Paper>
                                 ) : (
-                                    <Paper>
+                                    <Paper className="history-song-list">
                                         没有最近唱过歌曲
                                     </Paper>
                                 )

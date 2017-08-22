@@ -41,17 +41,17 @@ class UserIndex extends BaseComponent {
     }*/
 
     componentDidUpdate(preProps) {
-        if (preProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
-            this.updateUserInfo();
-        }
+        // if (preProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
+        //     this.updateUserInfo();
+        // }
         if (preProps.recordsList.recordsListStamp !== this.props.recordsList.recordsListStamp) {
             this.updateRecordsList();
         }
     }
 
     componentDidMount() {
-        const userInfoParams = {};
-        this.props.userInfoAction(userInfoParams, reqHeader(userInfoParams));
+        // const userInfoParams = {};
+        // this.props.userInfoAction(userInfoParams, reqHeader(userInfoParams));
 
         const getRecordsListParams = {
             pageSize: 9,
@@ -61,7 +61,8 @@ class UserIndex extends BaseComponent {
     }
 
     render() {
-        const userInfo = this.state.userInfoData;
+        const {data} = this.props.userInfo.userInfoData || {data: []};
+        const userInfo = data;
         const recordsList = this.state.recordsListData;
         const recordsListTotalCounts = this.state.recordsListTotalCounts;
         return (

@@ -2,11 +2,12 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
-import {getUserConfig} from "../actions/userActions";
+import {getUserConfig, getUserInfo} from "../actions/userActions";
+import {getUserInfoFromSession, updateScreen} from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
-import {chkDevice, loadScript, reqHeader, wxConfig} from "../utils/comUtils";
+import {chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader} from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
 import NotFound from "../components/common/notfound";
@@ -168,10 +169,12 @@ class App extends React.Component {
         super(props);
         this.state = {
             showMsg: false,
-            msgText: ''
+            msgText: '',
+            timer: null
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
+        this.sizeChange = this.sizeChange.bind(this);
     }
 
     componentWillMount() {
@@ -189,6 +192,29 @@ class App extends React.Component {
         }
         console.log("App component did mount ");
         this.removeAppLoading();
+        window.addEventListener('resize', this.sizeChange);
+
+        let wxInfo = {
+            wxId: getQueryString("uuid") || "",
+            deviceId: getQueryString("deviceId") || ""
+        };
+
+        const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+        if (typeof wxInfoSession.status === "undefined") {
+            const params = {
+                url: window.location.href.split("#")[0]
+            };
+            this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)), (res) => {
+                const {status, data, msg} = res;
+                if (parseInt(status, 10) === 302) {
+                    window.location.href = data;
+                } else if (parseInt(status, 10) === 1) {
+                    window.sessionStorage.setItem("wxInfo", JSON.stringify(res));
+                }
+            });
+        } else {
+            this.props.action_getUserInfoFromSession();
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -269,18 +295,30 @@ class App extends React.Component {
         });
     }
 
+    sizeChange () {
+        if (!this.state.timer) {
+            this.state.timer = setTimeout(() => {
+                this.props.action_updateScreen();
+                clearTimeout(this.state.timer);
+                this.state.timer = null;
+            }, 500);
+        }
+    }
 }
+
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        user: state.app.user.userConfig
+        userInfo: state.app.user.userInfo
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
-    let boundActionCreators = bindActionCreators(getUserConfig, dispatch);
     return {
-        action_getUserConfig: boundActionCreators
+        action_getUserConfig: bindActionCreators(getUserConfig, dispatch),
+        action_updateScreen: bindActionCreators(updateScreen, dispatch),
+        action_getUserInfo: bindActionCreators(getUserInfo, dispatch),
+        action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch)
     };
 };
 

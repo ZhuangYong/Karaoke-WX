@@ -18,6 +18,13 @@ export default (state = initState, action) => {
                 loading: "userInfoLoading",
                 stamp: "userInfoStamp"
             });
+        case ActionTypes.COMMON.COMMON_UPDATE_USER_INFO:
+            return Object.assign({}, state, {
+                userInfoData: JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}"),
+                userInfoMsg: "get user info from session",
+                loading: false,
+                userInfoStamp: 1
+            });
         default:
             return state;
     }

@@ -504,7 +504,8 @@ module.exports = {
     globals: {    // 声明在代码中自定义的全局变量
         'CONFIG': true,
         'sysConfig':true,
-         'sysInfo':true
+         'sysInfo':true,
+        "HYAPP": true
     },
     env: {            // 定义预定义的全局变量,比如browser: true，这样你在代码中可以放心使用宿主环境给你提供的全局变量。
         browser: true, // browser global variables.
