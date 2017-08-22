@@ -17,6 +17,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import AppBar from 'material-ui/AppBar';
 import OperateIcon from "material-ui/svg-icons/navigation/more-horiz";
 
+import SvgIconFace from 'material-ui/svg-icons/action/face';
 class UserIndex extends BaseComponent {
 
     constructor(props) {
@@ -125,21 +126,41 @@ class UserIndex extends BaseComponent {
                             titleStyle={{color: "#000"}}
                             title="我的录音"
                             showMenuIconButton={false}
-                            iconElementRight={<RaisedButton
-                                backgroundColor="#ccc"
+                            iconElementRight={<div
+                                style={{marginTop: "-8px"}}
                                 onTouchTap={() => {
-                                    linkTo("user/records", false, null);
+                                    linkTo("user/recordings", false, null);
                                 }}
                             >
-                                共{recordsListTotalCounts}首 >
-                            </RaisedButton>}
+
+                                <span
+                                    style={{
+                                        lineHeight: "64px",
+                                        fontSize: "18px",
+                                        color: "#959293"
+                                    }}>共{recordsListTotalCounts}首</span>
+                                <svg
+                                    viewBox="0 0 32 32"
+                                    style={{
+                                        display: "inline-block",
+                                        marginLeft: "6px",
+                                        marginBottom: "-3px",
+                                        marginRight: "3px",
+                                        color: "#e48265",
+                                        fill: "currentcolor",
+                                        height: "20px",
+                                        width: "20px",
+                                        userSelect: "none",
+                                        transition: "all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms"}}>
+                                    <path style={{fillRule: "evenodd", clipRule: "evenodd"}} d="M20.536,15.121l-7.657-7.657c-0.391-0.391-1.024-0.391-1.414,0c-0.391,0.391-0.391,1.024,0,1.414L18.586,16l-7.121,7.121c-0.391,0.391-0.391,1.024,0,1.414c0.391,0.391,1.024,0.391,1.414,0l7.657-7.657c0.24-0.24,0.314-0.568,0.26-0.879C20.85,15.69,20.775,15.361,20.536,15.121z M16,0C7.163,0,0,7.164,0,16c0,8.837,7.163,16,16,16c8.837,0,16-7.163,16-16C32,7.164,24.837,0,16,0z M16,30C8.268,30,2,23.732,2,16C2,8.268,8.268,2,16,2c7.732,0,14,6.268,14,14C30,23.732,23.732,30,16,30z"/>
+                                </svg>
+                            </div>}
                         />
                         <GridList
                             cellHeight={100}
                             style={{margin: "6px"}}
                             cols={3}
                         >
-
                             {recordsList.map((tile) => (
                                 <GridTile
                                     key={tile.uid}
@@ -160,7 +181,7 @@ class UserIndex extends BaseComponent {
                                             e.target.src = defaultImg;
                                         }}
                                         onTouchTap={() => {
-                                            linkTo(`s/p/${tile.uid}`, false, null);
+                                            linkTo(`user/recordings/play/${tile.uid}`, false, null);
                                         }}
                                     />
                                 </GridTile>

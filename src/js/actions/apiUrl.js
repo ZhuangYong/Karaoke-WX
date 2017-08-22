@@ -58,22 +58,22 @@ export default {
     // 获取我的订单列表
     "API_GET_ORDER_FORM": "/api/getOrderForm.json",
 
-    // 获取歌曲分类
+    // 获取歌曲榜单排行
     "API_QUERY_ALBUM": "/rank/album",
-    // 获取歌曲推荐
+    // 获取歌曲热门推荐
     "API_QUERY_ALBUM_RECOMMEND": "/recommend/album",
-
+    // 推送接口
     "API_PUSH": "/music/msgPush",
+    // 推送
+    "API_SET_SONG_TOP": "/music/msgPush",
     // 搜索
     "API_SEARCH": "/music/search",
     // 已点列表
     "API_CHOOSE_LIST": "/music/getRecordJson",
-    // 推送
-    "API_SET_SONG_TOP": "/music/msgPush",
     // 热门搜索关键字，cms后台可定义
     "API_GET_HOT_WORD": "/music/searchKeyList",
 
-    // 歌星
+    // 歌星列表
     "API_GET_SINGER_CATEGORY_ALBUM": "/singer_catagory/album",
     // 歌手歌曲列表
     "API_GET_ACTORS_ALBUM": "/actors/album",

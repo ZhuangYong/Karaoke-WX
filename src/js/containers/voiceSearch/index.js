@@ -9,7 +9,7 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
-import BtnIcon from '../../../img/voiceSearch.png';
+import BtnIcon from '../../../img/voice_search.png';
 import "../../../sass/voiceSearch.scss";
 import {linkTo, stripScript} from "../../utils/comUtils";
 

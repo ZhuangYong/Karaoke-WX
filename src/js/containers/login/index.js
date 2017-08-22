@@ -27,7 +27,6 @@ class Login extends BaseComponent {
         this.state = {
             matchParams: this.props.match.params
         };
-        console.log(this.props.match.params);
 
     }
 
@@ -55,7 +54,7 @@ class Login extends BaseComponent {
                     textAlign: "center",
                     color: "#000",
                     fontSize: "18px"
-                }}>{this.content()}</p>
+                }}>{this.matchPages()}</p>
 
                 {this.state.matchParams.state.toString() === "home" && (<section
                     style={{position: "absolute", bottom: "10%", left: 0, padding: "20px 10px", width: "100%"}}
@@ -91,7 +90,7 @@ class Login extends BaseComponent {
         );
     }
 
-    content() {
+    matchPages() {
         const params = this.state.matchParams;
         let text = "";
         switch (params.state) {

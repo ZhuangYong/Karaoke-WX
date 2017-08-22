@@ -302,9 +302,10 @@ export function loadScript(url, callback) {
  * 2f8ea06784194d56c19d96d4d75a1b6b // jin biao
  * 7ec58553c6bdcca24eb7a33bfcd84bd3 // a du
  * 0ab25001ad1cd646887242fcaebf752f //xiong xiao song
- *
+ * 607a674586b0024ac5343e2cb8b82e4c // 蒋程
+ * 59a3254c724a852d10052c65c2c5dfd1 // 朱琴
  */
-export function getEncryptHeader(Oid = {deviceId: "3c3cf52ccf882f55db3445524e60f10d", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
+export function getEncryptHeader(Oid = {deviceId: "", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
     let sessionOid = {
         wxId: window.sessionStorage.getItem("wxId"),
         deviceId: window.sessionStorage.getItem("deviceId")

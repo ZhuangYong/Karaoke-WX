@@ -27,7 +27,7 @@ import Search from "../containers/song/search";
 
 import AudioEffect from "../containers/controller/audioEffect";
 import Barrage from "../containers/controller/barrage";
-import Records from '../containers/user/records';
+import Recordings from '../containers/user/recordings';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import Preview from '../containers/user/photoAlbum/preview';
 import OrderForm from "../containers/user/orderForm/index";
@@ -96,8 +96,8 @@ const SongsListContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
-const RecordsContainer = () => (
-    <Bundle load={Records}>
+const RecordingsContainer = () => (
+    <Bundle load={Recordings}>
         {Component => <Component />}
     </Bundle>
 );
@@ -204,7 +204,7 @@ class App extends React.Component {
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
                         {/*
-                        *state: home/alipaySucess/alipayFailed(页面状态)
+                        *state: home/aliPaySuccess/aliPayFailed(页面状态)
                         * openid: 用户微信openId
                         * pollingId: OTT轮询id
                         * deviceId: OTT设备id
@@ -215,8 +215,8 @@ class App extends React.Component {
                         <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>
                         <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
                         <Route path={`/user`} exact component={UserContainer}/>
-                        <Route path={`/user/records`} exact component={RecordsContainer}/>
-                        <Route path={`/s/p/:uid`} component={AudioContainer}/>
+                        <Route path={`/user/recordings`} exact component={RecordingsContainer}/>
+                        <Route path={`/user/recordings/play/:uid`} component={AudioContainer}/>
                         <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
                         {/*imgId: 预览图片id*/}
                         <Route path={`/user/photoAlbumPreview/:imgId`} exact component={PreviewContainer}/>

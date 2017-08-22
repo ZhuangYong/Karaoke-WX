@@ -9,10 +9,13 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import {alipayPay, getPayList, getWXPayParams} from "../../actions/payAction";
 import {getEncryptHeader, linkTo, reqHeader} from "../../utils/comUtils";
+import navUtils from "../../utils/navUtils";
 
 import RaisedButton from 'material-ui/RaisedButton';
 import CheckboxIcon from '../../../img/pay_checkbox.png';
 import CheckboxSelectedIcon from '../../../img/pay_checkbox_selected.png';
+import PaySuccessIcon from "../../../img/pay_success.png";
+import PayFailedIcon from "../../../img/pay_failed.png";
 
 const styles = {
     submitBtn: {
@@ -60,10 +63,14 @@ class Pay extends BaseComponent {
 
         this.state = {
             matchParams: this.props.match.params,
-            payListActiveId: null,
-            payListActivePrice: null,
+            payListActiveItem: {
+                productId: null,
+                price: null
+            },
             isCheckboxChecked: true,
-            payList: []
+            payList: [],
+            isPayList: true,
+            isPaySuccess: false
         };
 
         this.pay = this.pay.bind(this);
@@ -73,111 +80,135 @@ class Pay extends BaseComponent {
 
     componentDidUpdate(preProps) {
         if (preProps.result.payListStamp !== this.props.result.payListStamp) {
-            const {data} = this.props.result.payListData || {data: []};
-            this.setState({
-                payListActiveId: data[0].productId,
-                payListActivePrice: data[0].price,
-                payList: data
-            });
+            this.updatePayList();
         }
     }
 
     componentDidMount() {
-        const getPayListParams = {};
-        this.props.getPayListAction(getPayListParams, reqHeader(getPayListParams));
+        this.matchPages();
     }
 
     render() {
         const payList = this.state.payList;
-        const payListActiveId = this.state.payListActiveId;
-        const payListActivePrice = this.state.payListActivePrice;
+        const payListActiveItem = this.state.payListActiveItem;
         const isCheckboxChecked = this.state.isCheckboxChecked;
         return (
             <div>
-                <section>
-                    <header style={styles.itemBox}>
-                        <div style={styles.itemLeft}>VIP会员套餐</div>
-                    </header>
+                {this.state.isPayList ? (<div>
+                    <section>
+                        <header style={styles.itemBox}>
+                            <div style={styles.itemLeft}>VIP会员套餐</div>
+                        </header>
 
-                    <ul style={{
-                        padding: 0,
-                        margin: 0,
-                        listStyle: "none"
-                    }}>
-                        {payList.map((tile) => (<li
-                            key={tile.productId}
-                            style={payListActiveId === tile.productId ? styles.itemBoxActive : styles.itemBox}
-                            onTouchTap={() => {
-                                this.setState({
-                                    payListActivePrice: tile.price,
-                                    payListActiveId: tile.productId
-                                });
-                            }}
-                        >
-                            <div style={styles.itemLeft}>{tile.productName}</div>
-                            <div style={styles.itemRight}>{tile.price}</div>
-                        </li>))}
+                        <ul style={{
+                            padding: 0,
+                            margin: 0,
+                            listStyle: "none"
+                        }}>
+                            {payList.map((tile) => (<li
+                                key={tile.productId}
+                                style={payListActiveItem.productId === tile.productId ? styles.itemBoxActive : styles.itemBox}
+                                onTouchTap={() => {
+                                    this.setState({
+                                        payListActiveItem: tile
+                                    });
+                                }}
+                            >
+                                <div style={styles.itemLeft}>{tile.productName}</div>
+                                <div style={styles.itemRight}>{tile.price}</div>
+                            </li>))}
 
-                    </ul>
+                        </ul>
 
-                    <div style={styles.itemLeft}>
-                        <input
-                            type="checkbox"
-                            id="payCheckBox"
-                            style={{display: "none"}}
-                            checked={isCheckboxChecked}
-                            onChange={() => {
-                                this.setState({
-                                    isCheckboxChecked: !isCheckboxChecked
-                                });
-                            }}
-                        />
-                        <label htmlFor="payCheckBox">
-                            <img
-                                src={isCheckboxChecked ? CheckboxSelectedIcon : CheckboxIcon}
-                                alt=""
-                                style={{
-                                    position: "relative",
-                                    top: "2px",
-                                    marginRight: "5px",
-                                    width: "15px",
-                                    height: "15px"
+                        <div style={styles.itemLeft}>
+                            <input
+                                type="checkbox"
+                                id="payCheckBox"
+                                style={{display: "none"}}
+                                checked={isCheckboxChecked}
+                                onChange={() => {
+                                    this.setState({
+                                        isCheckboxChecked: !isCheckboxChecked
+                                    });
                                 }}
                             />
-                            同意并阅读
-                        </label>
-                        <span
-                            style={{color: "#2522ff"}}
-                            onTouchTap={() => {
-                                linkTo(`protocol`, false, null);
+                            <label htmlFor="payCheckBox">
+                                <img
+                                    src={isCheckboxChecked ? CheckboxSelectedIcon : CheckboxIcon}
+                                    alt=""
+                                    style={{
+                                        position: "relative",
+                                        top: "2px",
+                                        marginRight: "5px",
+                                        width: "15px",
+                                        height: "15px"
+                                    }}
+                                />
+                                同意并阅读
+                            </label>
+                            <span
+                                style={{color: "#2522ff"}}
+                                onTouchTap={() => {
+                                    linkTo(`protocol`, false, null);
+                                }}
+                            >《金麦客支付协议》</span>
+                        </div>
+                    </section>
+                    <section
+                        style={{padding: "20px 10px", width: "100%", clear: "both"}}
+                    >
+                        <header style={{
+                            marginBottom: "20px",
+                            textAlign: "center",
+                            color: "#252525",
+                            fontSize: "14px"
+                        }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem.price}元</span></header>
+                        <RaisedButton
+                            disabled={!isCheckboxChecked && payListActiveItem !== null}
+                            backgroundColor="#ff8632"
+                            disabledBackgroundColor="#ccc"
+                            label="确认支付"
+                            style={styles.submitBtn}
+                            buttonStyle={styles.submitBtn}
+                            labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
+                            onClick={this.pay}
+                        />
+                    </section>
+                </div>) : (<session>
+                    <header>
+                        <img
+                            style={{
+                                display: "block",
+                                margin: "35% auto 0",
+                                width: "100px"
                             }}
-                        >《金麦客支付协议》</span>
-                    </div>
-                </section>
-                <section
-                    style={{padding: "20px 10px", width: "100%", clear: "both"}}
-                >
-                    <header style={{
-                        marginBottom: "20px",
-                        textAlign: "center",
-                        color: "#252525",
-                        fontSize: "14px"
-                    }}>支付金额: <span style={{color: "#c48848"}}>{payListActivePrice}元</span></header>
+                            src={this.state.isPaySuccess ? PaySuccessIcon : PayFailedIcon}
+                            alt=""/>
+                        <p style={{
+                            textAlign: "center",
+                            color: "#ff8632",
+                            fontSize: "18px"
+                        }}>{this.state.isPaySuccess ? "支付成功" : "支付失败，请重新支付"}</p>
+                    </header>
+
                     <RaisedButton
-                        disabled={!isCheckboxChecked && payListActiveId !== null}
+                        disabled={!isCheckboxChecked && payListActiveItem !== null}
                         backgroundColor="#ff8632"
                         disabledBackgroundColor="#ccc"
-                        label="确认支付"
-                        style={styles.submitBtn}
+                        label="关闭"
+                        style={Object.assign({}, styles.submitBtn, {marginTop: "220px"})}
                         buttonStyle={styles.submitBtn}
                         labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
-                        onClick={this.pay}
+                        onClick={() => {
+                            window.AlipayJSBridge.call('closeWebview');
+                        }}
                     />
-                </section>
+                </session>)}
             </div>
         );
     }
 
+    // 点击支付
     pay() {
         const {isWeixin} = window.sysInfo;
         if (isWeixin) {
@@ -187,8 +218,9 @@ class Pay extends BaseComponent {
         }
     }
 
+    // 微信支付
     wxPay() {
-        const productId = this.state.payListActiveId;
+        const productId = this.state.payListActiveItem.productId;
         const matchParams = this.state.matchParams;
         let header = null;
         let params = {
@@ -225,8 +257,9 @@ class Pay extends BaseComponent {
         });
     }
 
+    // 支付宝支付
     aliPay() {
-        const productId = this.state.payListActiveId;
+        const productId = this.state.payListActiveItem.productId;
         const matchParams = this.state.matchParams;
         const params = {
             uuid: matchParams.pollingId,
@@ -240,6 +273,45 @@ class Pay extends BaseComponent {
 
             window.location.href = data.payUrl;
         });
+    }
+
+    // 更新支付列表
+    updatePayList() {
+        const {data} = this.props.result.payListData || {data: []};
+        this.setState({
+            payListActiveItem: data[0],
+            payList: data
+        });
+    }
+
+    // 识别页面状态
+    matchPages() {
+        const matchParams = this.state.matchParams;
+        switch (matchParams.state) {
+            case "home": {
+                const getPayListParams = {};
+                this.props.getPayListAction(getPayListParams, reqHeader(getPayListParams));
+                this.setState({
+                    isPayList: true
+                });
+            }
+                break;
+            case "aliPaySuccess":
+                this.setState({
+                    isPayList: false,
+                    isPaySuccess: true
+                });
+                break;
+            case "aliPayFailed":
+                this.setState({
+                    isPayList: false,
+                    isPaySuccess: false
+                });
+                break;
+            default:
+                navUtils.replace("/*");
+                break;
+        }
     }
 }
 

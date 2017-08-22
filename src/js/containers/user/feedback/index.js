@@ -15,7 +15,7 @@ import {GridList, GridTile} from "material-ui/GridList";
 import RaisedButton from 'material-ui/RaisedButton';
 import ClearIcon from "material-ui/svg-icons/content/clear";
 import InputBox from "../../../components/photoAlbum";
-import SubmitSuccessIcon from "../../../../img/submitSuccess.png";
+import SubmitSuccessIcon from "../../../../img/submit_success.png";
 import navUtils from "../../../utils/navUtils";
 
 const styles = {
@@ -159,7 +159,7 @@ class Feedback extends BaseComponent {
 
         return (
             <div>
-                {this.matchState() ? (<div>
+                {this.matchPages() ? (<div>
                     <section
                         style={{backgroundColor: "#eee"}}
                     >
@@ -334,7 +334,8 @@ class Feedback extends BaseComponent {
     }
 
 
-    matchState() {
+    // 页面状态识别
+    matchPages() {
         let res = null;
         const matchParams = this.props.match.params;
         switch (matchParams.state) {

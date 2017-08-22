@@ -244,22 +244,18 @@ class Home extends BaseComponent {
                             {this.getRecommendSongsContent()}
                         </List>
 
+
                         <div style={style.loading}>
-                            {
-                                this.state.loading ? (<span><RefreshIndicator
-                                    size={30}
-                                    left={70}
-                                    top={0}
-                                    loadingColor="#FF9800"
-                                    status="loading"
-                                    style={style.loadingBar}
-                                />正在加载</span>) : ""
-                            }
+                            {this.state.loading ? (<RefreshIndicator
+                                size={30}
+                                left={70}
+                                top={0}
+                                loadingColor="#FF9800"
+                                status="loading"
+                                style={style.loadingBar}
+                            />) : ""}
 
-                            {
-                                this.state.lastPage ? "亲爱滴，已经到底了" : ""
-                            }
-
+                            <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
                         </div>
                     </Paper>
                 </div>
@@ -294,7 +290,6 @@ class Home extends BaseComponent {
         if (this.state.loading || this.state.lastPage) return;
         const currentPage = this.state.currentPage + 1;
         const pageSize = this.state.pageSize;
-        this.state.loading = true;
         let param = {currentPage: currentPage, pageSize: pageSize, id: '48'};
         //个性化推荐
         this.props.action_getRecommend(param, reqHeader(param), resolve);
