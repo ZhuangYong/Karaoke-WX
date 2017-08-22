@@ -86,32 +86,6 @@ export function chkDevice() {
     let isAndroid = ua.indexOf('android') !== -1;
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
 
-    // 微信id和设备id信息
-    let wxInfo = {
-        wxId: getQueryString("uuid"),
-        deviceId: getQueryString("deviceId")
-    };
-
-    if (wxInfo.wxId === null) {
-        wxInfo.wxId = window.sessionStorage.getItem("wxId");
-        wxInfo.deviceId = window.sessionStorage.getItem("deviceId");
-
-        if (wxInfo.wxId === null) {
-            const params = {
-                url: window.location.href.split("#")[0]
-            };
-
-            getUserInfo(params, reqHeader(params), (res) => {
-                const {status, data, msg} = res;
-                if (parseInt(status, 10) === 302) {
-                    window.location.href = data;
-                } else if (parseInt(status, 10) === 1) {
-                    window.sessionStorage.setItem("wxInfo", JSON.stringify(data));
-                }
-            });
-        }
-    }
-
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,
@@ -119,6 +93,9 @@ export function chkDevice() {
     };
 }
 
+export function getWxinfoFromSession() {
+    return JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+}
 
 // 获取url?后某参数
 export function getQueryString(name) {
@@ -304,7 +281,10 @@ export function loadScript(url, callback) {
  * 0ab25001ad1cd646887242fcaebf752f //xiong xiao song
  *
  */
-export function getEncryptHeader(Oid = {deviceId: "3c3cf52ccf882f55db3445524e60f10d", wxId: "ohSltvwgabfZPNDxc2r14tlf7rwM"}) {
+export function getEncryptHeader(Oid = {
+    deviceId: "",
+    wxId: ""
+}) {
     let sessionOid = {
         wxId: window.sessionStorage.getItem("wxId"),
         deviceId: window.sessionStorage.getItem("deviceId")

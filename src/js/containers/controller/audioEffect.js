@@ -13,6 +13,9 @@ import ReduceIcon from "material-ui/svg-icons/content/remove";
 import {reqHeader} from "../../utils/comUtils";
 import bindActionCreators from "redux/es/bindActionCreators";
 import {push} from "../../actions/audioActons";
+import ToneIconAdd from "../../../img/controller/tone_add.png";
+import ToneIconSmooth from "../../../img/controller/tone_smooth.png";
+import ToneIconReduce from "../../../img/controller/tone_reduce.png";
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -60,7 +63,7 @@ class AudioEffect extends React.Component {
                         <div className="button" onClick={() => {
                             this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
                         }}>
-                            b
+                            <img src={ToneIconReduce} style={{height: '.4rem'}}/>
                         </div>
                         <p className="label">降调</p>
                     </div>
@@ -68,7 +71,7 @@ class AudioEffect extends React.Component {
                         <div className="button" onClick={() => {
                             this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
                         }}>
-                            b
+                            <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
                         </div>
                         <p className="label">平调</p>
                     </div>
@@ -76,7 +79,7 @@ class AudioEffect extends React.Component {
                         <div className="button" onClick={() => {
                             this.sendEffect(AUDIO_EFFECT_TONE_ADD);
                         }}>
-                            b
+                            <img src={ToneIconAdd} style={{height: '.4rem'}}/>
                         </div>
                         <p className="label">升调</p>
                     </div>

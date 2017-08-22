@@ -43,15 +43,9 @@ const fastWords = [
     {value: "快速文字"}
 ];
 const emotionIcons = [
-    {id: 1, name: "表情名字", url: likeImg},
-    {id: 2, name: "表情名字", url: handsomeImg},
-    {id: 3, name: "表情名字", url: praiseImg},
-    {id: 4, name: "表情名字", url: handsomeImg},
-    {id: 5, name: "表情名字", url: likeImg},
-    {id: 6, name: "表情名字", url: praiseImg},
-    {id: 7, name: "表情名字", url: handsomeImg},
-    {id: 8, name: "表情名字", url: likeImg},
-    {id: 9, name: "表情名字", url: praiseImg},
+    {id: 1, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/9E29D511D9051A00.jpg"},
+    {id: 2, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/C3DA48D6BBEECF98.jpg"},
+    {id: 3, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/3C8D2171B0B5A2ED.jpg"},
     {
         id: 10,
         name: "表情名字",

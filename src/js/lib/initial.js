@@ -1,6 +1,5 @@
 // app配置信息，全局变量
 var HYAPP = {
-    user: {}
 };
 (function () {
     var timer;
@@ -52,6 +51,5 @@ var HYAPP = {
 
     HYAPP.allowSessionStorage = isSessionStorageNameSupported();
     HYAPP.allowLocalStorage = isLocalStorageNameSupported();
-    HYAPP.ApiDomain = '/';
 })();
 window.HYAPP = HYAPP;
