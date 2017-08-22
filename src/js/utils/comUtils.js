@@ -285,10 +285,15 @@ export function getEncryptHeader(Oid = {
     deviceId: "",
     wxId: ""
 }) {
-    let sessionOid = {
-        wxId: window.sessionStorage.getItem("wxId"),
-        deviceId: window.sessionStorage.getItem("deviceId")
-    };
+    let sessionOid = {};
+    const userInfo = getWxinfoFromSession();
+    if (userInfo.status === 1) {
+        const {data} = userInfo;
+        sessionOid = {
+            wxId: data.uuid,
+            deviceId: data.deviceId
+        };
+    }
     Oid = Object.assign({}, sessionOid, Oid);
 
     let encrypt = new JSEncrypt();
