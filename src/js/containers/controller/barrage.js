@@ -84,7 +84,7 @@ const style = {
     },
     dots: {
         position: "absolute",
-        bottom: 0,
+        bottom: -20,
         width: "100%",
         display: "flex",
         justifyContent: "center",
@@ -264,7 +264,7 @@ class Barrage extends BaseComponent {
                                              onClick={() => {
                                                  this.chooseEmotion(url);
                                              }}
-                                             style={{width: "33.33%", padding: 6, fontSize: 12, textAlign: "center"}}>
+                                             style={{width: "33.33%", height: '3.334rem', overflow: 'hidden', padding: 6, fontSize: 12, textAlign: "center"}}>
                                     <img src={url} alt='' style={{maxWidth: "100%"}}/>
                                 </span>;
                             }
@@ -355,6 +355,7 @@ class Barrage extends BaseComponent {
     sendBarrage() {
         const {inputValue, inputImage} = this.state;
         let type = "";
+        const {data} = this.props.userInfo.userInfoData || {data: {}};
         if (inputValue) type = "txt";
         if (inputImage) type = "img";
         if (type) {
@@ -364,7 +365,7 @@ class Barrage extends BaseComponent {
                     danmu: {
                         type: type,
                         data: {
-                            avatar: "",
+                            avatar: data.headerImg,
                             content: inputValue || inputImage
                         }
                     }
@@ -394,7 +395,9 @@ class Barrage extends BaseComponent {
 
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
-    return {};
+    return {
+        userInfo: state.app.user.userInfo
+    };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {

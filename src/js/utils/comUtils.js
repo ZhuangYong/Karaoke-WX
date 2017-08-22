@@ -281,10 +281,7 @@ export function loadScript(url, callback) {
  * 0ab25001ad1cd646887242fcaebf752f //xiong xiao song
  *
  */
-export function getEncryptHeader(Oid = {
-    deviceId: "",
-    wxId: ""
-}) {
+export function getEncryptHeader(Oid) {
     let sessionOid = {};
     const userInfo = getWxinfoFromSession();
     if (userInfo.status === 1) {
@@ -294,8 +291,8 @@ export function getEncryptHeader(Oid = {
             deviceId: data.deviceId
         };
     }
-    Oid = Object.assign({}, sessionOid, Oid);
-
+    Oid && (Oid = Object.assign({}, sessionOid, Oid));
+    !Oid && (Oid = sessionOid);
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
