@@ -26,16 +26,29 @@ import EffectIcon from "../../../img/common/icon_effect.png";
 const style = {
     controllerBtn: {
         width: "50%",
-        height: "3rem",
+        height: "3.4rem",
         textAlign: "center",
-        marginTop: ".5rem"
+        marginTop: "1rem",
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+        button: {
+            backgroundColor: '#ffc51b',
+            width: '1.867rem',
+            height: '1.867rem',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '1.867rem'
+        }
     },
     extArea: {
         border: "none",
         boxShadow: "none",
         width: "100%",
         display: "flex",
-        marginTop: "30%",
+        marginTop: "16%",
         padding: '0 1.4rem',
         justifyContent: "center",
         alignItems: "center",
@@ -177,53 +190,45 @@ class SongController extends BaseComponent {
                             flexWrap: "wrap"
                         }}>
                             <div style={style.controllerBtn}>
-                                <FloatingActionButton backgroundColor="#ffc51b" onTouchTap={() => {
+                                <div style={style.controllerBtn.button} onTouchTap={() => {
                                     this.playController(PLAY_CONTROLLER_RE_SING);
                                 }}>
-                                    <ReloadIcon/>
-                                </FloatingActionButton>
-                                <p>重唱</p>
+                                    <ReloadIcon color="white" style={{width: '1.1rem', height: '1.1rem'}}/>
+                                </div>
+                                <p style={{margin: '.3rem 0'}}>重唱</p>
                             </div>
 
                             <div style={style.controllerBtn}>
-                                <FloatingActionButton backgroundColor="#0ebc0e" onTouchTap={() => {
+                                <idv style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onTouchTap={() => {
                                     this.playController(PLAY_CONTROLLER_PAUSE_PLAY);
                                 }}>
-                                    <PlayIcon/>
-                                    <div style={{
-                                        display: "inline-flex",
-                                        position: "absolute",
-                                        left: "44%"
-                                    }}>/
+                                    <PlayIcon color="white"/>
+                                    <div style={{color: 'white'}}>/
                                     </div>
-                                    <StopIcon/>
-                                </FloatingActionButton>
+                                    <StopIcon color="white"/>
+                                </idv>
                                 <p>播/暂</p>
                             </div>
 
                             <div style={style.controllerBtn}>
-                                <FloatingActionButton backgroundColor="#2cabe9" onTouchTap={() => {
+                                <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}} onTouchTap={() => {
                                     this.playController(PLAY_CONTROLLER_ORIGINAL_ACCOMPANY);
                                 }}>
-                                    <PersonIcon/>
-                                    <div style={{
-                                        display: "inline-flex",
-                                        position: "absolute",
-                                        left: "46%"
-                                    }}>/
+                                    <PersonIcon color="white"/>
+                                    <div style={{color: 'white'}}>/
                                     </div>
-                                    <MusicIcon/>
-                                </FloatingActionButton>
+                                    <MusicIcon color="white"/>
+                                </div>
                                 <p>原/伴</p>
                             </div>
 
-                            <div style={{...style.controllerBtn, marginTop: "0"}}>
-                                <FloatingActionButton
-                                    backgroundColor="#f2754e" iconStyle={{width: 70, height: 70}} onTouchTap={() => {
+                            <div style={{...style.controllerBtn}}>
+                                <div style={{...style.controllerBtn.button, backgroundColor: "#ff5223"}}
+                                    iconStyle={{width: 70, height: 70}} onTouchTap={() => {
                                     this.playController(PLAY_CONTROLLER_NEXT);
                                 }}>
-                                    <NextIcon/>
-                                </FloatingActionButton>
+                                    <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
+                                </div>
                                 <p>切歌</p>
                             </div>
 
@@ -233,7 +238,8 @@ class SongController extends BaseComponent {
                             <div style={{
                                 width: '50%',
                                 display: 'flex',
-                                justifyContent: 'center'}}>
+                                justifyContent: 'center'
+                            }}>
                                 <div
                                     style={style.extArea.btn}
                                     onTouchTap={() => {
@@ -247,7 +253,8 @@ class SongController extends BaseComponent {
                             <div style={{
                                 width: '50%',
                                 display: 'flex',
-                                justifyContent: 'center'}}>
+                                justifyContent: 'center'
+                            }}>
                                 <div
                                     style={style.extArea.btn}
                                     onTouchTap={() => {

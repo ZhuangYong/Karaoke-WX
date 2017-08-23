@@ -293,7 +293,6 @@ export function getEncryptHeader(Oid) {
     }
     Oid && (Oid = Object.assign({}, sessionOid, Oid));
     !Oid && (Oid = sessionOid);
-
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");

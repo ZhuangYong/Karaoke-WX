@@ -56,7 +56,7 @@ class UserIndex extends BaseComponent {
     }
 
     render() {
-        const {data} = this.props.userInfo.userInfoData || {data: []};
+        const {data} = this.props.userInfo.userInfoData || {data: {}};
         const userInfo = data;
         const recordsList = this.state.recordsListData;
         const recordsListTotalCounts = this.state.recordsListTotalCounts;
