@@ -1,4 +1,5 @@
 import fetch from 'isomorphic-fetch';
+import ActionTypes from "../actions/actionTypes";
 // import * as cryptoUtils from './cryptoUtils';
 
 export function cryptoFetch(options, succ, fail) {
@@ -128,6 +129,11 @@ export function comFetch(dispatch, param, options = {
             error: err,
             param: param
         });
+        dispatch({
+            type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
+            globAlert: '网络不给力，请稍后再试'
+        });
+
         failCallback && failCallback('网络不给力，请稍后再试', err);
     });
 }

@@ -8,7 +8,10 @@ import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {setSongTop, getChooseList, getHistorySongList, push} from "../../actions/audioActons";
 
-import {Paper, RaisedButton, Tab, Tabs, FloatingActionButton, List, ListItem, CircularProgress} from "material-ui";
+import {
+    Paper, RaisedButton, Tab, Tabs, FloatingActionButton, List, ListItem, CircularProgress,
+    RefreshIndicator, Snackbar
+} from "material-ui";
 import ReloadIcon from "material-ui/svg-icons/action/autorenew";
 import PlayIcon from "material-ui/svg-icons/av/play-arrow";
 import StopIcon from "material-ui/svg-icons/av/pause";
@@ -28,7 +31,7 @@ const style = {
         width: "50%",
         height: "3.4rem",
         textAlign: "center",
-        marginTop: "1rem",
+        marginTop: ".4rem",
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -115,13 +118,17 @@ class SongController extends BaseComponent {
         this.state = {
             playList: [],
             historySongList: [],
+            controllerIng: {},
             tabIndex: 0,
-            delChooseSongIdIng: 0,
+            delChooseSongIdIng: {},
             updateChooseSongsCount: 0,
-            emptyChooseSongs: false
+            emptyChooseSongs: false,
+            barrageSendToast: '',
+            barrageToastMsg: ''
         };
         this.unChoose = this.unChoose.bind(this);
         this.playController = this.playController.bind(this);
+        this.onPushSongFail = this.onPushSongFail.bind(this);
         this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
         this.handelChangeTab = this.handelChangeTab.bind(this);
     }
@@ -160,6 +167,8 @@ class SongController extends BaseComponent {
 
     render() {
         const {playList, historySongList} = this.state;
+        const {w, h} = this.props.common;
+        const tabContainerHeight = h - 48 - 60;
         const playingSong = this.state.playingSong;
         let backgroundColor = ['transparent', 'transparent', 'transparent'];
         let fontColor = ['white', 'white', 'white'];
@@ -185,51 +194,82 @@ class SongController extends BaseComponent {
                         <div style={{
                             marginTop: "10%",
                             display: "flex",
-                            width: "90%",
-                            marginLeft: "5%",
+                            width: "80%",
+                            marginLeft: "10%",
                             flexWrap: "wrap"
                         }}>
                             <div style={style.controllerBtn}>
                                 <div style={style.controllerBtn.button} onTouchTap={() => {
-                                    this.playController(PLAY_CONTROLLER_RE_SING);
+                                    this.state.controllerIng[PLAY_CONTROLLER_RE_SING] !== true && this.playController(PLAY_CONTROLLER_RE_SING);
                                 }}>
-                                    <ReloadIcon color="white" style={{width: '1.1rem', height: '1.1rem'}}/>
+                                    {
+                                        this.state.controllerIng[PLAY_CONTROLLER_RE_SING] === true ? <CircularProgress
+                                            size={20}
+                                            thickness={2}
+                                            color="white"/> : <ReloadIcon
+                                            color="white"
+                                            style={{width: '1.1rem', height: '1.1rem'}}
+                                        />
+                                    }
                                 </div>
                                 <p style={{margin: '.3rem 0'}}>重唱</p>
                             </div>
 
                             <div style={style.controllerBtn}>
-                                <idv style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onTouchTap={() => {
-                                    this.playController(PLAY_CONTROLLER_PAUSE_PLAY);
+                                <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onTouchTap={() => {
+                                    this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] !== true && this.playController(PLAY_CONTROLLER_PAUSE_PLAY);
                                 }}>
-                                    <PlayIcon color="white"/>
-                                    <div style={{color: 'white'}}>/
-                                    </div>
-                                    <StopIcon color="white"/>
-                                </idv>
-                                <p>播/暂</p>
+                                    {
+                                        this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] === true ? <CircularProgress
+                                            size={20}
+                                            thickness={2}
+                                            color="white"/> : (
+                                                <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}}>
+                                                    <PlayIcon color="white"/>
+                                                    <div style={{color: 'white'}}>/
+                                                    </div>
+                                                    <StopIcon color="white"/>
+                                                </div>
+                                        )
+                                    }
+                                </div>
+                                <p style={{margin: '.3rem 0'}}>播/暂</p>
                             </div>
 
                             <div style={style.controllerBtn}>
                                 <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}} onTouchTap={() => {
-                                    this.playController(PLAY_CONTROLLER_ORIGINAL_ACCOMPANY);
+                                    this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] !== true && this.playController(PLAY_CONTROLLER_ORIGINAL_ACCOMPANY);
                                 }}>
-                                    <PersonIcon color="white"/>
-                                    <div style={{color: 'white'}}>/
-                                    </div>
-                                    <MusicIcon color="white"/>
+                                    {
+                                        this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] === true ? <CircularProgress
+                                            size={20}
+                                            thickness={2}
+                                            color="white"/> : (
+                                            <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}}>
+                                                <PersonIcon color="white"/>
+                                                <div style={{color: 'white'}}>/
+                                                </div>
+                                                <MusicIcon color="white"/>
+                                            </div>
+                                        )
+                                    }
                                 </div>
-                                <p>原/伴</p>
+                                <p style={{margin: '.3rem 0'}}>原/伴</p>
                             </div>
 
                             <div style={{...style.controllerBtn}}>
                                 <div style={{...style.controllerBtn.button, backgroundColor: "#ff5223"}}
-                                    iconStyle={{width: 70, height: 70}} onTouchTap={() => {
-                                    this.playController(PLAY_CONTROLLER_NEXT);
+                                     onTouchTap={() => {
+                                         this.state.controllerIng[PLAY_CONTROLLER_NEXT] !== true && this.playController(PLAY_CONTROLLER_NEXT);
                                 }}>
-                                    <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
+                                    {
+                                        this.state.controllerIng[PLAY_CONTROLLER_NEXT] === true ? <CircularProgress
+                                            size={20}
+                                            thickness={2}
+                                            color="white"/> : <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
+                                    }
                                 </div>
-                                <p>切歌</p>
+                                <p style={{margin: '.3rem 0'}}>切歌</p>
                             </div>
 
                         </div>
@@ -278,10 +318,10 @@ class SongController extends BaseComponent {
                             this.handelChangeTab(1);
                         }}
                         label="已点歌曲">
-                        <div>
+                        <div style={{height: tabContainerHeight, width: "100%", position: 'absolute', overflowY: 'auto'}}>
                             {
                                 !this.state.emptyChooseSongs ? (
-                                    <Paper style={style.chooseList}>
+                                    <Paper style={style.chooseList} zDepth={0}>
                                         <List>
                                             {
                                                 playingSong ? (
@@ -301,7 +341,7 @@ class SongController extends BaseComponent {
                                                     rightToggle={
                                                         <div>
                                                             {
-                                                                this.state.delChooseSongIdIng === song.musicNo ? <div style={style.chooseList.deleteButton.delIng}>
+                                                                this.state.delChooseSongIdIng[song.musicNo] === true ? <div style={style.chooseList.deleteButton.delIng}>
                                                                         <CircularProgress size={16} thickness={1}
                                                                                           style={{marginRight: 3}}/> 刪除中
                                                                     </div> : <div>
@@ -339,16 +379,17 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
                         label="最近唱过">
-                        <div>
+                        <div style={{height: tabContainerHeight, width: "100%", position: 'absolute', overflowY: 'auto'}}>
                             {
-                                historySongList ? (
-                                    <Paper className="history-song-list">
+                                (historySongList && historySongList.length > 0) ? (
+                                    <Paper className="history-song-list" zDepth={0}>
                                         <List className="song-list">
                                             {historySongList.map((song) => (
                                                 <SongItem
                                                     key={song.id}
                                                     song={song}
                                                     onPushSongSuccess={this.onPushSongSuccess}
+                                                    onPushSongFail={this.onPushSongFail}
                                                 />
                                             ))}
                                         </List>
@@ -362,6 +403,16 @@ class SongController extends BaseComponent {
                         </div>
                     </Tab>
                 </Tabs>
+                <Snackbar
+                    open={!!this.state.barrageSendToast}
+                    message={this.state.barrageToastMsg}
+                    autoHideDuration={500}
+                    onRequestClose={() => {
+                        this.setState({
+                            barrageSendToast: false
+                        });
+                    }}
+                />
                 <MBottomNavigation selectedIndex={1}/>
             </div>
         );
@@ -444,8 +495,11 @@ class SongController extends BaseComponent {
         });
     }
 
-    onPushSongSuccess() {
+    onPushSongSuccess(song) {
+        const {nameNorm} = song;
         this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: nameNorm + " 点歌成功",
             updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
         });
     }
@@ -453,12 +507,15 @@ class SongController extends BaseComponent {
     unChoose(musicNo) {
         const param = {type: 13, id: musicNo};
         let playList = this.state.playList;
+        let {delChooseSongIdIng} = this.state;
+        delChooseSongIdIng[musicNo] = true;
         this.setState({
-            delChooseSongIdIng: musicNo
+            delChooseSongIdIng: delChooseSongIdIng
         });
         this.props.action_setSongTop(param, reqHeader(param), () => {
+            delChooseSongIdIng[musicNo] = false;
             this.setState({
-                delChooseSongIdIng: 0,
+                delChooseSongIdIng: delChooseSongIdIng,
                 playList: playList.filter((song) => {
                     return song.musicNo !== musicNo;
                 })
@@ -470,8 +527,30 @@ class SongController extends BaseComponent {
         const param = {
             type: type
         };
+        let {controllerIng} = this.state;
+        controllerIng[type] = true;
+        this.setState({
+            controllerIng: controllerIng
+        });
         this.props.action_push(param, reqHeader(param), () => {
+            controllerIng[type] = false;
+            setTimeout(() => {
+                this.setState({
+                    controllerIng: controllerIng
+                });
+            }, 600);
         }, (msg) => {
+            controllerIng[type] = false;
+            this.setState({
+                controllerIng: controllerIng
+            });
+        });
+    }
+
+    onPushSongFail(msg) {
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: msg
         });
     }
 
@@ -479,7 +558,8 @@ class SongController extends BaseComponent {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        songs: state.app.songs
+        songs: state.app.songs,
+        common: state.app.common
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

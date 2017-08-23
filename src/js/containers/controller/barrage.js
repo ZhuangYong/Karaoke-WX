@@ -5,11 +5,8 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {CircularProgress, List, ListItem, RefreshIndicator, Snackbar, Tab, Tabs} from "material-ui";
+import {CircularProgress, List, ListItem, Snackbar, Tab, Tabs} from "material-ui";
 import SwipeableViews from "react-swipeable-views";
-import likeImg from "../../../img/barrage/like.png";
-import handsomeImg from "../../../img/barrage/handsome.png";
-import praiseImg from "../../../img/barrage/praise.png";
 import barrageImg from "../../../img/barrage/barrage.png";
 import barrageOnImg from "../../../img/barrage/barrage_on.png";
 import emotionImg from "../../../img/barrage/emotion.png";
@@ -156,7 +153,7 @@ class Barrage extends BaseComponent {
 
     render() {
         const {inputValue, inputImage} = this.state;
-        const fastWordPanelHeight = document.documentElement.clientHeight - 240 - 60;
+        const fastWordPanelHeight = document.documentElement.clientHeight - (5.336 + 1.2) * (document.documentElement.clientWidth / 10) - 60;
         let tabBackgroundColor = ["", ""];
         tabBackgroundColor[this.state.tabIndex] = "#ff6833";
         let tabIcon = [barrageImg, emotionImg];
@@ -164,7 +161,7 @@ class Barrage extends BaseComponent {
         tabIcon[this.state.tabIndex] = tabOnIcon[this.state.tabIndex];
         return (
             <div>
-                <div style={{textAlign: "center", height: 200, overflow: "hidden"}}>
+                <div style={{textAlign: "center", height: '5.336rem', overflow: "hidden"}}>
                     {
                         inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}}/> : <Input
                             hintText="说点儿什么..."
@@ -189,7 +186,7 @@ class Barrage extends BaseComponent {
                         zIndex: -1
                     }}>
                     <Tab
-                        buttonStyle={{flexDirection: "row", height: 40, backgroundColor: tabBackgroundColor[0]}}
+                        buttonStyle={{flexDirection: "row", height: '1.2rem', backgroundColor: tabBackgroundColor[0]}}
                         onActive={() => {
                             this.handelChangeTab(0);
                         }}
@@ -206,7 +203,7 @@ class Barrage extends BaseComponent {
                         }
                     </Tab>
                     <Tab
-                        buttonStyle={{flexDirection: "row", height: 40, backgroundColor: tabBackgroundColor[1]}}
+                        buttonStyle={{flexDirection: "row", height: '1.2rem', backgroundColor: tabBackgroundColor[1]}}
                         onActive={() => {
                             this.handelChangeTab(1);
                         }}
@@ -264,7 +261,14 @@ class Barrage extends BaseComponent {
                                              onClick={() => {
                                                  this.chooseEmotion(url);
                                              }}
-                                             style={{width: "33.33%", height: '3.334rem', overflow: 'hidden', padding: 6, fontSize: 12, textAlign: "center"}}>
+                                             style={{
+                                                 width: "33.33%",
+                                                 height: '3.334rem',
+                                                 overflow: 'hidden',
+                                                 padding: 6,
+                                                 fontSize: 12,
+                                                 textAlign: "center"
+                                             }}>
                                     <img src={url} alt='' style={{maxWidth: "100%"}}/>
                                 </span>;
                             }
@@ -396,7 +400,8 @@ class Barrage extends BaseComponent {
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        userInfo: state.app.user.userInfo
+        userInfo: state.app.user.userInfo,
+        common: state.app.common
     };
 };
 // 映射dispatch到props

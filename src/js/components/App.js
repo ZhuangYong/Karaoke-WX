@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {getUserConfig, getUserInfo} from "../actions/userActions";
-import {getUserInfoFromSession, updateScreen} from "../actions/common/actions";
+import {getUserInfoFromSession, setGlobAlert, updateScreen} from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -36,6 +36,7 @@ import Feedback from "../containers/user/feedback/index";
 import VoiceSearch from "../containers/voiceSearch";
 import Pay from "../containers/Pay";
 import Protocol from "../containers/Pay/Protocol";
+import {Snackbar} from "material-ui";
 
 
 const LoginContainer = () => (
@@ -170,7 +171,8 @@ class App extends React.Component {
         this.state = {
             showMsg: false,
             msgText: '',
-            timer: null
+            timer: null,
+            barrageSendToast: false
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
@@ -193,6 +195,7 @@ class App extends React.Component {
         console.log("App component did mount ");
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
+        this.props.action_updateScreen();
 
         let wxInfo = {
             wxId: getQueryString("uuid") || "",
@@ -226,6 +229,7 @@ class App extends React.Component {
         return (
             <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
+                    <div>
                     <Switch>
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
@@ -268,6 +272,15 @@ class App extends React.Component {
                         <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
+                    <Snackbar
+                        open={!!this.props.globAlert}
+                        message={this.props.globAlert}
+                        autoHideDuration={2000}
+                        onRequestClose={() => {
+                            this.props.action_setGlobAlert("");
+                        }}
+                    />
+                    </div>
                 </MuiThemeProvider>
             </div>
         );
@@ -309,7 +322,8 @@ class App extends React.Component {
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        userInfo: state.app.user.userInfo
+        userInfo: state.app.user.userInfo,
+        globAlert: state.app.common.globAlert
     };
 };
 // 映射dispatch到props
@@ -318,7 +332,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_getUserConfig: bindActionCreators(getUserConfig, dispatch),
         action_updateScreen: bindActionCreators(updateScreen, dispatch),
         action_getUserInfo: bindActionCreators(getUserInfo, dispatch),
-        action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch)
+        action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 

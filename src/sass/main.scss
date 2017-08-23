@@ -11,17 +11,10 @@
         border-bottom:1px solid #e0e0e0;
         .song-title{
             font-size: 16px;
+            line-height: 22px;
             .label-vip{
-                background-color:#ff6833;
                 padding:2px 8px;
                 margin-left:10px;
-                -webkit-border-radius:20px;
-                -moz-border-radius:20px;
-                border-radius:20px;
-                color: white;
-                font-size:10px;
-                font-weight: bold;
-                font-style: normal;
             }
         }
         .song-author{
