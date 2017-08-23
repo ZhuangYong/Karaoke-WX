@@ -13,3 +13,10 @@ export function getUserInfoFromSession() {
         info: 'update user info'
     };
 }
+
+export function setGlobAlert(msg) {
+    return {
+        type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
+        globAlert: msg
+    };
+}

@@ -11,6 +11,7 @@ import {push} from "../../actions/audioActons";
 import BaseComponent from "./BaseComponent";
 import {reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
+import VIPIcon from "../../../img/common/icon_vip.png";
 
 class SongItem extends BaseComponent {
     constructor(props) {
@@ -28,7 +29,7 @@ class SongItem extends BaseComponent {
                 className="song-item"
                 key={song.id}
                 primaryText={<div>
-                    <div className="song-title">{song.nameNorm}<i className="label-vip">{song.charge ? "VIP" : ""}</i>
+                    <div className="song-title">{song.nameNorm}<i className="label-vip">{song.charge ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
                     </div>
                 </div>}
                 secondaryText={
@@ -54,16 +55,18 @@ class SongItem extends BaseComponent {
         });
         this.props.action_push(param, reqHeader(param), () => {
             this.state.pushIng[song.serialNo] = false;
-            this.setState({
-                pushIng: this.state.pushIng
-            });
-            onPushSongSuccess && onPushSongSuccess(song);
+            setTimeout(() => {
+                this.setState({
+                    pushIng: this.state.pushIng
+                });
+                onPushSongSuccess && onPushSongSuccess(song);
+            }, 600);
         }, (msg) => {
             this.state.pushIng[song.serialNo] = false;
             this.setState({
                 pushIng: this.state.pushIng
             });
-            onPushSongFail && onPushSongFail(msg);
+            //onPushSongFail && onPushSongFail(msg);
         });
     }
 
