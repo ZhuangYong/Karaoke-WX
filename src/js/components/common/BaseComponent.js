@@ -114,8 +114,8 @@ export default class BaseComponent extends Component {
         const {status, data} = userInfoData || {};
         if (typeof status !== 'undefined') {
             const {isReDevice, bindExpireTime} = data;
-            //是否绑定设备1（未绑定设备）2（已绑定）3（绑定过期）
-            if (isReDevice === 2) {
+            //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
+            if (isReDevice === 1) {
                 return true;
             } else {
                 return false;

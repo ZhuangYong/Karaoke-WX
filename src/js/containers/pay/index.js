@@ -7,17 +7,18 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
+import {setGlobAlert} from "../../actions/common/actions";
 import {alipayPay, getPayList, getWXPayParams} from "../../actions/payAction";
 import {getEncryptHeader, linkTo, reqHeader} from "../../utils/comUtils";
 import navUtils from "../../utils/navUtils";
 
-import RaisedButton from 'material-ui/RaisedButton';
 import CheckboxIcon from '../../../img/pay_checkbox.png';
 import CheckboxSelectedIcon from '../../../img/pay_checkbox_selected.png';
 import PaySuccessIcon from "../../../img/pay_success.png";
 import PayFailedIcon from "../../../img/pay_failed.png";
 import DeviceRegisterIcon from "../../../img/device_register.png";
 import ButtonPage from "../../components/common/ButtonPage";
+import ActionTypes from "../../actions/actionTypes";
 
 const styles = {
     itemBox: {
@@ -293,7 +294,8 @@ class Pay extends BaseComponent {
                         contentStyle={{color: "#c48848"}}
                         buttonLabel="马上体验"
                         touchTap={() => {
-
+                            const actionSetGlobAlert = this.props.action_setGlobAlert;
+                            actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE);
                         }}/>
                 });
                 break;
@@ -321,6 +323,7 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getPayListAction: bindActionCreators(getPayList, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         getWXPayParamsAction: bindActionCreators(getWXPayParams, dispatch),
         alipayAction: bindActionCreators(alipayPay, dispatch)
     };

@@ -19,6 +19,8 @@ import HeaderBgIcon from "../../../img/user_header_bg.png";
 import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
 import VIPPayContent from "../../../img/vip_pay_content.png";
+import {setGlobAlert} from "../../actions/common/actions";
+import ActionTypes from "../../actions/actionTypes";
 
 const styles = {
     headerImg: {
@@ -50,6 +52,7 @@ class UserIndex extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("我的");
 
         this.state = {
             userInfoData: {},
@@ -69,16 +72,19 @@ class UserIndex extends BaseComponent {
 
     componentDidMount() {
 
-        const getRecordsListParams = {
-            pageSize: 9,
-            currentPage: 1
-        };
-        this.props.getRecordsListActions(getRecordsListParams, reqHeader(getRecordsListParams));
+        if (super.isBindDevice(this.props.userInfo.userInfoData)) {
+            const getRecordsListParams = {
+                pageSize: 9,
+                currentPage: 1
+            };
+            this.props.getRecordsListActions(getRecordsListParams, reqHeader(getRecordsListParams));
+        }
     }
 
     render() {
-        const {data} = this.props.userInfo.userInfoData || {data: {}};
-        const userInfo = data;
+        const userInfoData = this.props.userInfo.userInfoData;
+        const {data} = userInfoData || {data: {}};
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
         const recordsList = this.state.recordsListData;
         const recordsListTotalCounts = this.state.recordsListTotalCounts;
         return (
@@ -98,7 +104,7 @@ class UserIndex extends BaseComponent {
                             height: toRem(160),
                             border: `${toRem(7)} solid rgba(255, 255, 255, .3)`,
                             backgroundColor: "rgba(255, 255, 255)"
-                        }} src={userInfo.headerImg === "/0" ? defaultImg : userInfo.headerImg} alt=""/>
+                        }} src={data.headerImg === "/0" ? defaultImg : data.headerImg} alt=""/>
                         <div style={{
                             float: "left",
                             paddingTop: toRem(65),
@@ -109,8 +115,8 @@ class UserIndex extends BaseComponent {
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30),
                                 color: "#fff"
-                            }}>{userInfo.nickName}</div>
-                            {this.showVIPStatus(userInfo)}
+                            }}>{data.nickName}</div>
+                            {this.showVIPStatus(data)}
                         </div>
                     </header>
 
@@ -119,7 +125,11 @@ class UserIndex extends BaseComponent {
                         style={{margin: 0, clear: "both"}}
                         cols={2}>
 
-                        <GridTile>
+                        <GridTile
+                            onTouchTap={() => {
+                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
+                                actionSetGlobAlert && actionSetGlobAlert("已绑定，开始点歌吧");
+                            }}>
                             <img
                                 src={DeviceIcon}
                                 style={styles.headerImg}
@@ -127,13 +137,14 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>
                                 <p style={{margin: "0"}}>绑定设备</p>
                                 <p style={{margin: `${toRem(10)} 0 0`, fontSize: toRem(20), color: "#999"}}>
-                                    {parseInt(userInfo.isReDevice, 10) === 1 ? "已绑定" + userInfo.deviceId.replace(userInfo.deviceId.slice(4, userInfo.deviceId.length - 4), "***") : '未绑定'}
+                                    {parseInt(data.isReDevice, 10) === 1 ? "已绑定" + data.deviceId.replace(data.deviceId.slice(4, data.deviceId.length - 4), "***") : '未绑定'}
                                 </p>
                             </div>
                         </GridTile>
 
                         <GridTile
                             onTouchTap={() => {
+                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
                                 linkTo(`user/feedback/home`, false, null);
                             }}>
                             <img
@@ -146,7 +157,7 @@ class UserIndex extends BaseComponent {
 
                 </section>
 
-                <section style={{
+                {!(data.channel === "nst_yinba") && (<section style={{
                     paddingBottom: " 85px"
                 }}>
                     <header style={{
@@ -167,6 +178,12 @@ class UserIndex extends BaseComponent {
                                 marginRight: toRem(20)
                             }}
                             onTouchTap={() => {
+                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
+
+                                if (recordsListTotalCounts < 1) {
+                                    actionSetGlobAlert && actionSetGlobAlert("暂无录音");
+                                    return;
+                                }
                                 linkTo(`user/recordings`, false, null);
                             }}>
                             <span style={{
@@ -187,7 +204,7 @@ class UserIndex extends BaseComponent {
                     </header>
 
                     <RecordingGrid data={recordsList}/>
-                </section>
+                </section>)}
 
                 <MBottomNavigation selectedIndex={2}/>
             </div>
@@ -211,14 +228,17 @@ class UserIndex extends BaseComponent {
     }
 
     showVIPStatus(data) {
-        const vipStatus = data.vipStatus;
+        let vipStatus = data.vipStatus;
+        const isReDevice = data.isReDevice;
+
+        if (isReDevice !== 1) vipStatus = -1;
 
         let vipParams = {
-            bgColor: data.vipStatus === 0 ? "rgba(239, 238, 238, .3)" : "rgba(0, 0, 0, .4)",
-            imgUrl: data.vipStatus === 0 ? VIPGrayIcon : VIPIcon,
+            bgColor: vipStatus === 0 ? "rgba(239, 238, 238, .3)" : "rgba(0, 0, 0, .4)",
+            imgUrl: vipStatus === 0 ? VIPGrayIcon : VIPIcon,
             content: null,
-            contentColor: data.vipStatus === 0 ? "#909090" : "#f9f02c",
-            rightColor: data.vipStatus === 0 ? "#909090" : "#e0b544",
+            contentColor: vipStatus === 0 ? "#909090" : "#f9f02c",
+            rightColor: vipStatus === 0 ? "#909090" : "#e0b544",
             _content: (text) => {
                 if (!text) {
                     return (<img style={{
@@ -235,7 +255,7 @@ class UserIndex extends BaseComponent {
                 }}>{text}</span>);
             }
         };
-        switch (data.vipStatus) {
+        switch (vipStatus) {
             case -1:
                 vipParams.content = vipParams._content();
                 break;
@@ -257,6 +277,12 @@ class UserIndex extends BaseComponent {
                 borderRadius: toRem(50)
             }}
             onTouchTap={() => {
+                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
+
+                if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+                    linkTo(`pay/deviceRegister`, false, null);
+                    return;
+                }
                 linkTo(`pay/home`, false, null);
             }}>
             <img style={{
@@ -297,6 +323,7 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         userInfoAction: bindActionCreators(getUserInfo, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         getRecordsListActions: bindActionCreators(getRecordsList, dispatch)
     };
 };
