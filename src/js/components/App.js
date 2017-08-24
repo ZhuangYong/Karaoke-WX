@@ -242,6 +242,11 @@ class App extends React.Component {
             this.props.action_getOttStatus(param, reqHeader(param));
             this.state.updateDevice = true;
         }
+        const alertData = this.props.alertData;
+        if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
+            linkTo("", false, "");
+            this.props.action_setGlobAlert("", "");
+        }
     }
 
     render() {
@@ -353,7 +358,7 @@ class App extends React.Component {
             case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
                 // alertStr = '激活vip免费体验';
                 //TODO ACTIVE
-                linkTo("", false, "");
+                //linkTo("", false, "");
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
                 alertStr = '充值成为VIP';
