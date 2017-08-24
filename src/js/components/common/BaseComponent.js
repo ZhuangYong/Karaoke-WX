@@ -43,8 +43,8 @@ export default class BaseComponent extends Component {
      * @returns {*} 如果正在获取用户信息将返回字符串的提示，如果条件都满足将返回true，否则返回false并做出相应的提示
      */
     validUserStatus(userInfoData, actionSetGlobAlert) {
-        const isVip = this.isFreeActivation(userInfoData);
-        const isBindDevice = this.isFreeActivation(userInfoData);
+        const isVip = this.isVip(userInfoData);
+        const isBindDevice = this.isBindDevice(userInfoData);
         const isFreeActivation = this.isFreeActivation(userInfoData);
         if (typeof isBindDevice === 'string') {
             actionSetGlobAlert && actionSetGlobAlert("正在获取用户信息，请稍后重试！");
@@ -74,7 +74,7 @@ export default class BaseComponent extends Component {
      * @returns {*}
      */
     validUserBindDevice(userInfoData, actionSetGlobAlert) {
-        const isBindDevice = this.isFreeActivation(userInfoData);
+        const isBindDevice = this.isBindDevice(userInfoData);
         if (typeof isBindDevice === 'string') {
             actionSetGlobAlert && actionSetGlobAlert("正在获取用户信息，请稍后重试！");
             return '正在获取用户信息';
@@ -115,7 +115,7 @@ export default class BaseComponent extends Component {
         if (typeof status !== 'undefined') {
             const {isReDevice, bindExpireTime} = data;
             //是否绑定设备1（未绑定设备）2（已绑定）3（绑定过期）
-            if (isReDevice === 2 && new Date().getTime() < bindExpireTime) {
+            if (isReDevice === 2) {
                 return true;
             } else {
                 return false;
