@@ -7,7 +7,7 @@ import {getUserInfoFromSession, setGlobAlert, updateScreen} from "../actions/com
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
-import {chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader} from "../utils/comUtils";
+import {chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo} from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
 import NotFound from "../components/common/notfound";
@@ -38,6 +38,7 @@ import Pay from "../containers/Pay";
 import Protocol from "../containers/Pay/Protocol";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
+import {getOttStatus} from "../actions/deviceAction";
 
 
 const LoginContainer = () => (
@@ -173,7 +174,8 @@ class App extends React.Component {
             showMsg: false,
             msgText: '',
             timer: null,
-            barrageSendToast: false
+            barrageSendToast: false,
+            updateDevice: false
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
@@ -186,7 +188,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const {isWeixin} = window.sysInfo;
+        let {isWeixin} = window.sysInfo;
         if (isWeixin) {
             const param = {url: location.href.split('#')[0]};
             this.props.action_getUserConfig(param, reqHeader(param), (json) => {
@@ -199,8 +201,11 @@ class App extends React.Component {
                 wxId: getQueryString("uuid") || "",
                 deviceId: getQueryString("deviceId") || ""
             };
-
-            const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+            let wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+            if (wxInfoSession.status === -100) {
+                window.sessionStorage.removeItem("wxInfo");
+                wxInfoSession = {};
+            }
             if (typeof wxInfoSession.status === "undefined") {
                 const params = {
                     url: window.location.href.split("#")[0]
@@ -216,6 +221,13 @@ class App extends React.Component {
             } else {
                 this.props.action_getUserInfoFromSession();
             }
+        } else {
+            window.sessionStorage.setItem("wxInfo", JSON.stringify({
+                status: -100,
+                msg: "",
+                data: {}
+            }));
+            this.props.action_getUserInfoFromSession();
         }
         console.log("App component did mount ");
         this.removeAppLoading();
@@ -225,6 +237,11 @@ class App extends React.Component {
 
     componentDidUpdate(prevProps) {
         console.log('App did Updated');
+        if (this.props.userInfo.userInfoData && !this.state.updateDevice) {
+            const param = {};
+            this.props.action_getOttStatus(param, reqHeader(param));
+            this.state.updateDevice = true;
+        }
     }
 
     render() {
@@ -327,14 +344,18 @@ class App extends React.Component {
         if (!alertData) return;
         let alertStr = "";
         let showAlert = true;
+        let doAction;
         switch (alertData) {
             case ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE:
                 alertStr = '未绑定设备, 请绑定';
                 //TODO BIND DEVICE
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
-                alertStr = '激活vip免费体验';
+                // alertStr = '激活vip免费体验';
                 //TODO ACTIVE
+                doAction = () => {
+                    linkTo("", false, "");
+                };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
                 alertStr = '充值成为VIP';
@@ -344,11 +365,13 @@ class App extends React.Component {
                 showAlert = false;
                 break;
         }
+        if (!alertStr) return;
         const handleClose = () => {
             this.props.action_setGlobAlert("", "");
         };
         const handleSure = () => {
             this.props.action_setGlobAlert("", "");
+            doAction && doAction();
         };
         const actions = [
             <FlatButton
@@ -382,7 +405,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
-        alertData: state.app.common.alertData
+        alertData: state.app.common.alertData,
+        ottInfo: state.app.device.ottInfo
     };
 };
 // 映射dispatch到props
@@ -392,7 +416,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_updateScreen: bindActionCreators(updateScreen, dispatch),
         action_getUserInfo: bindActionCreators(getUserInfo, dispatch),
         action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        action_getOttStatus: bindActionCreators(getOttStatus, dispatch)
     };
 };
 
