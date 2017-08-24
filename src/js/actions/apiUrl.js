@@ -78,5 +78,7 @@ export default {
     // 歌手歌曲列表
     "API_GET_ACTORS_ALBUM": "/actors/album",
     // 分类歌曲列表
-    "API_GET_CAT_ALBUM": "/cat/album"
+    "API_GET_CAT_ALBUM": "/cat/album",
+
+    "API_GET_OTT_DEVICE_STATUS": "/deviceNet/qryStatus"
 };

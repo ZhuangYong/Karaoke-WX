@@ -77,13 +77,18 @@ const Pay = {
     API_GET_WX_PAY_PARAMS: "API_GET_WX_PAY_PARAMS",
 };
 
+const DEVICE = {
+    API_GET_OTT_DEVICE_STATUS: "API_GET_OTT_DEVICE_STATUS"
+};
+
 export default {
     COMMON,
     USER,
     AUDIO,
     SONG,
     SEARCH,
-    Pay
+    Pay,
+    DEVICE
 };
 
 
