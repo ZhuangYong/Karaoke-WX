@@ -16,15 +16,10 @@ import CheckboxIcon from '../../../img/pay_checkbox.png';
 import CheckboxSelectedIcon from '../../../img/pay_checkbox_selected.png';
 import PaySuccessIcon from "../../../img/pay_success.png";
 import PayFailedIcon from "../../../img/pay_failed.png";
+import DeviceRegisterIcon from "../../../img/device_register.png";
+import ButtonPage from "../../components/common/ButtonPage";
 
 const styles = {
-    submitBtn: {
-        display: "block",
-        borderRadius: "50px",
-        margin: "0 auto",
-        width: "240px",
-        height: "50px"
-    },
     itemBox: {
         width: "100%",
         height: "50px",
@@ -69,8 +64,7 @@ class Pay extends BaseComponent {
             },
             isCheckboxChecked: true,
             payList: [],
-            isPayList: true,
-            isPaySuccess: false
+            buttonPage: null
         };
 
         this.pay = this.pay.bind(this);
@@ -92,9 +86,11 @@ class Pay extends BaseComponent {
         const payList = this.state.payList;
         const payListActiveItem = this.state.payListActiveItem;
         const isCheckboxChecked = this.state.isCheckboxChecked;
+        const matchParams = this.state.matchParams;
+
         return (
             <div>
-                {this.state.isPayList ? (<div>
+                {matchParams.state === "home" ? (<div>
                     <section>
                         <header style={styles.itemBox}>
                             <div style={styles.itemLeft}>VIP会员套餐</div>
@@ -154,56 +150,28 @@ class Pay extends BaseComponent {
                             >《金麦客支付协议》</span>
                         </div>
                     </section>
-                    <section
-                        style={{padding: "20px 10px", width: "100%", clear: "both"}}
-                    >
-                        <header style={{
+
+                    <ButtonPage
+                        style={{
+                            position: "relative",
+                            paddingTop: "20px",
+                            height: "100px",
+                            clear: "both"
+                        }}
+                        headerDom={<div style={{
                             marginBottom: "20px",
                             textAlign: "center",
                             color: "#252525",
                             fontSize: "14px"
-                        }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem.price}元</span></header>
-                        <RaisedButton
-                            disabled={!isCheckboxChecked && payListActiveItem !== null}
-                            backgroundColor="#ff8632"
-                            disabledBackgroundColor="#ccc"
-                            label="确认支付"
-                            style={styles.submitBtn}
-                            buttonStyle={styles.submitBtn}
-                            labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
-                            onClick={this.pay}
-                        />
-                    </section>
-                </div>) : (<session>
-                    <header>
-                        <img
-                            style={{
-                                display: "block",
-                                margin: "35% auto 0",
-                                width: "100px"
-                            }}
-                            src={this.state.isPaySuccess ? PaySuccessIcon : PayFailedIcon}
-                            alt=""/>
-                        <p style={{
-                            textAlign: "center",
-                            color: "#ff8632",
-                            fontSize: "18px"
-                        }}>{this.state.isPaySuccess ? "支付成功" : "支付失败，请重新支付"}</p>
-                    </header>
-
-                    <RaisedButton
-                        disabled={!isCheckboxChecked && payListActiveItem !== null}
-                        backgroundColor="#ff8632"
-                        disabledBackgroundColor="#ccc"
-                        label="关闭"
-                        style={Object.assign({}, styles.submitBtn, {marginTop: "220px"})}
-                        buttonStyle={styles.submitBtn}
-                        labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
-                        onClick={() => {
-                            window.AlipayJSBridge.call('closeWebview');
+                        }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem.price}元</span></div>}
+                        disabled={!(isCheckboxChecked && payListActiveItem.productId !== null)}
+                        raisedButtonStyles={{
+                            bottom: 0
                         }}
+                        buttonLabel="确认支付"
+                        touchTap={this.pay}
                     />
-                </session>)}
+                </div>) : this.state.buttonPage}
             </div>
         );
     }
@@ -278,10 +246,11 @@ class Pay extends BaseComponent {
     // 更新支付列表
     updatePayList() {
         const {data} = this.props.result.payListData || {data: []};
-        this.setState({
-            payListActiveItem: data[0],
-            payList: data
-        });
+        if (data)
+            this.setState({
+                payListActiveItem: data[0],
+                payList: data
+            });
     }
 
     // 识别页面状态
@@ -291,21 +260,41 @@ class Pay extends BaseComponent {
             case "home": {
                 const getPayListParams = {};
                 this.props.getPayListAction(getPayListParams, reqHeader(getPayListParams));
-                this.setState({
-                    isPayList: true
-                });
             }
                 break;
             case "aliPaySuccess":
                 this.setState({
-                    isPayList: false,
-                    isPaySuccess: true
+                    buttonPage: <ButtonPage
+                        src={PaySuccessIcon}
+                        content="充值成功"
+                        buttonLabel="关闭"
+                        touchTap={() => {
+                            window.AlipayJSBridge.call('closeWebview');
+                        }}/>
                 });
                 break;
             case "aliPayFailed":
                 this.setState({
-                    isPayList: false,
-                    isPaySuccess: false
+                    buttonPage: <ButtonPage
+                        src={PayFailedIcon}
+                        content="充值失败，请重新充值"
+                        buttonLabel="关闭"
+                        touchTap={() => {
+                            window.AlipayJSBridge.call('closeWebview');
+                        }}/>
+                });
+                break;
+            case "deviceRegister":
+                this.setState({
+                    buttonPage: <ButtonPage
+                        src={DeviceRegisterIcon}
+                        imgStyle={{width: "162.5px"}}
+                        content="恭喜你获得金麦客VIP体验资格哟！"
+                        contentStyle={{color: "#c48848"}}
+                        buttonLabel="马上体验"
+                        touchTap={() => {
+
+                        }}/>
                 });
                 break;
             default:

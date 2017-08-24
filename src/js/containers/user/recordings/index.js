@@ -9,37 +9,27 @@ import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import {GridList, GridTile} from "material-ui/GridList";
 import {getRecordsList} from '../../../actions/userActions';
-import {linkTo, reqHeader} from "../../../utils/comUtils";
+import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import defaultImg from "../../../../img/common/tile_default.jpg";
 
 import BaseComponent from "../../../components/common/BaseComponent";
 import RefreshIndicator from "material-ui/RefreshIndicator";
+import RecordingGrid from "../../../components/recordingGrid/index";
 
 const style = {
     recordings: {
         position: "absolute",
+        paddingTop: toRem(20),
         height: "100%",
         overflowY: "auto",
         width: "100%"
-    },
-    tile: {
-        width: "90%",
-        height: "80%",
-        margin: "auto",
-        overflow: "hidden"
-    },
-    tileImg: {
-        height: "100%",
-        margin: "auto",
-        display: "inherit"
     },
     loading: {
         position: "relative",
         display: "flex",
         justifyContent: "center",
-        height: 50,
-        fontSize: "14px",
-        // marginBottom: 88,
+        height: toRem(100),
+        fontSize: toRem(28),
         alignItems: "center",
         clear: "both"
     },
@@ -91,29 +81,7 @@ class Records extends BaseComponent {
                 style={style.recordings}
                 onScroll={this.onScroll.bind(this)}
             >
-                <GridList
-                    cellHeight={100}
-                    style={{margin: "6px"}}
-                    cols={3}
-                >
-                    {recordingList.map((tile) => (
-                        <GridTile
-                            key={tile.musicTime}
-                            title={tile.nameNorm}
-                            titleStyle={{textAlign: "center", marginRight: "16px", marginTop: "20%", color: "black"}}
-                            titleBackground="transparent"
-                            onTouchTap={() => {
-                                linkTo(`user/recordings/play/${tile.uid}`, false, null);
-                            }}
-                        >
-                            <div style={style.tile}>
-                                <img src={defaultImg} style={style.tileImg} onError={function (e) {
-                                    e.target.src = defaultImg;
-                                }}/>
-                            </div>
-                        </GridTile>
-                    ))}
-                </GridList>
+                <RecordingGrid data={recordingList}/>
 
                 <div style={style.loading}>
                     {this.state.loading ? (<RefreshIndicator

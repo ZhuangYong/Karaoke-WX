@@ -191,33 +191,34 @@ class App extends React.Component {
                 const {data} = json;
                 wxConfig(data);
             });
+
+            // 获取用户信息
+            let wxInfo = {
+                wxId: getQueryString("uuid") || "",
+                deviceId: getQueryString("deviceId") || ""
+            };
+
+            const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+            if (typeof wxInfoSession.status === "undefined") {
+                const params = {
+                    url: window.location.href.split("#")[0]
+                };
+                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)), (res) => {
+                    const {status, data, msg} = res;
+                    if (parseInt(status, 10) === 302) {
+                        window.location.href = data;
+                    } else if (parseInt(status, 10) === 1) {
+                        window.sessionStorage.setItem("wxInfo", JSON.stringify(res));
+                    }
+                });
+            } else {
+                this.props.action_getUserInfoFromSession();
+            }
         }
         console.log("App component did mount ");
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
         this.props.action_updateScreen();
-
-        let wxInfo = {
-            wxId: getQueryString("uuid") || "",
-            deviceId: getQueryString("deviceId") || ""
-        };
-
-        const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
-        if (typeof wxInfoSession.status === "undefined") {
-            const params = {
-                url: window.location.href.split("#")[0]
-            };
-            this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)), (res) => {
-                const {status, data, msg} = res;
-                if (parseInt(status, 10) === 302) {
-                    window.location.href = data;
-                } else if (parseInt(status, 10) === 1) {
-                    window.sessionStorage.setItem("wxInfo", JSON.stringify(res));
-                }
-            });
-        } else {
-            this.props.action_getUserInfoFromSession();
-        }
     }
 
     componentDidUpdate(prevProps) {
@@ -234,7 +235,7 @@ class App extends React.Component {
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
                         {/*
-                        *state: home/aliPaySuccess/aliPayFailed(页面状态)
+                        *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
                         * openid: 用户微信openId
                         * pollingId: OTT轮询id
                         * deviceId: OTT设备id

@@ -132,7 +132,6 @@ class PhotoAlbum extends BaseComponent {
                         />
 
                         <InputBox
-                            cellHeight={100}
                             cols={3}
                             badgeContent={<DoneIcon color="#fff"/>}
                             data={dataList}

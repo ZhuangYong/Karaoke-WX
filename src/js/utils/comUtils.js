@@ -395,3 +395,8 @@ export function stripScript(s) {
     }
     return rs;
 }
+
+export function toRem(px) {
+    const designW = 750;
+    return px * 10 / designW + "rem";
+}

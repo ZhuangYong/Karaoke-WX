@@ -7,20 +7,31 @@ import {GridList} from "material-ui/GridList";
 import Badge from 'material-ui/Badge';
 
 import defaultImg from "../../../img/common/tile_default.jpg";
+import SvgIcon from 'material-ui/SvgIcon';
 
 const style = {
     tile: {
+        display: "block",
+        margin: "0 auto",
         padding: 0,
-        width: "100%",
-        height: "100%",
-        margin: "auto"
+        width: "72px",
+        height: "70px",
+        boxSizing: "border-box"
     },
     tileImg: {
-        width: "100%",
-        height: "100%",
+        display: "block",
         margin: "auto",
-        display: "block"
+        width: "100%",
+        height: "100%"
     }
+};
+
+const AddIcon = (props) => {
+    return (<SvgIcon
+        style={props.style}
+        viewBox="0 0 612 792">
+        <polygon points="612,376.893 325.116,376.893 325.116,90.296 286.903,90.296 286.903,376.893 0,376.893 0,415.107 286.903,415.107 286.903,701.704 325.116,701.704 325.116,415.107 612,415.107"/>
+    </SvgIcon>);
 };
 
 class InputBox extends React.Component {
@@ -69,7 +80,7 @@ class InputBox extends React.Component {
     render () {
         return (
             <GridList
-                cellHeight={this.props.cellHeight}
+                cellHeight={"auto"}
                 cols={this.props.cols}
                 style={Object.assign({}, {
                     margin: 0,
@@ -101,25 +112,21 @@ class InputBox extends React.Component {
                                 }
                             }}
                         />) : (<div
-                            style={style.tile}
+                            style={Object.assign({}, style.tileImg, {
+                                backgroundColor: "#fff",
+                                border: "1px solid #ccc"
+                            })}
                             onClick={() => {
                                 this.addBtnTouchTap();
-                            }}
-                        >
-                            {/*<img src={addIcon} style={style.tileImg} alt="添加图片按钮"/>*/}
-                            <div
-                                style={{position: "relative", width: "100%", height: "100%", backgroundColor: "#fff"}}
-                            >
-                                <div
-                                    style={{position: "absolute", top: "50%", left: "50%", marginLeft: "-30%", width: "60%", height: "2px", backgroundColor: "#ccc"}}
-                                >
-
-                                </div>
-                                <div
-                                    style={{position: "absolute", top: "50%", left: "50%", marginTop: "-30%", height: "65%", width: "2px", backgroundColor: "#ccc"}}
-                                >
-                                </div>
-                            </div>
+                            }}>
+                            <AddIcon style={{
+                                position: "relative",
+                                top: "20%",
+                                left: "20%",
+                                width: "60%",
+                                height: "60%",
+                                color: "#ccc"
+                            }}/>
                             <input
                                 ref="addImgInp"
                                 type="file"

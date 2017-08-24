@@ -17,6 +17,7 @@ import ClearIcon from "material-ui/svg-icons/content/clear";
 import InputBox from "../../../components/photoAlbum";
 import SubmitSuccessIcon from "../../../../img/submit_success.png";
 import navUtils from "../../../utils/navUtils";
+import ButtonPage from "../../../components/common/ButtonPage";
 
 const styles = {
     sectionHeader: {
@@ -109,6 +110,7 @@ class Feedback extends BaseComponent {
 
         this.addBtnClick = this.addBtnClick.bind(this);
         this.submit = this.submit.bind(this);
+        this.closePage = this.closePage.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -204,9 +206,9 @@ class Feedback extends BaseComponent {
                         </header>
 
                         <InputBox
-                            cellHeight={70}
                             cols={5}
                             badgeBackgroundColor="#ce0000"
+                            itemStyle={{padding: "3px"}}
                             badgeContent={<ClearIcon
                                 style={{width: "20px", height: "20px"}}
                                 color="#fff"
@@ -225,7 +227,7 @@ class Feedback extends BaseComponent {
                                     });
                                 }}
                             />}
-                            badgeStyle={{top: "-3px", right: "-3px", width: "20px", height: "20px"}}
+                            badgeStyle={{width: "20px", height: "20px"}}
                             data={this.state.imgList}
                             addBtnTouchTap={this.addBtnClick}
                         />
@@ -269,20 +271,9 @@ class Feedback extends BaseComponent {
                             onClick={this.submit}
                         />
                     </section>
-                </div>) : (<div>
-                    <section
-                        style={{padding: "20px 10px"}}
-                    >
-                        <img
-                            src={SubmitSuccessIcon}
-                            alt="成功"
-                            style={{
-                                display: "block",
-                                margin: "35% auto 0",
-                                width: "100px",
-                                height: "100px"
-                            }}
-                        />
+                </div>) : (<ButtonPage
+                    src={SubmitSuccessIcon}
+                    content={<div>
                         <p style={{
                             textAlign: "center",
                             color: "#ff8632",
@@ -293,30 +284,22 @@ class Feedback extends BaseComponent {
                             color: "#807f7e",
                             fontSize: "14px"
                         }}>我们将会在第一时间处理，感谢您的反馈！</p>
-                    </section>
-                    <section
-                        style={{position: "absolute", bottom: "10%", left: 0, padding: "20px 10px", width: "100%"}}
-                    >
-                        <RaisedButton
-                            backgroundColor="#ff8632"
-                            disabledBackgroundColor="#ccc"
-                            label="关闭"
-                            style={styles.submitBtn}
-                            buttonStyle={styles.submitBtn}
-                            labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
-                            onTouchTap={() => {
-                                const matchParams = this.state.matchParams;
-                                if (matchParams.deviceId.toString() !== "undefined") {
-                                    window.WeixinJSBridge.call('closeWindow');
-                                } else {
-                                    window.history.back();
-                                }
-                            }}
-                        />
-                    </section>
-                </div>)}
+                    </div>}
+                    imgStyle={{width: "100px"}}
+                    buttonLabel="关闭"
+                    touchTap={this.closePage}
+                />)}
             </div>
         );
+    }
+
+    closePage() {
+        const matchParams = this.state.matchParams;
+        if (matchParams.deviceId !== undefined) {
+            window.WeixinJSBridge.call('closeWindow');
+        } else {
+            window.history.back();
+        }
     }
 
     // 页面状态识别

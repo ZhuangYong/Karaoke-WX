@@ -162,7 +162,7 @@ module.exports = {
 
         // 打开浏览器
         new OpenBrowserPlugin({
-            url: 'http://wx.j-make.cn:81'
+            url: 'http://wxzac.j-make.com.cn?uuid=ohSltvwgabfZPNDxc2r14tlf7rwM'
         })
     ]
 };

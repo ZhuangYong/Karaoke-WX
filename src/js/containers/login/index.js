@@ -5,21 +5,11 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 
-import RaisedButton from 'material-ui/RaisedButton';
 import LoginIcon from "../../../img/login.png";
 import navUtils from "../../utils/navUtils";
 import {OTTLogin} from "../../actions/userActions";
-import {linkTo, reqHeader} from "../../utils/comUtils";
-
-const styles = {
-    submitBtn: {
-        display: "block",
-        borderRadius: "50px",
-        margin: "0 auto",
-        width: "240px",
-        height: "50px"
-    }
-};
+import {reqHeader} from "../../utils/comUtils";
+import ButtonPage from "../../components/common/ButtonPage";
 
 class Login extends BaseComponent {
     constructor(props) {
@@ -40,54 +30,31 @@ class Login extends BaseComponent {
     }
 
     render() {
-        return (
-            <div>
-                <img
-                    style={{
-                        display: "block",
-                        margin: "35% auto 0",
-                        width: "150px"
-                    }}
-                    src={LoginIcon}
-                    alt="登录"/>
-                <p style={{
-                    textAlign: "center",
-                    color: "#000",
-                    fontSize: "18px"
-                }}>{this.matchPages()}</p>
+        return (<ButtonPage
+            src={LoginIcon}
+            disabled={typeof this.state.matchParams.uuid === "undefined"}
+            content={this.matchPages()}
+            imgStyle={{width: "180px"}}
+            buttonLabel="确认登录"
+            hideButton={this.state.matchParams.state !== "home"}
+            touchTap={() => {
+                const uuid = this.state.matchParams.uuid;
+                if (typeof uuid !== "undefined") {
+                    const params = {
+                        uuid: uuid
+                    };
+                    this.props.ottLoginAction(params, reqHeader(params), (res) => {
+                        const {status, data, msg} = res;
 
-                {this.state.matchParams.state.toString() === "home" && (<section
-                    style={{position: "absolute", bottom: "10%", left: 0, padding: "20px 10px", width: "100%"}}
-                >
-                    <RaisedButton
-                        disabled={typeof this.state.matchParams.uuid === "undefined"}
-                        backgroundColor="#ff8632"
-                        disabledBackgroundColor="#ccc"
-                        label="确认登录"
-                        style={styles.submitBtn}
-                        buttonStyle={styles.submitBtn}
-                        labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
-                        onTouchTap={() => {
-                            const uuid = this.state.matchParams.uuid;
-                            if (typeof uuid !== "undefined") {
-                                const params = {
-                                    uuid: uuid
-                                };
-                                this.props.ottLoginAction(params, reqHeader(params), (res) => {
-                                    const {status, data, msg} = res;
-
-                                    if (parseInt(status, 10) === 302) {
-                                        window.location.href = data;
-                                    } else if (parseInt(status, 10) === 1) {
-                                        navUtils.replace(`/login/success`);
-                                    }
-                                });
-                            }
-                        }}
-                    />
-                </section>)}
-            </div>
-        );
+                        if (parseInt(status, 10) === 302) {
+                            window.location.href = data;
+                        } else if (parseInt(status, 10) === 1) {
+                            navUtils.replace(`/login/success`);
+                        }
+                    });
+                }
+            }}
+        />);
     }
 
     matchPages() {
