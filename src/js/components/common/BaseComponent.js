@@ -47,7 +47,7 @@ export default class BaseComponent extends Component {
         const isBindDevice = this.isBindDevice(userInfoData);
         const isFreeActivation = this.isFreeActivation(userInfoData);
         if (typeof isBindDevice === 'string') {
-            actionSetGlobAlert && actionSetGlobAlert("正在获取用户信息，请稍后重试！");
+            actionSetGlobAlert && actionSetGlobAlert(isBindDevice);
             return '正在获取用户信息';
         } else if (isBindDevice === false) {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
@@ -111,14 +111,20 @@ export default class BaseComponent extends Component {
      * @returns {*}
      */
     isBindDevice(userInfoData) {
-        const {status, data} = userInfoData || {};
+        const {status, msg, data} = userInfoData || {};
         if (typeof status !== 'undefined') {
-            const {isReDevice, bindExpireTime} = data;
-            //是否绑定设备1（未绑定设备）2（已绑定）3（绑定过期）
-            if (isReDevice === 2) {
-                return true;
+            if (status === -100) {
+                return '请使用微信操作';
+            } else if (status === 1) {
+                const {isReDevice, bindExpireTime} = data;
+                //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
+                if (isReDevice === 1) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
-                return false;
+                return msg || '获取用户信息失败，请稍后重试！';
             }
         }
         return '正在获取用户信息';

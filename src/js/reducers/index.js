@@ -6,6 +6,7 @@ import audio from './play/audio';
 import songs from './songs';
 import search from './search';
 import pay from './pay';
+import device from './device';
 
 let appReducer = combineReducers({
     user,
@@ -13,7 +14,8 @@ let appReducer = combineReducers({
     audio,
     songs,
     search,
-    pay
+    pay,
+    device
 });
 
 export default appReducer;

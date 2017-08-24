@@ -84,7 +84,10 @@ export function chkDevice() {
     let isWeixin = ua.indexOf('micromessenger') !== -1;
     let isAndroid = ua.indexOf('android') !== -1;
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
-
+    console.log(process.env);
+    if (process.env.NODE_ENV === "development") {
+        isWeixin = true;
+    }
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,

@@ -353,9 +353,7 @@ class App extends React.Component {
             case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
                 // alertStr = '激活vip免费体验';
                 //TODO ACTIVE
-                doAction = () => {
-                    linkTo("", false, "");
-                };
+                linkTo("", false, "");
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
                 alertStr = '充值成为VIP';
