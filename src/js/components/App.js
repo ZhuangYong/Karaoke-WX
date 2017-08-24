@@ -36,7 +36,8 @@ import Feedback from "../containers/user/feedback/index";
 import VoiceSearch from "../containers/voiceSearch";
 import Pay from "../containers/Pay";
 import Protocol from "../containers/Pay/Protocol";
-import {Snackbar} from "material-ui";
+import {Dialog, FlatButton, Snackbar} from "material-ui";
+import ActionTypes from "../actions/actionTypes";
 
 
 const LoginContainer = () => (
@@ -177,6 +178,7 @@ class App extends React.Component {
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
         this.sizeChange = this.sizeChange.bind(this);
+        this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
     }
 
     componentWillMount() {
@@ -226,7 +228,7 @@ class App extends React.Component {
     }
 
     render() {
-
+        const showAlert = !!this.props.globAlert && !this.props.alertData;
         return (
             <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
@@ -274,13 +276,14 @@ class App extends React.Component {
                         <Route path="*" component={NotFound}/>
                     </Switch>
                     <Snackbar
-                        open={!!this.props.globAlert}
+                        open={showAlert}
                         message={this.props.globAlert}
                         autoHideDuration={2000}
                         onRequestClose={() => {
                             this.props.action_setGlobAlert("");
                         }}
                     />
+                        {this.validUserStatusDialog()}
                     </div>
                 </MuiThemeProvider>
             </div>
@@ -318,13 +321,68 @@ class App extends React.Component {
             }, 500);
         }
     }
+
+    validUserStatusDialog() {
+        const alertData = this.props.alertData;
+        if (!alertData) return;
+        let alertStr = "";
+        let showAlert = true;
+        switch (alertData) {
+            case ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE:
+                alertStr = '未绑定设备, 请绑定';
+                //TODO BIND DEVICE
+                break;
+            case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
+                alertStr = '激活vip免费体验';
+                //TODO ACTIVE
+                break;
+            case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
+                alertStr = '充值成为VIP';
+                //TODO VIP
+                break;
+            default:
+                showAlert = false;
+                break;
+        }
+        const handleClose = () => {
+            this.props.action_setGlobAlert("", "");
+        };
+        const handleSure = () => {
+            this.props.action_setGlobAlert("", "");
+        };
+        const actions = [
+            <FlatButton
+                label="取消"
+                primary={true}
+                onTouchTap={handleClose}
+            />,
+            <FlatButton
+                label="确定"
+                primary={true}
+                onTouchTap={handleSure}
+            />,
+        ];
+        return (
+            <div className="dialog-panel">
+                <Dialog
+                    actions={actions}
+                    modal={false}
+                    open={showAlert}
+                    // onRequestClose={handleClose}
+                >
+                    {alertStr}
+                </Dialog>
+            </div>
+        );
+    }
 }
 
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
-        globAlert: state.app.common.globAlert
+        globAlert: state.app.common.globAlert,
+        alertData: state.app.common.alertData
     };
 };
 // 映射dispatch到props

@@ -24,13 +24,12 @@ class SongList extends BaseComponent {
         const {type, id} = this.props.match.params;
         props[type] = parseInt(id, 10);
         return (
-            <Paper zDepth={0}
-                   style={{paddingTop: "66px"}}>
+            <Paper zDepth={0} style={{paddingTop: 44}}>
                 <SearchHeadFake/>
                 <DSongList
                     onPushSongSuccess={this.onPushSongSuccess}
                     onPushSongFail={this.onPushSongFail}
-                    containerStyle={{top: 66}}
+                    containerStyle={{top: 44}}
                     {...props}/>
                 <Snackbar
                     open={this.state.barrageSendToast}

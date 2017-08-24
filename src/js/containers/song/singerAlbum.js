@@ -30,20 +30,21 @@ class SingerAlumb extends BaseComponent {
             <Paper zDepth={0}>
                 <SearchHeadFake/>
                 <List
-                    style={{paddingTop: "44px", height: "100%"}}
+                    style={{padding: '50px .133rem'}}
+                    className="singer-album-list"
                 >
                     {getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result.map((singer) => (
                         <ListItem
+                            innerDivStyle={{padding: '0.133rem'}}
                             key={singer.id}
                             onTouchTap={() => {
                                 linkTo(`singer/${singer.id}`, false, null);
                             }}
                             primaryText={(
-                                <div style={{height: "80px", overflow: "hidden"}}>
+                                <div style={{height: "2.8rem", width: "4.6rem", overflow: "hidden"}}>
                                     <img style={{width: "100%"}} src={singer.wxPic || singer.ottPic}/>
                                 </div>
                             )}
-                            secondaryText={<p style={{textAlign: "center"}}>{singer.name}</p>}
                         />
                     ))}
                 </List>

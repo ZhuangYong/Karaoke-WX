@@ -25,6 +25,7 @@ import MusicStyleIcon from "material-ui/svg-icons/action/settings-input-componen
 import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
 import EffectIcon from "../../../img/common/icon_effect.png";
+import {setGlobAlert} from "../../actions/common/actions";
 
 const style = {
     controllerBtn: {
@@ -120,6 +121,7 @@ class SongController extends BaseComponent {
             historySongList: [],
             controllerIng: {},
             tabIndex: 0,
+            setTopSongIdIng: 0,
             delChooseSongIdIng: {},
             updateChooseSongsCount: 0,
             emptyChooseSongs: false,
@@ -418,6 +420,49 @@ class SongController extends BaseComponent {
         );
     }
 
+    getSongOerationButtons(song) {
+        if (this.state.delChooseSongIdIng[song.musicNo] === true) {
+            return (
+                <div style={style.chooseList.deleteButton.delIng}>
+                    <CircularProgress size={16} thickness={1}
+                                      style={{marginRight: 3}}/> 刪除中
+                </div>
+            );
+        } else if (this.state.setTopSongIdIng === song.musicNo) {
+            return (
+                <div style={style.chooseList.deleteButton.delIng}>
+                    <CircularProgress size={16} thickness={1}
+                                      style={{marginRight: 3}}/> 置顶中
+                </div>
+            );
+        } else if (this.state.setTopSongIdIng) {
+            return (
+                <div>
+                    <DeleteIcon
+                        onTouchTap={() => {
+                            this.unChoose(song.musicNo);
+                        }}
+                    />
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <PublishIcon
+                        onTouchTap={() => {
+                            this.setTop(song.musicNo);
+                        }}
+                    />
+                    <DeleteIcon
+                        onTouchTap={() => {
+                            this.unChoose(song.musicNo);
+                        }}
+                    />
+                </div>
+            );
+        }
+    }
+
     updateSong() {
         const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
         if (!data) {
@@ -474,6 +519,7 @@ class SongController extends BaseComponent {
     }
 
     setTop(musicNo) {
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
         const param = {type: 12, id: musicNo};
         let playList = this.state.playList;
         const topSong = playList.find((song) => {
@@ -482,8 +528,12 @@ class SongController extends BaseComponent {
         const newSongList = playList.filter((song) => {
             if (song !== topSong) return song;
         });
+        this.setState({
+            setTopSongIdIng: musicNo
+        });
         this.props.action_setSongTop(param, reqHeader(param), () => {
             this.setState({
+                setTopSongIdIng: 0,
                 playList: [topSong, ...newSongList]
             });
         });
@@ -505,6 +555,7 @@ class SongController extends BaseComponent {
     }
 
     unChoose(musicNo) {
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
         const param = {type: 13, id: musicNo};
         let playList = this.state.playList;
         let {delChooseSongIdIng} = this.state;
@@ -524,6 +575,7 @@ class SongController extends BaseComponent {
     }
 
     playController(type) {
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
         const param = {
             type: type
         };
@@ -559,7 +611,8 @@ class SongController extends BaseComponent {
 const mapStateToProps = (state, ownPorps) => {
     return {
         songs: state.app.songs,
-        common: state.app.common
+        common: state.app.common,
+        userInfoData: state.app.user.userInfo.userInfoData
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -567,7 +620,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_push: bindActionCreators(push, dispatch),
         action_setSongTop: bindActionCreators(setSongTop, dispatch),
         action_getChooseList: bindActionCreators(getChooseList, dispatch),
-        action_getHistorySongList: bindActionCreators(getHistorySongList, dispatch)
+        action_getHistorySongList: bindActionCreators(getHistorySongList, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 

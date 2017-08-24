@@ -12,6 +12,7 @@ import BaseComponent from "./BaseComponent";
 import {reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import VIPIcon from "../../../img/common/icon_vip.png";
+import {setGlobAlert} from "../../actions/common/actions";
 
 class SongItem extends BaseComponent {
     constructor(props) {
@@ -47,7 +48,9 @@ class SongItem extends BaseComponent {
     }
 
     pushSong() {
-        const {song, onPushSongSuccess, onPushSongFail} = this.props;
+        const {song, onPushSongSuccess, onPushSongFail, userInfo, action_setGlobAlert} = this.props;
+        const isValidUser = super.validUserStatus(userInfo.userInfoData, action_setGlobAlert);
+        if (!isValidUser) return;
         const param = {id: JSON.stringify(song), type: 4};
         this.state.pushIng[song.serialNo] = true;
         this.setState({
@@ -86,12 +89,14 @@ SongItem.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
     return {
         songs: state.app.songs,
+        userInfo: state.app.user.userInfo
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        action_push: bindActionCreators(push, dispatch)
+        action_push: bindActionCreators(push, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 

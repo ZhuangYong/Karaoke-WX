@@ -15,7 +15,8 @@ let common = function (state = initialState, action = {}) {
             });
         case ActionTypes.COMMON.COMMON_GLOB_ALERT:
             return Object.assign({}, state, {
-                globAlert: action.globAlert
+                globAlert: action.globAlert,
+                alertData: action.alertData
             });
         default:
             return state;

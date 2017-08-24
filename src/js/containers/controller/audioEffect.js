@@ -16,6 +16,8 @@ import {push} from "../../actions/audioActons";
 import ToneIconAdd from "../../../img/controller/tone_add.png";
 import ToneIconSmooth from "../../../img/controller/tone_smooth.png";
 import ToneIconReduce from "../../../img/controller/tone_reduce.png";
+import BaseComponent from "../../components/common/BaseComponent";
+import {setGlobAlert} from "../../actions/common/actions";
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -34,10 +36,11 @@ const AUDIO_EFFECT_PHONE_REDUCE = AUDIO_EFFECT_PHONE_ADD + 1;
 const AUDIO_EFFECT_EFFECT_ADD = AUDIO_EFFECT_PHONE_REDUCE + 1;
 const AUDIO_EFFECT_EFFECT_REDUCE = AUDIO_EFFECT_EFFECT_ADD + 1;
 
-class AudioEffect extends React.Component {
+class AudioEffect extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("音效控制");
         this.sendEffect = this.sendEffect.bind(this);
     }
 
@@ -46,15 +49,29 @@ class AudioEffect extends React.Component {
             <div className="effect">
                 <div className="top-area">
                     <div className="big-circle">
-                        <LeftArrowIcon color="#f96d32" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_MODE_ADD);
-                        }}/>
+                        <div className="left-choose">
+                            <LeftArrowIcon style={{
+                                position: 'absolute',
+                                right: '.9rem',
+                                top: '.9rem',
+                                transform: 'rotate(-45deg)'
+                            }} color="#f96d32" onClick={() => {
+                                this.sendEffect(AUDIO_EFFECT_MODE_ADD);
+                            }}/>
+                        </div>
+                        <div className="right-choose">
+                            <RightArrowIcon style={{
+                                position: 'absolute',
+                                left: '.9rem',
+                                bottom: '.9rem',
+                                transform: 'rotate(-45deg)'
+                            }} color="#f96d32" onClick={() => {
+                                this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
+                            }}/>
+                        </div>
                         <div className="inside-circle">
                             效果模式
                         </div>
-                        <RightArrowIcon color="#f96d32" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
-                        }}/>
                     </div>
                 </div>
 
@@ -140,6 +157,7 @@ class AudioEffect extends React.Component {
      * @param type
      */
     sendEffect(type) {
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
         let msgId = "";
         let data = "";
         switch (type) {
@@ -230,12 +248,15 @@ class AudioEffect extends React.Component {
 
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
-    return {};
+    return {
+        userInfoData: state.app.user.userInfo.userInfoData
+    };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        action_push: bindActionCreators(push, dispatch)
+        action_push: bindActionCreators(push, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 
