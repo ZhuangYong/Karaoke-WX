@@ -193,13 +193,15 @@ class App extends React.Component {
                 const {data} = json;
                 wxConfig(data);
             });
+        }
 
-            // 获取用户信息
-            let wxInfo = {
-                wxId: getQueryString("uuid") || "",
-                deviceId: getQueryString("deviceId") || ""
-            };
+        // 获取用户信息
+        let wxInfo = {
+            wxId: getQueryString("uuid") || "",
+            deviceId: getQueryString("deviceId") || ""
+        };
 
+        if (isWeixin || wxInfo.wxId !== "") {
             const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
             if (typeof wxInfoSession.status === "undefined") {
                 const params = {
@@ -217,6 +219,7 @@ class App extends React.Component {
                 this.props.action_getUserInfoFromSession();
             }
         }
+
         console.log("App component did mount ");
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
