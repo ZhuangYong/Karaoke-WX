@@ -1,26 +1,54 @@
 .effect {
-    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     .top-area {
         display: flex;
-        padding-top: 20px;
+        padding-top: .5rem;
         justify-content: center;
         .big-circle {
             border: 1px solid #ffe1d6;
-            width: 30vh;
-            height: 30vh;
+            width: 4.8rem;
+            height: 4.8rem;
             display: flex;
+            position: relative;
+            overflow: hidden;
             justify-content: center;
             align-items: center;
             -webkit-border-radius: 50%;
             -moz-border-radius: 50%;
             border-radius: 50%;
+            .left-choose{
+                width:4rem;
+                height:4rem;
+                right:3.2rem;
+                position: absolute;
+                -webkit-transform: rotate(45deg);
+                -moz-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
+            .right-choose{
+                width:4rem;
+                height:4rem;
+                left:3.2rem;
+                position: absolute;
+                -webkit-transform: rotate(45deg);
+                -moz-transform: rotate(45deg);
+                -ms-transform: rotate(45deg);
+                -o-transform: rotate(45deg);
+                transform: rotate(45deg);
+            }
             .inside-circle {
-                border: 1px solid #ffe1d6;
-                width: 16vh;
-                height: 16vh;
-                font-size: 12px;
+                width: 2.533rem;
+                height: 2.533rem;
+                font-size: .32rem;
                 display: flex;
                 color: #ff6832;
+                z-index: 4;
+                border: 1px solid #ffe1d6;
                 justify-content: center;
                 align-items: center;
                 background-color: white;
@@ -28,14 +56,17 @@
                 -moz-border-radius: 50%;
                 border-radius: 50%;
             }
-
+            .right-choose:active,.left-choose:active{
+                background-color:#ffe1d6;
+            }
         }
     }
     .center-area {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-top: 20px;
+        padding-top: 1.4rem;
+        width:100%;
         .fun-button {
             width: 33.33%;
             display: flex;
@@ -59,17 +90,19 @@
             }
             .label {
                 color: #ff6832;
-                font-size:14px;
+                font-size: .32rem;
             }
         }
     }
     .bottom-area {
-        height: 30vh;
+        height: 30%;
+        width:100%;
         display: flex;
+        margin-top:1rem;
         justify-content: center;
         align-items: center;
         .fun-button {
-            width: 33.333vh;
+            width: 33.33%;
             display: flex;
             align-items: center;
             flex-direction: column;
@@ -106,7 +139,7 @@
             }
             .label {
                 color: #ff6832;
-                font-size:14px;
+                font-size: .32rem;
             }
         }
     }

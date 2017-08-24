@@ -1,36 +1,59 @@
 @import "common/variables";
 @import "common/base";
 
-
-.song-list{
-    .song-item{
-        padding-top:16px !important;
+.song-list {
+    .song-item {
+        padding-top: 12px !important;
         padding-bottom: 12px !important;
-        padding-left:6px !important;
-        margin-left:6px !important;
-        border-bottom:1px solid #e0e0e0;
-        .song-title{
+        padding-left: 6px !important;
+        margin-left: 6px !important;
+        border-bottom: .027rem solid #e0e0e0;
+        .song-title {
             font-size: 16px;
             line-height: 22px;
-            .label-vip{
-                padding:2px 8px;
-                margin-left:10px;
+            .label-vip {
+                padding: 2px 8px;
+                margin-left: 10px;
             }
         }
-        .song-author{
-            font-size:12px !important;
+        .song-author {
+            font-size: 12px !important;
         }
-        .choose-button{
+        .choose-button {
             border: 1px solid #ff895f;
             padding: 4px 8px;
             border-radius: 20px;
             color: #ff895f;
-            top:13px !important;
-            font-size:14px !important;
+            font-size: 14px !important;
             text-align: center;
         }
     }
 }
+
+.singer-album-list {
+    padding-top: 44px;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    >div{
+        width:50%;
+    }
+}
+
+.single-list{
+    .single-item{
+        height:1.467rem;
+    }
+    .single-item:after{
+        border-top:.027rem solid #e5e5e5;
+        position:absolute;
+        width:100%;
+        left:2rem;
+        top:0;
+        content: "";
+    }
+}
+
 input, textarea {
     -webkit-user-select: text !important;
 }

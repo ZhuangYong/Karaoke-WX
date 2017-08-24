@@ -34,13 +34,17 @@ class SingerList extends BaseComponent {
 
     render() {
         const singerList = this.props.songs.getSingerAlbum;
+        const {w, h} = this.props.common;
+        const avatarSize = 42 * (w / 375);
         return (
 
             <Paper zDepth={0}>
                 <SearchHeadFake/>
-                <List style={{paddingTop: "66px", height: "100%"}}>
+                <List className="single-list" style={{paddingTop: 44, height: "100%"}}>
                     {singerList && singerList.data && singerList.data.result.map((singer) => (
                         <ListItem
+                            innerDivStyle={{paddingLeft: '2rem'}}
+                            className="single-item"
                             key={singer.id}
                             onTouchTap={() => {
                                 linkTo(`songs/singerId/${singer.id}`, false, null);
@@ -48,7 +52,7 @@ class SingerList extends BaseComponent {
                             leftAvatar={
                                 <Avatar
                                     src={singer.image}
-                                    size={30}
+                                    size={avatarSize}
                                 />
                             }
                             rightIcon={<RightArrowIcon/>}
@@ -63,7 +67,8 @@ class SingerList extends BaseComponent {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        songs: state.app.songs
+        songs: state.app.songs,
+        common: state.app.common
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

@@ -14,9 +14,10 @@ export function getUserInfoFromSession() {
     };
 }
 
-export function setGlobAlert(msg) {
+export function setGlobAlert(msg, data) {
     return {
         type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
+        alertData: data,
         globAlert: msg
     };
 }

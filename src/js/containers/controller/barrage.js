@@ -17,6 +17,7 @@ import BaseComponent from "../../components/common/BaseComponent";
 import {reqHeader} from "../../utils/comUtils";
 
 import bindActionCreators from "redux/es/bindActionCreators";
+import {setGlobAlert} from "../../actions/common/actions";
 
 const fastWords = [
     {value: "快速文字"},
@@ -357,6 +358,7 @@ class Barrage extends BaseComponent {
     }
 
     sendBarrage() {
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
         const {inputValue, inputImage} = this.state;
         let type = "";
         const {data} = this.props.userInfo.userInfoData || {data: {}};
@@ -401,13 +403,15 @@ class Barrage extends BaseComponent {
 const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
-        common: state.app.common
+        common: state.app.common,
+        userInfoData: state.app.user.userInfo.userInfoData
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        action_push: bindActionCreators(push, dispatch)
+        action_push: bindActionCreators(push, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 

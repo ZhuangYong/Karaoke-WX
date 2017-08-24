@@ -121,8 +121,6 @@ class SongList extends BaseComponent {
                     ref="scroller"
                     directionLockThreshold={1}
                     containerStyle={this.props.containerStyle}
-                    usePullRefresh
-                    pullRefreshAction={this.pullRefreshAction.bind(this)}
                     useLoadMore
                     loadMoreAction={this.loadMoreAction.bind(this)}
                     noMoreData={this.state.lastPage}
