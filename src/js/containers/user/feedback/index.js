@@ -94,7 +94,7 @@ const addBtn = {
 class Feedback extends BaseComponent {
     constructor(props) {
         super(props);
-
+        super.title("意见反馈");
 
         this.state = {
             matchParams: this.props.match.params,

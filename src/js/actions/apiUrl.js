@@ -8,6 +8,8 @@ export default {
     "API_ALI_PAY": "/pay/alipayPay",
     // 获取微信支付参数
     "API_GET_WX_PAY_PARAMS": "/pay/jsPay",
+    // OTT免费激活
+    "API_DEVICE_REGISTER": "/user/userActivation",
 
     /**
      * 获取用户信息
@@ -19,7 +21,7 @@ export default {
      * expireTime: vip到期时间
      * headerImg: 微信用户头像
      * isFreeActivation: 是否可以免费激活1（可以）0（不可以）
-     * isReDevice: 是否绑定设备1（未绑定设备）2（已绑定）3（绑定过期）
+     * isReDevice: 是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
      * mac:（mac地址）
      * nickName: 微信昵称
      * openid: 微信openid

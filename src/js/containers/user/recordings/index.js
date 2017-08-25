@@ -44,6 +44,7 @@ const style = {
 class Records extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("我的录音");
 
         this.state = {
             recordingList: [],

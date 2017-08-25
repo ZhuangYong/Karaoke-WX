@@ -14,6 +14,7 @@ import ButtonPage from "../../components/common/ButtonPage";
 class Login extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("登录");
         this.state = {
             matchParams: this.props.match.params
         };

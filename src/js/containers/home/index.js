@@ -91,6 +91,7 @@ const style = {
 class Home extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("金麦客");
         this.state = {
             defaultBack: '/',
             showMsg: false,
