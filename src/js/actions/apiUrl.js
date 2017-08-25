@@ -80,5 +80,7 @@ export default {
     // 分类歌曲列表
     "API_GET_CAT_ALBUM": "/cat/album",
 
-    "API_GET_OTT_DEVICE_STATUS": "/deviceNet/qryStatus"
+    "API_GET_OTT_DEVICE_STATUS": "/deviceNet/qryStatus",
+
+    "API_LOCAL_TEST_PUSH": "/localserver/status"
 };

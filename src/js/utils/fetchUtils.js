@@ -129,11 +129,12 @@ export function comFetch(dispatch, param, options = {
             error: err,
             param: param
         });
-        dispatch({
-            type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-            globAlert: '网络不给力，请稍后再试'
-        });
-
+        if (options.action !== ActionTypes.COMMON.API_LOCAL_TEST_PUSH) {
+            dispatch({
+                type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
+                globAlert: '网络不给力，请稍后再试'
+            });
+        }
         failCallback && failCallback('网络不给力，请稍后再试', err);
     });
 }

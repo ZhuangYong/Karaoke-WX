@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {getUserConfig, getUserInfo} from "../actions/userActions";
-import {getUserInfoFromSession, setGlobAlert, updateScreen} from "../actions/common/actions";
+import {checkLocal, getUserInfoFromSession, setGlobAlert, updateScreen} from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -39,7 +39,7 @@ import Protocol from "../containers/Pay/Protocol";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
-
+import sysConfig from "../utils/sysConfig";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -175,11 +175,16 @@ class App extends React.Component {
             msgText: '',
             timer: null,
             barrageSendToast: false,
-            updateDevice: false
+            updateDevice: false,
+            checkLocalTimer: 0,
+            checkLocalCount: 0,
+            checkLocalBetween: 5
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
         this.sizeChange = this.sizeChange.bind(this);
+        this.runCheckLocal = this.runCheckLocal.bind(this);
+        this.updateUserInfo = this.updateUserInfo.bind(this);
         this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
     }
 
@@ -188,47 +193,8 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        let {isWeixin} = window.sysInfo;
-        if (isWeixin) {
-            const param = {url: location.href.split('#')[0]};
-            this.props.action_getUserConfig(param, reqHeader(param), (json) => {
-                const {data} = json;
-                wxConfig(data);
-            });
-
-            // 获取用户信息
-            let wxInfo = {
-                wxId: getQueryString("uuid") || "",
-                deviceId: getQueryString("deviceId") || ""
-            };
-            let wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
-            if (wxInfoSession.status === -100) {
-                window.sessionStorage.removeItem("wxInfo");
-                wxInfoSession = {};
-            }
-            if (typeof wxInfoSession.status === "undefined") {
-                const params = {
-                    url: window.location.href.split("#")[0]
-                };
-                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)), (res) => {
-                    const {status, data, msg} = res;
-                    if (parseInt(status, 10) === 302) {
-                        window.location.href = data;
-                    } else if (parseInt(status, 10) === 1) {
-                        window.sessionStorage.setItem("wxInfo", JSON.stringify(res));
-                    }
-                });
-            } else {
-                this.props.action_getUserInfoFromSession();
-            }
-        } else {
-            window.sessionStorage.setItem("wxInfo", JSON.stringify({
-                status: -100,
-                msg: "",
-                data: {}
-            }));
-            this.props.action_getUserInfoFromSession();
-        }
+        this.updateUserInfo();
+        // this.runCheckLocal();
         console.log("App component did mount ");
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
@@ -334,6 +300,9 @@ class App extends React.Component {
         });
     }
 
+    /**
+     * 屏幕尺寸改变事件
+     */
     sizeChange () {
         if (!this.state.timer) {
             this.state.timer = setTimeout(() => {
@@ -401,6 +370,82 @@ class App extends React.Component {
             </div>
         );
     }
+
+    /**
+     * 更新用户信息
+     */
+    updateUserInfo() {
+        let {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            const param = {url: location.href.split('#')[0]};
+            this.props.action_getUserConfig(param, reqHeader(param), (json) => {
+                const {data} = json;
+                wxConfig(data);
+            });
+
+            // 获取用户信息
+            let wxInfo = {
+                wxId: getQueryString("uuid") || "",
+                deviceId: getQueryString("deviceId") || ""
+            };
+            let wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+            if (wxInfoSession.status === -100) {
+                window.sessionStorage.removeItem("wxInfo");
+                wxInfoSession = {};
+            }
+            if (typeof wxInfoSession.status === "undefined" || !!wxInfo.wxId) {
+                const params = {
+                    url: window.location.href.split("#")[0]
+                };
+                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)), (res) => {
+                    const {status, data, msg} = res;
+                    if (parseInt(status, 10) === 302) {
+                        window.location.href = data;
+                    } else if (parseInt(status, 10) === 1) {
+                        window.sessionStorage.setItem("wxInfo", JSON.stringify(res));
+                    }
+                });
+            } else {
+                this.props.action_getUserInfoFromSession();
+            }
+        } else {
+            window.sessionStorage.setItem("wxInfo", JSON.stringify({
+                status: -100,
+                msg: "",
+                data: {}
+            }));
+            this.props.action_getUserInfoFromSession();
+        }
+    }
+
+    /**
+     * ott同局域网测试
+     */
+    runCheckLocal() {
+        const {checkLocalTimer} = this.state;
+        if (!checkLocalTimer) {
+            this.state.checkLocalTimer = setInterval(() => {
+                const {checkLocalCount, checkLocalBetween} = this.state;
+                if (checkLocalCount >= checkLocalBetween) {
+                    const {data} = this.props.ottInfo || {};
+                    const {userInfoData} = this.props.userInfo || {};
+                    const {deviceIp, devicePort, networkType} = data || {};
+                    if ((networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
+                        const param = {
+                            debug: sysConfig.environment === "test",
+                            deviceId: userInfoData.data.deviceId
+                        };
+                        this.props.action_checkLocal(`http://${deviceIp}:${devicePort}`, param, reqHeader(param), (json) => {
+                            console.log(json);
+                        });
+                    }
+                    this.state.checkLocalCount = 0;
+                } else {
+                    this.state.checkLocalCount += 1;
+                }
+            }, 1000);
+        }
+    }
 }
 
 // 映射state到props
@@ -409,6 +454,7 @@ const mapStateToProps = (state, ownProps) => {
         userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
         alertData: state.app.common.alertData,
+        testLocalPush: state.app.common.testLocalPush,
         ottInfo: state.app.device.ottInfo
     };
 };
@@ -420,7 +466,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_getUserInfo: bindActionCreators(getUserInfo, dispatch),
         action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
-        action_getOttStatus: bindActionCreators(getOttStatus, dispatch)
+        action_getOttStatus: bindActionCreators(getOttStatus, dispatch),
+        action_checkLocal: bindActionCreators(checkLocal, dispatch)
     };
 };
 

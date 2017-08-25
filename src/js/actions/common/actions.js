@@ -1,4 +1,6 @@
 import ActionTypes from '../actionTypes';
+import apiUrl from "../apiUrl";
+import {comFetch} from "../../utils/fetchUtils";
 
 export function updateScreen() {
     return {
@@ -19,5 +21,24 @@ export function setGlobAlert(msg, data) {
         type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
         alertData: data,
         globAlert: msg
+    };
+}
+
+export function setLocalNet(iswork) {
+    return {
+        type: ActionTypes.COMMON.COMMON_LOCAL_NETWORK_STATUS,
+        localNetIsWork: iswork
+    };
+}
+
+export function checkLocal(urlPri, data, headers, callback, failBack) {
+    const url = urlPri + apiUrl.API_LOCAL_TEST_PUSH;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "get",
+            headers: headers,
+            action: ActionTypes.COMMON.API_LOCAL_TEST_PUSH
+        }, callback, failBack);
     };
 }

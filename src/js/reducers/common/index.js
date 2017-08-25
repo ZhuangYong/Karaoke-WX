@@ -1,8 +1,10 @@
 import ActionTypes from "../../actions/actionTypes";
+import {fetchProcess} from "../../utils/fetchUtils";
 
 let initialState = {
     info: 'common store',
-    globAlert: ""
+    globAlert: "",
+    testLocalPushStamp: 0
 };
 
 let common = function (state = initialState, action = {}) {
@@ -18,6 +20,18 @@ let common = function (state = initialState, action = {}) {
                 globAlert: action.globAlert,
                 alertData: action.alertData
             });
+        case ActionTypes.COMMON.COMMON_LOCAL_NETWORK_STATUS:
+            return Object.assign({}, state, {
+                localNetIsWork: action.localNetIsWork
+            });
+        case ActionTypes.COMMON.API_LOCAL_TEST_PUSH:
+            return fetchProcess(state, action, {
+                data: "testLocalPush",
+                stamp: "testLocalPushStamp",
+                msg: "testLocalPushMsg",
+                loading: "loading"
+            });
+
         default:
             return state;
     }

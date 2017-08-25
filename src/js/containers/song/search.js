@@ -25,6 +25,8 @@ class Search extends BaseComponent {
     }
 
     componentDidMount() {
+        const {keyword} = this.props.match.params;
+        this.search(keyword);
     }
 
     render() {

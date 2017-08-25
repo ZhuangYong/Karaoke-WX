@@ -49,6 +49,23 @@ export function push(data, headers, callback, failBack) {
 }
 
 /**
+ * 推送
+ * @param data
+ * @param headers
+ * @returns {function(*=)}
+ */
+export function pushLocal(data, headers, callback, failBack) {
+    const url = sysConfig.apiDomain + apiUrl.API_PUSH;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_PUSH
+        }, callback, failBack);
+    };
+}
+
+/**
  * 获取已点歌曲列表
  * @param data
  * @param headers
