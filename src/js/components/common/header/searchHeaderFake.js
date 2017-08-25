@@ -25,7 +25,9 @@ class SearchHeaderFake extends BaseComponent {
                             <div>
                                 <img className="search" src={SearchIcon}/>
                                 <font>请输入你要找的歌曲或歌星</font>
-                                <img className="voice" src={VoiceIcon}/>
+                                <img onClick={() => {
+                                    linkTo("voiceSearch", false, "");
+                                }} className="voice" src={VoiceIcon}/>
                             </div>
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}

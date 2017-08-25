@@ -39,3 +39,14 @@ export function getWXPayParams(data, headers, callback) {
         }, callback);
     };
 }
+
+export function deviceRegister(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_DEVICE_REGISTER;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.Pay.API_DEVICE_REGISTER
+        }, callback);
+    };
+}

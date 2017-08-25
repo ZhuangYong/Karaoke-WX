@@ -7,8 +7,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
-import {setGlobAlert} from "../../actions/common/actions";
-import {alipayPay, getPayList, getWXPayParams} from "../../actions/payAction";
+import {alipayPay, deviceRegister, getPayList, getWXPayParams} from "../../actions/payAction";
 import {getEncryptHeader, linkTo, reqHeader} from "../../utils/comUtils";
 import navUtils from "../../utils/navUtils";
 
@@ -18,7 +17,11 @@ import PaySuccessIcon from "../../../img/pay_success.png";
 import PayFailedIcon from "../../../img/pay_failed.png";
 import DeviceRegisterIcon from "../../../img/device_register.png";
 import ButtonPage from "../../components/common/ButtonPage";
-import ActionTypes from "../../actions/actionTypes";
+
+import Dialog from "material-ui/Dialog";
+import FlatButton from "material-ui/FlatButton";
+import {setGlobAlert} from "../../actions/common/actions";
+import {getUserInfo} from "../../actions/userActions";
 
 const styles = {
     itemBox: {
@@ -65,12 +68,15 @@ class Pay extends BaseComponent {
             },
             isCheckboxChecked: true,
             payList: [],
-            buttonPage: null
+            buttonPage: null,
+            openDialog: false
         };
 
         this.pay = this.pay.bind(this);
         this.wxPay = this.wxPay.bind(this);
         this.aliPay = this.aliPay.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleAction = this.handleAction.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -88,6 +94,18 @@ class Pay extends BaseComponent {
         const payListActiveItem = this.state.payListActiveItem;
         const isCheckboxChecked = this.state.isCheckboxChecked;
         const matchParams = this.state.matchParams;
+        const actions = [
+            <FlatButton
+                label="以后再说"
+                primary={true}
+                onClick={this.handleClose}
+            />,
+            <FlatButton
+                label="立即开通"
+                primary={true}
+                onClick={this.handleAction}
+            />,
+        ];
 
         return (
             <div>
@@ -173,8 +191,40 @@ class Pay extends BaseComponent {
                         touchTap={this.pay}
                     />
                 </div>) : this.state.buttonPage}
+
+                <div className="dialog-panel">
+                    <Dialog
+                        actions={actions}
+                        modal={false}
+                        open={this.state.openDialog}
+                        onRequestClose={this.handleClose}
+                    >
+                        确定开通金麦客VIP体验权
+                    </Dialog>
+                </div>
             </div>
         );
+    }
+
+    handleAction() {
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
+        const getUserInfoAction = this.props.getUserInfoAction;
+        this.setState({openDialog: false});
+        const params = {};
+        this.props.deviceRegisterAction(params, reqHeader(params), (res) => {
+            const {status} = res;
+            if (status === 1) {
+                actionSetGlobAlert("成功开通");
+
+                getUserInfoAction({}, reqHeader({}));
+            } else {
+                actionSetGlobAlert("开通失败");
+            }
+            window.history.back();
+        });
+    }
+    handleClose() {
+        this.setState({openDialog: false});
     }
 
     // 点击支付
@@ -294,8 +344,7 @@ class Pay extends BaseComponent {
                         contentStyle={{color: "#c48848"}}
                         buttonLabel="马上体验"
                         touchTap={() => {
-                            const actionSetGlobAlert = this.props.action_setGlobAlert;
-                            actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE);
+                            this.setState({openDialog: true});
                         }}/>
                 });
                 break;
@@ -325,6 +374,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         getPayListAction: bindActionCreators(getPayList, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         getWXPayParamsAction: bindActionCreators(getWXPayParams, dispatch),
+        deviceRegisterAction: bindActionCreators(deviceRegister, dispatch),
+        getUserInfoAction: bindActionCreators(getUserInfo, dispatch),
         alipayAction: bindActionCreators(alipayPay, dispatch)
     };
 };

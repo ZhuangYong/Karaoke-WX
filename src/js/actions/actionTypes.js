@@ -75,6 +75,8 @@ const Pay = {
     API_ALI_PAY: "API_ALI_PAY",
     // 获取微信支付参数
     API_GET_WX_PAY_PARAMS: "API_GET_WX_PAY_PARAMS",
+    // OTT免费激活
+    API_DEVICE_REGISTER: "API_DEVICE_REGISTER"
 };
 
 const DEVICE = {

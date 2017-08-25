@@ -42,9 +42,13 @@
                 margin-right: 4px;
             }
             img.voice{
-                height: 18px;
+                display: block;
+                padding: 6px 10px 6px 18px;
+                width: 40px;
+                height: 30px;
                 position: absolute;
                 right: 12px;
+                z-index: 1;
             }
         }
         .search-button{

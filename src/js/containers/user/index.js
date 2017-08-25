@@ -128,7 +128,7 @@ class UserIndex extends BaseComponent {
                         <GridTile
                             onTouchTap={() => {
                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
-                                actionSetGlobAlert && actionSetGlobAlert("已绑定，开始点歌吧");
+                                actionSetGlobAlert("已绑定，开始点歌吧");
                             }}>
                             <img
                                 src={DeviceIcon}
@@ -181,7 +181,7 @@ class UserIndex extends BaseComponent {
                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
 
                                 if (recordsListTotalCounts < 1) {
-                                    actionSetGlobAlert && actionSetGlobAlert("暂无录音");
+                                    actionSetGlobAlert("暂无录音");
                                     return;
                                 }
                                 linkTo(`user/recordings`, false, null);

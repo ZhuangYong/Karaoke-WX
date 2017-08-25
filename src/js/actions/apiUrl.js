@@ -8,6 +8,8 @@ export default {
     "API_ALI_PAY": "/pay/alipayPay",
     // 获取微信支付参数
     "API_GET_WX_PAY_PARAMS": "/pay/jsPay",
+    // OTT免费激活
+    "API_DEVICE_REGISTER": "/user/userActivation",
 
     /**
      * 获取用户信息

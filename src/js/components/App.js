@@ -244,7 +244,7 @@ class App extends React.Component {
         }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
-            linkTo("", false, "");
+            linkTo("pay/deviceRegister", false, "");
             this.props.action_setGlobAlert("", "");
         }
     }
@@ -354,6 +354,20 @@ class App extends React.Component {
             case ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE:
                 alertStr = '未绑定设备, 请绑定';
                 //TODO BIND DEVICE
+                doAction = () => {
+                    window.wx.scanQRCode({
+                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                        success: function (res) {
+                            // let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                            console.log('扫一扫成功');
+                            // alert(result);
+                        },
+                        fail: function (res) {
+                            console.log(res);
+                        }
+                    });
+                };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
                 // alertStr = '激活vip免费体验';
@@ -363,6 +377,9 @@ class App extends React.Component {
             case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
                 alertStr = '充值成为VIP';
                 //TODO VIP
+                doAction = () => {
+                    linkTo("pay/home", false, "");
+                };
                 break;
             default:
                 showAlert = false;

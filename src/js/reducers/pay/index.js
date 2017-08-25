@@ -29,6 +29,12 @@ export default (state = initialState, action = {}) => {
                 msg: "wxPayParamsMsg",
                 loading: "wxPayParamsLoading"
             });
+        case ActionTypes.Pay.API_DEVICE_REGISTER:
+            return fetchProcess(state, action, {
+                data: "deviceRegisterData",
+                msg: "deviceRegisterMsg",
+                loading: "deviceRegisterLoading"
+            });
         default:
             return state;
     }
