@@ -20,7 +20,7 @@ class SearchHeader extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
-            inputting: true,
+            inputting: typeof this.props.inputIng !== "undefined" ? this.props.inputIng : true,
             searchKey: "",
             searchHistory: getCookie("searchHistory")
         };
@@ -216,7 +216,8 @@ class SearchHeader extends BaseComponent {
 }
 
 SearchHeader.propTypes = {
-    getSearchKey: PropTypes.func
+    getSearchKey: PropTypes.func,
+    inputIng: PropTypes.bool
 };
 
 const mapStateToProps = (state, ownProps) => {

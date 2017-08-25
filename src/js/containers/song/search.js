@@ -30,9 +30,10 @@ class Search extends BaseComponent {
     }
 
     render() {
+        const {keyword} = this.props.match.params;
         return (
             <Paper zDepth={0}>
-                <SearchHeader getSearchKey={this.search}/>
+                <SearchHeader getSearchKey={this.search} inputIng={!keyword}/>
                 {this.state.keyword ? <Paper style={{position: "absolute", top: 44, width: "100%", zIndex: 4}}>
                     <Subheader>
                         “{this.state.keyword}” 的搜索结果
