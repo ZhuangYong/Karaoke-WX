@@ -10,6 +10,7 @@ import navUtils from "../../utils/navUtils";
 import {OTTLogin} from "../../actions/userActions";
 import {reqHeader} from "../../utils/comUtils";
 import ButtonPage from "../../components/common/ButtonPage";
+import {setGlobAlert} from "../../actions/common/actions";
 
 class Login extends BaseComponent {
     constructor(props) {
@@ -39,6 +40,13 @@ class Login extends BaseComponent {
             buttonLabel="确认登录"
             hideButton={this.state.matchParams.state !== "home"}
             touchTap={() => {
+
+                const {isWeixin} = window.sysInfo;
+                if (!isWeixin) {
+                    this.props.action_setGlobAlert("请在微信客户端操作");
+                    return;
+                }
+
                 const uuid = this.state.matchParams.uuid;
                 if (typeof uuid !== "undefined") {
                     const params = {
@@ -98,7 +106,8 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        ottLoginAction: bindActionCreators(OTTLogin, dispatch)
+        ottLoginAction: bindActionCreators(OTTLogin, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

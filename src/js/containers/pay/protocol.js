@@ -9,6 +9,7 @@ import {withRouter} from "react-router-dom";
 class Protocol extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("支付协议");
     }
 
     componentDidMount() {

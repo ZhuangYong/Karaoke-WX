@@ -59,6 +59,7 @@ const styles = {
 class Pay extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("支付");
 
         this.state = {
             matchParams: this.props.match.params,
@@ -239,6 +240,8 @@ class Pay extends BaseComponent {
 
     // 微信支付
     wxPay() {
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
+        const getUserInfoAction = this.props.getUserInfoAction;
         const productId = this.state.payListActiveItem.productId;
         const matchParams = this.state.matchParams;
         let header = null;
@@ -264,13 +267,17 @@ class Pay extends BaseComponent {
                 paySign: data.paySign, // 支付签名
                 success: function (res) {
                     // 支付成功后的回调函数
-
+                    actionSetGlobAlert("支付成功");
+                    getUserInfoAction({}, reqHeader({}));
+                    window.history.back();
                 },
                 cancel: function (res) {
-
+                    actionSetGlobAlert("取消支付");
+                    window.history.back();
                 },
                 fail: function (res) {
-
+                    actionSetGlobAlert("支付失败");
+                    window.history.back();
                 }
             });
         });
@@ -310,7 +317,13 @@ class Pay extends BaseComponent {
         switch (matchParams.state) {
             case "home": {
                 const getPayListParams = {};
-                this.props.getPayListAction(getPayListParams, reqHeader(getPayListParams));
+                let header = null;
+                if (matchParams.deviceId !== undefined) {
+                    header = reqHeader(getPayListParams, getEncryptHeader({deviceId: matchParams.deviceId}));
+                } else {
+                    header = reqHeader(getPayListParams);
+                }
+                this.props.getPayListAction(getPayListParams, header);
             }
                 break;
             case "aliPaySuccess":

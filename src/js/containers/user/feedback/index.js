@@ -18,6 +18,7 @@ import InputBox from "../../../components/photoAlbum";
 import SubmitSuccessIcon from "../../../../img/submit_success.png";
 import navUtils from "../../../utils/navUtils";
 import ButtonPage from "../../../components/common/ButtonPage";
+import {setGlobAlert} from "../../../actions/common/actions";
 
 const styles = {
     sectionHeader: {
@@ -114,9 +115,6 @@ class Feedback extends BaseComponent {
     }
 
     componentDidUpdate(preProps) {
-        if (preProps.questionList.questionListStamp !== this.props.questionList.questionListStamp) {
-            this.updateQuestionList();
-        }
 
         const matchParams = this.props.match.params;
         if (preProps.match.params.state !== matchParams.state) {
@@ -132,8 +130,14 @@ class Feedback extends BaseComponent {
     }
 
     render() {
-        const questionList = this.state.questionList;
-        const submitParams = this.state.submitParams;
+        const {data} = this.props.questionList.questionListData || {data: {}};
+        const {result} = data || {};
+        const questionList = result || [];
+        let submitParams = this.state.submitParams;
+
+        if (submitParams.questionIds === null && questionList[0]) {
+            submitParams.questionIds = questionList[0].id;
+        }
 
         return (
             <div>
@@ -183,6 +187,9 @@ class Feedback extends BaseComponent {
                             maxLength="200"
                             onChange={(e) => {
                                 submitParams.content = e.target.value;
+                                if (submitParams.content.length >= 200) {
+                                    this.props.action_setGlobAlert("字太多啦，不准写了");
+                                }
                                 this.setState({
                                     submitParams: submitParams
                                 });
@@ -248,8 +255,7 @@ class Feedback extends BaseComponent {
                                 placeholder="手机、QQ或邮箱"
                                 style={{width: "100%", height: "50px", backgroundColor: "#fff", border: "none", fontSize: "18px", textIndent: "10px", borderRadius: "4px"}}
                                 onChange={(e) => {
-                                    const val = e.target.value;
-                                    submitParams.tel = val;
+                                    submitParams.tel = e.target.value;
                                     this.setState({
                                         submitParams: submitParams
                                     });
@@ -346,10 +352,12 @@ class Feedback extends BaseComponent {
         }
 
         this.props.feedbackSubmitAction(submitParams, header, (res) => {
-            const {status} = res;
+            const {status, msg} = res;
 
-            if (parseInt(status, 10) === 1) {
+            if (status === 1) {
                 navUtils.replace(`/user/feedback/success/${matchParams.deviceId}`);
+            } else {
+                this.props.action_setGlobAlert("网络开小差咯");
             }
         });
     }
@@ -395,19 +403,6 @@ class Feedback extends BaseComponent {
         }
     }
 
-    // 问题类型数据更新
-    updateQuestionList() {
-        const {data} = this.props.questionList.questionListData || {data: {}};
-        const {result} = data || {result: []};
-
-        let submitParams = this.state.submitParams;
-        submitParams.questionIds = result[0].id;
-
-        this.setState({
-            submitParams: submitParams,
-            questionList: result
-        });
-    }
 }
 
 Feedback.defaultProps = {
@@ -430,7 +425,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getFeedbackQuestionListAction: bindActionCreators(getFeedbackQuestionList, dispatch),
         uploadImgAction: bindActionCreators(uploadImgWeiXin, dispatch),
-        feedbackSubmitAction: bindActionCreators(feedbackSubmit, dispatch)
+        feedbackSubmitAction: bindActionCreators(feedbackSubmit, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Feedback));

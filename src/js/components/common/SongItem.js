@@ -13,7 +13,6 @@ import {reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import VIPIcon from "../../../img/common/icon_vip.png";
 import {setGlobAlert} from "../../actions/common/actions";
-import Push from "../common/push";
 
 class SongItem extends BaseComponent {
     constructor(props) {

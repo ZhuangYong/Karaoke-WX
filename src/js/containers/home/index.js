@@ -195,7 +195,7 @@ class Home extends BaseComponent {
                                     }}
                                 >
                                     <div style={style.tile}>
-                                        <img src={recommend.imgurl} style={style.tileImg}/>
+                                        <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
                                         <div style={style.itemTitle}>{recommend.name}</div>
                                     </div>
                                 </GridTile>
@@ -224,7 +224,7 @@ class Home extends BaseComponent {
                                     }}
                                 >
                                     <div style={style.tile}>
-                                        <img src={rank.imgurl} style={style.tileImg}/>
+                                        <img src={rank.wxPic || rank.imgurl} style={style.tileImg}/>
                                         <div style={style.itemTitle}>{rank.name}</div>
                                     </div>
                                 </GridTile>

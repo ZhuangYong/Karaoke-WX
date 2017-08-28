@@ -45,7 +45,7 @@ class CatAlbum extends BaseComponent {
                                     data={catArr}
                                     labelKey="name"
                                     idKey="id"
-                                    imgKey="imgurl"
+                                    imgKey="wxPic"
                                     linHeadKey="songs/catId/"
                                 />
                             </Paper>

@@ -12,6 +12,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import BtnIcon from '../../../img/voice_search.png';
 import "../../../sass/voiceSearch.scss";
 import {linkTo, stripScript} from "../../utils/comUtils";
+import {setGlobAlert} from "../../actions/common/actions";
 
 const styles = {
     btn: {
@@ -31,6 +32,7 @@ const styles = {
 class VoiceSearch extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("语音搜索");
 
         this.state = {
             isRecordStart: false,
@@ -69,13 +71,13 @@ class VoiceSearch extends BaseComponent {
                         onClick={() => {
                             const {isWeixin} = window.sysInfo;
                             if (!isWeixin) {
-                                alert("请在微信客户端打开");
+                                this.props.action_setGlobAlert("请在微信客户端操作");
                                 return;
                             }
 
                             this.setState({
                                 btnDisabled: true,
-                                pageState: 1,
+                                pageState: this.state.pageState !== 0 ? 0 : 1,
                                 isRecordStart: !isRecordStart
                             });
                             setTimeout(() => {
@@ -167,7 +169,9 @@ class VoiceSearch extends BaseComponent {
             });
             return;
         }
+
         const _this = this;
+        const actionGlobAlert = this.props.action_setGlobAlert;
         let stopRecordTimer = this.state.stopRecordTimer;
         if (stopRecordTimer !== null) {
             clearTimeout(stopRecordTimer);
@@ -180,7 +184,12 @@ class VoiceSearch extends BaseComponent {
                     }, 30000);
                 },
                 fail: function () {
-                    console.log('无法调用开始开始录音API');
+                    _this.setState({
+                        pageState: 0,
+                        isRecordStart: isRecordStart
+                    });
+
+                    actionGlobAlert('录音失败');
                 }
             });
         } else {
@@ -192,7 +201,6 @@ class VoiceSearch extends BaseComponent {
                         isShowProgressTips: 1, // 默认为1，显示进度提示
                         success: function (resl) {
                             const res = resl.translateResult;
-                            alert(res);
                             if (typeof res !== "undefined") {
                                 linkTo(`song/search/${encodeURIComponent(stripScript(res))}`, false, null);
                             } else {
@@ -203,12 +211,20 @@ class VoiceSearch extends BaseComponent {
                             }
                         },
                         fail: function () {
-                            console.log('调用识别录音API失败或网络不正常');
+                            _this.setState({
+                                pageState: 0,
+                                isRecordStart: isRecordStart
+                            });
+                            actionGlobAlert('语音识别失败');
                         }
                     });
                 },
                 fail: function () {
-                    console.log('调用停止录音API失败');
+                    _this.setState({
+                        pageState: 0,
+                        isRecordStart: isRecordStart
+                    });
+                    actionGlobAlert('无法停止录音');
                 }
             });
         }
@@ -224,13 +240,11 @@ VoiceSearch.propTypes = {
 };
 
 const mapStateToProps = (state, ownPorps) => {
-    return {
-
-    };
+    return {};
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VoiceSearch));
