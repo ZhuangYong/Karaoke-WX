@@ -21,15 +21,21 @@ class GradeList extends BaseComponent {
         const idKey = this.props.idKey;
         const linkHead = this.props.linHeadKey;
         const title = this.props.title;
+        const {w} = this.props.common;
+        const cellHeight = 3.467 * w / 10 - 4;
+        const cellPadding = 0.267 * w / 10;
+        const cellMarinTop = 22 + 0.187 * w / 10;
+
         return (
-            <Card>
+            <div>
                 {
                     title && (<CardTitle title={title}/>)
                 }
                 <GridList
-                    cellHeight={100}
-                    style={{margin: "6px"}}
-                    cols={3}
+                    cellHeight={cellHeight}
+                    padding={cellPadding}
+                    style={{margin: '0.133rem'}}
+                    cols={2}
                 >
 
                     {data.map((item) => (
@@ -39,21 +45,22 @@ class GradeList extends BaseComponent {
                             titleStyle={{
                                 textAlign: "center",
                                 marginRight: "16px",
-                                marginTop: "20%",
-                                color: "black"
+                                marginTop: cellMarinTop,
+                                color: "black",
+                                fontSize: ".293rem"
                             }}
                             titleBackground="transparent"
                             onClick={() => {
-                                linkTo(linkHead + item[idKey], false, null);
+                                linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encodeURIComponent(item[imgKey]).replace(/\./g, '___dot___')}`, false, null);
                             }}
                         >
-                            <div style={{height: "60%", overflow: "hidden"}}>
-                                <img src={item[imgKey]} style={{width: "60%", display: "table-cell", margin: "auto"}}/>
+                            <div>
+                                <img src={item[imgKey]} style={{height: '2.8rem', width: "4.6rem", display: "table-cell", margin: "auto"}}/>
                             </div>
                         </GridTile>
                     ))}
                 </GridList>
-            </Card>
+            </div>
 
         );
     }
@@ -72,8 +79,8 @@ GradeList.defaultProps = {
 };
 
 export default withRouter(connect(
-    () => {
-        return {};
+    (state) => {
+        return {common: state.app.common};
     },
     () => {
         return {};

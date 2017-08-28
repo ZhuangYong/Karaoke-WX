@@ -21,7 +21,7 @@ class SearchHeader extends BaseComponent {
         super(props);
         this.state = {
             inputting: typeof this.props.inputIng !== "undefined" ? this.props.inputIng : true,
-            searchKey: "",
+            searchKey: typeof this.props.defaultKeyWord !== "undefined" ? this.props.defaultKeyWord : "",
             searchHistory: getCookie("searchHistory")
         };
         this.handelBlur = this.handelBlur.bind(this);
@@ -217,6 +217,7 @@ class SearchHeader extends BaseComponent {
 
 SearchHeader.propTypes = {
     getSearchKey: PropTypes.func,
+    defaultKeyWord: PropTypes.string,
     inputIng: PropTypes.bool
 };
 

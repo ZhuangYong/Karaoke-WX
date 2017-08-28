@@ -4,10 +4,8 @@ import {withRouter} from "react-router-dom";
 import {search} from "../../actions/searchActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeader from "../../components/common/header/searchHeader";
-import {reqHeader} from "../../utils/comUtils";
-import {List, ListItem, Paper, Subheader} from "material-ui";
+import {Paper, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
-import ReactDOM from "react-dom";
 import SongList from "../../components/common/SongList";
 
 
@@ -33,14 +31,15 @@ class Search extends BaseComponent {
         const {keyword} = this.props.match.params;
         return (
             <Paper zDepth={0}>
-                <SearchHeader getSearchKey={this.search} inputIng={!keyword}/>
-                {this.state.keyword ? <Paper style={{position: "absolute", top: 44, width: "100%", zIndex: 4}}>
+                <SearchHeader defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
+                {this.state.keyword ? <Paper style={{position: "absolute", top: 44, width: "100%", zIndex: 1}}>
                     <Subheader>
                         “{this.state.keyword}” 的搜索结果
                     </Subheader>
                 </Paper> : ""}
-                <SongList containerStyle={{top: 86}} keyword={this.state.keyword} search={true}/>
-
+                <div style={{paddingTop: 86}}>
+                    <SongList keyword={this.state.keyword} search={true}/>
+                </div>
             </Paper>
         );
     }

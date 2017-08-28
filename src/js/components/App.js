@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {getUserConfig, getUserInfo} from "../actions/userActions";
-import {checkLocal, getUserInfoFromSession, setGlobAlert, updateScreen} from "../actions/common/actions";
+import {checkLocal, getUserInfoFromSession, setGlobAlert, setLocalNet, updateScreen} from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -178,7 +178,7 @@ class App extends React.Component {
             updateDevice: false,
             checkLocalTimer: 0,
             checkLocalCount: 0,
-            checkLocalBetween: 5
+            checkLocalBetween: 15
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
@@ -194,7 +194,7 @@ class App extends React.Component {
 
     componentDidMount() {
         this.updateUserInfo();
-        // this.runCheckLocal();
+        this.runCheckLocal();
         console.log("App component did mount ");
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
@@ -213,6 +213,15 @@ class App extends React.Component {
             linkTo("pay/deviceRegister", false, "");
             this.props.action_setGlobAlert("", "");
         }
+        if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
+            const {status, data, msg} = this.props.userInfo.userInfoData || {};
+            if (parseInt(status, 10) === 302) {
+                window.location.href = data;
+            } else if (parseInt(status, 10) === 1) {
+                window.sessionStorage.setItem("wxInfo", JSON.stringify(this.props.userInfo.userInfoData));
+            }
+        }
+
     }
 
     render() {
@@ -259,7 +268,7 @@ class App extends React.Component {
                         <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>
                         <Route path={`/singer/:id`} exact component={SingerListContainer}/>
                         <Route path={`/catAlbum`} exact component={CatAlbumContainer}/>
-                        <Route path={`/songs/:type/:id`} exact component={SongsListContainer}/>
+                        <Route path={`/songs/:type/:id/:title?/:headImg?`} exact component={SongsListContainer}/>
                         <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>
                         <Route path="*" component={NotFound}/>
                     </Switch>
@@ -350,6 +359,9 @@ class App extends React.Component {
                     linkTo("pay/home", false, "");
                 };
                 break;
+            case ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE:
+                alertStr = '设备不在线';
+                break;
             default:
                 showAlert = false;
                 break;
@@ -414,14 +426,7 @@ class App extends React.Component {
                 const params = {
                     url: window.location.href.split("#")[0]
                 };
-                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)), (res) => {
-                    const {status, data, msg} = res;
-                    if (parseInt(status, 10) === 302) {
-                        window.location.href = data;
-                    } else if (parseInt(status, 10) === 1) {
-                        window.sessionStorage.setItem("wxInfo", JSON.stringify(res));
-                    }
-                });
+                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
             } else {
                 this.props.action_getUserInfoFromSession();
             }
@@ -443,19 +448,15 @@ class App extends React.Component {
         if (!checkLocalTimer) {
             this.state.checkLocalTimer = setInterval(() => {
                 const {checkLocalCount, checkLocalBetween} = this.state;
+                if (this.props.localNetIsWork) {
+                    this.state.checkLocalCount = 0;
+                    return;
+                }
                 if (checkLocalCount >= checkLocalBetween) {
-                    const {data} = this.props.ottInfo || {};
-                    const {userInfoData} = this.props.userInfo || {};
-                    const {deviceIp, devicePort, networkType} = data || {};
-                    if ((networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
-                        const param = {
-                            debug: sysConfig.environment === "test",
-                            deviceId: userInfoData.data.deviceId
-                        };
-                        this.props.action_checkLocal(`http://${deviceIp}:${devicePort}`, param, reqHeader(param), (json) => {
-                            console.log(json);
-                        });
-                    }
+                    const param = {};
+                    this.props.action_getOttStatus(param, reqHeader(param), () => {
+                        this.props.action_setLocalNet(true);
+                    });
                     this.state.checkLocalCount = 0;
                 } else {
                     this.state.checkLocalCount += 1;
@@ -471,7 +472,7 @@ const mapStateToProps = (state, ownProps) => {
         userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
         alertData: state.app.common.alertData,
-        testLocalPush: state.app.common.testLocalPush,
+        localNetIsWork: state.app.common.localNetIsWork,
         ottInfo: state.app.device.ottInfo
     };
 };
@@ -484,7 +485,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         action_getOttStatus: bindActionCreators(getOttStatus, dispatch),
-        action_checkLocal: bindActionCreators(checkLocal, dispatch)
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
     };
 };
 

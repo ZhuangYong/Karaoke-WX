@@ -20,7 +20,7 @@ import SongItem from "../../components/common/SongItem";
 
 const style = {
     home: {
-        paddingTop: "66px",
+        paddingTop: "1.2rem",
         position: "absolute",
         height: "100%",
         overflowY: "auto",
@@ -40,21 +40,22 @@ const style = {
         },
         label: {
             margin: 6,
-            fontSize: "16px",
+            fontSize: ".4rem",
             color: "#ff6832"
         }
     },
     paper: {
         margin: 4,
-        minHeight: 140
+        minHeight: '5.2rem'
     },
     tile: {
         width: "100%",
         overflow: "hidden"
     },
     tileImg: {
-        height: 70,
-        minWidth: 83,
+        height: '3.067rem',
+        width: '4.4rem',
+        minWidth: '4.4rem',
         margin: "auto",
         display: "inherit"
     },
@@ -161,7 +162,7 @@ class Home extends BaseComponent {
                                 <p style={style.topNav.label}>歌星</p>
                             </span>
                             <span style={style.topNav.item} onClick={() => {
-                                linkTo("songs/hotId/48", false, null);
+                                linkTo(`songs/hotId/48/热歌/http%3A%2F%2Fimagetest___dot___j-make___dot___com___dot___cn%2Fimages%2Fkalaok%2F71A3C59FB3A1B4D7___dot___png`, false, null);
                             }}>
                                 <img src={IconHotSong} style={style.topNav.img}/>
                                 <p style={style.topNav.label}>热歌</p>
@@ -174,15 +175,15 @@ class Home extends BaseComponent {
                         style={{...style.paper, position: "relative"}}
                     >
                         <CardTitle
-                            style={{padding: "0 8px"}}
-                            titleStyle={{fontSize: 14}}
+                            style={{padding: "0 8px", height: '1.467rem'}}
+                            titleStyle={{fontSize: '.453rem', paddingTop: '.22rem'}}
                             title="精选推荐"/>
-                        <div style={{width: "100%", overflowX: "auto", position: "absolute"}}>
+                        <div style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
                             {getAlbumRecommendData.data.result.map((recommend) => (
                                 <GridTile
                                     key={recommend.id}
                                     title=""
-                                    style={{display: "table-cell", padding: "0 4px"}}
+                                    style={{display: "table-cell", padding: "0 .067rem"}}
                                     titleStyle={{
                                         textAlign: "center",
                                         marginRight: "16px",
@@ -191,11 +192,11 @@ class Home extends BaseComponent {
                                     }}
                                     titleBackground="transparent"
                                     onTouchTap={() => {
-                                        linkTo("songs/recommendId/" + recommend.id, false, null);
+                                        linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encodeURIComponent(recommend.wxPic || recommend.imgurl).replace(/\./g, '___dot___')}`, false, null);
                                     }}
                                 >
                                     <div style={style.tile}>
-                                        <img src={recommend.imgurl} style={style.tileImg}/>
+                                        <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
                                         <div style={style.itemTitle}>{recommend.name}</div>
                                     </div>
                                 </GridTile>
@@ -208,23 +209,23 @@ class Home extends BaseComponent {
                         style={{...style.paper, position: "relative"}}
                     >
                         <CardTitle
-                            style={{padding: "0 8px"}}
-                            titleStyle={{fontSize: 14}}
+                            style={{padding: "0 8px", height: '1.467rem'}}
+                            titleStyle={{fontSize: '.453rem', paddingTop: '.22rem'}}
                             title="经典排行"
                         />
-                        <div style={{width: "100%", overflowX: "auto", position: "absolute"}}>
+                        <div style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
                             {getRankingData.data.result.map((rank) => (
                                 <GridTile
                                     key={rank.id}
                                     title=""
-                                    style={{display: "table-cell", padding: "0 4px"}}
+                                    style={{display: "table-cell", padding: "0 .067rem"}}
                                     titleBackground="transparent"
                                     onTouchTap={() => {
-                                        linkTo("songs/hotId/" + rank.id, false, null);
+                                        linkTo(`songs/hotId/${rank.id}/${rank.name}/${encodeURIComponent(rank.wxPic || rank.imgurl).replace(/\./g, '___dot___')}`, false, null);
                                     }}
                                 >
                                     <div style={style.tile}>
-                                        <img src={rank.imgurl} style={style.tileImg}/>
+                                        <img src={rank.wxPic || rank.imgurl} style={style.tileImg}/>
                                         <div style={style.itemTitle}>{rank.name}</div>
                                     </div>
                                 </GridTile>

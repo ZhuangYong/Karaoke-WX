@@ -3,6 +3,7 @@ import {JSEncrypt} from 'jsencrypt';
 import md5 from 'md5';
 import sysConfig from "./sysConfig";
 import navUtils from "./navUtils";
+import ActionTypes from "../actions/actionTypes";
 
 /**
  * 根据时间戳返回对应的y，m，d
@@ -402,4 +403,46 @@ export function stripScript(s) {
 export function toRem(px) {
     const designW = 750;
     return px * 10 / designW + "rem";
+}
+
+export function dynaPush(funcParam = {
+    ottInfo: {},
+    userInfo: {},
+    param: {},
+    localNetIsWork: false,
+    action_pushLocal: f => f,
+    action_setLocalNet: f => f,
+    action_push: f => f,
+    action_setGlobAlert: f => f,
+    success: f => f,
+    fail: f => f
+
+}) {
+    const {ottInfo, userInfo, param, localNetIsWork, action_pushLocal, action_setLocalNet, action_push, action_setGlobAlert, success, fail} = funcParam;
+    const {data} = ottInfo || {};
+    const {userInfoData} = userInfo || {};
+    const {deviceIp, devicePort, networkType, systemTime, timeStamp} = data || {};
+    const localParam = Object.assign({}, param, {
+        debug: sysConfig.environment === "test",
+        deviceId: userInfoData.data.deviceId
+    });
+    const header = reqHeader(param);
+    const localHeader = reqHeader(localParam);
+    const localPri = `http://${deviceIp}:${devicePort}`;
+    const ottIsOnLine = () => {
+        if (systemTime && timeStamp) return !(systemTime - timeStamp > 12 * 60 * 1000);
+        return false;
+    };
+    if (!ottIsOnLine()) {
+        action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+        return;
+    }
+    if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
+        action_pushLocal(localPri, localParam, localHeader, success, () => {
+            action_setLocalNet(false);
+            action_push(param, header, success, fail);
+        });
+    } else {
+        action_push(param, header, success, fail);
+    }
 }

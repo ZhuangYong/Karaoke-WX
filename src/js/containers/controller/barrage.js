@@ -12,12 +12,12 @@ import barrageOnImg from "../../../img/barrage/barrage_on.png";
 import emotionImg from "../../../img/barrage/emotion.png";
 import emotionOnImg from "../../../img/barrage/emotion_on.png";
 import Input from "../../components/common/Input";
-import {push} from "../../actions/audioActons";
+import {push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
-import {reqHeader} from "../../utils/comUtils";
+import {dynaPush, reqHeader} from "../../utils/comUtils";
 
 import bindActionCreators from "redux/es/bindActionCreators";
-import {setGlobAlert} from "../../actions/common/actions";
+import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 
 const fastWords = [
     {value: "快速文字"},
@@ -137,6 +137,7 @@ class Barrage extends BaseComponent {
         super(props);
         this.state = {
             tabIndex: 0,
+            inputIng: false,
             emotionPage: 0,
             inputValue: "",
             inputImage: "",
@@ -144,6 +145,8 @@ class Barrage extends BaseComponent {
             barrageSendToast: false,
             barrageToastMsg: "发送成功"
         };
+        this.onBlur = this.onBlur.bind(this);
+        this.onFocus = this.onFocus.bind(this);
         this.getSendButton = this.getSendButton.bind(this);
         this.chooseEmotion = this.chooseEmotion.bind(this);
         this.chooseFastWord = this.chooseFastWord.bind(this);
@@ -155,16 +158,21 @@ class Barrage extends BaseComponent {
     render() {
         const {inputValue, inputImage} = this.state;
         const fastWordPanelHeight = document.documentElement.clientHeight - (5.336 + 1.2) * (document.documentElement.clientWidth / 10) - 60;
-        let tabBackgroundColor = ["", ""];
+        let tabBackgroundColor = ["#d7d7d7", "#d7d7d7"];
         tabBackgroundColor[this.state.tabIndex] = "#ff6833";
         let tabIcon = [barrageImg, emotionImg];
         let tabOnIcon = [barrageOnImg, emotionOnImg];
         tabIcon[this.state.tabIndex] = tabOnIcon[this.state.tabIndex];
+        const showTabContainer = window.sysInfo.isAndroid ? !this.state.inputIng : true ;
         return (
             <div>
-                <div style={{textAlign: "center", height: '5.336rem', overflow: "hidden"}}>
+                <div style={{textAlign: "center", height: '5.336rem', overflow: "hidden"}} onTouchTap={() => {
+                    inputImage && this.setState({
+                        inputImage: ""
+                    });
+                }}>
                     {
-                        inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}}/> : <Input
+                        inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}} /> : <Input
                             hintText="说点儿什么..."
                             hintStyle={{top: 0, padding: 12}}
                             textareaStyle={{paddingLeft: 12}}
@@ -173,6 +181,8 @@ class Barrage extends BaseComponent {
                             rowsMax={10}
                             fullWidth={true}
                             value={inputValue}
+                            onFocus={this.onFocus}
+                            onBlur={this.onBlur}
                             bindState={this.bindState("inputValue")}
                         />
                     }
@@ -200,7 +210,7 @@ class Barrage extends BaseComponent {
                             </div>
                         }>
                         {
-                            this.getFastWord()
+                            showTabContainer && this.getFastWord()
                         }
                     </Tab>
                     <Tab
@@ -221,10 +231,12 @@ class Barrage extends BaseComponent {
                             this.handelChangeEmotionPage(index);
                         }}>
                             {
-                                this.getEmotion()
+                                showTabContainer && this.getEmotion()
                             }
                         </SwipeableViews>
-                        {this.getEmotionDots()}
+                        {
+                            showTabContainer && this.getEmotionDots()
+                        }
                     </Tab>
                 </Tabs>
 
@@ -380,7 +392,7 @@ class Barrage extends BaseComponent {
             this.setState({
                 sendBarrageIng: true
             });
-            this.props.action_push(param, reqHeader(param), () => {
+            const success = () => {
                 this.setState({
                     inputImage: "",
                     inputValue: "",
@@ -388,14 +400,55 @@ class Barrage extends BaseComponent {
                     barrageSendToast: true,
                     barrageToastMsg: "发送成功"
                 });
-            }, (msg) => {
+            };
+            const fail = (msg) => {
                 this.setState({
                     sendBarrageIng: false,
                     barrageSendToast: true,
                     barrageToastMsg: msg
                 });
+            };
+            dynaPush({
+                ottInfo: this.props.ottInfo,
+                userInfo: this.props.userInfo,
+                param: param,
+                localNetIsWork: this.props.localNetIsWork,
+                action_pushLocal: this.props.action_pushLocal,
+                action_setLocalNet: this.props.action_setLocalNet,
+                action_push: this.props.action_push,
+                action_setGlobAlert: this.props.action_setGlobAlert,
+                success: success,
+                fail: fail
             });
+
+            // this.props.action_push(param, reqHeader(param), () => {
+            //     this.setState({
+            //         inputImage: "",
+            //         inputValue: "",
+            //         sendBarrageIng: false,
+            //         barrageSendToast: true,
+            //         barrageToastMsg: "发送成功"
+            //     });
+            // }, (msg) => {
+            //     this.setState({
+            //         sendBarrageIng: false,
+            //         barrageSendToast: true,
+            //         barrageToastMsg: msg
+            //     });
+            // });
         }
+    }
+
+    onFocus() {
+        this.setState({
+            inputIng: true
+        });
+    }
+
+    onBlur() {
+        this.setState({
+            inputIng: false
+        });
     }
 }
 
@@ -404,14 +457,18 @@ const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
         common: state.app.common,
-        userInfoData: state.app.user.userInfo.userInfoData
+        userInfoData: state.app.user.userInfo.userInfoData,
+        ottInfo: state.app.device.ottInfo,
+        localNetIsWork: state.app.common.localNetIsWork
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         action_push: bindActionCreators(push, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        action_pushLocal: bindActionCreators(pushLocal, dispatch),
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
     };
 };
 

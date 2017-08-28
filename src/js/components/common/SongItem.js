@@ -7,13 +7,13 @@ import {CircularProgress, ListItem} from "material-ui";
 import {withRouter} from "react-router-dom";
 import {bindActionCreators} from "redux";
 import PropTypes from "prop-types";
-import {push} from "../../actions/audioActons";
+import {push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "./BaseComponent";
-import {reqHeader} from "../../utils/comUtils";
+import {dynaPush, reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import VIPIcon from "../../../img/common/icon_vip.png";
-import {setGlobAlert} from "../../actions/common/actions";
-import Push from "../common/push";
+import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
+import sysConfig from "../../utils/sysConfig";
 
 class SongItem extends BaseComponent {
     constructor(props) {
@@ -49,14 +49,14 @@ class SongItem extends BaseComponent {
     }
 
     pushSong() {
-        const {song, onPushSongSuccess, onPushSongFail, userInfo, action_setGlobAlert} = this.props;
-        if (super.validUserStatus(userInfo.userInfoData, action_setGlobAlert) !== true) return;
-        const param = {id: JSON.stringify(song), type: 4};
+        const {song, onPushSongSuccess, onPushSongFail, userInfo, ottInfo, action_setGlobAlert} = this.props;
+        if (super.validUserStatus(userInfo.userInfoData, ottInfo, action_setGlobAlert) !== true) return;
         this.state.pushIng[song.serialNo] = true;
         this.setState({
             pushIng: this.state.pushIng
         });
-        this.props.action_push(param, reqHeader(param), () => {
+        const param = {id: JSON.stringify(song), type: 4};
+        const success = () => {
             this.state.pushIng[song.serialNo] = false;
             setTimeout(() => {
                 this.setState({
@@ -64,13 +64,63 @@ class SongItem extends BaseComponent {
                 });
                 onPushSongSuccess && onPushSongSuccess(song);
             }, 600);
-        }, (msg) => {
+        };
+        const fail = (msg) => {
             this.state.pushIng[song.serialNo] = false;
             this.setState({
                 pushIng: this.state.pushIng
             });
             //onPushSongFail && onPushSongFail(msg);
+        };
+        dynaPush({
+            ottInfo: this.props.ottInfo,
+            userInfo: this.props.userInfo,
+            param: param,
+            localNetIsWork: this.props.localNetIsWork,
+            action_pushLocal: this.props.action_pushLocal,
+            action_setLocalNet: this.props.action_setLocalNet,
+            action_push: this.props.action_push,
+            action_setGlobAlert: this.props.action_setGlobAlert,
+            success: success,
+            fail: fail
         });
+        // const param = {id: JSON.stringify(song), type: 4};
+        // const {data} = this.props.ottInfo || {};
+        // const {userInfoData} = this.props.userInfo || {};
+        // const {deviceIp, devicePort, networkType} = data || {};
+        //
+        // const localParam = Object.assign({}, param, {
+        //     debug: sysConfig.environment === "test",
+        //     deviceId: userInfoData.data.deviceId
+        // });
+        // const header = reqHeader(param);
+        // const localHeader = reqHeader(localParam);
+        // const localPri = `http://${deviceIp}:${devicePort}`;
+        // const success = () => {
+        //     this.state.pushIng[song.serialNo] = false;
+        //     setTimeout(() => {
+        //         this.setState({
+        //             pushIng: this.state.pushIng
+        //         });
+        //         onPushSongSuccess && onPushSongSuccess(song);
+        //     }, 600);
+        // };
+        // const fail = (msg) => {
+        //     this.state.pushIng[song.serialNo] = false;
+        //     this.setState({
+        //         pushIng: this.state.pushIng
+        //     });
+        //     //onPushSongFail && onPushSongFail(msg);
+        // };
+        // if (this.props.localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
+        //     this.props.action_pushLocal(localPri, localParam, localHeader, success, () => {
+        //         this.props.action_setLocalNet(false);
+        //         this.props.action_push(param, header, success, fail);
+        //     });
+        // } else {
+        //     this.props.action_push(param, header, success, fail);
+        // }
+
     }
 
 }
@@ -89,14 +139,18 @@ SongItem.defaultProps = {
 const mapStateToProps = (state, ownProps) => {
     return {
         songs: state.app.songs,
-        userInfo: state.app.user.userInfo
+        userInfo: state.app.user.userInfo,
+        ottInfo: state.app.device.ottInfo,
+        localNetIsWork: state.app.common.localNetIsWork
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         action_push: bindActionCreators(push, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        action_pushLocal: bindActionCreators(pushLocal, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
     };
 };
 

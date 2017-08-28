@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import ActionTypes from "../actions/actionTypes";
-// import * as cryptoUtils from './cryptoUtils';
+import sysConfig from "../utils/sysConfig";
 
 export function cryptoFetch(options, succ, fail) {
     let url = options.url;
@@ -54,6 +54,7 @@ export function comFetch(dispatch, param, options = {
     headers: "",
     action: "",
     formData: "",
+    timeout: null,
     noTrackStatus: ""
 }, callback, failCallback) {
 
@@ -64,6 +65,10 @@ export function comFetch(dispatch, param, options = {
 
     if (options.headers) {
         fetchOption.headers = options.headers;
+    }
+
+    if (options.timeout) {
+        fetchOption.timeout = options.timeout;
     }
     // 根据get/post请求方式设置请求参数，除非指定为get类型，默认都按post发送请求
     if (options.type === 'get') {
@@ -129,7 +134,7 @@ export function comFetch(dispatch, param, options = {
             error: err,
             param: param
         });
-        if (options.action !== ActionTypes.COMMON.API_LOCAL_TEST_PUSH) {
+        if (options.url.indexOf("http") >= 0 && options.url.indexOf(sysConfig.apiDomain) >= 0) {
             dispatch({
                 type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
                 globAlert: '网络不给力，请稍后再试'

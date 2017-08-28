@@ -10,14 +10,14 @@ import LeftArrowIcon from "material-ui/svg-icons/hardware/keyboard-arrow-left";
 import RightArrowIcon from "material-ui/svg-icons/hardware/keyboard-arrow-right";
 import AddIcon from "material-ui/svg-icons/content/add";
 import ReduceIcon from "material-ui/svg-icons/content/remove";
-import {reqHeader} from "../../utils/comUtils";
+import {dynaPush, reqHeader} from "../../utils/comUtils";
 import bindActionCreators from "redux/es/bindActionCreators";
-import {push} from "../../actions/audioActons";
+import {push, pushLocal} from "../../actions/audioActons";
 import ToneIconAdd from "../../../img/controller/tone_add.png";
 import ToneIconSmooth from "../../../img/controller/tone_smooth.png";
 import ToneIconReduce from "../../../img/controller/tone_reduce.png";
 import BaseComponent from "../../components/common/BaseComponent";
-import {setGlobAlert} from "../../actions/common/actions";
+import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -228,7 +228,7 @@ class AudioEffect extends BaseComponent {
                 }
             })
         };
-        this.props.action_push(param, reqHeader(param), () => {
+        const success = () => {
             this.setState({
                 inputImage: "",
                 inputValue: "",
@@ -236,27 +236,61 @@ class AudioEffect extends BaseComponent {
                 barrageSendToast: true,
                 barrageToastMsg: "发送成功"
             });
-        }, (msg) => {
+        };
+        const fail = (msg) => {
             this.setState({
                 sendBarrageIng: false,
                 barrageSendToast: true,
                 barrageToastMsg: msg
             });
+        };
+        dynaPush({
+            ottInfo: this.props.ottInfo,
+            userInfo: this.props.userInfo,
+            param: param,
+            localNetIsWork: this.props.localNetIsWork,
+            action_pushLocal: this.props.action_pushLocal,
+            action_setLocalNet: this.props.action_setLocalNet,
+            action_push: this.props.action_push,
+            action_setGlobAlert: this.props.action_setGlobAlert,
+            success: success,
+            fail: fail
         });
+
+        // this.props.action_push(param, reqHeader(param), () => {
+        //     this.setState({
+        //         inputImage: "",
+        //         inputValue: "",
+        //         sendBarrageIng: false,
+        //         barrageSendToast: true,
+        //         barrageToastMsg: "发送成功"
+        //     });
+        // }, (msg) => {
+        //     this.setState({
+        //         sendBarrageIng: false,
+        //         barrageSendToast: true,
+        //         barrageToastMsg: msg
+        //     });
+        // });
     }
 }
 
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
-        userInfoData: state.app.user.userInfo.userInfoData
+        userInfoData: state.app.user.userInfo.userInfoData,
+        userInfo: state.app.user.userInfo,
+        ottInfo: state.app.device.ottInfo,
+        localNetIsWork: state.app.common.localNetIsWork
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         action_push: bindActionCreators(push, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        action_pushLocal: bindActionCreators(pushLocal, dispatch),
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
     };
 };
 

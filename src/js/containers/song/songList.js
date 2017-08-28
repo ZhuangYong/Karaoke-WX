@@ -11,6 +11,8 @@ class SongList extends BaseComponent {
 
     constructor(props) {
         super(props);
+        const {title} = this.props.match.params || {};
+        super.title(title);
         this.state = {
             barrageSendToast: false,
             barrageToastMsg: ""
@@ -21,7 +23,7 @@ class SongList extends BaseComponent {
 
     render() {
         let props = {};
-        const {type, id} = this.props.match.params;
+        const {type, id, headImg} = this.props.match.params || {};
         props[type] = parseInt(id, 10);
         return (
             <Paper zDepth={0} style={{paddingTop: 44}}>
@@ -29,7 +31,7 @@ class SongList extends BaseComponent {
                 <DSongList
                     onPushSongSuccess={this.onPushSongSuccess}
                     onPushSongFail={this.onPushSongFail}
-                    containerStyle={{top: 44}}
+                    headImg={headImg}
                     {...props}/>
                 <Snackbar
                     open={this.state.barrageSendToast}

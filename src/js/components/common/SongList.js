@@ -2,7 +2,7 @@
  * Created by walljack@163.com on 2017/8/7.
  */
 import React from "react";
-import {List} from "material-ui";
+import {List, RefreshIndicator} from "material-ui";
 import {withRouter} from "react-router-dom";
 import {bindActionCreators} from "redux";
 import PropTypes from "prop-types";
@@ -17,9 +17,31 @@ import {search} from "../../actions/searchActons";
 import NoResultImg from "../../../img/common/bg_no_result.png";
 
 const style = {
+    commonSongList: {
+        position: "absolute",
+        height: "100%",
+        overflowY: "auto",
+        width: "100%"
+    },
+    loading: {
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        height: 30,
+        fontSize: "14px",
+        marginBottom: 14,
+        alignItems: "center"
+    },
+    loadingBar: {
+        boxShadow: "none",
+        top: "none",
+        left: "none",
+        transform: "none",
+        marginLeft: -50,
+    },
     noResult: {
         height: "100%",
-        position: "absolute",
+        marginTop: "15%",
         zIndex: -1,
         display: "flex",
         justifyContent: "center",
@@ -66,7 +88,6 @@ class SongList extends BaseComponent {
             queryFun: queryFun,
             id: this.props.singerId || this.props.catId || this.props.hotId || this.props.recommendId
         };
-        this.pushSong = this.pushSong.bind(this);
         this.getContent = this.getContent.bind(this);
     }
 
@@ -106,7 +127,7 @@ class SongList extends BaseComponent {
 
     render() {
         const {noData} = this.state;
-        const {singerId, catId, hotId, ...others} = this.props;
+        const {singerId, catId, hotId, headImg, ...others} = this.props;
         if (noData) {
             return (
                 <div style={style.noResult}>
@@ -116,7 +137,10 @@ class SongList extends BaseComponent {
             );
         } else {
             return (
-                <Scroller
+                <div className='common-song-list'
+                     style={style.commonSongList}
+                     onScroll={this.onScroll.bind(this)}>
+               {/* <Scroller
                     {...others}
                     ref="scroller"
                     directionLockThreshold={1}
@@ -124,9 +148,25 @@ class SongList extends BaseComponent {
                     useLoadMore
                     loadMoreAction={this.loadMoreAction.bind(this)}
                     noMoreData={this.state.lastPage}
-                >
+                >*/}
+                    {
+                        headImg && <img style={{top: 44, width: '100%'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
+                    }
                     <List className="song-list">{this.getContent()}</List>
-                </Scroller>
+                    <div style={style.loading}>
+                        {this.state.loading ? (<RefreshIndicator
+                            size={30}
+                            left={70}
+                            top={0}
+                            loadingColor="#FF9800"
+                            status="loading"
+                            style={style.loadingBar}
+                        />) : ""}
+
+                        <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
+                    </div>
+                {/*</Scroller>*/}
+                </div>
             );
         }
     }
@@ -163,12 +203,6 @@ class SongList extends BaseComponent {
         );
     }
 
-    pushSong() {
-        const song = this.props.song;
-        const param = {id: song, type: 4};
-        this.props.action_push(param, reqHeader(param));
-    }
-
     nextPage(callback) {
         if (this.state.lastPage) return;
         this.state.currentPage += 1;
@@ -201,6 +235,16 @@ class SongList extends BaseComponent {
         }
         queryFun && queryFun(param, reqHeader(param), callback);
     }
+
+    onScroll(e) {
+        if (!this.state.loading && e.target.classList && e.target.classList.contains("common-song-list")) {
+            const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
+            if (betweenBottom < 50) {
+                this.loadMoreAction();
+            }
+        }
+    }
+
 }
 
 SongList.defaultProps = {
@@ -219,7 +263,8 @@ SongList.propTypes = {
     keyword: PropTypes.string,
     search: PropTypes.bool,
     onPushSongSuccess: PropTypes.func,
-    onPushSongFail: PropTypes.func
+    onPushSongFail: PropTypes.func,
+    headImg: PropTypes.string
 };
 
 // 映射state到props

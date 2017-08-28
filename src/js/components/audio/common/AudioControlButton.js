@@ -28,7 +28,7 @@ export default class AudioControlButton extends React.Component {
         const duration = parseInt(this.props.duration, 10) || 0;
         return (
             <div className={`audio-control ${get(this.props, 'className', '')}`}>
-                <div style={{position: "relative"}}>
+                <div className="control-buttons">
                     <button className="audio-control_btn" disabled={this.props.disabled} onClick={this.props.onClick}>
                         {icon}
                     </button>

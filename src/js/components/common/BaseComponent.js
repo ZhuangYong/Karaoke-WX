@@ -42,10 +42,16 @@ export default class BaseComponent extends Component {
      * @param actionSetGlobAlert actions/common/actions.js/setGlobAlert
      * @returns {*} 如果正在获取用户信息将返回字符串的提示，如果条件都满足将返回true，否则返回false并做出相应的提示
      */
-    validUserStatus(userInfoData, actionSetGlobAlert) {
+    validUserStatus(userInfoData, ottInfo, actionSetGlobAlert) {
+        const {data} = ottInfo || {};
+        const {systemTime, timeStamp} = data || {};
         const isVip = this.isVip(userInfoData);
         const isBindDevice = this.isBindDevice(userInfoData);
         const isFreeActivation = this.isFreeActivation(userInfoData);
+        const ottIsOnLine = () => {
+            if (systemTime && timeStamp) return !(systemTime - timeStamp > 12 * 60 * 1000);
+            return false;
+        };
         if (typeof isBindDevice === 'string') {
             actionSetGlobAlert && actionSetGlobAlert(isBindDevice);
             return '正在获取用户信息';
@@ -57,11 +63,16 @@ export default class BaseComponent extends Component {
                 actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE);
                 return false;
             } else if (isFreeActivation === false) {
-                if (isVip === false) {
-                    actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BE_VIP);
-                    return false;
+                if (ottIsOnLine()) {
+                    if (isVip === false) {
+                        actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BE_VIP);
+                        return false;
+                    } else {
+                        return true;
+                    }
                 } else {
-                    return true;
+                    actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+                    return false;
                 }
             }
         }

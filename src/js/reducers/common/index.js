@@ -4,7 +4,8 @@ import {fetchProcess} from "../../utils/fetchUtils";
 let initialState = {
     info: 'common store',
     globAlert: "",
-    testLocalPushStamp: 0
+    testLocalPushStamp: 0,
+    localNetIsWork: true
 };
 
 let common = function (state = initialState, action = {}) {

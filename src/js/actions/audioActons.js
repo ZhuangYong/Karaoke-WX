@@ -50,16 +50,18 @@ export function push(data, headers, callback, failBack) {
 
 /**
  * 推送
+ * @param urlPri
  * @param data
  * @param headers
  * @returns {function(*=)}
  */
-export function pushLocal(data, headers, callback, failBack) {
-    const url = sysConfig.apiDomain + apiUrl.API_PUSH;
+export function pushLocal(urlPri, data, headers, callback, failBack) {
+    const url = urlPri + apiUrl.API_PUSH;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
+            timeout: 3000,
             action: ActionTypes.SONG.API_PUSH
         }, callback, failBack);
     };

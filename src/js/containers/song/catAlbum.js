@@ -32,24 +32,26 @@ class CatAlbum extends BaseComponent {
     render() {
         const {getCatAlbum} = this.props.songs;
         return (
-            <Paper zDepth={0} style={{paddingTop: "66px"}}>
+            <Paper zDepth={0} style={{paddingTop: 44}}>
                 <SearchHeadFake/>
                 {
                     getCatAlbum && getCatAlbum.data.result.map((cats) => {
                         const name = cats.name;
                         const catArr = cats.data;
-                        return (
-                            <Paper key={name}>
-                                <GradeList
-                                    title={name}
-                                    data={catArr}
-                                    labelKey="name"
-                                    idKey="id"
-                                    imgKey="imgurl"
-                                    linHeadKey="songs/catId/"
-                                />
-                            </Paper>
-                        );
+                        if (name === "主题") {
+                            return (
+                                <Paper key={name} zDepth={0}>
+                                    <GradeList
+                                        data={catArr}
+                                        labelKey="name"
+                                        idKey="id"
+                                        imgKey="wxPic"
+                                        linHeadKey="songs/catId/"
+                                    />
+                                </Paper>
+                            );
+                        }
+
                     })
                 }
 

@@ -51,7 +51,7 @@ class PlayAudio extends React.Component {
         const {status, data, msg} = this.props.audio.audioInfo;
         const {musicUrl, musicTime, nameNorm} = data || {};
         return (
-            <div>
+            <div className="audio-play">
                 <div className="top-panel">
                     <AutoPlaySwipeAbleViews className="swipe-panel">
                         <div className="img-div"><img src={defaultImg}/></div>
@@ -60,20 +60,15 @@ class PlayAudio extends React.Component {
                     </AutoPlaySwipeAbleViews>
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>
-                <ListItem
-                    className="user-info"
-                    disabled={true}
-                    leftAvatar={
-                        <Avatar src={defaultImg2}/>
-                    }
-                >
-                    名字
-                </ListItem>
-                <Divider style={{width: "90%", marginLeft: "auto", marginRight: "auto"}}/>
-
-                <Subheader style={{lineHeight: "18px", marginTop: 10}}>
+                <p className="song-label">
+                    {nameNorm}&nbsp;
+                </p>
+                <Subheader style={{lineHeight: "18px", marginTop: '.267rem', textAlign: "center", fontSize: '.4rem'}}>
                     一首好听的《{nameNorm}》，快去分享吧
-                    <p>{musicTime}</p>
+                    <p style={{fontSize: '.32rem'}}>&nbsp;{musicTime}&nbsp;</p>
+                </Subheader>
+                <Subheader style={{lineHeight: "18px", textAlign: "center", bottom: '.8rem'}}>
+                    <p style={{color: '#ff6832', fontSize: '.32rem'}}>来自金麦客专业家庭卡拉OK</p>
                 </Subheader>
             </div>
         );

@@ -3,10 +3,10 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 
-import {linkTo, reqHeader} from "../../utils/comUtils";
+import {dynaPush, linkTo, reqHeader} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
-import {setSongTop, getChooseList, getHistorySongList, push} from "../../actions/audioActons";
+import {setSongTop, getChooseList, getHistorySongList, push, pushLocal} from "../../actions/audioActons";
 
 import {
     Paper, RaisedButton, Tab, Tabs, FloatingActionButton, List, ListItem, CircularProgress,
@@ -25,7 +25,7 @@ import MusicStyleIcon from "material-ui/svg-icons/action/settings-input-componen
 import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
 import EffectIcon from "../../../img/common/icon_effect.png";
-import {setGlobAlert} from "../../actions/common/actions";
+import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 
 const style = {
     controllerBtn: {
@@ -584,19 +584,47 @@ class SongController extends BaseComponent {
         this.setState({
             controllerIng: controllerIng
         });
-        this.props.action_push(param, reqHeader(param), () => {
+        const success = () => {
             controllerIng[type] = false;
             setTimeout(() => {
                 this.setState({
                     controllerIng: controllerIng
                 });
             }, 600);
-        }, (msg) => {
+        };
+        const fail = (msg) => {
             controllerIng[type] = false;
             this.setState({
                 controllerIng: controllerIng
             });
+        };
+
+        dynaPush({
+            ottInfo: this.props.ottInfo,
+            userInfo: this.props.userInfo,
+            param: param,
+            localNetIsWork: this.props.localNetIsWork,
+            action_pushLocal: this.props.action_pushLocal,
+            action_setLocalNet: this.props.action_setLocalNet,
+            action_push: this.props.action_push,
+            action_setGlobAlert: this.props.action_setGlobAlert,
+            success: success,
+            fail: fail
         });
+
+        // this.props.action_push(param, reqHeader(param), () => {
+        //     controllerIng[type] = false;
+        //     setTimeout(() => {
+        //         this.setState({
+        //             controllerIng: controllerIng
+        //         });
+        //     }, 600);
+        // }, (msg) => {
+        //     controllerIng[type] = false;
+        //     this.setState({
+        //         controllerIng: controllerIng
+        //     });
+        // });
     }
 
     onPushSongFail(msg) {
@@ -612,6 +640,9 @@ const mapStateToProps = (state, ownPorps) => {
     return {
         songs: state.app.songs,
         common: state.app.common,
+        userInfo: state.app.user.userInfo,
+        ottInfo: state.app.device.ottInfo,
+        localNetIsWork: state.app.common.localNetIsWork,
         userInfoData: state.app.user.userInfo.userInfoData
     };
 };
@@ -621,7 +652,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_setSongTop: bindActionCreators(setSongTop, dispatch),
         action_getChooseList: bindActionCreators(getChooseList, dispatch),
         action_getHistorySongList: bindActionCreators(getHistorySongList, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        action_pushLocal: bindActionCreators(pushLocal, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
     };
 };
 
