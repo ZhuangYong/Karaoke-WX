@@ -86,9 +86,9 @@ export function chkDevice() {
     let isAndroid = ua.indexOf('android') !== -1;
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
     console.log(process.env);
-    // if (process.env.NODE_ENV === "development") {
-    //     isWeixin = true;
-    // }
+    if (process.env.NODE_ENV === "development") {
+        isWeixin = true;
+    }
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,
@@ -440,9 +440,27 @@ export function dynaPush(funcParam = {
     if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
         action_pushLocal(localPri, localParam, localHeader, success, () => {
             action_setLocalNet(false);
-            action_push(param, header, success, fail);
+            action_push(param, header, (res) => {
+                const {status, data} = res;
+                const pushMsg = JSON.parse(data.msg || "{}");
+                if (status === 1 && pushMsg.ret && pushMsg.ret === 'SUCCESS') {
+                    success && success(res);
+                } else {
+                    fail && fail("操作失败");
+                }
+                // success
+            }, fail);
         });
     } else {
-        action_push(param, header, success, fail);
+        action_push(param, header, (res) => {
+            const {status, data} = res;
+            const pushMsg = JSON.parse(data.msg || "{}");
+            if (status === 1 && pushMsg.ret && pushMsg.ret === 'SUCCESS') {
+                success && success(res);
+            } else {
+                fail && fail("操作失败");
+            }
+            // success
+        }, fail);
     }
 }

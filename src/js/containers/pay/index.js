@@ -97,11 +97,13 @@ class Pay extends BaseComponent {
         const matchParams = this.state.matchParams;
         const actions = [
             <FlatButton
+                className="cancel-button"
                 label="以后再说"
                 primary={true}
                 onClick={this.handleClose}
             />,
             <FlatButton
+                className="sure-button"
                 label="立即开通"
                 primary={true}
                 onClick={this.handleAction}
@@ -193,8 +195,9 @@ class Pay extends BaseComponent {
                     />
                 </div>) : this.state.buttonPage}
 
-                <div className="dialog-panel">
+                <div>
                     <Dialog
+                        className="dialog-panel"
                         actions={actions}
                         modal={false}
                         open={this.state.openDialog}

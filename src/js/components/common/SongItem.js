@@ -70,6 +70,7 @@ class SongItem extends BaseComponent {
             this.setState({
                 pushIng: this.state.pushIng
             });
+            this.props.action_setGlobAlert("点歌失败！");
             //onPushSongFail && onPushSongFail(msg);
         };
         dynaPush({

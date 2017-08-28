@@ -377,18 +377,22 @@ class App extends React.Component {
         const actions = [
             <FlatButton
                 label="取消"
+                className="cancel-button"
                 primary={true}
                 onTouchTap={handleClose}
             />,
             <FlatButton
                 label="确定"
+                className="sure-button"
                 primary={true}
                 onTouchTap={handleSure}
             />,
         ];
         return (
-            <div className="dialog-panel">
+            <div>
                 <Dialog
+                    className="dialog-panel"
+                    actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
                     actions={actions}
                     modal={false}
                     open={showAlert}

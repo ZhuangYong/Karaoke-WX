@@ -576,6 +576,7 @@ class SongController extends BaseComponent {
 
     playController(type) {
         if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
+        if (super.validUserDeviceOnline(this.props.ottInfo, this.props.action_setGlobAlert) !== true) return;
         const param = {
             type: type
         };

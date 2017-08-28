@@ -60,6 +60,7 @@ export function pushLocal(urlPri, data, headers, callback, failBack) {
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
+            type: "get",
             headers: headers,
             timeout: 3000,
             action: ActionTypes.SONG.API_PUSH
