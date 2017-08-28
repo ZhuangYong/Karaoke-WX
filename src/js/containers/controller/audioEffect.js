@@ -158,6 +158,7 @@ class AudioEffect extends BaseComponent {
      */
     sendEffect(type) {
         if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
+        if (super.validUserDeviceOnline(this.props.ottInfo, this.props.action_setGlobAlert) !== true) return;
         let msgId = "";
         let data = "";
         switch (type) {

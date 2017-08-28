@@ -23,6 +23,7 @@
     "react-dom": "^15.6.1",
     "react-event-listener": "^0.4.5",
     "react-iscroll": "^2.0.3",
+    "react-lazyload": "^2.2.7",
     "react-modal": "^1.9.7",
     "react-redux": "^5.0.5",
     "react-router": "^4.1.2",

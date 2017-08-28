@@ -179,28 +179,28 @@ class Home extends BaseComponent {
                             titleStyle={{fontSize: '.453rem', paddingTop: '.22rem'}}
                             title="精选推荐"/>
                         <div style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
-                            {getAlbumRecommendData.data.result.map((recommend) => (
-                                <GridTile
-                                    key={recommend.id}
-                                    title=""
-                                    style={{display: "table-cell", padding: "0 .067rem"}}
-                                    titleStyle={{
-                                        textAlign: "center",
-                                        marginRight: "16px",
-                                        marginTop: "20%",
-                                        color: "black"
-                                    }}
-                                    titleBackground="transparent"
-                                    onTouchTap={() => {
-                                        linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encodeURIComponent(recommend.wxPic || recommend.imgurl).replace(/\./g, '___dot___')}`, false, null);
-                                    }}
-                                >
-                                    <div style={style.tile}>
-                                        <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
-                                        <div style={style.itemTitle}>{recommend.name}</div>
-                                    </div>
-                                </GridTile>
-                            ))}
+                                {getAlbumRecommendData.data.result.map((recommend) => (
+                                    <GridTile
+                                        key={recommend.id}
+                                        title=""
+                                        style={{display: "table-cell", padding: "0 .067rem"}}
+                                        titleStyle={{
+                                            textAlign: "center",
+                                            marginRight: "16px",
+                                            marginTop: "20%",
+                                            color: "black"
+                                        }}
+                                        titleBackground="transparent"
+                                        onTouchTap={() => {
+                                            linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encodeURIComponent(recommend.wxPic || recommend.imgurl).replace(/\./g, '___dot___')}`, false, null);
+                                        }}
+                                    >
+                                        <div style={style.tile}>
+                                                <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
+                                            <div style={style.itemTitle}>{recommend.name}</div>
+                                        </div>
+                                    </GridTile>
+                                ))}
                         </div>
                     </Paper>
 

@@ -97,6 +97,20 @@ export default class BaseComponent extends Component {
         }
     }
 
+   validUserDeviceOnline(ottInfo, actionSetGlobAlert) {
+        const {data} = ottInfo || {};
+        const {systemTime, timeStamp} = data || {};
+        if (systemTime && timeStamp) {
+            const online = !(systemTime - timeStamp > 12 * 60 * 1000);
+            if (!online) {
+                actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+                return false;
+            }
+            return true;
+        }
+            return false;
+    }
+
     /**
      * 判断用户是否可以免费激活
      * @param userInfoData
@@ -107,11 +121,7 @@ export default class BaseComponent extends Component {
         if (typeof status !== 'undefined') {
             const {isFreeActivation} = data;
             // 是否可以免费激活1（可以）0（不可以）
-            if (isFreeActivation === 1) {
-                return true;
-            } else {
-                return false;
-            }
+            return isFreeActivation === 1;
         }
         return '正在获取用户信息';
     }
@@ -129,11 +139,7 @@ export default class BaseComponent extends Component {
             } else if (status === 1) {
                 const {isReDevice, bindExpireTime} = data;
                 //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
-                if (isReDevice === 1) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return isReDevice === 1;
             } else {
                 return msg || '获取用户信息失败，请稍后重试！';
             }
@@ -151,11 +157,7 @@ export default class BaseComponent extends Component {
         if (typeof status !== 'undefined') {
             const {vipStatus, expireTime} = data;
             // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
-            if (vipStatus === 1 && new Date().getTime() < expireTime) {
-                return true;
-            } else {
-                return false;
-            }
+            return vipStatus === 1 && new Date().getTime() < expireTime ;
         }
         return '正在获取用户信息';
     }

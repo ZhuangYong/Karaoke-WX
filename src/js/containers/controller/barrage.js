@@ -370,9 +370,10 @@ class Barrage extends BaseComponent {
     }
 
     sendBarrage() {
-        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
-        const {inputValue, inputImage} = this.state;
         let type = "";
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
+        if (super.validUserDeviceOnline(this.props.ottInfo, this.props.action_setGlobAlert) !== true) return;
+        const {inputValue, inputImage} = this.state;
         const {data} = this.props.userInfo.userInfoData || {data: {}};
         if (inputValue) type = "txt";
         if (inputImage) type = "img";
