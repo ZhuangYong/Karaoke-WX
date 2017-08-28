@@ -84,6 +84,8 @@ class UserIndex extends BaseComponent {
     render() {
         const userInfoData = this.props.userInfo.userInfoData;
         const {data} = userInfoData || {data: {}};
+        let {headerImg} = data;
+        headerImg = headerImg || "";
         const actionSetGlobAlert = this.props.action_setGlobAlert;
         const recordsList = this.state.recordsListData;
         const recordsListTotalCounts = this.state.recordsListTotalCounts;
@@ -96,6 +98,7 @@ class UserIndex extends BaseComponent {
                         background: `url(${HeaderBgIcon}) center no-repeat`,
                         backgroundSize: "cover"
                     }}>
+
                         <Avatar style={{
                             float: "left",
                             marginTop: toRem(22),
@@ -104,7 +107,8 @@ class UserIndex extends BaseComponent {
                             height: toRem(160),
                             border: `${toRem(7)} solid rgba(255, 255, 255, .3)`,
                             backgroundColor: "rgba(255, 255, 255)"
-                        }} src={data.headerImg === "/0" ? defaultImg : data.headerImg} alt=""/>
+                        }} src={headerImg.slice(0, 4) !== "http" ? defaultImg : headerImg} alt=""/>
+
                         <div style={{
                             float: "left",
                             paddingTop: toRem(65),
