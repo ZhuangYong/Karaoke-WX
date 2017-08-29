@@ -98,17 +98,18 @@ export default class BaseComponent extends Component {
     }
 
    validUserDeviceOnline(ottInfo, actionSetGlobAlert) {
-        const {data} = ottInfo || {};
-        const {systemTime, timeStamp} = data || {};
-        if (systemTime && timeStamp) {
-            const online = !(systemTime - timeStamp > 12 * 60 * 1000);
-            if (!online) {
-                actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
-                return false;
-            }
-            return true;
-        }
-            return false;
+       const {data} = ottInfo || {};
+       const {systemTime, timeStamp} = data || {};
+       if (systemTime && timeStamp) {
+           const online = !(systemTime - timeStamp > 12 * 60 * 1000);
+           if (!online) {
+               actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+               return false;
+           }
+           return true;
+       }
+       actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+       return false;
     }
 
     /**

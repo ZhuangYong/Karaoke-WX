@@ -437,30 +437,21 @@ export function dynaPush(funcParam = {
         action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
         return;
     }
+    const renderPushResult = (res) => {
+        const {status, data} = res;
+        const pushMsg = JSON.parse(data.msg || "{}");
+        if (status === 1 && pushMsg.ret && pushMsg.ret === 'SUCCESS') {
+            success && success(res);
+        } else {
+            fail && fail("操作失败");
+        }
+    };
     if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
         action_pushLocal(localPri, localParam, localHeader, success, () => {
             action_setLocalNet(false);
-            action_push(param, header, (res) => {
-                const {status, data} = res;
-                const pushMsg = JSON.parse(data.msg || "{}");
-                if (status === 1 && pushMsg.ret && pushMsg.ret === 'SUCCESS') {
-                    success && success(res);
-                } else {
-                    fail && fail("操作失败");
-                }
-                // success
-            }, fail);
+            action_push(param, header, renderPushResult, fail);
         });
     } else {
-        action_push(param, header, (res) => {
-            const {status, data} = res;
-            const pushMsg = JSON.parse(data.msg || "{}");
-            if (status === 1 && pushMsg.ret && pushMsg.ret === 'SUCCESS') {
-                success && success(res);
-            } else {
-                fail && fail("操作失败");
-            }
-            // success
-        }, fail);
+        action_push(param, header, renderPushResult, fail);
     }
 }
