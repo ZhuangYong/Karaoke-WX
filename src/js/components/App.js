@@ -203,11 +203,11 @@ class App extends React.Component {
 
     componentDidUpdate(prevProps) {
         console.log('App did Updated');
-        if (this.props.userInfo.userInfoData && !this.state.updateDevice) {
-            const param = {};
-            this.props.action_getOttStatus(param, reqHeader(param));
-            this.state.updateDevice = true;
-        }
+        // if (this.props.userInfo.userInfoData && !this.state.updateDevice) {
+        //     const param = {};
+        //     this.props.action_getOttStatus(param, reqHeader(param));
+        //     this.state.updateDevice = true;
+        // }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
             linkTo("pay/deviceRegister", false, "");
@@ -219,6 +219,7 @@ class App extends React.Component {
                 window.location.href = data;
             } else if (parseInt(status, 10) === 1) {
                 window.sessionStorage.setItem("wxInfo", JSON.stringify(this.props.userInfo.userInfoData));
+                this.props.action_getOttStatus({}, reqHeader({}));
             }
         }
 

@@ -129,6 +129,7 @@ class SongController extends BaseComponent {
             barrageToastMsg: ''
         };
         this.unChoose = this.unChoose.bind(this);
+        this.showAudioEffect = this.showAudioEffect.bind(this);
         this.playController = this.playController.bind(this);
         this.onPushSongFail = this.onPushSongFail.bind(this);
         this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
@@ -292,21 +293,24 @@ class SongController extends BaseComponent {
                                     <p style={style.extArea.btn.label}>弹幕</p>
                                 </div>
                             </div>
-                            <div style={{
-                                width: '50%',
-                                display: 'flex',
-                                justifyContent: 'center'
-                            }}>
-                                <div
-                                    style={style.extArea.btn}
-                                    onTouchTap={() => {
-                                        linkTo('controller/effect', false, null);
-                                    }}
-                                >
-                                    <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                    <p style={style.extArea.btn.label}>音效</p>
-                                </div>
-                            </div>
+                            {
+                                this.showAudioEffect() ? <div style={{
+                                    width: '50%',
+                                    display: 'flex',
+                                    justifyContent: 'center'
+                                }}>
+                                    <div
+                                        style={style.extArea.btn}
+                                        onTouchTap={() => {
+                                            linkTo('controller/effect', false, null);
+                                        }}
+                                    >
+                                        <img src={BarrageIcon} style={style.extArea.btn.icon}/>
+                                        <p style={style.extArea.btn.label}>音效</p>
+                                    </div>
+                                </div> : ""
+                            }
+
                         </Paper>
 
                     </Tab>
@@ -520,6 +524,7 @@ class SongController extends BaseComponent {
 
     setTop(musicNo) {
         if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
+        if (super.validUserDeviceOnline(this.props.ottInfo, this.props.action_setGlobAlert) !== true) return;
         const param = {type: 12, id: musicNo};
         let playList = this.state.playList;
         const topSong = playList.find((song) => {
@@ -613,19 +618,6 @@ class SongController extends BaseComponent {
             fail: fail
         });
 
-        // this.props.action_push(param, reqHeader(param), () => {
-        //     controllerIng[type] = false;
-        //     setTimeout(() => {
-        //         this.setState({
-        //             controllerIng: controllerIng
-        //         });
-        //     }, 600);
-        // }, (msg) => {
-        //     controllerIng[type] = false;
-        //     this.setState({
-        //         controllerIng: controllerIng
-        //     });
-        // });
     }
 
     onPushSongFail(msg) {
@@ -633,6 +625,12 @@ class SongController extends BaseComponent {
             barrageSendToast: true,
             barrageToastMsg: msg
         });
+    }
+
+    showAudioEffect() {
+        const {data} = this.props.userInfo.userInfoData || {data: {}};
+        // 国光老板卡，显示音控台
+        return (data.channel === 'gg_laobanka' && data.isReDevice === 1);
     }
 
 }

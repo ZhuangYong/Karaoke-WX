@@ -106,7 +106,36 @@ export function comFetch(dispatch, param, options = {
     }
     fetchOption.headers['content-type'] = "application/x-www-form-urlencoded; charset=UTF-8";
     // 发起请求
+    const rejectFun = (err) => {
+        console.log(err);
+        dispatch({
+            type: options.action,
+            fetchStatus: 1,
+            msg: '网络不给力，请稍后再试',
+            error: err,
+            param: param
+        });
+        if (options.url.indexOf("http") >= 0 && options.url.indexOf(sysConfig.apiDomain) >= 0) {
+            dispatch({
+                type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
+                globAlert: '网络不给力，请稍后再试'
+            });
+        }
+        failCallback && failCallback('网络不给力，请稍后再试', err);
+    };
+
+    let timeoutSing;
+    if (typeof options.timeout === 'number') {
+        timeoutSing = setTimeout(() => {
+            rejectFun({});
+        }, options.timeout);
+    }
+
     fetch(url, fetchOption).then(function (response) {
+        if (timeoutSing) {
+            clearTimeout(timeoutSing);
+            timeoutSing = null;
+        }
         return response.json();
     }).then(function (json) {
         const {status, msg} = json;
@@ -125,23 +154,7 @@ export function comFetch(dispatch, param, options = {
         }
         callback && callback(json);
         // 请求成功回调
-    }).catch(function (err) {
-        console.log(err);
-        dispatch({
-            type: options.action,
-            fetchStatus: 1,
-            msg: '网络不给力，请稍后再试',
-            error: err,
-            param: param
-        });
-        if (options.url.indexOf("http") >= 0 && options.url.indexOf(sysConfig.apiDomain) >= 0) {
-            dispatch({
-                type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-                globAlert: '网络不给力，请稍后再试'
-            });
-        }
-        failCallback && failCallback('网络不给力，请稍后再试', err);
-    });
+    }).catch(rejectFun);
 }
 
 
