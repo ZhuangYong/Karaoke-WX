@@ -166,7 +166,7 @@ const ProtocolContainer = () => (
 };*/
 
 window.sysInfo = chkDevice();
-
+let wxConfigPaths = [];
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -220,6 +220,18 @@ class App extends React.Component {
             } else if (parseInt(status, 10) === 1) {
                 window.sessionStorage.setItem("wxInfo", JSON.stringify(this.props.userInfo.userInfoData));
                 this.props.action_getOttStatus({}, reqHeader({}));
+            }
+        }
+
+        let {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            if (!wxConfigPaths[this.props.history.location.pathname]) {
+                const param = {url: location.href.split('#')[0]};
+                this.props.action_getUserConfig(param, reqHeader(param), (json) => {
+                    const {data} = json;
+                    wxConfig(data);
+                });
+                wxConfigPaths[this.props.history.location.pathname] = true;
             }
         }
 
@@ -411,11 +423,11 @@ class App extends React.Component {
     updateUserInfo() {
         let {isWeixin} = window.sysInfo;
         if (isWeixin) {
-            const param = {url: location.href.split('#')[0]};
-            this.props.action_getUserConfig(param, reqHeader(param), (json) => {
-                const {data} = json;
-                wxConfig(data);
-            });
+            // const param = {url: location.href.split('#')[0]};
+            // this.props.action_getUserConfig(param, reqHeader(param), (json) => {
+            //     const {data} = json;
+            //     wxConfig(data);
+            // });
 
             // 获取用户信息
             let wxInfo = {

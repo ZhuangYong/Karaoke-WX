@@ -134,6 +134,8 @@ class SongController extends BaseComponent {
         this.onPushSongFail = this.onPushSongFail.bind(this);
         this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
         this.handelChangeTab = this.handelChangeTab.bind(this);
+        this.songListButtons = this.songListButtons.bind(this);
+        this.songSetTopButton = this.songSetTopButton.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -345,23 +347,9 @@ class SongController extends BaseComponent {
                                                     primaryText={song.musicName}
                                                     secondaryText={song.actorName}
                                                     rightToggle={
-                                                        <div>
+                                                        <div style={{height: '1rem', width: '2rem', display: "flex", top: "auto"}}>
                                                             {
-                                                                this.state.delChooseSongIdIng[song.musicNo] === true ? <div style={style.chooseList.deleteButton.delIng}>
-                                                                        <CircularProgress size={16} thickness={1}
-                                                                                          style={{marginRight: 3}}/> 刪除中
-                                                                    </div> : <div>
-                                                                    <PublishIcon
-                                                                        onTouchTap={() => {
-                                                                            this.setTop(song.musicNo);
-                                                                        }}
-                                                                    />
-                                                                    <DeleteIcon
-                                                                        onTouchTap={() => {
-                                                                            this.unChoose(song.musicNo);
-                                                                        }}
-                                                                    />
-                                                                </div>
+                                                                this.songListButtons(song)
                                                             }
 
                                                         </div>
@@ -424,7 +412,7 @@ class SongController extends BaseComponent {
         );
     }
 
-    getSongOerationButtons(song) {
+    songListButtons(song) {
         if (this.state.delChooseSongIdIng[song.musicNo] === true) {
             return (
                 <div style={style.chooseList.deleteButton.delIng}>
@@ -441,7 +429,10 @@ class SongController extends BaseComponent {
             );
         } else if (this.state.setTopSongIdIng) {
             return (
-                <div>
+                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    {
+                        this.songSetTopButton(song)
+                    }
                     <DeleteIcon
                         onTouchTap={() => {
                             this.unChoose(song.musicNo);
@@ -451,18 +442,39 @@ class SongController extends BaseComponent {
             );
         } else {
             return (
-                <div>
-                    <PublishIcon
-                        onTouchTap={() => {
-                            this.setTop(song.musicNo);
-                        }}
-                    />
+                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                    {
+                        this.songSetTopButton(song)
+                    }
                     <DeleteIcon
                         onTouchTap={() => {
                             this.unChoose(song.musicNo);
                         }}
                     />
                 </div>
+            );
+        }
+    }
+
+    songSetTopButton(song) {
+        // needDownload:id 0不需要下载 1 需要下载
+        // downloadStatus: 1下载完成 0未下载 2下载失败
+        const {needDownload, downloadStatus} = song;
+        if (needDownload === 1 && downloadStatus !== 1) {
+            const downloadStatusStr = downloadStatus ? "下载失败" : "未下载";
+            return (
+                <p style={{fontSize: '.3rem', color: downloadStatus ? "red" : "gray", marginRight: '.2rem'}}>
+                    {downloadStatusStr}
+                </p>
+            );
+        } else {
+            return (
+                    <PublishIcon
+                        style={{marginRight: '.38rem'}}
+                        onTouchTap={() => {
+                            this.setTop(song.musicNo);
+                        }}
+                    />
             );
         }
     }
