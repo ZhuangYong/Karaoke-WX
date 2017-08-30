@@ -16,7 +16,8 @@ let initState = {
     searchResultStamp: 0,
     recommendSongsStamp: 0,
     getAlbumRecommendSongListStamp: 0,
-    recordsListStamp: 0
+    recordsListStamp: 0,
+    getSingerAlbumStamp: 0
 };
 export default (state = initState, action = {}) => {
     switch (action.type) {
@@ -57,6 +58,7 @@ export default (state = initState, action = {}) => {
             return fetchProcess(state, action, {
                 data: "getSingerAlbum",
                 msg: "getSingerAlbumMsg",
+                stamp: "getSingerAlbumStamp",
                 loading: "loading"
             });
         case ActionTypes.SONG.API_GET_ACTORS_ALBUM:

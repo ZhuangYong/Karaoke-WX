@@ -17,6 +17,7 @@ import {List, RefreshIndicator, Snackbar} from "material-ui";
 import {bindActionCreators} from "redux";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import SongItem from "../../components/common/SongItem";
+import BlankImg from "../../../img/common/blank.png";
 
 const style = {
     home: {
@@ -57,7 +58,11 @@ const style = {
         width: '4.4rem',
         minWidth: '4.4rem',
         margin: "auto",
-        display: "inherit"
+        display: "inherit",
+        backgroundImage: `url(${BlankImg})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'auto 100%',
+        backgroundPosition: 'center'
     },
     gridList: {
         display: 'flex',
