@@ -186,7 +186,7 @@ class VoiceSearch extends BaseComponent {
                 fail: function () {
                     _this.setState({
                         pageState: 0,
-                        isRecordStart: isRecordStart
+                        isRecordStart: !isRecordStart
                     });
 
                     actionGlobAlert('录音失败');

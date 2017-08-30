@@ -5,7 +5,7 @@ import "../../../../sass/common/searchHeader.scss";
 import {Chip, List, ListItem, Subheader} from "material-ui";
 import {getHotWords} from "../../../actions/searchActons";
 import DelIcon from "material-ui/svg-icons/content/clear";
-import {getCookie, reqHeader, setCookie} from "../../../utils/comUtils";
+import {getCookie, linkTo, reqHeader, setCookie} from "../../../utils/comUtils";
 import {withRouter} from "react-router-dom";
 import Input from "../Input";
 import BaseComponent from "../BaseComponent";
@@ -77,7 +77,9 @@ class SearchHeader extends BaseComponent {
                             <div>
                                 <img className="search" src={SearchIcon}/>
                                 <font>请输入你要找的歌曲或歌星</font>
-                                <img className="voice" src={VoiceIcon}/>
+                                <img onClick={() => {
+                                    linkTo("voiceSearch", false, "");
+                                }} className="voice" src={VoiceIcon}/>
                             </div>
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}

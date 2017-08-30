@@ -198,6 +198,8 @@ class Pay extends BaseComponent {
                 <div>
                     <Dialog
                         className="dialog-panel"
+                        actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
+                        contentStyle={{textAlign: 'center'}}
                         actions={actions}
                         modal={false}
                         open={this.state.openDialog}
