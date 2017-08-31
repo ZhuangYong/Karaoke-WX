@@ -20,25 +20,17 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 
 const fastWords = [
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"},
-    {value: "快速文字"}
+    {value: "哇塞!唱得太好听了"},
+    {value: "偶像，请收下我的膝盖！"},
+    {value: "偶像，请收下我的膝盖！"},
+    {value: "歌神！请给我签个名吧"},
+    {value: "我只是路过打酱油的~~"},
+    {value: "来来来，唱完这一首还有三首~"},
+    {value: "简直帅到无法形容"},
+    {value: "美女美女我爱你，就像老鼠爱大米"},
+    {value: "来，让我们嗨唱到天亮"},
+    {value: "这音只应天上有,唱到迷人无处求"},
+    {value: "帅锅，来来，陪我再唱一曲"}
 ];
 const emotionIcons = [
     {id: 1, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/9E29D511D9051A00.jpg"},
