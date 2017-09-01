@@ -61,7 +61,8 @@ const style = {
         display: "inherit",
         backgroundImage: `url(${BlankImg})`,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'auto 100%',
+        backgroundSize: 'auto 60%',
+        backgroundColor: '#eaeaea',
         backgroundPosition: 'center'
     },
     gridList: {
@@ -155,7 +156,7 @@ class Home extends BaseComponent {
                     >
                         <div style={style.topNav}>
                             <span style={style.topNav.item} onClick={() => {
-                                linkTo("catAlbum", false, null);
+                                linkTo("suggestions/suggestions.html", false, null);
                             }}>
                                 <img src={IconCate} style={style.topNav.img}/>
                                 <p style={style.topNav.label}>分类</p>

@@ -7,8 +7,20 @@ import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {List, ListItem, Paper} from "material-ui";
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
+import BlankImg from "../../../img/common/blank.png";
 
-
+const style = {
+    albumImg: {
+        height: "2.8rem",
+        width: "4.6rem",
+        overflow: "hidden",
+        backgroundImage: `url(${BlankImg})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'auto 60%',
+        backgroundColor: '#eaeaea',
+        backgroundPosition: 'center'
+    }
+};
 class SingerAlumb extends BaseComponent {
 
     constructor(props) {
@@ -42,7 +54,7 @@ class SingerAlumb extends BaseComponent {
                                 linkTo(`singer/${singer.id}/${singer.name}`, false, null);
                             }}
                             primaryText={(
-                                <div style={{height: "2.8rem", width: "4.6rem", overflow: "hidden"}}>
+                                <div style={style.albumImg}>
                                     <img style={{width: "100%"}} src={singer.wxPic || singer.ottPic}/>
                                 </div>
                             )}

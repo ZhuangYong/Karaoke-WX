@@ -22,6 +22,8 @@ import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import NoResultImg from "../../../img/common/bg_no_result.png";
+import PlayStopIcon from "../../../img/controller/play_stop.png";
+import YuanBanIcon from "../../../img/controller/yuan_ban.png";
 
 const style = {
     controllerBtn: {
@@ -235,10 +237,7 @@ class SongController extends BaseComponent {
                                             thickness={2}
                                             color="white"/> : (
                                                 <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}}>
-                                                    <PlayIcon color="white"/>
-                                                    <div style={{color: 'white'}}>/
-                                                    </div>
-                                                    <StopIcon color="white"/>
+                                                    <img src={PlayStopIcon} style={{width: '60%'}}/>
                                                 </div>
                                         )
                                     }
@@ -256,10 +255,7 @@ class SongController extends BaseComponent {
                                             thickness={2}
                                             color="white"/> : (
                                             <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}}>
-                                                <PersonIcon color="white"/>
-                                                <div style={{color: 'white'}}>/
-                                                </div>
-                                                <MusicIcon color="white"/>
+                                                <img src={YuanBanIcon} style={{width: '60%'}}/>
                                             </div>
                                         )
                                     }
