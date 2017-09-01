@@ -20,8 +20,8 @@ const styles = {
         top: "120px",
         left: "50%",
         marginLeft: "-42.5px",
-        width: "85px",
-        height: "85px"
+        width: "80px",
+        height: "80px"
     },
     headerDesc: {
         color: "#7e7e7e",
@@ -42,6 +42,11 @@ class VoiceSearch extends BaseComponent {
             btnDisabled: false
         };
     }
+
+    componentWillUnmount() {
+        window.wx.stopRecord();
+    }
+
 
     render() {
         const isRecordStart = this.state.isRecordStart;
@@ -88,7 +93,7 @@ class VoiceSearch extends BaseComponent {
                             this.voiceRecognite(!isRecordStart);
                         }}
                     >
-                        {!isRecordStart ? (<img src={BtnIcon} style={{width: "auto", height: "50px"}} alt="录音"/>) : (<div className="voiceSearchScaleBox">
+                        {!isRecordStart ? (<img src={BtnIcon} style={{width: "auto", height: "35px"}} alt="录音"/>) : (<div className="voiceSearchScaleBox">
                             <div className="voiceSearchScaleLong">
                             </div>
                             <div className="voiceSearchScaleShort">

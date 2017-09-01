@@ -366,7 +366,7 @@ export function expireT(time) {
 
 export function wxConfig(data = {}) {
     window.wx.config({
-        debug: true,
+        debug: false,
         appId: data.appId,
         timestamp: data.timestamp,
         nonceStr: data.nonceStr,
@@ -387,6 +387,88 @@ export function wxConfig(data = {}) {
             'getLocalImgData',
             'uploadImage'
         ]
+    });
+}
+
+
+// 微信分享
+export function wxShare(shareData) {
+    // 分享到朋友圈
+    window.wx.onMenuShareTimeline({
+        title: shareData.title + "---" + shareData.desc, // 分享标题
+        link: shareData.link, // 分享链接
+        imgUrl: shareData.imgUrl, // 分享图标
+        trigger: function () {
+        },
+        success: function () {
+        },
+        cancel: function () {
+        },
+        fail: function () {
+        }
+
+    });
+    // 分享给朋友
+    window.wx.onMenuShareAppMessage({
+        title: shareData.title, // 分享标题
+        desc: shareData.desc, // 分享描述
+        link: shareData.link, // 分享链接
+        imgUrl: shareData.imgUrl, // 分享图标
+        type: shareData.type, // 分享类型,music、video或link，不填默认为link
+        dataUrl: shareData.dataUrl, // 如果type是music或video，则要提供数据链接，默认为空
+        trigger: function () {
+        },
+        success: function () {
+        },
+        cancel: function () {
+        },
+        fail: function () {
+        }
+    });
+    // 分享到QQ
+    window.wx.onMenuShareQQ({
+        title: shareData.title, // 分享标题
+        desc: shareData.desc, // 分享描述
+        link: shareData.link, // 分享链接
+        imgUrl: shareData.imgUrl, // 分享图标
+        trigger: function () {
+        },
+        success: function () {
+        },
+        cancel: function () {
+        },
+        fail: function () {
+        }
+    });
+    // 分享到腾讯微博
+    window.wx.onMenuShareWeibo({
+        title: shareData.title, // 分享标题
+        desc: shareData.desc, // 分享描述
+        link: shareData.link, // 分享链接
+        imgUrl: shareData.imgUrl, // 分享图标
+        trigger: function () {
+        },
+        success: function () {
+        },
+        cancel: function () {
+        },
+        fail: function () {
+        }
+    });
+    // 分享到QQ空间
+    window.wx.onMenuShareQZone({
+        title: shareData.title, // 分享标题
+        desc: shareData.desc, // 分享描述
+        link: shareData.link, // 分享链接
+        imgUrl: shareData.imgUrl, // 分享图标
+        trigger: function () {
+        },
+        success: function () {
+        },
+        cancel: function () {
+        },
+        fail: function () {
+        }
     });
 }
 

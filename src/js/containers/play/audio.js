@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/palyAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import {reqHeader} from "../../utils/comUtils";
+import {reqHeader, wxShare} from "../../utils/comUtils";
 
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
@@ -13,20 +13,23 @@ import defaultImg from "../../../img/common/tile_default.jpg";
 import defaultImg2 from "../../../img/picture.jpg";
 import PropTypes from "prop-types";
 import {Avatar, Divider, ListItem, Subheader} from "material-ui";
+import BaseComponent from "../../components/common/BaseComponent";
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 const style = {};
-class PlayAudio extends React.Component {
+class PlayAudio extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("录音分享");
         this.state = {
             audio: {},
             params: this.props.match.params,
             percent: 0,
             currentTime: 0,
             wxTimer: -1,
-            musicUrl: ""
+            musicUrl: "",
+            imgUrl: ""
         };
     }
 
@@ -36,12 +39,21 @@ class PlayAudio extends React.Component {
     }
 
     componentDidUpdate() {
+        const imgUrl = this.state.imgUrl;
         const {isWeixin} = window.sysInfo;
         if (isWeixin) {
             const {data} = this.props.audio.audioInfo;
             if (data && data.musicUrl) {
                 window.wx.ready(() => {
                     this.refs.audio.refs.audio.refs.audio.play();
+
+                    wxShare({
+                        title: `刚刚唱了一首《${data.nameNorm}》快点来听`,
+                        desc: "分享自金麦客家庭卡拉OK",
+                        link: location.protocol + '//' + location.host,
+                        imgUrl: imgUrl === "" ? data.image : imgUrl,
+                        dataUrl: data.musicUrl
+                    });
                 });
             }
         }
@@ -49,7 +61,7 @@ class PlayAudio extends React.Component {
 
     render() {
         const {status, data, msg} = this.props.audio.audioInfo;
-        const {musicUrl, musicTime, nameNorm} = data || {};
+        const {image, musicUrl, musicTime, nameNorm} = data || {};
         return (
             <div className="audio-play">
                 <div className="top-panel">
@@ -70,6 +82,12 @@ class PlayAudio extends React.Component {
                 <Subheader style={{lineHeight: "18px", textAlign: "center", bottom: '.8rem'}}>
                     <p style={{color: '#ff6832', fontSize: '.32rem'}}>来自金麦客专业家庭卡拉OK</p>
                 </Subheader>
+
+                <img src={image} style={{display: "none"}} onError={() => {
+                    this.setState({
+                        imgUrl: "http://wx.j-make.cn/img/logo.png"
+                    });
+                }}/>
             </div>
         );
     }

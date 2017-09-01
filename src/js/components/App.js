@@ -7,7 +7,7 @@ import {checkLocal, getUserInfoFromSession, setGlobAlert, setLocalNet, updateScr
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
-import {chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo} from "../utils/comUtils";
+import {chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo, wxShare} from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
 import NotFound from "../components/common/notfound";
@@ -199,6 +199,16 @@ class App extends React.Component {
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
         this.props.action_updateScreen();
+
+        window.wx.ready(() => {
+            wxShare({
+                title: `金麦客微信点歌`,
+                desc: "分享自金麦客家庭卡拉OK",
+                link: location.protocol + '//' + location.host,
+                imgUrl: "http://wx.j-make.cn/img/logo.png",
+                dataUrl: null
+            });
+        });
     }
 
     componentDidUpdate(prevProps) {
@@ -227,10 +237,12 @@ class App extends React.Component {
         if (isWeixin) {
             if (!wxConfigPaths[this.props.history.location.pathname]) {
                 const param = {url: location.href.split('#')[0]};
-                alert(param.url);
+
                 this.props.action_getUserConfig(param, reqHeader(param), (json) => {
                     const {data} = json;
-                    wxConfig(data);
+                    setTimeout(() => {
+                        wxConfig(data);
+                    }, 500);
                 });
                 wxConfigPaths[this.props.history.location.pathname] = true;
             }
