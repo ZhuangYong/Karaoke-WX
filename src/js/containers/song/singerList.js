@@ -58,6 +58,8 @@ class SingerList extends BaseComponent {
 
     constructor(props) {
         super(props);
+        const {title} = this.props.match.params || {};
+        super.title(title);
         this.state = {
             pageSize: 20,
             pageData: [],
@@ -139,7 +141,7 @@ class SingerList extends BaseComponent {
                                 className="single-item"
                                 key={singer.id}
                                 onTouchTap={() => {
-                                    linkTo(`songs/singerId/${singer.id}`, false, null);
+                                    linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
                                 }}
                                 leftAvatar={
                                     <Avatar

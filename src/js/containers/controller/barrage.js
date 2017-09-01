@@ -127,6 +127,7 @@ class Barrage extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("弹幕");
         this.state = {
             tabIndex: 0,
             inputIng: false,

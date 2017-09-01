@@ -120,6 +120,7 @@ class SongController extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("播控");
         this.state = {
             playList: [],
             historySongList: [],

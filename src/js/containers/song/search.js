@@ -13,6 +13,7 @@ class Search extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("搜索");
         this.state = {
             keyword: ""
         };

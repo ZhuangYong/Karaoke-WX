@@ -227,6 +227,7 @@ class App extends React.Component {
         if (isWeixin) {
             if (!wxConfigPaths[this.props.history.location.pathname]) {
                 const param = {url: location.href.split('#')[0]};
+                alert(param.url);
                 this.props.action_getUserConfig(param, reqHeader(param), (json) => {
                     const {data} = json;
                     wxConfig(data);
@@ -279,7 +280,7 @@ class App extends React.Component {
                         <Route path={`/song/chooselist`} exact component={ChooseListContainer}/>
                         <Route path={`/song/search/:keyword?`} exact component={SearchContainer}/>
                         <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>
-                        <Route path={`/singer/:id`} exact component={SingerListContainer}/>
+                        <Route path={`/singer/:id/:title`} exact component={SingerListContainer}/>
                         <Route path={`/catAlbum`} exact component={CatAlbumContainer}/>
                         <Route path={`/songs/:type/:id/:title?/:headImg?`} exact component={SongsListContainer}/>
                         <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>

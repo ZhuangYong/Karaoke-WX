@@ -17,6 +17,7 @@ class CatAlbum extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("分类");
         this.state = {};
     }
 
