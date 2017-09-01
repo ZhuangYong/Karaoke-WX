@@ -61,7 +61,8 @@ const style = {
         display: "inherit",
         backgroundImage: `url(${BlankImg})`,
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'auto 100%',
+        backgroundSize: 'auto 60%',
+        backgroundColor: '#eaeaea',
         backgroundPosition: 'center'
     },
     gridList: {

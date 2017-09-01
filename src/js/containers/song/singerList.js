@@ -102,6 +102,7 @@ class SingerList extends BaseComponent {
         const singerList = this.props.songs.getSingerAlbum;
         const {w, h} = this.props.common;
         const avatarSize = 42 * (w / 375);
+        const {keyWord} = this.state;
         return (
 
             <Paper zDepth={0}>
@@ -112,10 +113,14 @@ class SingerList extends BaseComponent {
                     onScroll={this.onScroll.bind(this)}>
 
                     <div style={style.hotFilter}>
-                        热门
+                        {
+                            keyWord || "热门"
+                        }
+
                         <div style={style.hotFilter.icon} onClick={this.handleHotPanel}>
                             <ArrowDownIcon color="#ff6832"/>
                         </div>
+
                         <Popover
                             style={{boxShadow: 'rgba(128, 128, 128, 0.51) 1px 1px 20px 3px'}}
                             open={this.state.openHotChoose}
@@ -145,6 +150,7 @@ class SingerList extends BaseComponent {
                                 }}
                                 leftAvatar={
                                     <Avatar
+                                        style={{overflow: 'hidden'}}
                                         src={singer.image}
                                         size={avatarSize}
                                     />
@@ -198,10 +204,10 @@ class SingerList extends BaseComponent {
     refreshPage() {
         this.setState({
             currentPage: 0,
-            pageData: [],
-            lastPage: false,
-            loading: false
+            pageData: []
         });
+        this.state.loading = false;
+        this.state.lastPage = false;
         this.loadMoreAction();
     }
 

@@ -10,12 +10,13 @@ import BaseComponent from "./BaseComponent";
 import {reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import SongItem from "./SongItem";
-import Scroller from "silk-scroller";
 import "../../../sass/common/Scroller.scss";
 import {getActorsAlbum, getCatSongList, getRankAlbum, getAlbumRecommendSongList} from "../../actions/audioActons";
 import {search} from "../../actions/searchActons";
 import NoResultImg from "../../../img/common/bg_no_result.png";
+import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
 
+const NEED_SCROLL_TOP_HEIGHT = 1000;
 const style = {
     commonSongList: {
         position: "absolute",
@@ -47,6 +48,18 @@ const style = {
         justifyContent: "center",
         alignItems: "center",
         flexDirection: "column"
+    },
+    scrollToTop: {
+        width: '1.5rem',
+        height: '1.5rem',
+        borderRadius: '1.5rem',
+        backgroundColor: "rgba(255, 104, 50, 0.76)",
+        position: "fixed",
+        bottom: '1rem',
+        right: '1rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 };
 class SongList extends BaseComponent {
@@ -86,9 +99,11 @@ class SongList extends BaseComponent {
             lastPage: false,
             dataKey: dataKey,
             queryFun: queryFun,
+            needScrollToTop: false,
             id: this.props.singerId || this.props.catId || this.props.hotId || this.props.recommendId
         };
         this.getContent = this.getContent.bind(this);
+        this.scrollTo = this.scrollTo.bind(this);
     }
 
     componentDidMount() {
@@ -140,19 +155,19 @@ class SongList extends BaseComponent {
                 <div className='common-song-list'
                      style={style.commonSongList}
                      onScroll={this.onScroll.bind(this)}>
-               {/* <Scroller
-                    {...others}
-                    ref="scroller"
-                    directionLockThreshold={1}
-                    containerStyle={this.props.containerStyle}
-                    useLoadMore
-                    loadMoreAction={this.loadMoreAction.bind(this)}
-                    noMoreData={this.state.lastPage}
-                >*/}
                     {
                         headImg && <img style={{top: 44, width: '100%'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
+
+                    {
+                        this.state.needScrollToTop ? <div style={style.scrollToTop} onClick={() => {
+                            this.scrollTo(0);
+                        }}>
+                            <ScrollToTopIcon color="white"/>
+                        </div> : ""
+                    }
+
                     <div style={style.loading}>
                         {this.state.loading ? (<RefreshIndicator
                             size={30}
@@ -165,7 +180,6 @@ class SongList extends BaseComponent {
 
                         <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
                     </div>
-                {/*</Scroller>*/}
                 </div>
             );
         }
@@ -223,7 +237,10 @@ class SongList extends BaseComponent {
             currentPage: 1,
             pageData: [],
             lastPage: false,
-            loading: true
+            loading: true,
+            scrollTarget: null,
+            scrollIng: false,
+            scrollToTop: false
         });
         const {pageSize, queryFun, id} = this.state;
         let param = {currentPage: 1, pageSize: pageSize};
@@ -238,11 +255,26 @@ class SongList extends BaseComponent {
 
     onScroll(e) {
         if (!this.state.loading && e.target.classList && e.target.classList.contains("common-song-list")) {
+            this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
             if (betweenBottom < 50) {
                 this.loadMoreAction();
             }
+            if (e.target.scrollTop > NEED_SCROLL_TOP_HEIGHT) {
+                this.setState({
+                    needScrollToTop: true
+                });
+            } else {
+                this.setState({
+                    needScrollToTop: false
+                });
+            }
         }
+    }
+
+    scrollTo(to) {
+        const {scrollTarget} = this.state || {scrollTo: f => f};
+        scrollTarget.scrollTop = to;
     }
 
 }

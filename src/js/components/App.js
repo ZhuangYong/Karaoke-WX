@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {getUserConfig, getUserInfo} from "../actions/userActions";
-import {checkLocal, getUserInfoFromSession, setGlobAlert, setLocalNet, updateScreen} from "../actions/common/actions";
+import {getUserInfoFromSession, setGlobAlert, setLocalNet, updateScreen} from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -39,6 +39,7 @@ import Protocol from "../containers/Pay/Protocol";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
+import Suggestions from "../containers/forOldVersion/suggestions";
 import sysConfig from "../utils/sysConfig";
 
 const LoginContainer = () => (
@@ -153,6 +154,11 @@ const PayContainer = () => (
 
 const ProtocolContainer = () => (
     <Bundle load={Protocol}>
+        {Component => <Component />}
+    </Bundle>
+);
+const SuggestionsContainer = () => (
+    <Bundle load={Suggestions}>
         {Component => <Component />}
     </Bundle>
 );
@@ -282,6 +288,7 @@ class App extends React.Component {
                         *deviceId: 绑定设备号
                         * */}
                         <Route path={`/user/feedback/:state/:deviceId?`} exact component={FeedbackContainer}/>
+                        <Route path={`/suggestions/suggestions.html`} exact component={SuggestionsContainer}/>
                         {/*
                         *state: home/success/failed/invalid(页面状态)
                         *uuid: 扫码登录参数/用户微信unionId
