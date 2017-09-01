@@ -156,7 +156,7 @@ class Home extends BaseComponent {
                     >
                         <div style={style.topNav}>
                             <span style={style.topNav.item} onClick={() => {
-                                linkTo("suggestions/suggestions.html", false, null);
+                                linkTo("catAlbum", false, null);
                             }}>
                                 <img src={IconCate} style={style.topNav.img}/>
                                 <p style={style.topNav.label}>分类</p>
