@@ -1,6 +1,6 @@
 archive
 node_modules
-build
 dist
 .idea
 /testjson/
+!/build/
