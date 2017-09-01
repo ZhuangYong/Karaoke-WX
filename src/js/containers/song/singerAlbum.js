@@ -13,6 +13,7 @@ class SingerAlumb extends BaseComponent {
 
     constructor(props) {
         super(props);
+        super.title("歌星");
         this.state = {};
     }
 
@@ -38,7 +39,7 @@ class SingerAlumb extends BaseComponent {
                             innerDivStyle={{padding: '0.133rem'}}
                             key={singer.id}
                             onTouchTap={() => {
-                                linkTo(`singer/${singer.id}`, false, null);
+                                linkTo(`singer/${singer.id}/${singer.name}`, false, null);
                             }}
                             primaryText={(
                                 <div style={{height: "2.8rem", width: "4.6rem", overflow: "hidden"}}>

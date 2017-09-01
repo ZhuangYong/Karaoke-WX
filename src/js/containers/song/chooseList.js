@@ -16,6 +16,7 @@ class ChooseList extends BaseComponent {
 
     constructor(props) {
         super(props);
+        // super.title("已点列表");
         this.state = {
             playList: []
         };

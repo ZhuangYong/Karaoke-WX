@@ -366,7 +366,7 @@ export function expireT(time) {
 
 export function wxConfig(data = {}) {
     window.wx.config({
-        debug: false,
+        debug: true,
         appId: data.appId,
         timestamp: data.timestamp,
         nonceStr: data.nonceStr,
