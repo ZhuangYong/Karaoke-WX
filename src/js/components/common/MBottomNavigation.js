@@ -106,7 +106,7 @@ class MBottomNavigation extends BaseComponent {
                 />
                 <BottomNavigationItem
                     style={style.nav.playController}
-                    label={<div style={{...style.nav.label, color: labelColor[1]}}>遥控</div>}
+                    label={<div style={{...style.nav.label, color: labelColor[1]}}>播控</div>}
                     icon={
                         <div style={style.nav.playController.circle}>
                             <div style={style.nav.playController.circle.arc}/>

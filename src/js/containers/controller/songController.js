@@ -6,12 +6,9 @@ import {withRouter} from "react-router-dom";
 import {dynaPush, linkTo, reqHeader} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
-import {setSongTop, getChooseList, getHistorySongList, push, pushLocal} from "../../actions/audioActons";
+import {getChooseList, getHistorySongList, push, pushLocal, setSongTop} from "../../actions/audioActons";
 
-import {
-    Paper, RaisedButton, Tab, Tabs, FloatingActionButton, List, ListItem, CircularProgress,
-    RefreshIndicator, Snackbar
-} from "material-ui";
+import {CircularProgress, List, ListItem, Paper, Snackbar, Tab, Tabs} from "material-ui";
 import ReloadIcon from "material-ui/svg-icons/action/autorenew";
 import PlayIcon from "material-ui/svg-icons/av/play-arrow";
 import StopIcon from "material-ui/svg-icons/av/pause";
@@ -21,11 +18,10 @@ import MusicIcon from "material-ui/svg-icons/image/music-note";
 import NextIcon from "material-ui/svg-icons/av/skip-next";
 import PublishIcon from "material-ui/svg-icons/editor/publish";
 import DeleteIcon from "material-ui/svg-icons/action/delete";
-import MusicStyleIcon from "material-ui/svg-icons/action/settings-input-component";
 import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
-import EffectIcon from "../../../img/common/icon_effect.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
+import NoResultImg from "../../../img/common/bg_no_result.png";
 
 const style = {
     controllerBtn: {
@@ -104,6 +100,14 @@ const style = {
                 display: "flex"
             }
         }
+    },
+    noResult: {
+        height: "100%",
+        zIndex: -1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column"
     }
 };
 const UPDATE_CHOOSE_SONG_TIME_COUNT = 5;
@@ -359,8 +363,11 @@ class SongController extends BaseComponent {
                                         </List>
                                     </Paper>
                                 ) : (
-                                    <Paper style={style.chooseList}>
-                                        没有已点歌曲
+                                    <Paper style={style.chooseList} zDepth={0}>
+                                        <div style={style.noResult}>
+                                            <img src={NoResultImg} style={{maxWidth: "80%"}}/>
+                                            <p style={{color: "#7e7e7e", textAlign: 'center'}}>没有任何东东哟</p>
+                                        </div>
                                     </Paper>
                                 )
                             }
@@ -389,8 +396,11 @@ class SongController extends BaseComponent {
                                         </List>
                                     </Paper>
                                 ) : (
-                                    <Paper className="history-song-list">
-                                        没有最近唱过歌曲
+                                    <Paper className="history-song-list" zDepth={0}>
+                                        <div style={style.noResult}>
+                                            <img src={NoResultImg} style={{maxWidth: "80%"}}/>
+                                            <p style={{color: "#7e7e7e", textAlign: 'center'}}>没有任何东东哟</p>
+                                        </div>
                                     </Paper>
                                 )
                             }

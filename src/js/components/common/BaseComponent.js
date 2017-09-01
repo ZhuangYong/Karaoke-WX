@@ -87,8 +87,8 @@ export default class BaseComponent extends Component {
     validUserBindDevice(userInfoData, actionSetGlobAlert) {
         const isBindDevice = this.isBindDevice(userInfoData);
         if (typeof isBindDevice === 'string') {
-            actionSetGlobAlert && actionSetGlobAlert("正在获取用户信息，请稍后重试！");
-            return '正在获取用户信息';
+            actionSetGlobAlert && actionSetGlobAlert(isBindDevice);
+            return isBindDevice;
         } else if (isBindDevice === false) {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return false;
