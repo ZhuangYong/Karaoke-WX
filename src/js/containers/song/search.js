@@ -8,7 +8,15 @@ import {Paper, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
 import SongList from "../../components/common/SongList";
 
-
+const style = {
+    searchWord: {
+        maxWidth: '6rem',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: 'inline-block',
+        whiteSpace: 'nowrap'
+    }
+};
 class Search extends BaseComponent {
 
     constructor(props) {
@@ -34,8 +42,8 @@ class Search extends BaseComponent {
             <Paper zDepth={0}>
                 <SearchHeader defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
                 {this.state.keyword ? <Paper style={{position: "absolute", top: 44, width: "100%", zIndex: 1}}>
-                    <Subheader>
-                        “{this.state.keyword}” 的搜索结果
+                    <Subheader style={{display: 'flex', alignItems: 'center'}}>
+                        “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font>的搜索结果</font>
                     </Subheader>
                 </Paper> : ""}
                 <div style={{paddingTop: 86}}>

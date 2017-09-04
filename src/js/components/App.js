@@ -3,7 +3,10 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {getUserConfig, getUserInfo} from "../actions/userActions";
-import {getUserInfoFromSession, setGlobAlert, setLocalNet, updateScreen} from "../actions/common/actions";
+import {
+    getUserInfoFromSession, setGlobAlert, setLocalNet, setWeixinConfigFinished,
+    updateScreen
+} from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
@@ -247,7 +250,11 @@ class App extends React.Component {
                 this.props.action_getUserConfig(param, reqHeader(param), (json) => {
                     const {data} = json;
                     setTimeout(() => {
+                        this.props.action_setWeixinConfigFinished(false);
                         wxConfig(data);
+                        window.wx.ready(() => {
+                            this.props.action_setWeixinConfigFinished(true);
+                        });
                     }, 500);
                 });
                 wxConfigPaths[this.props.history.location.pathname] = true;
@@ -523,7 +530,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_getUserInfoFromSession: bindActionCreators(getUserInfoFromSession, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         action_getOttStatus: bindActionCreators(getOttStatus, dispatch),
-        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
+        action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch)
     };
 };
 

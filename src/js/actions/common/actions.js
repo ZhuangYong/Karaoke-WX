@@ -31,6 +31,13 @@ export function setLocalNet(iswork) {
     };
 }
 
+export function setWeixinConfigFinished(finished) {
+    return {
+        type: ActionTypes.COMMON.COMMON_WEIXIN_CONFIG_FINISHED,
+        weixinConfigFinish: finished
+    };
+}
+
 export function checkLocal(urlPri, data, headers, callback, failBack) {
     const url = urlPri + apiUrl.API_LOCAL_TEST_PUSH;
     return (dispatch) => {

@@ -10,11 +10,12 @@
             .utilities{
                 position: absolute;
                 top: 2.7rem;
-                width: 100%;
-                left: 0;
+                width: 88%;
+                left: 6%;
                 .control-buttons{
                     position: absolute;
                     top: 1.6rem;
+                    left:50%;
                     .rc-progress-circle{
                         width: 1.6rem;
                         height: 1.6rem;
@@ -83,15 +84,17 @@
                 color: white;
                 margin-left: 30px;
                 .current-time {
-                    left: 0;
-                    top: -16px;
-                    font-size: 10px;
+                    left: -1.1rem;
+                    top: -5px;
+                    color: #999999;
+                    font-size: .257rem;
                     position: absolute;
                 }
                 .duration {
-                    right: 0;
-                    top: -16px;
-                    font-size: 10px;
+                    right: -1.1rem;
+                    top: -5px;
+                    color: #999999;
+                    font-size: .257rem;
                     position: absolute;
                 }
             }
@@ -101,7 +104,7 @@
     .song-label{
         padding: 0;
         text-align: center;
-        margin: 0 0 3.8rem ;
+        margin: 0 0 3.5rem ;
         color: #222222;
         font-size:.4rem;
     }

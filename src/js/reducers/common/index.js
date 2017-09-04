@@ -5,7 +5,8 @@ let initialState = {
     info: 'common store',
     globAlert: "",
     testLocalPushStamp: 0,
-    localNetIsWork: true
+    localNetIsWork: true,
+    weixinConfigFinish: false
 };
 
 let common = function (state = initialState, action = {}) {
@@ -24,6 +25,10 @@ let common = function (state = initialState, action = {}) {
         case ActionTypes.COMMON.COMMON_LOCAL_NETWORK_STATUS:
             return Object.assign({}, state, {
                 localNetIsWork: action.localNetIsWork
+            });
+        case ActionTypes.COMMON.COMMON_WEIXIN_CONFIG_FINISHED:
+            return Object.assign({}, state, {
+                weixinConfigFinish: action.weixinConfigFinish
             });
         case ActionTypes.COMMON.API_LOCAL_TEST_PUSH:
             return fetchProcess(state, action, {
