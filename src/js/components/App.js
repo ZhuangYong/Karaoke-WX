@@ -192,6 +192,7 @@ class App extends React.Component {
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
+        this.configWeiXin = this.configWeiXin.bind(this);
         this.sizeChange = this.sizeChange.bind(this);
         this.runCheckLocal = this.runCheckLocal.bind(this);
         this.updateUserInfo = this.updateUserInfo.bind(this);
@@ -219,6 +220,11 @@ class App extends React.Component {
                 dataUrl: null
             });
         });
+
+        const {isIos} = window.sysInfo;
+        if (isIos) {
+            this.configWeiXin();
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -244,21 +250,9 @@ class App extends React.Component {
         }
 
         let {isWeixin, isIos} = window.sysInfo;
-        if (isWeixin) {
+        if (isWeixin && !isIos) {
             if (!wxConfigPaths[this.props.history.location.pathname]) {
-                let param = {url: location.href.split('#')[0]};
-                if (isIos && this.props.history.location.pathname === "/voiceSearch") param.url = firstConfigUrl;
-                this.props.action_getUserConfig(param, reqHeader(param), (json) => {
-                    const {data} = json;
-                    setTimeout(() => {
-                        this.props.action_setWeixinConfigFinished(false);
-                        wxConfig(data);
-                        if (!firstConfigUrl)firstConfigUrl = location.href.split('#')[0];
-                        window.wx.ready(() => {
-                            this.props.action_setWeixinConfigFinished(true);
-                        });
-                    }, 500);
-                });
+                this.configWeiXin();
                 wxConfigPaths[this.props.history.location.pathname] = true;
             }
         }
@@ -511,6 +505,20 @@ class App extends React.Component {
                 }
             }, 1000);
         }
+    }
+
+    configWeiXin() {
+        let param = {url: location.href.split('#')[0]};
+        this.props.action_getUserConfig(param, reqHeader(param), (json) => {
+            const {data} = json;
+            setTimeout(() => {
+                this.props.action_setWeixinConfigFinished(false);
+                wxConfig(data);
+                window.wx.ready(() => {
+                    this.props.action_setWeixinConfigFinished(true);
+                });
+            }, 500);
+        });
     }
 }
 
