@@ -9,14 +9,14 @@ import {reqHeader, wxShare} from "../../utils/comUtils";
 
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
-import defaultImg from "../../../img/common/tile_default.jpg";
-import defaultImg2 from "../../../img/picture.jpg";
 import PropTypes from "prop-types";
-import {Avatar, Divider, ListItem, Subheader} from "material-ui";
+import {Subheader} from "material-ui";
 import BaseComponent from "../../components/common/BaseComponent";
+import SlidePng1 from "../../../img/album/1.png";
+import SlidePng2 from "../../../img/album/2.png";
+import SlidePng3 from "../../../img/album/3.png";
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
-const style = {};
 class PlayAudio extends BaseComponent {
 
     constructor(props) {
@@ -66,9 +66,9 @@ class PlayAudio extends BaseComponent {
             <div className="audio-play">
                 <div className="top-panel">
                     <AutoPlaySwipeAbleViews className="swipe-panel">
-                        <div className="img-div"><img src={defaultImg}/></div>
-                        <div className="img-div"><img src={defaultImg2}/></div>
-                        <div className="img-div"><img src={defaultImg}/></div>
+                        <div className="img-div"><img src={SlidePng1}/></div>
+                        <div className="img-div"><img src={SlidePng2}/></div>
+                        <div className="img-div"><img src={SlidePng3}/></div>
                     </AutoPlaySwipeAbleViews>
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>

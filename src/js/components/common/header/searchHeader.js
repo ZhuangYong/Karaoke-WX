@@ -17,19 +17,29 @@ import SearchIcon from "../../../../img/common/icon_search.png";
 import CleanIcon from "material-ui/svg-icons/navigation/cancel";
 
 const style = {
+    searchButton: {
+        position: 'absolute',
+        right: '.3rem',
+        fontSize: '.5rem',
+        top: 0,
+        display: 'flex',
+        height: '1.2rem',
+        alignItems: 'center',
+        margin: 0
+    },
     cleanKeyWord: {
         display: 'flex',
         alignItems: 'center',
-        width: 33,
+        width: '.6rem',
         height: '1.2rem',
         overflow: 'hidden',
         position: 'absolute',
-        right: '1.46rem',
+        right: '1.6rem',
         zIndex: 7,
-        paddingTop: 2,
         icon: {
             width: '.6rem',
-            height: '.6rem'
+            height: '.6rem',
+            color: 'rgba(0, 0, 0, 0.38)'
         }
     }
 };
@@ -71,14 +81,14 @@ class SearchHeader extends BaseComponent {
                 return (
                     <div className="search-button"
                          onClick={this.handelBlur}>
-                        取消
+                        <p style={style.searchButton}>取消</p>
                     </div>
                 );
             } else if (this.state.searchKey) {
                 return (
                     <div className="search-button"
                          onClick={this.handelSearch}>
-                        搜索
+                        <p style={style.searchButton}>搜索</p>
                     </div>
                 );
             }
@@ -122,11 +132,11 @@ class SearchHeader extends BaseComponent {
                     >
                         <div className="search-words">
                             <Subheader>
-                                热门搜索
+                                <font style={{fontWeight: 'bold'}} color="#000000">热门搜索</font>
                             </Subheader>
                             <div className="hot-words">
                                 {hotKeyWords && hotKeyWords.data.list.map((word) => (
-                                    <Chip className="word" key={word.tag} onTouchTap={() => {
+                                    <Chip style={{border: '1px solid #b7b7b7', backgroundColor: 'white'}} className="word" key={word.tag} onTouchTap={() => {
                                         this.handelHotSearch(word.tag);
                                     }}>
                                         {word.tag}
@@ -138,9 +148,9 @@ class SearchHeader extends BaseComponent {
                                 this.state.searchHistory && (
                                     <div className="history-words-title">
                                         <Subheader style={{position: "relative"}}>
-                                            搜索历史
+                                            <font style={{fontWeight: 'bold'}} color="#000000">最近搜索</font>
                                             <div style={{top: "0", right: "5%", position: "absolute"}}
-                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}>清除搜索记录
+                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}><font color="#ff6832">清除搜索记录</font>
                                             </div>
                                         </Subheader>
                                     </div>
@@ -148,12 +158,11 @@ class SearchHeader extends BaseComponent {
                             }
 
                             <div className="history-words">
-
                                 <List>
                                     {searchHistory.map((word) => (
                                         <ListItem
                                             key={word}
-                                            primaryText={word}
+                                            primaryText={<font color="#252525">{word}</font>}
                                             rightIcon={
                                                 <DelIcon onTouchTap={(e) => {
                                                     e.stopPropagation();

@@ -6,7 +6,7 @@
         width: 100%;
         color:white;
         position: fixed;
-        padding: 5px 8px;
+        padding: .133rem .107rem;
         text-align: center;
         height: $bar-base-height;
         background-color:$bar-color;
@@ -32,7 +32,7 @@
                 display: none!important;
             }
             input{
-                height: 30px !important;
+                height: .9rem !important;
                 padding-left: 5%!important;
                 color: white!important;
             }
@@ -75,6 +75,8 @@
                 }
             }
             .history-words-title{
+                height: .8rem;
+                margin-top: .6rem;
             }
         }
     }

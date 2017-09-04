@@ -188,7 +188,7 @@ class App extends React.Component {
             updateDevice: false,
             checkLocalTimer: 0,
             checkLocalCount: 0,
-            checkLocalBetween: 15
+            checkLocalBetween: 120
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);

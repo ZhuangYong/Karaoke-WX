@@ -106,6 +106,7 @@ export function comFetch(dispatch, param, options = {
     }
     fetchOption.headers['content-type'] = "application/x-www-form-urlencoded; charset=UTF-8";
     // 发起请求
+    const rejectCode = Math.random();
     const rejectFun = (err) => {
         console.log(err);
         dispatch({
@@ -121,7 +122,7 @@ export function comFetch(dispatch, param, options = {
                 globAlert: '网络不给力，请稍后再试'
             });
         }
-        failCallback && failCallback('网络不给力，请稍后再试', err);
+        failCallback && failCallback('网络不给力，请稍后再试', err, rejectCode);
     };
 
     let timeoutSing;
