@@ -7,6 +7,7 @@ import SearchHeader from "../../components/common/header/searchHeader";
 import {Paper, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
 import SongList from "../../components/common/SongList";
+import navutils from "../../utils/navUtils";
 
 const style = {
     searchWord: {
@@ -57,6 +58,7 @@ class Search extends BaseComponent {
         this.setState({
             keyword: keyword
         });
+        //if (!location.href.endsWith("/"))navutils.replace(keyword);
     }
 }
 

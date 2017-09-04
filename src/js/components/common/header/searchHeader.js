@@ -14,7 +14,25 @@ import * as ReactDOM from "react-dom";
 import Scroller from "silk-scroller";
 import VoiceIcon from "../../../../img/common/icon_voice.png";
 import SearchIcon from "../../../../img/common/icon_search.png";
+import CleanIcon from "material-ui/svg-icons/navigation/cancel";
 
+const style = {
+    cleanKeyWord: {
+        display: 'flex',
+        alignItems: 'center',
+        width: 33,
+        height: '1.2rem',
+        overflow: 'hidden',
+        position: 'absolute',
+        right: '1.46rem',
+        zIndex: 7,
+        paddingTop: 2,
+        icon: {
+            width: '.6rem',
+            height: '.6rem'
+        }
+    }
+};
 // 通用头部组件，包含标题和一个返回按钮
 class SearchHeader extends BaseComponent {
     constructor(props) {
@@ -29,6 +47,7 @@ class SearchHeader extends BaseComponent {
         this.handelDelHistoryWord = this.handelDelHistoryWord.bind(this);
         this.handelInputBlur = this.handelInputBlur.bind(this);
         this.handelSearch = this.handelSearch.bind(this);
+        this.cleanKeyWord = this.cleanKeyWord.bind(this);
     }
 
     componentDidMount() {
@@ -55,7 +74,7 @@ class SearchHeader extends BaseComponent {
                         取消
                     </div>
                 );
-            } else if (this.state.inputting && this.state.searchKey) {
+            } else if (this.state.searchKey) {
                 return (
                     <div className="search-button"
                          onClick={this.handelSearch}>
@@ -67,6 +86,12 @@ class SearchHeader extends BaseComponent {
 
         return (
             <div className="search-header">
+                {
+                    this.state.searchKey ? <div style={style.cleanKeyWord} onTouchTap={this.cleanKeyWord}>
+                        <CleanIcon style={style.cleanKeyWord.icon}/>
+                    </div> : ""
+                }
+
                 <span className="search-bar-panel">
                     <Input
                         ref="input"
@@ -89,7 +114,6 @@ class SearchHeader extends BaseComponent {
                     />
                     {funcBtn()}
                 </span>
-
                 <div className="search-panel" style={{display: showHelper}}>
                     <Scroller
                         ref="scroller"
@@ -213,6 +237,12 @@ class SearchHeader extends BaseComponent {
         setCookie("searchHistory", "");
         this.setState({
             searchHistory: ""
+        });
+    }
+
+    cleanKeyWord() {
+        this.setState({
+            searchKey: ""
         });
     }
 }

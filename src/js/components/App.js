@@ -472,6 +472,7 @@ class App extends React.Component {
                     url: window.location.href.split("#")[0]
                 };
                 this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
+                history.replaceState("", "", "/");
             } else {
                 this.props.action_getUserInfoFromSession();
             }

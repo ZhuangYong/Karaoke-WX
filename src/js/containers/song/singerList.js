@@ -203,9 +203,9 @@ class SingerList extends BaseComponent {
 
     refreshPage() {
         this.setState({
-            currentPage: 0,
             pageData: []
         });
+        this.state.currentPage = 0;
         this.state.loading = false;
         this.state.lastPage = false;
         this.loadMoreAction();

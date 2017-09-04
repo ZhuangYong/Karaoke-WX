@@ -14,10 +14,11 @@
         .key-word-input{
             margin: 0;
             padding: 0;
-            display:table-cell!important;
-            border-radius: 16px;
+            width:auto!important;
+            display:flex!important;
+            border-radius: 1.2rem;
             background-color:#fe9e62!important;
-            height: 34px!important;
+            height: .93rem!important;
             border: 1px solid #fe9e62;
             div:nth-child(1){
                 display: flex;

@@ -8,8 +8,9 @@ class NotFound extends React.Component {
 
 	render () {
 		return (
-			<div>
-				你要的页面可能在路上.
+			<div style={{textAlign: 'center'}}>
+                <p style={{color: 'gray', fontSize: '4rem', fontWeight: 'bold'}}>404</p>
+				<font color="gray">你要的页面可能在路上！</font>
 			</div>
 		);
 	}
