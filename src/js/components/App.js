@@ -176,6 +176,7 @@ const SuggestionsContainer = () => (
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
+let firstConfigUrl = "";
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -242,16 +243,17 @@ class App extends React.Component {
             }
         }
 
-        let {isWeixin} = window.sysInfo;
+        let {isWeixin, isIos} = window.sysInfo;
         if (isWeixin) {
             if (!wxConfigPaths[this.props.history.location.pathname]) {
-                const param = {url: location.href.split('#')[0]};
-
+                let param = {url: location.href.split('#')[0]};
+                if (isIos && this.props.history.location.pathname === "/voiceSearch") param.url = firstConfigUrl;
                 this.props.action_getUserConfig(param, reqHeader(param), (json) => {
                     const {data} = json;
                     setTimeout(() => {
                         this.props.action_setWeixinConfigFinished(false);
                         wxConfig(data);
+                        if (!firstConfigUrl)firstConfigUrl = location.href.split('#')[0];
                         window.wx.ready(() => {
                             this.props.action_setWeixinConfigFinished(true);
                         });
