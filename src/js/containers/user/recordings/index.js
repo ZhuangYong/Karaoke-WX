@@ -59,8 +59,12 @@ class Records extends BaseComponent {
         if (preProps.list.recordsListStamp !== this.props.list.recordsListStamp) {
             const {data} = this.props.list.recordsListData || {data: {result: [], islastpage: false}};
             const {result, islastpage} = data;
+            let recordingList = result.filter((item) => {
+                item.defaultImg = this.randomDefaultImg();
+                return item;
+            });
             this.setState({
-                recordingList: [...this.state.recordingList, ...(result || [])],
+                recordingList: [...this.state.recordingList, ...(recordingList || [])],
                 lastPage: islastpage,
                 loading: false
             });
@@ -123,6 +127,10 @@ class Records extends BaseComponent {
             currentPage: currentPage,
             loading: true
         });
+    }
+
+    randomDefaultImg() {
+        return `../../../../img/album/${parseInt(Math.random() * 3, 10) + 1}.png`;
     }
 
 }

@@ -12,7 +12,6 @@ import {findDOMNode} from "react-dom";
 import {Avatar, GridList, GridTile} from "material-ui";
 import SvgIcon from 'material-ui/SvgIcon';
 
-import defaultImg from "../../../img/common/tile_default.jpg";
 import FeedbackIcon from "../../../img/to_feedback.png";
 import DeviceIcon from "../../../img/user_device.png";
 import HeaderBgIcon from "../../../img/user_header_bg.png";
@@ -20,7 +19,9 @@ import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
 import VIPPayContent from "../../../img/vip_pay_content.png";
 import {setGlobAlert} from "../../actions/common/actions";
-import ActionTypes from "../../actions/actionTypes";
+
+import defaultImg from "../../../img/common/tile_default.jpg";
+import defaultAvatar from "../../../img/default_avatar.png";
 
 const styles = {
     headerImg: {
@@ -106,8 +107,10 @@ class UserIndex extends BaseComponent {
                             width: toRem(160),
                             height: toRem(160),
                             border: `${toRem(7)} solid rgba(255, 255, 255, .3)`,
-                            backgroundColor: "rgba(255, 255, 255)"
-                        }} src={headerImg.slice(0, 4) !== "http" ? defaultImg : headerImg} alt=""/>
+                            backgroundColor: "rgba(255, 255, 255)",
+                            background: `url(${defaultAvatar}) no-repeat center`,
+                            backgroundSize: "cover"
+                        }} src={headerImg} alt=""/>
 
                         <div style={{
                             float: "left",
@@ -220,7 +223,10 @@ class UserIndex extends BaseComponent {
         const {result} = data || {result: []};
         this.setState({
             recordsListTotalCounts: data.totalCount,
-            recordsListData: result
+            recordsListData: result.filter((item) => {
+                item.defaultImg = this.randomDefaultImg();
+                return item;
+            })
         });
     }
 
@@ -304,6 +310,10 @@ class UserIndex extends BaseComponent {
                 height: toRem(24)
             }}/>
         </div>);
+    }
+
+    randomDefaultImg() {
+        return `../../../img/album/${parseInt(Math.random() * 3, 10) + 1}.png`;
     }
 }
 

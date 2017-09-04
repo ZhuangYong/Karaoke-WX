@@ -4,8 +4,9 @@
 import React from "react";
 import {linkTo, toRem} from "../../utils/comUtils";
 import {GridList, GridTile} from "material-ui";
-import defaultImg from "../../../img/common/tile_default.jpg";
 import MoreHorizIcon from 'material-ui/svg-icons/navigation/more-horiz';
+
+import defaultImg from "../../../img/common/tile_default.jpg";
 
 class RecordingGrid extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class RecordingGrid extends React.Component {
                     }}
                 >
                     <img
-                        src={defaultImg}
+                        src={tile.defaultImg}
                         onError={function (e) {
                             e.target.src = defaultImg;
                         }}
@@ -74,7 +75,7 @@ class RecordingGrid extends React.Component {
                 </GridTile>
             ))}
         </GridList>);
-}
+    }
 }
 
 export default RecordingGrid;
