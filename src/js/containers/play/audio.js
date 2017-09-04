@@ -50,12 +50,28 @@ class PlayAudio extends BaseComponent {
                     wxShare({
                         title: `刚刚唱了一首《${data.nameNorm}》快点来听`,
                         desc: "分享自金麦客家庭卡拉OK",
-                        link: location.protocol + '//' + location.host,
+                        link: location.href,
                         imgUrl: imgUrl === "" ? data.image : imgUrl,
                         dataUrl: data.musicUrl
                     });
                 });
             }
+        }
+    }
+
+    componentWillUnmount() {
+        const {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            window.wx.ready(() => {
+
+                wxShare({
+                    title: `金麦客微信点歌`,
+                    desc: "分享自金麦客家庭卡拉OK",
+                    link: location.protocol + '//' + location.host,
+                    imgUrl: "http://wx.j-make.cn/img/logo.png",
+                    dataUrl: null
+                });
+            });
         }
     }
 
