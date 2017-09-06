@@ -44,7 +44,7 @@ class PlayAudio extends BaseComponent {
         if (isWeixin) {
             const {data} = this.props.audio.audioInfo;
             if (data && data.musicUrl) {
-                window.wx.ready(() => {
+                window.wx && window.wx.ready(() => {
                     this.refs.audio.refs.audio.refs.audio.play();
 
                     wxShare({
@@ -62,7 +62,7 @@ class PlayAudio extends BaseComponent {
     componentWillUnmount() {
         const {isWeixin} = window.sysInfo;
         if (isWeixin) {
-            window.wx.ready(() => {
+            window.wx && window.wx.ready(() => {
 
                 wxShare({
                     title: `金麦客微信点歌`,

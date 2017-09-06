@@ -33,8 +33,9 @@ const style = {
         width: '.6rem',
         height: '1.2rem',
         overflow: 'hidden',
-        position: 'absolute',
+        position: 'fixed',
         right: '1.6rem',
+        top: 0,
         zIndex: 7,
         icon: {
             width: '.6rem',
@@ -47,10 +48,12 @@ const style = {
 class SearchHeader extends BaseComponent {
     constructor(props) {
         super(props);
+        const searchKey = typeof this.props.defaultKeyWord !== "undefined" ? this.props.defaultKeyWord : "";
         this.state = {
             inputting: typeof this.props.inputIng !== "undefined" ? this.props.inputIng : true,
-            searchKey: typeof this.props.defaultKeyWord !== "undefined" ? this.props.defaultKeyWord : "",
-            searchHistory: getCookie("searchHistory")
+            searchKey: searchKey,
+            searchHistory: getCookie("searchHistory"),
+            searchedOnce: !!searchKey
         };
         this.handelBlur = this.handelBlur.bind(this);
         this.handelFocus = this.handelFocus.bind(this);
@@ -78,12 +81,17 @@ class SearchHeader extends BaseComponent {
 
         const funcBtn = () => {
             if (this.state.inputting && !this.state.searchKey) {
-                return (
-                    <div className="search-button"
-                         onClick={this.handelBlur}>
-                        <p style={style.searchButton}>取消</p>
-                    </div>
-                );
+                if (this.state.searchedOnce) {
+                    return (
+                        <div className="search-button"
+                             onClick={this.handelBlur}>
+                            <p style={style.searchButton}>取消</p>
+                        </div>
+                    );
+                } else {
+                    return "";
+                }
+
             } else if (this.state.searchKey) {
                 return (
                     <div className="search-button"
@@ -127,7 +135,7 @@ class SearchHeader extends BaseComponent {
                 <div className="search-panel" style={{display: showHelper}}>
                     <Scroller
                         ref="scroller"
-                        containerStyle={{top: 33}}
+                        containerStyle={{top: '1.2rem'}}
                         directionLockThreshold={1}
                     >
                         <div className="search-words">
@@ -162,6 +170,7 @@ class SearchHeader extends BaseComponent {
                                     {searchHistory.map((word) => (
                                         <ListItem
                                             key={word}
+                                            innerDivStyle={{overflow: 'hidden', textOverflow: 'ellipsis'}}
                                             primaryText={<font color="#252525">{word}</font>}
                                             rightIcon={
                                                 <DelIcon onTouchTap={(e) => {
@@ -207,9 +216,6 @@ class SearchHeader extends BaseComponent {
     }
 
     handelHotSearch(searchKey) {
-        this.setState({
-            searchKey: searchKey
-        });
         this.state.searchKey = searchKey;
         this.handelSearch();
     }
@@ -225,6 +231,7 @@ class SearchHeader extends BaseComponent {
         setCookie("searchHistory", searchHistory);
         this.setState({
             inputting: false,
+            searchedOnce: true,
             searchHistory: searchHistory
         });
     }

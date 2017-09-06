@@ -18,6 +18,7 @@ import ToneIconSmooth from "../../../img/controller/tone_smooth.png";
 import ToneIconReduce from "../../../img/controller/tone_reduce.png";
 import BaseComponent from "../../components/common/BaseComponent";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
+import MBottomNavigation from "../../components/common/MBottomNavigation";
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -143,6 +144,8 @@ class AudioEffect extends BaseComponent {
                         <p className="label">效果</p>
                     </div>
                 </div>
+
+                <MBottomNavigation selectedIndex={0}/>
             </div>
         );
     }

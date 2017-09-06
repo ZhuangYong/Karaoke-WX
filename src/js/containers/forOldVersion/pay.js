@@ -2,14 +2,15 @@ import React from "react";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import BaseComponent from "../../components/common/BaseComponent";
-import "../../../sass/common/Scroller.scss";
 import {getQueryString, linkTo} from "../../utils/comUtils";
 
-class Suggestions extends BaseComponent {
+class Pay extends BaseComponent {
     constructor(props) {
         super(props);
         const bondDeviceId = getQueryString("bondDeviceId");
-        linkTo(`user/feedback/home/${bondDeviceId}`, false, null);
+        const {state, pollingId, deviceId, openid} = this.props.match.params;
+        const link = `pay?state=${state || ""}&pollingId=${pollingId || ""}&deviceId=${deviceId || ""}&openid=${openid || ""}`;
+        this.props.history.replace("/" + link);
     }
     render() {
         return (
@@ -33,4 +34,4 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(Suggestions));
+)(Pay));

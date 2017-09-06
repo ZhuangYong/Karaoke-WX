@@ -9,7 +9,7 @@ if (process.env.NODE_ENV === 'production') {
     projectConfig = require('../../config/project.config.prod');
     cbUrl = "aHR0cDovL3d4LmotbWFrZS5jbi8=";
     appId = "wxb948b0bc6e5db6da";
-} else if (process.env.NODE_ENV === 'development') {
+} else if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     projectConfig = require('../../config/project.config.dev');
     cbUrl = "aHR0cDovL3d4Zml4LmotbWFrZS5jb20uY24=";
     appId = "wx4688d2b7b85451aa";

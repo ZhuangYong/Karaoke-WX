@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import {alipayPay, deviceRegister, getPayList, getWXPayParams} from "../../actions/payAction";
-import {getEncryptHeader, linkTo, reqHeader} from "../../utils/comUtils";
+import {getEncryptHeader, getQueryString, linkTo, reqHeader} from "../../utils/comUtils";
 import navUtils from "../../utils/navUtils";
 
 import CheckboxIcon from '../../../img/pay_checkbox.png';
@@ -60,9 +60,14 @@ class Pay extends BaseComponent {
     constructor(props) {
         super(props);
         super.title("支付");
-
+        const matchParams = {
+            state: getQueryString("state") || "",
+            pollingId: getQueryString("pollingId") || "",
+            deviceId: getQueryString("deviceId") || "",
+            openid: getQueryString("openid") || ""
+        };
         this.state = {
-            matchParams: this.props.match.params,
+            matchParams: matchParams,
             payListActiveItem: {
                 productId: null,
                 price: null
@@ -264,7 +269,7 @@ class Pay extends BaseComponent {
         }
         this.props.getWXPayParamsAction(params, header, (res) => {
             const {data} = res;
-            window.wx.chooseWXPay({
+            window.wx && window.wx.chooseWXPay({
                 timestamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
                 nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位
                 package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）

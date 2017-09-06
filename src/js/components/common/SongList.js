@@ -146,14 +146,14 @@ class SongList extends BaseComponent {
         if (noData) {
             return (
                 <div style={style.noResult}>
-                    <img src={NoResultImg} style={{maxWidth: "98%"}}/>
+                    <img src={NoResultImg} style={{maxWidth: "80%"}}/>
                     <p style={{color: "#7e7e7e"}}>没有任何东东哟</p>
                 </div>
             );
         } else {
             return (
                 <div className='common-song-list'
-                     style={style.commonSongList}
+                     style={{...style.commonSongList, paddingTop: this.props.paddingTop ? this.props.paddingTop : 5}}
                      onScroll={this.onScroll.bind(this)}>
                     {
                         headImg && <img style={{top: 44, width: '100%'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
@@ -296,7 +296,8 @@ SongList.propTypes = {
     search: PropTypes.bool,
     onPushSongSuccess: PropTypes.func,
     onPushSongFail: PropTypes.func,
-    headImg: PropTypes.string
+    headImg: PropTypes.string,
+    paddingTop: PropTypes.number
 };
 
 // 映射state到props

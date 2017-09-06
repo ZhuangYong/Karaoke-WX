@@ -43,6 +43,7 @@ import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
 import Suggestions from "../containers/forOldVersion/suggestions";
+import RedirectPay from "../containers/forOldVersion/pay";
 import sysConfig from "../utils/sysConfig";
 
 const LoginContainer = () => (
@@ -165,6 +166,11 @@ const SuggestionsContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const RedirectPayContainer = () => (
+    <Bundle load={RedirectPay}>
+        {Component => <Component />}
+    </Bundle>
+);
 
 /*const dynamicLoadFun = (container) => {
     return () => (
@@ -216,7 +222,7 @@ class App extends React.Component {
             this.configWeiXin();
         }
 
-        window.wx.ready(() => {
+        window.wx && window.wx.ready(() => {
             wxShare({
                 title: `金麦客微信点歌`,
                 desc: "分享自金麦客家庭卡拉OK",
@@ -275,7 +281,8 @@ class App extends React.Component {
                         * pollingId: OTT轮询id
                         * deviceId: OTT设备id
                         */}
-                        <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={PayContainer}/>
+                        <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
+                        <Route path={`/pay`} component={PayContainer}/>
                         <Route path={`/protocol`} component={ProtocolContainer}/>
                         <Route path={`/controller/`} exact component={SongControllerContainer}/>
                         <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>
@@ -370,7 +377,7 @@ class App extends React.Component {
                 alertStr = '未绑定设备, 请绑定';
                 //TODO BIND DEVICE
                 doAction = () => {
-                    window.wx.scanQRCode({
+                    window.wx && window.wx.scanQRCode({
                         needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
                         scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
                         success: function (res) {
@@ -469,7 +476,7 @@ class App extends React.Component {
                     url: window.location.href.split("#")[0]
                 };
                 this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
-                history.replaceState("", "", "/");
+                // history.replaceState("", "", "/");
             } else {
                 this.props.action_getUserInfoFromSession();
             }
@@ -515,7 +522,7 @@ class App extends React.Component {
             setTimeout(() => {
                 this.props.action_setWeixinConfigFinished(false);
                 wxConfig(data);
-                window.wx.ready(() => {
+                window.wx && window.wx.ready(() => {
                     this.props.action_setWeixinConfigFinished(true);
                 });
             }, 500);
