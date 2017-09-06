@@ -9,6 +9,7 @@ import RightArrowIcon from "material-ui/svg-icons/hardware/keyboard-arrow-right"
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import ArrowDownIcon from "material-ui/svg-icons/hardware/keyboard-arrow-down";
+import MBottomNavigation from "../../components/common/MBottomNavigation";
 
 const style = {
     commonSingerList: {
@@ -23,7 +24,7 @@ const style = {
         justifyContent: "center",
         height: 30,
         fontSize: "14px",
-        marginBottom: 14,
+        marginBottom: 84,
         alignItems: "center"
     },
     loadingBar: {
@@ -173,6 +174,8 @@ class SingerList extends BaseComponent {
                         <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
                     </div>
                 </div>
+
+                <MBottomNavigation selectedIndex={0}/>
             </Paper>
         );
     }
@@ -223,6 +226,15 @@ class SingerList extends BaseComponent {
         const keys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const {keyWord} = this.state;
         let keyStr = [];
+        keyStr.push(
+            keyWord === '' ? <p className="active" key={'热门'}>
+                {'热门'}
+            </p> : <p onClick={() => {
+                this.chooseKey('');
+            }} key={'热门'}>
+                {'热门'}
+            </p>
+        );
         for (let key of keys) {
             if (keyWord === key) {
                 keyStr.push(

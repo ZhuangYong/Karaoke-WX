@@ -8,6 +8,7 @@ import {List, ListItem, Paper} from "material-ui";
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import BlankImg from "../../../img/common/blank.png";
+import MBottomNavigation from "../../components/common/MBottomNavigation";
 
 const style = {
     albumImg: {
@@ -40,7 +41,7 @@ class SingerAlumb extends BaseComponent {
     render() {
         const {getSingerAlbum} = this.props.songs;
         return (
-            <Paper zDepth={0}>
+            <Paper zDepth={0} style={{paddingBottom: 66}}>
                 <SearchHeadFake/>
                 <List
                     style={{padding: '50px .133rem'}}
@@ -61,6 +62,7 @@ class SingerAlumb extends BaseComponent {
                         />
                     ))}
                 </List>
+                <MBottomNavigation selectedIndex={0}/>
             </Paper>
         );
     }

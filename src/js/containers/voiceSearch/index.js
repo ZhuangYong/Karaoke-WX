@@ -44,7 +44,7 @@ class VoiceSearch extends BaseComponent {
     }
 
     componentWillUnmount() {
-        window.wx.stopRecord();
+        window.wx && window.wx.stopRecord();
     }
 
 
@@ -182,7 +182,7 @@ class VoiceSearch extends BaseComponent {
             clearTimeout(stopRecordTimer);
         }
         if (isRecordStart) {
-            window.wx.startRecord({
+            window.wx && window.wx.startRecord({
                 success: function () {
                     stopRecordTimer = setTimeout(() => {
                         _this.voiceRecognite(false);
@@ -198,7 +198,7 @@ class VoiceSearch extends BaseComponent {
                 }
             });
         } else {
-            window.wx.stopRecord({
+            window.wx && window.wx.stopRecord({
                 success: function (res) {
                     // alert(res.localId);
                     window.wx.translateVoice({

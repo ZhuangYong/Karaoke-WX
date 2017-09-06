@@ -17,7 +17,7 @@ class SearchHeaderFake extends BaseComponent {
 
         return (
             <div className="search-header">
-                <span className="search-bar-panel">
+                <span className="search-bar-panel" style={{display: "flex!important"}}>
                     <Input
                         ref="input"
                         className="key-word-input"

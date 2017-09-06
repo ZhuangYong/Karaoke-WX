@@ -72,19 +72,19 @@ const style = {
     tabs: {
         leftTab: {
             flexDirection: "row",
-            height: 36,
+            height: '.933rem',
             border: "1px solid white",
             borderRadius: "6px 0 0 6px"
         },
         centerTab: {
             flexDirection: "row",
-            height: 36,
+            height: '.933rem',
             borderTop: "1px solid white",
             borderBottom: "1px solid white"
         },
         rightTab: {
             flexDirection: "row",
-            height: 36,
+            height: '.933rem',
             border: "1px solid white",
             borderRadius: "0 6px 6px 0"
         }
@@ -194,7 +194,7 @@ class SongController extends BaseComponent {
             <div>
                 <Tabs
                     inkBarStyle={{display: "none"}}
-                    tabItemContainerStyle={{backgroundColor: "#ff8333", padding: "6px 10%"}}
+                    tabItemContainerStyle={{alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: "6px 10%"}}
                 >
                     <Tab
                         onActive={() => {
@@ -334,22 +334,37 @@ class SongController extends BaseComponent {
                             {
                                 !this.state.emptyChooseSongs ? (
                                     <Paper style={style.chooseList} zDepth={0}>
-                                        <List>
+                                        <List className="song-list">
                                             {
                                                 playingSong ? (
                                                     <ListItem
+                                                        className="song-item"
                                                         key={playingSong.musicNo}
-                                                        primaryText={playingSong.musicName}
-                                                        secondaryText={playingSong.actorName}
-                                                        rightToggle={<div style={{...style.chooseList.operationArea, justifyContent: 'center'}}><PlayingIcon color="#ff8832"/></div>}
+                                                        primaryText={<div className="song-title">{playingSong.musicName}</div>}
+                                                        secondaryText={<div className="song-author">
+                                                            {playingSong.actorName}
+                                                        </div>}
+                                                        rightToggle={<div style={{...style.chooseList.operationArea, justifyContent: 'center'}}>
+                                                            <div className={`playing ${playingSong.playStatus === 1 ? "" : "stoped"}`}>
+                                                                <span/>
+                                                                <span/>
+                                                                <span/>
+                                                                <span/>
+                                                            </div>
+                                                        </div>}
                                                     />
                                                 ) : ""
                                             }
                                             {playList.map((song, index) => (
                                                 <ListItem
+                                                    className="song-item"
                                                     key={song.musicNo}
-                                                    primaryText={song.musicName}
-                                                    secondaryText={song.actorName}
+                                                    primaryText={
+                                                        <div className="song-title">{song.musicName}</div>
+                                                    }
+                                                    secondaryText={<div className="song-author">
+                                                        {song.actorName}
+                                                    </div>}
                                                     rightToggle={
                                                         <div style={style.chooseList.operationArea}>
                                                             {
@@ -441,9 +456,9 @@ class SongController extends BaseComponent {
             return (
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        index !== 0 && this.songSetTopButton(song)
+                        index !== 0 ? this.songSetTopButton(song) : <div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
-                    <img src={DelIcon} style={{height: '.6rem'}}
+                    <img src={DelIcon} style={{width: '.4rem'}}
                          onTouchTap={() => {
                              this.unChoose(song.musicNo);
                          }}/>
@@ -453,9 +468,9 @@ class SongController extends BaseComponent {
             return (
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        index !== 0 && this.songSetTopButton(song)
+                        index !== 0 ? this.songSetTopButton(song) : <div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
-                    <img src={DelIcon} style={{height: '.6rem'}}
+                    <img src={DelIcon} style={{width: '.4rem'}}
                          onTouchTap={() => {
                              this.unChoose(song.musicNo);
                          }}/>
@@ -477,7 +492,7 @@ class SongController extends BaseComponent {
             );
         } else {
             return (
-                    <img src={SetTopIcon} style={{marginRight: '.6rem', height: '.6rem'}}
+                    <img src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
                          onTouchTap={() => {
                              this.setTop(song.musicNo);
                          }}/>

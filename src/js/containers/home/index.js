@@ -72,7 +72,7 @@ const style = {
         margin: "0 4px"
     },
     itemTitle: {
-        fontSize: 10,
+        fontSize: '.32rem',
         lineHeight: "12px",
         paddingTop: 6,
         textAlign: "center"
@@ -168,7 +168,7 @@ class Home extends BaseComponent {
                                 <p style={style.topNav.label}>歌星</p>
                             </span>
                             <span style={style.topNav.item} onClick={() => {
-                                linkTo(`songs/hotId/48/热歌/http%3A%2F%2Fimagetest___dot___j-make___dot___com___dot___cn%2Fimages%2Fkalaok%2F71A3C59FB3A1B4D7___dot___png`, false, null);
+                                linkTo(`songs/hotId/48/热歌/`, false, null);
                             }}>
                                 <img src={IconHotSong} style={style.topNav.img}/>
                                 <p style={style.topNav.label}>热歌</p>
@@ -245,7 +245,7 @@ class Home extends BaseComponent {
                     >
                         <CardTitle
                             style={{padding: "0 8px"}}
-                            titleStyle={{fontSize: 14}}
+                            titleStyle={{fontSize: '.453rem'}}
                             title="个性化推荐"
                         />
                         <List className="song-list">

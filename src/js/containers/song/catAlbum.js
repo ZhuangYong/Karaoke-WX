@@ -11,6 +11,7 @@ import {List, ListItem, Paper, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import GradeList from "../../components/common/GradeList";
+import MBottomNavigation from "../../components/common/MBottomNavigation";
 
 
 class CatAlbum extends BaseComponent {
@@ -41,7 +42,7 @@ class CatAlbum extends BaseComponent {
                         const catArr = cats.data;
                         if (name === "主题") {
                             return (
-                                <Paper key={name} zDepth={0}>
+                                <Paper key={name} zDepth={0} style={{paddingBottom: 66}}>
                                     <GradeList
                                         data={catArr}
                                         labelKey="name"
@@ -49,6 +50,8 @@ class CatAlbum extends BaseComponent {
                                         imgKey="wxPic"
                                         linHeadKey="songs/catId/"
                                     />
+
+                                    <MBottomNavigation selectedIndex={0}/>
                                 </Paper>
                             );
                         }

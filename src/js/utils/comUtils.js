@@ -86,9 +86,9 @@ export function chkDevice() {
     let isAndroid = ua.indexOf('android') !== -1;
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
     // console.log(process.env);
-    // if (process.env.NODE_ENV === "development") {
-    //     isWeixin = true;
-    // }
+    if (process.env.NODE_ENV === "development") {
+        isWeixin = true;
+    }
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,
@@ -365,7 +365,7 @@ export function expireT(time) {
 }
 
 export function wxConfig(data = {}) {
-    window.wx.config({
+    window.wx && window.wx.config({
         debug: false,
         appId: data.appId,
         timestamp: data.timestamp,
@@ -394,7 +394,7 @@ export function wxConfig(data = {}) {
 // 微信分享
 export function wxShare(shareData) {
     // 分享到朋友圈
-    window.wx.onMenuShareTimeline({
+    window.wx && window.wx.onMenuShareTimeline({
         title: shareData.title + "---" + shareData.desc, // 分享标题
         link: shareData.link, // 分享链接
         imgUrl: shareData.imgUrl, // 分享图标
@@ -409,7 +409,7 @@ export function wxShare(shareData) {
 
     });
     // 分享给朋友
-    window.wx.onMenuShareAppMessage({
+    window.wx && window.wx.onMenuShareAppMessage({
         title: shareData.title, // 分享标题
         desc: shareData.desc, // 分享描述
         link: shareData.link, // 分享链接
@@ -426,7 +426,7 @@ export function wxShare(shareData) {
         }
     });
     // 分享到QQ
-    window.wx.onMenuShareQQ({
+    window.wx && window.wx.onMenuShareQQ({
         title: shareData.title, // 分享标题
         desc: shareData.desc, // 分享描述
         link: shareData.link, // 分享链接
@@ -441,7 +441,7 @@ export function wxShare(shareData) {
         }
     });
     // 分享到腾讯微博
-    window.wx.onMenuShareWeibo({
+    window.wx && window.wx.onMenuShareWeibo({
         title: shareData.title, // 分享标题
         desc: shareData.desc, // 分享描述
         link: shareData.link, // 分享链接
@@ -456,7 +456,7 @@ export function wxShare(shareData) {
         }
     });
     // 分享到QQ空间
-    window.wx.onMenuShareQZone({
+    window.wx && window.wx.onMenuShareQZone({
         title: shareData.title, // 分享标题
         desc: shareData.desc, // 分享描述
         link: shareData.link, // 分享链接
@@ -505,7 +505,7 @@ export function dynaPush(funcParam = {
     const {userInfoData} = userInfo || {};
     const {deviceIp, devicePort, networkType, systemTime, timeStamp} = data || {};
     const localParam = Object.assign({}, param, {
-        debug: sysConfig.environment === "test",
+        debug: sysConfig.environment !== "product",
         deviceId: userInfoData.data.deviceId
     });
     const header = reqHeader(param);

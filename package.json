@@ -131,6 +131,8 @@
     "dev": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --history-api-fallback",
     "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
     "build:test": "npm run copy:dev && cross-env NODE_ENV=production webpack --config ./src/config/webpack.config.js --env=prod",
+    "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --host wx.j-make.cn --history-api-fallback",
+    "build:test": "npm run copy:dev && cross-env NODE_ENV=development webpack --config ./src/config/webpack.config.js --env=test",
     "build:pre": "npm run copy:dev && cross-env NODE_ENV=pre webpack --config ./src/config/webpack.config.js --env=prod.pre",
     "正式发布编译": "npm run copy:dev && cross-env NODE_ENV=production webpack --config ./src/config/webpack.config.js --env=prod",
     "eslint": "eslint -c ./src/config/.eslintrc.js --ignore-path ./src/config/.eslintignore --ext .js ./src",

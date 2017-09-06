@@ -26,7 +26,7 @@ class SongList extends BaseComponent {
         const {type, id, headImg} = this.props.match.params || {};
         props[type] = parseInt(id, 10);
         return (
-            <Paper zDepth={0} style={{paddingTop: 44}}>
+            <Paper zDepth={0} style={{paddingTop: '1.04rem'}}>
                 <SearchHeadFake/>
                 <DSongList
                     onPushSongSuccess={this.onPushSongSuccess}

@@ -42,13 +42,13 @@ class Search extends BaseComponent {
         return (
             <Paper zDepth={0}>
                 <SearchHeader defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
-                {this.state.keyword ? <Paper style={{position: "absolute", top: 44, width: "100%", zIndex: 1}}>
+                {this.state.keyword ? <Paper style={{position: "fixed", top: '1.2rem', width: "100%", zIndex: 1}}>
                     <Subheader style={{display: 'flex', alignItems: 'center'}}>
                         “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font>的搜索结果</font>
                     </Subheader>
                 </Paper> : ""}
-                <div style={{paddingTop: 86}}>
-                    <SongList keyword={this.state.keyword} search={true}/>
+                <div>
+                    <SongList paddingTop={86} keyword={this.state.keyword} search={true}/>
                 </div>
             </Paper>
         );

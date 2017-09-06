@@ -9,11 +9,11 @@ import {bindActionCreators} from "redux";
 import PropTypes from "prop-types";
 import {push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "./BaseComponent";
-import {dynaPush, reqHeader} from "../../utils/comUtils";
+import {dynaPush} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import VIPIcon from "../../../img/common/icon_vip.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
-import sysConfig from "../../utils/sysConfig";
+// import sysConfig from "../../utils/sysConfig";
 
 class SongItem extends BaseComponent {
     constructor(props) {

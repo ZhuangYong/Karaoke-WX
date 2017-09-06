@@ -29,6 +29,7 @@
                 -ms-transform: rotate(45deg);
                 -o-transform: rotate(45deg);
                 transform: rotate(45deg);
+                top: .4rem;
             }
             .right-choose{
                 width:4rem;
@@ -40,6 +41,7 @@
                 -ms-transform: rotate(45deg);
                 -o-transform: rotate(45deg);
                 transform: rotate(45deg);
+                top: .4rem;
             }
             .inside-circle {
                 width: 2.533rem;
@@ -65,7 +67,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-top: 1.4rem;
+        padding-top: 1rem;
         width:100%;
         .fun-button {
             width: 33.33%;
@@ -95,10 +97,9 @@
         }
     }
     .bottom-area {
-        height: 30%;
         width:100%;
         display: flex;
-        margin-top:1rem;
+        margin-top:.4rem;
         justify-content: center;
         align-items: center;
         .fun-button {

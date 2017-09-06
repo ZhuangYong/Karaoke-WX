@@ -22,7 +22,6 @@ import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 const fastWords = [
     {value: "哇塞!唱得太好听了"},
     {value: "偶像，请收下我的膝盖！"},
-    {value: "偶像，请收下我的膝盖！"},
     {value: "歌神！请给我签个名吧"},
     {value: "我只是路过打酱油的~~"},
     {value: "来来来，唱完这一首还有三首~"},
