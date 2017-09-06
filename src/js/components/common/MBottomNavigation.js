@@ -134,7 +134,7 @@ class MBottomNavigation extends BaseComponent {
         this.setState({selectedIndex: index});
         switch (index) {
             case 0:
-                linkTo("home", false, null);
+                linkTo("", false, null);
                 break;
             case 1:
                 linkTo("controller/", false, null);
