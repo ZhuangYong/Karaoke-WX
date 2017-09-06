@@ -211,20 +211,21 @@ class App extends React.Component {
         window.addEventListener('resize', this.sizeChange);
         this.props.action_updateScreen();
 
-        window.wx.ready(() => {
-            wxShare({
-                title: `金麦客微信点歌`,
-                desc: "分享自金麦客家庭卡拉OK",
-                link: location.protocol + '//' + location.host,
-                imgUrl: "http://wx.j-make.cn/img/logo.png",
-                dataUrl: null
-            });
-        });
-
         const {isIos} = window.sysInfo;
         if (isIos) {
             this.configWeiXin();
         }
+
+        window.wx.ready(() => {
+            wxShare({
+                title: `金麦客微信点歌`,
+                desc: "分享自金麦客家庭卡拉OK",
+                // link: sysConfig.wxAuthorized,
+                link: location.protocol + "//" + location.host,
+                imgUrl: "http://wx.j-make.cn/img/logo.png",
+                dataUrl: null
+            });
+        });
     }
 
     componentDidUpdate(prevProps) {
