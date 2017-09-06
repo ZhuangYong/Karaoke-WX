@@ -253,7 +253,7 @@ class Pay extends BaseComponent {
         let params = {
             productId: productId
         };
-        if (typeof matchParams.openid !== "undefined") {
+        if (matchParams.openid !== undefined) {
             params.uuid = matchParams.pollingId;
             params.openid = matchParams.openid;
             header = reqHeader(params, getEncryptHeader({
@@ -273,16 +273,34 @@ class Pay extends BaseComponent {
                 success: function (res) {
                     // 支付成功后的回调函数
                     actionSetGlobAlert("支付成功");
-                    getUserInfoAction({}, reqHeader({}));
-                    window.history.back();
+                    if (matchParams.openid !== undefined) {
+                        setTimeout(() => {
+                            window.WeixinJSBridge.call('closeWindow');
+                        }, 500);
+                    } else {
+                        getUserInfoAction({}, reqHeader({}));
+                        window.history.back();
+                    }
                 },
                 cancel: function (res) {
                     actionSetGlobAlert("取消支付");
-                    window.history.back();
+                    if (matchParams.openid !== undefined) {
+                        setTimeout(() => {
+                            window.WeixinJSBridge.call('closeWindow');
+                        }, 500);
+                    } else {
+                        window.history.back();
+                    }
                 },
                 fail: function (res) {
                     actionSetGlobAlert("支付失败");
-                    window.history.back();
+                    if (matchParams.openid !== undefined) {
+                        setTimeout(() => {
+                            window.WeixinJSBridge.call('closeWindow');
+                        }, 500);
+                    } else {
+                        window.history.back();
+                    }
                 }
             });
         });
