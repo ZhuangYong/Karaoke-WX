@@ -258,7 +258,7 @@ class Pay extends BaseComponent {
         let params = {
             productId: productId
         };
-        if (matchParams.openid !== undefined) {
+        if (matchParams.openid !== "") {
             params.uuid = matchParams.pollingId;
             params.openid = matchParams.openid;
             header = reqHeader(params, getEncryptHeader({
@@ -278,7 +278,7 @@ class Pay extends BaseComponent {
                 success: function (res) {
                     // 支付成功后的回调函数
                     actionSetGlobAlert("支付成功");
-                    if (matchParams.openid !== undefined) {
+                    if (matchParams.openid !== "") {
                         setTimeout(() => {
                             window.WeixinJSBridge.call('closeWindow');
                         }, 500);
@@ -289,7 +289,7 @@ class Pay extends BaseComponent {
                 },
                 cancel: function (res) {
                     actionSetGlobAlert("取消支付");
-                    if (matchParams.openid !== undefined) {
+                    if (matchParams.openid !== "") {
                         setTimeout(() => {
                             window.WeixinJSBridge.call('closeWindow');
                         }, 500);
@@ -299,7 +299,7 @@ class Pay extends BaseComponent {
                 },
                 fail: function (res) {
                     actionSetGlobAlert("支付失败");
-                    if (matchParams.openid !== undefined) {
+                    if (matchParams.openid !== "") {
                         setTimeout(() => {
                             window.WeixinJSBridge.call('closeWindow');
                         }, 500);
@@ -346,7 +346,7 @@ class Pay extends BaseComponent {
             case "home": {
                 const getPayListParams = {};
                 let header = null;
-                if (matchParams.deviceId !== undefined) {
+                if (matchParams.deviceId !== "") {
                     header = reqHeader(getPayListParams, getEncryptHeader({deviceId: matchParams.deviceId}));
                 } else {
                     header = reqHeader(getPayListParams);
