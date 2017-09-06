@@ -529,9 +529,12 @@ export function dynaPush(funcParam = {
         }
     };
     if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
-        action_pushLocal(localPri, localParam, localHeader, success, () => {
+        action_pushLocal(localPri, localParam, localHeader, success, (msg, err, rejectCode) => {
+            if (!window.handelErrs) window.handelErrs = {};
+            if (window.handelErrs[rejectCode]) return;
             action_setLocalNet(false);
             action_push(param, header, renderPushResult, fail);
+            window.handelErrs[rejectCode] = true;
         });
     } else {
         action_push(param, header, renderPushResult, fail);

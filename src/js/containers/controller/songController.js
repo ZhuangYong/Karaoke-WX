@@ -10,20 +10,16 @@ import {getChooseList, getHistorySongList, push, pushLocal, setSongTop} from "..
 
 import {CircularProgress, List, ListItem, Paper, Snackbar, Tab, Tabs} from "material-ui";
 import ReloadIcon from "material-ui/svg-icons/action/autorenew";
-import PlayIcon from "material-ui/svg-icons/av/play-arrow";
-import StopIcon from "material-ui/svg-icons/av/pause";
 import PlayingIcon from "material-ui/svg-icons/av/equalizer";
-import PersonIcon from "material-ui/svg-icons/social/person";
-import MusicIcon from "material-ui/svg-icons/image/music-note";
 import NextIcon from "material-ui/svg-icons/av/skip-next";
-import PublishIcon from "material-ui/svg-icons/editor/publish";
-import DeleteIcon from "material-ui/svg-icons/action/delete";
 import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import NoResultImg from "../../../img/common/bg_no_result.png";
 import PlayStopIcon from "../../../img/controller/play_stop.png";
 import YuanBanIcon from "../../../img/controller/yuan_ban.png";
+import DelIcon from "../../../img/common/icon_un_top.png";
+import SetTopIcon from "../../../img/common/icon_set_top.png";
 
 const style = {
     controllerBtn: {
@@ -94,6 +90,13 @@ const style = {
         }
     },
     chooseList: {
+        operationArea: {
+            height: '1rem',
+            width: '2rem',
+            display: "flex",
+            top: "auto",
+            right: '.4rem'
+        },
         deleteButton: {
             delIng: {
                 fontSize: 10,
@@ -338,19 +341,19 @@ class SongController extends BaseComponent {
                                                         key={playingSong.musicNo}
                                                         primaryText={playingSong.musicName}
                                                         secondaryText={playingSong.actorName}
-                                                        rightToggle={<div><PlayingIcon/></div>}
+                                                        rightToggle={<div style={{...style.chooseList.operationArea, justifyContent: 'center'}}><PlayingIcon color="#ff8832"/></div>}
                                                     />
                                                 ) : ""
                                             }
-                                            {playList.map((song) => (
+                                            {playList.map((song, index) => (
                                                 <ListItem
                                                     key={song.musicNo}
                                                     primaryText={song.musicName}
                                                     secondaryText={song.actorName}
                                                     rightToggle={
-                                                        <div style={{height: '1rem', width: '2rem', display: "flex", top: "auto"}}>
+                                                        <div style={style.chooseList.operationArea}>
                                                             {
-                                                                this.songListButtons(song)
+                                                                this.songListButtons(song, index)
                                                             }
 
                                                         </div>
@@ -419,7 +422,7 @@ class SongController extends BaseComponent {
         );
     }
 
-    songListButtons(song) {
+    songListButtons(song, index) {
         if (this.state.delChooseSongIdIng[song.musicNo] === true) {
             return (
                 <div style={style.chooseList.deleteButton.delIng}>
@@ -436,28 +439,26 @@ class SongController extends BaseComponent {
             );
         } else if (this.state.setTopSongIdIng) {
             return (
-                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        this.songSetTopButton(song)
+                        index !== 0 && this.songSetTopButton(song)
                     }
-                    <DeleteIcon
-                        onTouchTap={() => {
-                            this.unChoose(song.musicNo);
-                        }}
-                    />
+                    <img src={DelIcon} style={{height: '.6rem'}}
+                         onTouchTap={() => {
+                             this.unChoose(song.musicNo);
+                         }}/>
                 </div>
             );
         } else {
             return (
-                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        this.songSetTopButton(song)
+                        index !== 0 && this.songSetTopButton(song)
                     }
-                    <DeleteIcon
-                        onTouchTap={() => {
-                            this.unChoose(song.musicNo);
-                        }}
-                    />
+                    <img src={DelIcon} style={{height: '.6rem'}}
+                         onTouchTap={() => {
+                             this.unChoose(song.musicNo);
+                         }}/>
                 </div>
             );
         }
@@ -476,12 +477,10 @@ class SongController extends BaseComponent {
             );
         } else {
             return (
-                    <PublishIcon
-                        style={{marginRight: '.38rem'}}
-                        onTouchTap={() => {
-                            this.setTop(song.musicNo);
-                        }}
-                    />
+                    <img src={SetTopIcon} style={{marginRight: '.6rem', height: '.6rem'}}
+                         onTouchTap={() => {
+                             this.setTop(song.musicNo);
+                         }}/>
             );
         }
     }
