@@ -226,8 +226,7 @@ class App extends React.Component {
             wxShare({
                 title: `金麦客微信点歌`,
                 desc: "分享自金麦客家庭卡拉OK",
-                // link: sysConfig.wxAuthorized,
-                link: location.protocol + "//" + location.host,
+                link: sysConfig.wxAuthorized,
                 imgUrl: "http://wx.j-make.cn/img/logo.png",
                 dataUrl: null
             });

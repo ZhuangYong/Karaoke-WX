@@ -20,6 +20,8 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // 微信授权登录链接
-projectConfig.wxAuthorized = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(projectConfig.apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(cbUrl)}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
+let wxAuthorizedLink = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(projectConfig.apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(cbUrl)}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
+
+projectConfig.wxAuthorized = `${projectConfig.apiDomain}/wx/process/toUrl?url=${encodeURIComponent(wxAuthorizedLink)}`;
 
 module.exports = projectConfig;

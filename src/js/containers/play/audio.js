@@ -6,6 +6,7 @@ import "../../../sass/audio/palyAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
 import {reqHeader, wxShare} from "../../utils/comUtils";
+import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
@@ -67,7 +68,7 @@ class PlayAudio extends BaseComponent {
                 wxShare({
                     title: `金麦客微信点歌`,
                     desc: "分享自金麦客家庭卡拉OK",
-                    link: location.protocol + '//' + location.host,
+                    link: sysConfig.wxAuthorized,
                     imgUrl: "http://wx.j-make.cn/img/logo.png",
                     dataUrl: null
                 });

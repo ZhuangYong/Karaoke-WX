@@ -425,7 +425,8 @@ export function wxShare(shareData) {
         fail: function () {
         }
     });
-    // 分享到QQ
+
+    /*// 分享到QQ
     window.wx && window.wx.onMenuShareQQ({
         title: shareData.title, // 分享标题
         desc: shareData.desc, // 分享描述
@@ -469,7 +470,7 @@ export function wxShare(shareData) {
         },
         fail: function () {
         }
-    });
+    });*/
 }
 
 // 去除字符串所有标点
