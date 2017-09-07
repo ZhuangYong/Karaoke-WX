@@ -1,0 +1,20 @@
+{
+    "status": 1,
+    "msg": "成功",
+    "data": {
+        "actor": [
+            {
+                "actorNo": "106564",
+                "nameNorm": "李玉刚",
+                "abbrNorm": "LYG",
+                "actorTypeNorm": "大陆男歌星"
+            }
+        ],
+        "image": "http://image.jmake.cp57.ott.cibntv.net/images/media/pic/7545774.jpg",
+        "musicTime": "2017-05-14 17:09:13",
+        "nameNorm": "刚好遇见你-2017央视元宵晚会(HD)",
+        "musicUrl": "http://image.jmake.cp57.ott.cibntv.net/device/2a3aded762b2327ba6346b44e80d199f/3B80C458A76793D0.mp3",
+        "state": 1,
+        "serialNo": 7545774
+    }
+}
