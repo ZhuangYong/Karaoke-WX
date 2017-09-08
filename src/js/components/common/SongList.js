@@ -13,10 +13,12 @@ import SongItem from "./SongItem";
 import "../../../sass/common/Scroller.scss";
 import {getActorsAlbum, getCatSongList, getRankAlbum, getAlbumRecommendSongList} from "../../actions/audioActons";
 import {search} from "../../actions/searchActons";
-import NoResultImg from "../../../img/common/bg_no_result.png";
 import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
+import Const from "../../utils/const";
+import NoResult from "./NoResult";
+import NoWifi from "./NoWifi";
+import NoNetworkImg from "../../../img/common/bg_no_network.png";
 
-const NEED_SCROLL_TOP_HEIGHT = 1000;
 const style = {
     commonSongList: {
         position: "absolute",
@@ -39,15 +41,6 @@ const style = {
         left: "none",
         transform: "none",
         marginLeft: -50,
-    },
-    noResult: {
-        height: "100%",
-        marginTop: "15%",
-        zIndex: -1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column"
     },
     scrollToTop: {
         width: '1.5rem',
@@ -123,7 +116,8 @@ class SongList extends BaseComponent {
             this.setState({
                 pageData: pageData,
                 lastPage: lastPage,
-                loading: false
+                loading: false,
+                offLine: false
             });
             if (this.state.currentPage > 0 && pageData.length === 0) {
                 this.setState({
@@ -145,18 +139,19 @@ class SongList extends BaseComponent {
         const {singerId, catId, hotId, headImg, ...others} = this.props;
         if (noData) {
             return (
-                <div style={style.noResult}>
-                    <img src={NoResultImg} style={{maxWidth: "80%"}}/>
-                    <p style={{color: "#7e7e7e"}}>没有任何东东哟</p>
-                </div>
+                <NoResult style={{position: 'absolute'}}/>
             );
         } else {
             return (
                 <div className='common-song-list'
                      style={{...style.commonSongList, paddingTop: this.props.paddingTop ? this.props.paddingTop : 5}}
                      onScroll={this.onScroll.bind(this)}>
+                    <img src={NoNetworkImg} style={{display: 'none'}}/>
                     {
-                        headImg && <img style={{top: 44, width: '100%'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
+                        (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
+                    }
+                    {
+                        !this.state.offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', height: '6.973rem'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
 
@@ -169,16 +164,19 @@ class SongList extends BaseComponent {
                     }
 
                     <div style={style.loading}>
-                        {this.state.loading ? (<RefreshIndicator
+                        {this.state.loading ? (<div><RefreshIndicator
                             size={30}
                             left={70}
                             top={0}
                             loadingColor="#FF9800"
                             status="loading"
                             style={style.loadingBar}
-                        />) : ""}
+                        />
+                            <span>正在加载</span>
+                        </div>) : ""}
 
-                        <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
+                        <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
+                        <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
                     </div>
                 </div>
             );
@@ -229,7 +227,14 @@ class SongList extends BaseComponent {
         } else {
             param.id = id;
         }
-        queryFun && queryFun(param, reqHeader(param), callback);
+        queryFun && queryFun(param, reqHeader(param), callback, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true,
+                    loading: false
+                });
+            }
+        });
     }
 
     refreshPage(callback) {
@@ -260,7 +265,7 @@ class SongList extends BaseComponent {
             if (betweenBottom < 50) {
                 this.loadMoreAction();
             }
-            if (e.target.scrollTop > NEED_SCROLL_TOP_HEIGHT) {
+            if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
                 this.setState({
                     needScrollToTop: true
                 });
@@ -296,8 +301,7 @@ SongList.propTypes = {
     search: PropTypes.bool,
     onPushSongSuccess: PropTypes.func,
     onPushSongFail: PropTypes.func,
-    headImg: PropTypes.string,
-    paddingTop: PropTypes.number
+    headImg: PropTypes.string
 };
 
 // 映射state到props

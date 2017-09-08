@@ -4,10 +4,11 @@ import {withRouter} from "react-router-dom";
 import {search} from "../../actions/searchActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeader from "../../components/common/header/searchHeader";
-import {Paper, Subheader} from "material-ui";
+import {Paper, Snackbar, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
 import SongList from "../../components/common/SongList";
 import navutils from "../../utils/navUtils";
+import Const from "../../utils/const";
 
 const style = {
     searchWord: {
@@ -24,9 +25,13 @@ class Search extends BaseComponent {
         super(props);
         super.title("搜索");
         this.state = {
-            keyword: ""
+            keyword: "",
+            barrageSendToast: false,
+            barrageToastMsg: ""
         };
         this.search = this.search.bind(this);
+        this.onPushSongFail = this.onPushSongFail.bind(this);
+        this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -48,8 +53,23 @@ class Search extends BaseComponent {
                     </Subheader>
                 </Paper> : ""}
                 <div>
-                    <SongList paddingTop={86} keyword={this.state.keyword} search={true}/>
+                    <SongList
+                        onPushSongSuccess={this.onPushSongSuccess}
+                        onPushSongFail={this.onPushSongFail}
+                        paddingTop="2.4rem"
+                        keyword={this.state.keyword}
+                        search={true}/>
                 </div>
+                <Snackbar
+                    open={this.state.barrageSendToast}
+                    message={this.state.barrageToastMsg}
+                    autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}
+                    onRequestClose={() => {
+                        this.setState({
+                            barrageSendToast: false
+                        });
+                    }}
+                />
             </Paper>
         );
     }
@@ -59,6 +79,20 @@ class Search extends BaseComponent {
             keyword: keyword
         });
         //if (!location.href.endsWith("/"))navutils.replace(keyword);
+    }
+    onPushSongSuccess(song) {
+        const {nameNorm} = song;
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: nameNorm + " 点歌成功"
+        });
+    }
+
+    onPushSongFail(msg) {
+        this.setState({
+            barrageSendToast: true,
+            barrageToastMsg: msg
+        });
     }
 }
 

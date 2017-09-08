@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import ActionTypes from "../actions/actionTypes";
 import sysConfig from "../utils/sysConfig";
+import Const from "./const";
 
 export function cryptoFetch(options, succ, fail) {
     let url = options.url;
@@ -112,17 +113,18 @@ export function comFetch(dispatch, param, options = {
         dispatch({
             type: options.action,
             fetchStatus: 1,
-            msg: '网络不给力，请稍后再试',
+            msg: Const.STRING_NO_WIFI,
             error: err,
             param: param
         });
         if (options.url.indexOf("http") >= 0 && options.url.indexOf(sysConfig.apiDomain) >= 0) {
             dispatch({
                 type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-                globAlert: '网络不给力，请稍后再试'
+                globAlert: Const.STRING_NO_WIFI
             });
         }
-        failCallback && failCallback('网络不给力，请稍后再试', err, rejectCode);
+        err.code = Const.CODE_OFF_LINE;
+        failCallback && failCallback(Const.STRING_NO_WIFI, err, rejectCode);
     };
 
     let timeoutSing;

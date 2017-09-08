@@ -10,16 +10,21 @@ import {getChooseList, getHistorySongList, push, pushLocal, setSongTop} from "..
 
 import {CircularProgress, List, ListItem, Paper, Snackbar, Tab, Tabs} from "material-ui";
 import ReloadIcon from "material-ui/svg-icons/action/autorenew";
-import PlayingIcon from "material-ui/svg-icons/av/equalizer";
 import NextIcon from "material-ui/svg-icons/av/skip-next";
 import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
-import NoResultImg from "../../../img/common/bg_no_result.png";
 import PlayStopIcon from "../../../img/controller/play_stop.png";
 import YuanBanIcon from "../../../img/controller/yuan_ban.png";
 import DelIcon from "../../../img/common/icon_un_top.png";
 import SetTopIcon from "../../../img/common/icon_set_top.png";
+import NoResult from "../../components/common/NoResult";
+import GifPlayIng from "../../../img/common/gif_playing.png";
+import GifPlayStop from "../../../img/common/gif_playstop.png";
+import VIPIcon from "../../../img/common/icon_vip.png";
+import Const from "../../utils/const";
+import NoWifi from "../../components/common/NoWifi";
+import NoNetworkImg from "../../../img/common/bg_no_network.png";
 
 const style = {
     controllerBtn: {
@@ -105,14 +110,6 @@ const style = {
                 display: "flex"
             }
         }
-    },
-    noResult: {
-        height: "100%",
-        zIndex: -1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column"
     }
 };
 const UPDATE_CHOOSE_SONG_TIME_COUNT = 5;
@@ -136,7 +133,8 @@ class SongController extends BaseComponent {
             updateChooseSongsCount: 0,
             emptyChooseSongs: false,
             barrageSendToast: '',
-            barrageToastMsg: ''
+            barrageToastMsg: '',
+            offLine: false
         };
         this.unChoose = this.unChoose.bind(this);
         this.showAudioEffect = this.showAudioEffect.bind(this);
@@ -146,6 +144,8 @@ class SongController extends BaseComponent {
         this.handelChangeTab = this.handelChangeTab.bind(this);
         this.songListButtons = this.songListButtons.bind(this);
         this.songSetTopButton = this.songSetTopButton.bind(this);
+        this.chooseSongList = this.chooseSongList.bind(this);
+        this.historySongList = this.historySongList.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -166,12 +166,30 @@ class SongController extends BaseComponent {
         const param = {};
         const updateChooseSongsInterval = this.state.updateChooseSongsInterval;
         const paramHistory = {type: "history"};
-        this.props.action_getChooseList(param, reqHeader(param));
-        this.props.action_getHistorySongList(paramHistory, reqHeader(paramHistory));
+        this.props.action_getChooseList(param, reqHeader(param), null, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true
+                });
+            }
+        });
+        this.props.action_getHistorySongList(paramHistory, reqHeader(paramHistory), null, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true
+                });
+            }
+        });
         if (!updateChooseSongsInterval) {
             this.state.updateChooseSongsInterval = setInterval(() => {
-                if (this.state.updateChooseSongsCount >= UPDATE_CHOOSE_SONG_TIME_COUNT && this.state.tabIndex === 1) {
-                    this.props.action_getChooseList(param, reqHeader(param));
+                if (!this.state.offLine && this.state.updateChooseSongsCount >= UPDATE_CHOOSE_SONG_TIME_COUNT && this.state.tabIndex === 1) {
+                    this.props.action_getChooseList(param, reqHeader(param), null, (msg, err) => {
+                        if (err.code === Const.CODE_OFF_LINE) {
+                            this.setState({
+                                offLine: true
+                            });
+                        }
+                    });
                     this.state.updateChooseSongsCount = 0;
                 } else {
                     this.state.updateChooseSongsCount += 1;
@@ -192,6 +210,7 @@ class SongController extends BaseComponent {
 
         return (
             <div>
+                <img src={NoNetworkImg} style={{display: 'none'}}/>
                 <Tabs
                     inkBarStyle={{display: "none"}}
                     tabItemContainerStyle={{alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: "6px 10%"}}
@@ -332,59 +351,7 @@ class SongController extends BaseComponent {
                         label="已点歌曲">
                         <div style={{height: tabContainerHeight, width: "100%", position: 'absolute', overflowY: 'auto'}}>
                             {
-                                !this.state.emptyChooseSongs ? (
-                                    <Paper style={style.chooseList} zDepth={0}>
-                                        <List className="song-list">
-                                            {
-                                                playingSong ? (
-                                                    <ListItem
-                                                        className="song-item"
-                                                        key={playingSong.musicNo}
-                                                        primaryText={<div className="song-title">{playingSong.musicName}</div>}
-                                                        secondaryText={<div className="song-author">
-                                                            {playingSong.actorName}
-                                                        </div>}
-                                                        rightToggle={<div style={{...style.chooseList.operationArea, justifyContent: 'center'}}>
-                                                            <div className={`playing ${playingSong.playStatus === 1 ? "" : "stoped"}`}>
-                                                                <span/>
-                                                                <span/>
-                                                                <span/>
-                                                                <span/>
-                                                            </div>
-                                                        </div>}
-                                                    />
-                                                ) : ""
-                                            }
-                                            {playList.map((song, index) => (
-                                                <ListItem
-                                                    className="song-item"
-                                                    key={song.musicNo}
-                                                    primaryText={
-                                                        <div className="song-title">{song.musicName}</div>
-                                                    }
-                                                    secondaryText={<div className="song-author">
-                                                        {song.actorName}
-                                                    </div>}
-                                                    rightToggle={
-                                                        <div style={style.chooseList.operationArea}>
-                                                            {
-                                                                this.songListButtons(song, index)
-                                                            }
-
-                                                        </div>
-                                                    }
-                                                />
-                                            ))}
-                                        </List>
-                                    </Paper>
-                                ) : (
-                                    <Paper style={style.chooseList} zDepth={0}>
-                                        <div style={style.noResult}>
-                                            <img src={NoResultImg} style={{maxWidth: "80%"}}/>
-                                            <p style={{color: "#7e7e7e", textAlign: 'center'}}>没有任何东东哟</p>
-                                        </div>
-                                    </Paper>
-                                )
+                                this.chooseSongList(playingSong, playList)
                             }
                         </div>
                     </Tab>
@@ -397,27 +364,7 @@ class SongController extends BaseComponent {
                         label="最近唱过">
                         <div style={{height: tabContainerHeight, width: "100%", position: 'absolute', overflowY: 'auto'}}>
                             {
-                                (historySongList && historySongList.length > 0) ? (
-                                    <Paper className="history-song-list" zDepth={0}>
-                                        <List className="song-list">
-                                            {historySongList.map((song) => (
-                                                <SongItem
-                                                    key={song.id}
-                                                    song={song}
-                                                    onPushSongSuccess={this.onPushSongSuccess}
-                                                    onPushSongFail={this.onPushSongFail}
-                                                />
-                                            ))}
-                                        </List>
-                                    </Paper>
-                                ) : (
-                                    <Paper className="history-song-list" zDepth={0}>
-                                        <div style={style.noResult}>
-                                            <img src={NoResultImg} style={{maxWidth: "80%"}}/>
-                                            <p style={{color: "#7e7e7e", textAlign: 'center'}}>没有任何东东哟</p>
-                                        </div>
-                                    </Paper>
-                                )
+                                this.historySongList(historySongList)
                             }
                         </div>
                     </Tab>
@@ -437,6 +384,121 @@ class SongController extends BaseComponent {
         );
     }
 
+    /**
+     * 已点歌曲列表
+     * @param playingSong
+     * @param playList
+     * @returns {XML}
+     */
+    chooseSongList(playingSong, playList) {
+        if (this.state.offLine) {
+            return (
+                <NoWifi style={{position: 'absolute', top: '-1rem'}}/>
+            );
+        } else if (!this.state.emptyChooseSongs) {
+            return (
+                <Paper style={style.chooseList} zDepth={0}>
+                    <List className="song-list">
+                        {
+                            playingSong ? (
+                                <ListItem
+                                    className="song-item"
+                                    key={playingSong.musicNo}
+                                    primaryText={<div className="song-title">
+                                        <font>{playingSong.musicName}</font>
+                                        <i className="label-vip">{playingSong.vipStutas ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
+                                    </div>
+                                    }
+                                    secondaryText={<div className="song-author">
+                                        {playingSong.actorName}
+                                    </div>}
+                                    rightToggle={<div style={{...style.chooseList.operationArea, justifyContent: 'center'}}>
+                                        {
+                                            playingSong.playStatus === 1 ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                                <img src={GifPlayIng} style={{height: '.8rem', width: '.653rem'}}/>
+                                            </div> : <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                                <img src={GifPlayStop} style={{height: '.8rem', width: '.653rem'}}/>
+                                            </div>
+                                        }
+                                    </div>}
+                                />
+                            ) : ""
+                        }
+                        {playList.map((song, index) => (
+                            <ListItem
+                                className="song-item"
+                                key={song.musicNo}
+                                primaryText={
+                                    <div className="song-title">
+                                        <font>{song.musicName}</font>
+                                        <i className="label-vip">{song.vipStutas ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
+                                    </div>
+                                }
+                                secondaryText={<div className="song-author">
+                                    {song.actorName}
+                                </div>}
+                                rightToggle={
+                                    <div style={style.chooseList.operationArea}>
+                                        {
+                                            this.songListButtons(song, index)
+                                        }
+
+                                    </div>
+                                }
+                            />
+                        ))}
+                    </List>
+                </Paper>
+            );
+        } else {
+            return (
+                <Paper style={style.chooseList} zDepth={0}>
+                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                </Paper>
+            );
+        }
+    }
+
+    /**
+     * 已唱歌曲列表
+     * @param historySongList
+     * @returns {XML}
+     */
+    historySongList(historySongList) {
+        if (this.state.offLine) {
+            return (
+                <NoWifi style={{position: 'absolute', top: '-1rem'}}/>
+            );
+        } else if (historySongList && historySongList.length > 0) {
+            return (
+                <Paper className="history-song-list" zDepth={0}>
+                    <List className="song-list">
+                        {historySongList.map((song) => (
+                            <SongItem
+                                key={song.id}
+                                song={song}
+                                onPushSongSuccess={this.onPushSongSuccess}
+                                onPushSongFail={this.onPushSongFail}
+                            />
+                        ))}
+                    </List>
+                </Paper>
+            );
+        } else {
+            return (
+                <Paper className="history-song-list" zDepth={0}>
+                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                </Paper>
+            );
+        }
+    }
+
+    /**
+     * 已点歌曲操作按钮
+     * @param song
+     * @param index
+     * @returns {XML}
+     */
     songListButtons(song, index) {
         if (this.state.delChooseSongIdIng[song.musicNo] === true) {
             return (
@@ -479,12 +541,17 @@ class SongController extends BaseComponent {
         }
     }
 
+    /**
+     * 设置置顶按钮
+     * @param song
+     * @returns {XML}
+     */
     songSetTopButton(song) {
         // needDownload:id 0不需要下载 1 需要下载
         // downloadStatus: 1下载完成 0未下载 2下载失败
         const {needDownload, downloadStatus} = song;
         if (needDownload === 1 && downloadStatus !== 1) {
-            const downloadStatusStr = downloadStatus ? "下载失败" : "未下载";
+            const downloadStatusStr = downloadStatus ? "下载失败！" : "正在下载…";
             return (
                 <p style={{fontSize: '.3rem', color: downloadStatus ? "red" : "gray", marginRight: '.2rem'}}>
                     {downloadStatusStr}
@@ -500,6 +567,9 @@ class SongController extends BaseComponent {
         }
     }
 
+    /**
+     * 更新已点歌曲数据
+     */
     updateSong() {
         const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
         if (!data) {
@@ -516,6 +586,9 @@ class SongController extends BaseComponent {
         }
     }
 
+    /**
+     * 更新已唱歌曲列表数据
+     */
     updateHistorySong() {
         const historyPlayList = this.props.songs.getHistorySongList;
         let historySongList;
@@ -550,11 +623,20 @@ class SongController extends BaseComponent {
         });
     }
 
+    /**
+     * 字符串转json
+     * @param jsonStr
+     * @returns {{}}
+     */
     handelList(jsonStr) {
         if (jsonStr) return JSON.parse(jsonStr);
         return {};
     }
 
+    /**
+     * 置顶操作
+     * @param musicNo
+     */
     setTop(musicNo) {
         if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
         if (super.validUserDeviceOnline(this.props.ottInfo, this.props.action_setGlobAlert) !== true) return;
@@ -571,6 +653,7 @@ class SongController extends BaseComponent {
         });
         this.props.action_setSongTop(param, reqHeader(param), () => {
             this.setState({
+                offLine: false,
                 setTopSongIdIng: 0,
                 playList: [topSong, ...newSongList]
             });
@@ -586,10 +669,15 @@ class SongController extends BaseComponent {
     onPushSongSuccess(song) {
         const {nameNorm} = song;
         this.setState({
+            offLine: false,
             barrageSendToast: true,
             barrageToastMsg: nameNorm + " 点歌成功",
             updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
         });
+
+        // 更新最近唱过
+        // const paramHistory = {type: "history"};
+        // this.props.action_getHistorySongList(paramHistory, reqHeader(paramHistory));
     }
 
     unChoose(musicNo) {
@@ -604,6 +692,7 @@ class SongController extends BaseComponent {
         this.props.action_setSongTop(param, reqHeader(param), () => {
             delChooseSongIdIng[musicNo] = false;
             this.setState({
+                offLine: false,
                 delChooseSongIdIng: delChooseSongIdIng,
                 playList: playList.filter((song) => {
                     return song.musicNo !== musicNo;
@@ -627,6 +716,7 @@ class SongController extends BaseComponent {
             controllerIng[type] = false;
             setTimeout(() => {
                 this.setState({
+                    offLine: false,
                     controllerIng: controllerIng
                 });
             }, 600);
@@ -634,6 +724,7 @@ class SongController extends BaseComponent {
         const fail = (msg) => {
             controllerIng[type] = false;
             this.setState({
+                offLine: true,
                 controllerIng: controllerIng
             });
         };

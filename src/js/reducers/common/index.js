@@ -6,7 +6,8 @@ let initialState = {
     globAlert: "",
     testLocalPushStamp: 0,
     localNetIsWork: true,
-    weixinConfigFinish: false
+    weixinConfigFinish: false,
+    singerList: {}
 };
 
 let common = function (state = initialState, action = {}) {
@@ -36,6 +37,10 @@ let common = function (state = initialState, action = {}) {
                 stamp: "testLocalPushStamp",
                 msg: "testLocalPushMsg",
                 loading: "loading"
+            });
+        case ActionTypes.COMMON.COMMON_SET_SINGER_LIST:
+            return Object.assign({}, state, {
+                singerList: action.singerList
             });
 
         default:

@@ -13,15 +13,22 @@ import {dynaPush} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import VIPIcon from "../../../img/common/icon_vip.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
+import SucIcon from "material-ui/svg-icons/navigation/check";
+import FailIcon from "material-ui/svg-icons/navigation/close";
+import Const from "../../utils/const";
 // import sysConfig from "../../utils/sysConfig";
 
 class SongItem extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
-            pushIng: {}
+            pushIng: {},
+            showSuc: {},
+            showFail: {}
         };
         this.pushSong = this.pushSong.bind(this);
+        this.pushSuccess = this.pushSuccess.bind(this);
+        this.pushFail = this.pushFail.bind(this);
     }
 
     render() {
@@ -31,7 +38,7 @@ class SongItem extends BaseComponent {
                 className="song-item"
                 key={song.id}
                 primaryText={<div>
-                    <div className="song-title">{song.nameNorm}<i className="label-vip">{song.charge ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
+                    <div className="song-title"><font>{song.nameNorm}</font><i className="label-vip">{song.charge ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
                     </div>
                 </div>}
                 secondaryText={
@@ -42,7 +49,7 @@ class SongItem extends BaseComponent {
                     </div>
                 }
                 rightToggle={
-                    this.state.pushIng[song.serialNo] ? <CircularProgress size={16} thickness={1} style={{right: 3, textAlign: "center"}}/> : <div className="choose-button" onTouchTap={this.pushSong}>点歌</div>
+                    this.getBut(song.serialNo)
                 }
             />
         );
@@ -57,7 +64,8 @@ class SongItem extends BaseComponent {
         });
         const param = {id: JSON.stringify(song), type: 4};
         const success = () => {
-            this.state.pushIng[song.serialNo] = false;
+            //this.state.pushIng[song.serialNo] = false;
+            this.pushSuccess(song.serialNo);
             setTimeout(() => {
                 this.setState({
                     pushIng: this.state.pushIng
@@ -66,7 +74,8 @@ class SongItem extends BaseComponent {
             }, 600);
         };
         const fail = (msg) => {
-            this.state.pushIng[song.serialNo] = false;
+            //this.state.pushIng[song.serialNo] = false;
+            this.pushFail(song.serialNo);
             this.setState({
                 pushIng: this.state.pushIng
             });
@@ -122,6 +131,56 @@ class SongItem extends BaseComponent {
         //     this.props.action_push(param, header, success, fail);
         // }
 
+    }
+
+    getBut(serialNo) {
+        if (this.state.pushIng[serialNo]) {
+            return (
+                <CircularProgress size={16} thickness={1} style={{right: 3, textAlign: "center"}}/>
+            );
+        } else if (this.state.showSuc[serialNo]) {
+            return (
+                <SucIcon className="choose-button no-border" color="#ff6932"/>
+            );
+        } else if (this.state.showFail[serialNo]) {
+            return (
+                <FailIcon className="choose-button no-border" color="red"/>
+            );
+        } else {
+            return (
+                <div className="choose-button" onTouchTap={this.pushSong}>点歌</div>
+            );
+        }
+    }
+
+    pushSuccess(serialNo) {
+        this.state.pushIng[serialNo] = false;
+        this.state.showSuc[serialNo] = true;
+        this.setState({
+            pushIng: this.state.pushIng,
+            showSuc: this.state.showSuc
+        });
+        setTimeout(() => {
+            this.state.showSuc[serialNo] = false;
+            this.setState({
+                showSuc: this.state.showSuc
+            });
+        }, Const.PUSH_SONG_RESULT_ICON_SHOW);
+    }
+
+    pushFail(serialNo) {
+        this.state.pushIng[serialNo] = false;
+        this.state.showFail[serialNo] = true;
+        this.setState({
+            pushIng: this.state.pushIng,
+            showFail: this.state.showFail
+        });
+        setTimeout(() => {
+            this.state.showFail[serialNo] = false;
+            this.setState({
+                showFail: this.state.showFail
+            });
+        }, Const.PUSH_SONG_RESULT_ICON_SHOW);
     }
 
 }

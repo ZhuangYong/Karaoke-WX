@@ -18,6 +18,7 @@ import {bindActionCreators} from "redux";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import SongItem from "../../components/common/SongItem";
 import BlankImg from "../../../img/common/blank.png";
+import Const from "../../utils/const";
 
 const style = {
     home: {
@@ -59,11 +60,6 @@ const style = {
         minWidth: '4.4rem',
         margin: "auto",
         display: "inherit",
-        backgroundImage: `url(${BlankImg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'auto 60%',
-        backgroundColor: '#eaeaea',
-        backgroundPosition: 'center'
     },
     gridList: {
         display: 'flex',
@@ -94,6 +90,25 @@ const style = {
         marginLeft: -50,
     }
 };
+const defaultGetAlbumRecommendData = [
+    {
+        id: 'dfAlbum1',
+        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
+        name: ''
+    },
+    {
+        id: 'dfAlbum2',
+        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
+        name: ''
+    },
+    {
+        id: 'dfAlbum3',
+        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
+        name: ''
+    }
+];
+
+const defaultGetRankingData = defaultGetAlbumRecommendData;
 
 class Home extends BaseComponent {
     constructor(props) {
@@ -143,8 +158,8 @@ class Home extends BaseComponent {
     }
 
     render() {
-        const getAlbumRecommendData = this.props.songs.getAlbumRecommend || {data: {result: []}};
-        const getRankingData = this.props.songs.getRanking || {data: {result: []}};
+        const getAlbumRecommendData = this.props.songs.getAlbumRecommend || {data: {result: defaultGetAlbumRecommendData}};
+        const getRankingData = this.props.songs.getRanking || {data: {result: defaultGetRankingData}};
         return (
             <div>
                 <SearchHeadFake back={this.back}/>
@@ -202,7 +217,7 @@ class Home extends BaseComponent {
                                         }}
                                     >
                                         <div style={style.tile}>
-                                                <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
+                                                <img className="img-not-loaded" src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
                                             <div style={style.itemTitle}>{recommend.name}</div>
                                         </div>
                                     </GridTile>
@@ -231,7 +246,7 @@ class Home extends BaseComponent {
                                     }}
                                 >
                                     <div style={style.tile}>
-                                        <img src={rank.wxPic || rank.imgurl} style={style.tileImg}/>
+                                        <img className="img-not-loaded" src={rank.wxPic || rank.imgurl} style={style.tileImg}/>
                                         <div style={style.itemTitle}>{rank.name}</div>
                                     </div>
                                 </GridTile>
@@ -254,23 +269,26 @@ class Home extends BaseComponent {
 
 
                         <div style={style.loading}>
-                            {this.state.loading ? (<RefreshIndicator
+                            {this.state.loading ? (<div><RefreshIndicator
                                 size={30}
                                 left={70}
                                 top={0}
                                 loadingColor="#FF9800"
                                 status="loading"
                                 style={style.loadingBar}
-                            />) : ""}
+                            />
+                                <span>正在加载</span>
+                            </div>) : ""}
 
-                            <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
+                            <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
+                            <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
                         </div>
                     </Paper>
                 </div>
                 <Snackbar
                     open={this.state.barrageSendToast}
                     message={this.state.barrageToastMsg}
-                    autoHideDuration={500}
+                    autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}
                     onRequestClose={() => {
                         this.setState({
                             barrageSendToast: false
@@ -300,7 +318,12 @@ class Home extends BaseComponent {
         const pageSize = this.state.pageSize;
         let param = {currentPage: currentPage, pageSize: pageSize, id: '48'};
         //个性化推荐
-        this.props.action_getRecommend(param, reqHeader(param), resolve);
+        this.props.action_getRecommend(param, reqHeader(param), resolve, () => {
+            this.setState({
+                offLine: true,
+                loading: false
+            });
+        });
         this.setState({
             currentPage: currentPage,
             loading: true

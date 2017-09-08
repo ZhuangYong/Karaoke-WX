@@ -49,3 +49,10 @@ export function checkLocal(urlPri, data, headers, callback, failBack) {
         }, callback, failBack);
     };
 }
+
+export function setSingerList(data) {
+    return {
+        type: ActionTypes.COMMON.COMMON_SET_SINGER_LIST,
+        singerList: data
+    };
+}

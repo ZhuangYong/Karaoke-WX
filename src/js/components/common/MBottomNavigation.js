@@ -28,8 +28,8 @@ const style = {
             paddingRight: 0,
             circle: {
                 position: "absolute",
-                top: -55,
-                height: 110,
+                top: -35,
+                height: 90,
                 arc: {
                     border: "1px solid #efeeef",
                     position: "absolute",

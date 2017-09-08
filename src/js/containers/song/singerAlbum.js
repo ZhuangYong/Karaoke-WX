@@ -47,11 +47,11 @@ class SingerAlumb extends BaseComponent {
                     style={{padding: '50px .133rem'}}
                     className="singer-album-list"
                 >
-                    {getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result.map((singer) => (
+                    {getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result && getSingerAlbum.data.result.map((singer) => (
                         <ListItem
                             innerDivStyle={{padding: '0.133rem'}}
                             key={singer.id}
-                            onTouchTap={() => {
+                            onClick={() => {
                                 linkTo(`singer/${singer.id}/${singer.name}`, false, null);
                             }}
                             primaryText={(

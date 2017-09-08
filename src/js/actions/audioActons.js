@@ -18,16 +18,18 @@ export function getShareAudio(data, headers) {
  * 首页下部推荐歌曲（获取热歌）
  * @param data
  * @param headers
+ * @param callback
+ * @param failBack
  * @returns {function(*=)}
  */
-export function getRecommend(data, headers) {
+export function getRecommend(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_GET_RECOMMEND
-        }, null);
+        }, callback, failBack);
     };
 }
 
@@ -72,16 +74,18 @@ export function pushLocal(urlPri, data, headers, callback, failBack) {
  * 获取已点歌曲列表
  * @param data
  * @param headers
+ * @param callback
+ * @param failBack
  * @returns {function(*=)}
  */
-export function getChooseList(data, headers) {
+export function getChooseList(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_CHOOSE_LIST;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_CHOOSE_LIST
-        }, null);
+        }, callback, failBack);
     };
 }
 
@@ -127,14 +131,14 @@ export function setSongTop(data, headers, callback) {
  * @param callback
  * @returns {function(*=)}
  */
-export function getSingerCategoryAlbum(data, headers, callback) {
+export function getSingerCategoryAlbum(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_SINGER_CATEGORY_ALBUM;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_GET_SINGER_CATEGORY_ALBUM
-        }, callback);
+        }, callback, failBack);
     };
 }
 
@@ -143,16 +147,17 @@ export function getSingerCategoryAlbum(data, headers, callback) {
  * @param data
  * @param headers
  * @param callback
+ * @param failBack
  * @returns {function(*=)}
  */
-export function getActorsAlbum(data, headers, callback) {
+export function getActorsAlbum(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_ACTORS_ALBUM;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_GET_ACTORS_ALBUM
-        }, callback);
+        }, callback, failBack);
     };
 }
 
@@ -179,16 +184,17 @@ export function getCatAlbum(data, headers, callback) {
  * @param data
  * @param headers
  * @param callback
+ * @param failBack
  * @returns {function(*=)}
  */
-export function getCatSongList(data, headers, callback) {
+export function getCatSongList(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_CAT_ALBUM;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_GET_CAT_SONG_LIST
-        }, callback);
+        }, callback, failBack);
     };
 }
 
@@ -197,16 +203,17 @@ export function getCatSongList(data, headers, callback) {
  * @param data
  * @param headers
  * @param callback
+ * @param failBack
  * @returns {function(*=)}
  */
-export function getRankAlbum(data, headers, callback) {
+export function getRankAlbum(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_GET_RANK_ALBUM
-        }, callback);
+        }, callback, failBack);
     };
 }
 
@@ -233,16 +240,17 @@ export function getAlbumRecommend(data, headers, callback) {
  * @param data
  * @param headers
  * @param callback
+ * @param failBack
  * @returns {function(*=)}
  */
-export function getAlbumRecommendSongList(data, headers, callback) {
+export function getAlbumRecommendSongList(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_QUERY_ALBUM_RECOMMEND;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.SONG.API_QUERY_ALBUM_RECOMMEND_SONG_LIST
-        }, callback);
+        }, callback, failBack);
     };
 }
 

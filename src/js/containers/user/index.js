@@ -293,7 +293,13 @@ class UserIndex extends BaseComponent {
                     linkTo(`pay/deviceRegister`, false, null);
                     return;
                 }
-                linkTo(`pay/home`, false, null);
+                const {isIos} = window.sysInfo;
+                if (isIos) {
+                    // linkTo(`pay/home`, false, null);
+                    location.href = '/pay/home';
+                } else {
+                    linkTo(`pay/home`, false, null);
+                }
             }}>
             <img style={{
                 marginTop: toRem(11),

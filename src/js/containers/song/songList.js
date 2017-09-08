@@ -5,6 +5,7 @@ import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {Paper, Snackbar} from "material-ui";
 import DSongList from "../../components/common/SongList";
+import Const from "../../utils/const";
 
 
 class SongList extends BaseComponent {
@@ -36,7 +37,7 @@ class SongList extends BaseComponent {
                 <Snackbar
                     open={this.state.barrageSendToast}
                     message={this.state.barrageToastMsg}
-                    autoHideDuration={500}
+                    autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}
                     onRequestClose={() => {
                         this.setState({
                             barrageSendToast: false

@@ -17,7 +17,8 @@ export default class Input extends React.Component {
         this.state = {
             hash: getRandomString(24),
             value: "",
-            errorText: ""
+            errorText: "",
+            trim: this.props.trim || false
         };
         this.handelValidate.bind(this);
     }
@@ -28,7 +29,7 @@ export default class Input extends React.Component {
     }
 
     render() {
-        const {onChange, errorStyle, errorText, minLength, maxLength, bindState, validate, doValidate, ...other} = this.props;
+        const {onChange, errorStyle, errorText, minLength, maxLength, bindState, validate, doValidate, trim, ...other} = this.props;
         return (
             <TextField
                 ref="input"
@@ -41,6 +42,9 @@ export default class Input extends React.Component {
     }
 
     handelChange(t, value) {
+        if (this.state.trim) {
+            value = value.trim();
+        }
         this.setState({
             value: value
         });

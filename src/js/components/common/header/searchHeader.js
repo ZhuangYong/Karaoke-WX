@@ -113,6 +113,7 @@ class SearchHeader extends BaseComponent {
                 <span className="search-bar-panel">
                     <Input
                         ref="input"
+                        trim={true}
                         className="key-word-input"
                         value={this.state.searchKey}
                         //autoFocus="autoFocus"

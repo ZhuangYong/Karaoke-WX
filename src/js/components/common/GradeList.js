@@ -55,7 +55,7 @@ class GradeList extends BaseComponent {
                             }}
                         >
                             <div>
-                                <img src={item[imgKey]} style={{height: '2.8rem', width: "4.6rem", display: "table-cell", margin: "auto"}}/>
+                                <img className="img-not-loaded" src={item[imgKey]} style={{height: '2.8rem', width: "4.6rem", display: "table-cell", margin: "auto"}}/>
                             </div>
                         </GridTile>
                     ))}
