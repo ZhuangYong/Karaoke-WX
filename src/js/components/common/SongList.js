@@ -15,6 +15,7 @@ import {getActorsAlbum, getCatSongList, getRankAlbum, getAlbumRecommendSongList}
 import {search} from "../../actions/searchActons";
 import NoResultImg from "../../../img/common/bg_no_result.png";
 import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
+import {atob as decoding} from "Base64";
 
 const NEED_SCROLL_TOP_HEIGHT = 1000;
 const style = {
@@ -156,7 +157,7 @@ class SongList extends BaseComponent {
                      style={{...style.commonSongList, paddingTop: this.props.paddingTop ? this.props.paddingTop : 5}}
                      onScroll={this.onScroll.bind(this)}>
                     {
-                        headImg && <img style={{top: 44, width: '100%'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
+                        headImg && <img style={{top: 44, width: '100%'}} src={decoding(headImg).replace(/___dot___/g, ".")}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
 

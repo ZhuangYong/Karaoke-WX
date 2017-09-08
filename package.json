@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "Base64": "^1.0.1",
     "bundle-loader": "^0.5.5",
     "cropper": "^3.0.0-rc.3",
     "cropperjs": "^0.8.1",

@@ -7,6 +7,7 @@ import {CardTitle} from "material-ui/Card";
 import BaseComponent from "../../components/common/BaseComponent";
 import "../../../sass/common/Scroller.scss";
 import {getAlbumRecommend, getRanking, getRecommend} from "../../actions/audioActons";
+import {btoa as encoding} from "Base64";
 
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {linkTo, reqHeader} from "../../utils/comUtils";
@@ -198,11 +199,11 @@ class Home extends BaseComponent {
                                         }}
                                         titleBackground="transparent"
                                         onTouchTap={() => {
-                                            linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encodeURIComponent(recommend.wxPic || recommend.imgurl).replace(/\./g, '___dot___')}`, false, null);
+                                            linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encoding(recommend.wxPic || recommend.imgurl)}`, false, null);
                                         }}
                                     >
                                         <div style={style.tile}>
-                                                <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
+                                            <img src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
                                             <div style={style.itemTitle}>{recommend.name}</div>
                                         </div>
                                     </GridTile>
@@ -227,7 +228,7 @@ class Home extends BaseComponent {
                                     style={{display: "table-cell", padding: "0 .067rem"}}
                                     titleBackground="transparent"
                                     onTouchTap={() => {
-                                        linkTo(`songs/hotId/${rank.id}/${rank.name}/${encodeURIComponent(rank.wxPic || rank.imgurl).replace(/\./g, '___dot___')}`, false, null);
+                                        linkTo(`songs/hotId/${rank.id}/${rank.name}/${encoding(rank.wxPic || rank.imgurl)}`, false, null);
                                     }}
                                 >
                                     <div style={style.tile}>

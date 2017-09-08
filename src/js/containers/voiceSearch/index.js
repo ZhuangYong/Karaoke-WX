@@ -44,7 +44,14 @@ class VoiceSearch extends BaseComponent {
     }
 
     componentWillUnmount() {
-        window.wx && window.wx.stopRecord();
+        if (this.state.isRecordStart) {
+            window.wx && window.wx.stopRecord();
+        }
+
+        const stopRecordTimer = this.state.stopRecordTimer;
+        if (stopRecordTimer !== null) {
+            clearTimeout(stopRecordTimer);
+        }
     }
 
 
@@ -217,7 +224,7 @@ class VoiceSearch extends BaseComponent {
                         },
                         fail: function () {
                             _this.setState({
-                                pageState: 0,
+                                pageState: 3,
                                 isRecordStart: isRecordStart
                             });
                             actionGlobAlert('语音识别失败');
@@ -229,7 +236,6 @@ class VoiceSearch extends BaseComponent {
                         pageState: 0,
                         isRecordStart: isRecordStart
                     });
-                    actionGlobAlert('无法停止录音');
                 }
             });
         }

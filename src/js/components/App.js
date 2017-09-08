@@ -10,7 +10,10 @@ import {
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
-import {chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo, wxShare} from "../utils/comUtils";
+import {
+    chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo, wxShare,
+    wxAuthorizedUrl, isGetUserInfo
+} from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
 import NotFound from "../components/common/notfound";
@@ -210,7 +213,7 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        this.updateUserInfo();
+        if (isGetUserInfo()) this.updateUserInfo();
         this.runCheckLocal();
         console.log("App component did mount ");
         this.removeAppLoading();
@@ -226,7 +229,7 @@ class App extends React.Component {
             wxShare({
                 title: `金麦客微信点歌`,
                 desc: "分享自金麦客家庭卡拉OK",
-                link: sysConfig.wxAuthorized,
+                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
                 imgUrl: "http://wx.j-make.cn/img/logo.png",
                 dataUrl: null
             });
