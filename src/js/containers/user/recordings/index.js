@@ -7,14 +7,17 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import {GridList, GridTile} from "material-ui/GridList";
-import {getRecordsList} from '../../../actions/userActions';
+import {deleteRecording, getRecordsList} from '../../../actions/userActions';
 import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
-import defaultImg from "../../../../img/common/tile_default.jpg";
 
 import BaseComponent from "../../../components/common/BaseComponent";
 import RefreshIndicator from "material-ui/RefreshIndicator";
 import RecordingGrid from "../../../components/recordingGrid/index";
+import BottomDrawer from "../../../components/recordingGrid/bottomDrawer";
+import FlatButton from 'material-ui/FlatButton';
+import Const from "../../../utils/const";
+import NoWifi from "../../../components/common/NoWifi";
+import NoResult from "../../../components/common/NoResult";
 
 const style = {
     recordings: {
@@ -51,7 +54,11 @@ class Records extends BaseComponent {
             pageSize: 20,
             currentPage: 0,
             loading: false,
-            lastPage: false
+            lastPage: false,
+            open: false,
+            deleteRecordingUid: null,
+            offLine: false,
+            dataLoaded: false
         };
     }
 
@@ -66,7 +73,8 @@ class Records extends BaseComponent {
             this.setState({
                 recordingList: [...this.state.recordingList, ...(recordingList || [])],
                 lastPage: islastpage,
-                loading: false
+                loading: false,
+                dataLoaded: true
             });
         }
     }
@@ -86,20 +94,80 @@ class Records extends BaseComponent {
                 style={style.recordings}
                 onScroll={this.onScroll.bind(this)}
             >
-                <RecordingGrid data={recordingList}/>
+                {
+                    (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
+                }
 
-                <div style={style.loading}>
-                    {this.state.loading ? (<RefreshIndicator
-                        size={30}
-                        left={70}
-                        top={0}
-                        loadingColor="#FF9800"
-                        status="loading"
-                        style={style.loadingBar}
-                    />) : ""}
+                {
+                    (this.state.dataLoaded && this.state.currentPage >= 1 && recordingList.length === 0) ? (<NoResult style={{position: 'absolute', top: '-1rem'}}/>) : (<div>
+                        <RecordingGrid
+                            data={recordingList}
+                            operateClick={(uid) => {
+                                this.setState({
+                                    deleteRecordingUid: uid,
+                                    open: true
+                                });
+                            }}
+                        />
 
-                    <span>{this.state.lastPage ? "亲爱滴，已经到底了" : "正在加载"}</span>
-                </div>
+                        <div style={style.loading}>
+                            {this.state.loading ? (<div><RefreshIndicator
+                                size={30}
+                                left={70}
+                                top={0}
+                                loadingColor="#FF9800"
+                                status="loading"
+                                style={style.loadingBar}
+                            />
+                                <span>正在加载</span>
+                            </div>) : ""}
+
+                            <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
+                            <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && recordingList.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
+                        </div>
+
+                        <BottomDrawer
+                            open={this.state.open}
+                            onRequestChange={() => {
+                                this.setState({
+                                    open: false
+                                });
+                            }}
+                            actions={[
+                                <FlatButton
+                                    style={{
+                                        width: "80%",
+                                        height: "80%",
+                                        color: "#ff6832"
+                                    }}
+                                    labelStyle={{fontSize: toRem(38)}}
+                                    label="删除"
+                                    primary={true}
+                                    onClick={() => {
+                                        const _this = this;
+                                        const uid = this.state.deleteRecordingUid;
+                                        const params = {
+                                            uid: uid
+                                        };
+                                        this.props.deleteRecordingAction(params, reqHeader(params), (res) => {
+                                            const {status} = res;
+                                            if (status === 1) {
+                                                const recordingList = _this.state.recordingList;
+
+                                                _this.setState({
+                                                    open: false,
+                                                    recordingList: recordingList.filter((item) => {
+                                                        if (item.uid !== uid) return item;
+                                                    })
+                                                });
+                                            }
+                                        });
+                                    }}
+                                />
+                            ]}
+                        />
+                    </div>)
+                }
             </div>
         );
     }
@@ -116,13 +184,20 @@ class Records extends BaseComponent {
     /**
      * 上拉加载更多动作
      * */
-    loadMoreAction(resolve, reject) {
+    loadMoreAction() {
         if (this.state.loading || this.state.lastPage) return;
         const currentPage = this.state.currentPage + 1;
         const pageSize = this.state.pageSize;
         let param = {currentPage: currentPage, pageSize: pageSize};
         //个性化推荐
-        this.props.getRecordsListActions(param, reqHeader(param), resolve);
+        this.props.getRecordsListActions(param, reqHeader(param), null, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true,
+                    loading: false
+                });
+            }
+        });
         this.setState({
             currentPage: currentPage,
             loading: true
@@ -151,6 +226,7 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        deleteRecordingAction: bindActionCreators(deleteRecording, dispatch),
         getRecordsListActions: bindActionCreators(getRecordsList, dispatch)
     };
 };

@@ -304,7 +304,7 @@ class Feedback extends BaseComponent {
 
     closePage() {
         const matchParams = this.state.matchParams;
-        if (matchParams.deviceId !== undefined) {
+        if (matchParams.deviceId !== "undefined") {
             window.WeixinJSBridge.call('closeWindow');
         } else {
             window.history.back();
@@ -406,7 +406,7 @@ class Feedback extends BaseComponent {
                                     }
 
                                     _this.setState({
-                                       imgList: [data[0], ...imgList]
+                                        imgList: [data[0], ...imgList]
                                     });
                                 });
                             }

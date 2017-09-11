@@ -44,17 +44,21 @@ class RecordingGrid extends React.Component {
                             linkTo(`user/recordings/play/${tile.uid}`, false, null);
                         }}
                     />
-                    <div style={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        margin: "0 auto",
-                        padding: `0 ${toRem(10)}`,
-                        width: toRem(230),
-                        height: toRem(60),
-                        backgroundColor: "rgba(0, 0, 0, .5)",
-                        boxSizing: "border-box"
-                    }}>
+                    <div
+                        style={{
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            margin: "0 auto",
+                            padding: `0 ${toRem(10)}`,
+                            width: toRem(230),
+                            height: toRem(60),
+                            backgroundColor: "rgba(0, 0, 0, .5)",
+                            boxSizing: "border-box"
+                        }}
+                        onClick={() => {
+                            this.props.operateClick(tile.uid);
+                        }}>
                         <div style={{
                             display: "inline-block",
                             width: toRem(160),
@@ -65,12 +69,13 @@ class RecordingGrid extends React.Component {
                             overflow: "hidden",
                             textOverflow: "ellipsis"
                         }}>{tile.nameNorm}</div>
-                        <MoreHorizIcon style={{
-                            float: "right",
-                            width: toRem(34),
-                            height: toRem(60),
-                            color: "#fff"
-                        }}/>
+                        <MoreHorizIcon
+                            style={{
+                                float: "right",
+                                width: toRem(34),
+                                height: toRem(60),
+                                color: "#fff"
+                            }}/>
                     </div>
                 </GridTile>
             ))}

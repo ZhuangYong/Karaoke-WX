@@ -102,6 +102,13 @@ export default (state = initState, action = {}) => {
                 msg: "recordsListMsg",
                 loading: "recordsListLoading"
             });
+        case ActionTypes.USER.API_DELETE_RECORDING:
+            return fetchProcess(state, action, {
+                data: "deleteRecordingData",
+                stamp: "deleteRecordingStamp",
+                msg: "deleteRecordingMsg",
+                loading: "deleteRecordingLoading"
+            });
         case ActionTypes.SONG.API_QUERY_ALBUM_RECOMMEND:
             return fetchProcess(state, action, {
                 data: "getAlbumRecommend",

@@ -39,6 +39,8 @@ export default {
     "API_QUERY_USER_SOUND": "/user/qryUserSound",
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
+    // 删除录音
+    "API_DELETE_RECORDING": "/user/deleteUserSound",
 
     // base64上传图片
     "API_UPLOAD_IMG_BASE64": "/upload/uploadImgBase64",

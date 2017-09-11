@@ -30,6 +30,8 @@ const USER = {
 
     // 获取录音分享列表
     API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST",
+    // 删除录音
+    API_DELETE_RECORDING: "API_DELETE_RECORDING",
     // 获取我的订单列表
     API_GET_ORDER_FORM: "API_GET_ORDER_FORM",
 

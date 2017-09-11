@@ -57,6 +57,19 @@ export function getRecordsList(data, headers) {
     };
 }
 
+export function deleteRecording(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_DELETE_RECORDING;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_DELETE_RECORDING
+        }, callback);
+    };
+}
+
 export function getPhotoAlbumList(data, headers) {
 
     const url = apiUrl.API_PHOTO_ALBUM_LIST;

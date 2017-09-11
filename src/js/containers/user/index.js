@@ -3,13 +3,13 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
-import {getRecordsList, getUserInfo} from "../../actions/userActions";
+import {deleteRecording, getRecordsList, getUserInfo} from "../../actions/userActions";
 import {linkTo, reqHeader, timeToYmd, toRem} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
 import {findDOMNode} from "react-dom";
-import {Avatar, GridList, GridTile} from "material-ui";
+import {Avatar, GridList, GridTile, FlatButton} from "material-ui";
 import SvgIcon from 'material-ui/SvgIcon';
 
 import FeedbackIcon from "../../../img/to_feedback.png";
@@ -20,8 +20,8 @@ import VIPGrayIcon from "../../../img/user_vip_gray.png";
 import VIPPayContent from "../../../img/vip_pay_content.png";
 import {setGlobAlert} from "../../actions/common/actions";
 
-import defaultImg from "../../../img/common/tile_default.jpg";
 import defaultAvatar from "../../../img/default_avatar.png";
+import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
 
 const styles = {
     headerImg: {
@@ -58,10 +58,11 @@ class UserIndex extends BaseComponent {
         this.state = {
             userInfoData: {},
             recordsListTotalCounts: 0,
-            recordsListData: []
+            recordsListData: [],
+            open: false,
+            deleteRecordingUid: null
         };
 
-        this.updateUserInfo = this.updateUserInfo.bind(this);
         this.updateRecordsList = this.updateRecordsList.bind(this);
     }
 
@@ -78,7 +79,7 @@ class UserIndex extends BaseComponent {
                 pageSize: 9,
                 currentPage: 1
             };
-            this.props.getRecordsListActions(getRecordsListParams, reqHeader(getRecordsListParams));
+            this.props.getRecordsListAction(getRecordsListParams, reqHeader(getRecordsListParams));
         }
     }
 
@@ -181,18 +182,18 @@ class UserIndex extends BaseComponent {
                             fontWeight: "bold"
                         }}>我的录音</div>
                         <div style={{
-                                float: "right",
-                                marginRight: toRem(20)
-                            }}
-                            onTouchTap={() => {
-                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
+                            float: "right",
+                            marginRight: toRem(20)
+                        }}
+                             onTouchTap={() => {
+                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
 
-                                if (recordsListTotalCounts < 1) {
-                                    actionSetGlobAlert("暂无录音");
-                                    return;
-                                }
-                                linkTo(`user/recordings`, false, null);
-                            }}>
+                                 if (recordsListTotalCounts < 1) {
+                                     actionSetGlobAlert("暂无录音");
+                                     return;
+                                 }
+                                 linkTo(`user/recordings`, false, null);
+                             }}>
                             <span style={{
                                 lineHeight: toRem(110),
                                 color: "#999",
@@ -210,10 +211,58 @@ class UserIndex extends BaseComponent {
                         </div>
                     </header>
 
-                    <RecordingGrid data={recordsList}/>
+                    <RecordingGrid
+                        data={recordsList}
+                        operateClick={(uid) => {
+                            this.setState({
+                                deleteRecordingUid: uid,
+                                open: true
+                            });
+                        }}
+                    />
                 </section>)}
 
                 <MBottomNavigation selectedIndex={2}/>
+
+                <BottomDrawer
+                    open={this.state.open}
+                    onRequestChange={() => {
+                        this.setState({
+                            open: false
+                        });
+                    }}
+                    actions={[
+                        <FlatButton
+                            style={{
+                                width: "80%",
+                                height: "80%",
+                                color: "#ff6832"
+                            }}
+                            labelStyle={{fontSize: toRem(38)}}
+                            label="删除"
+                            primary={true}
+                            onClick={() => {
+                                const uid = this.state.deleteRecordingUid;
+                                const params = {
+                                    uid: uid
+                                };
+                                this.props.deleteRecordingAction(params, reqHeader(params), (res) => {
+                                    const {status} = res;
+                                    if (status === 1) {
+                                        const getRecordsListParams = {
+                                            pageSize: 9,
+                                            currentPage: 1
+                                        };
+                                        this.props.getRecordsListAction(getRecordsListParams, reqHeader(getRecordsListParams));
+                                    }
+                                    this.setState({
+                                        open: false
+                                    });
+                                });
+                            }}
+                        />
+                    ]}
+                />
             </div>
         );
     }
@@ -227,13 +276,6 @@ class UserIndex extends BaseComponent {
                 item.defaultImg = this.randomDefaultImg();
                 return item;
             })
-        });
-    }
-
-    updateUserInfo() {
-        const {data} = this.props.userInfo.userInfoData || {data: []};
-        this.setState({
-            userInfoData: data
         });
     }
 
@@ -344,7 +386,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         userInfoAction: bindActionCreators(getUserInfo, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
-        getRecordsListActions: bindActionCreators(getRecordsList, dispatch)
+        deleteRecordingAction: bindActionCreators(deleteRecording, dispatch),
+        getRecordsListAction: bindActionCreators(getRecordsList, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserIndex));
