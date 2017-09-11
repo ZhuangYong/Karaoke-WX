@@ -256,7 +256,14 @@ class SongList extends BaseComponent {
         } else {
             param.id = id;
         }
-        queryFun && queryFun(param, reqHeader(param), callback);
+        queryFun && queryFun(param, reqHeader(param), callback, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true,
+                    loading: false
+                });
+            }
+        });
     }
 
     onScroll(e) {

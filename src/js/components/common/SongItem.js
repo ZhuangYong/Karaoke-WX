@@ -136,7 +136,7 @@ class SongItem extends BaseComponent {
     getBut(serialNo) {
         if (this.state.pushIng[serialNo]) {
             return (
-                <CircularProgress size={16} thickness={1} style={{right: 3, textAlign: "center"}}/>
+                <CircularProgress className="choose-button no-border" size={16} thickness={1}/>
             );
         } else if (this.state.showSuc[serialNo]) {
             return (
