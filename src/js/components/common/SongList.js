@@ -18,6 +18,7 @@ import Const from "../../utils/const";
 import NoResult from "./NoResult";
 import NoWifi from "./NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
+import {atob as decoding} from "Base64";
 
 const style = {
     commonSongList: {
@@ -151,7 +152,7 @@ class SongList extends BaseComponent {
                         (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
                     {
-                        !this.state.offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', height: '6.973rem'}} src={decodeURIComponent(headImg).replace(/___dot___/g, ".")}/>
+                        !this.state.offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', height: '6.973rem'}} src={decoding(headImg)}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
 

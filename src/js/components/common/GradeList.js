@@ -8,6 +8,7 @@ import BaseComponent from "./BaseComponent";
 import PropTypes from "prop-types";
 import {BottomNavigation, BottomNavigationItem, Card, CardTitle, GridList, GridTile} from "material-ui";
 import {linkTo} from "../../utils/comUtils";
+import {btoa as encoding} from "Base64";
 
 class GradeList extends BaseComponent {
     constructor(props) {
@@ -51,7 +52,7 @@ class GradeList extends BaseComponent {
                             }}
                             titleBackground="transparent"
                             onClick={() => {
-                                linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encodeURIComponent(item[imgKey]).replace(/\./g, '___dot___')}`, false, null);
+                                linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encoding(item[imgKey])}`, false, null);
                             }}
                         >
                             <div>

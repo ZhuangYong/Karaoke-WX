@@ -4,6 +4,7 @@ import md5 from 'md5';
 import sysConfig from "./sysConfig";
 import navUtils from "./navUtils";
 import ActionTypes from "../actions/actionTypes";
+import Base64 from "Base64";
 
 /**
  * 根据时间戳返回对应的y，m，d
@@ -86,6 +87,7 @@ export function chkDevice() {
     let isAndroid = ua.indexOf('android') !== -1;
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
     // console.log(process.env);
+
     if (process.env.NODE_ENV === "development") {
         isWeixin = true;
     }
@@ -425,7 +427,8 @@ export function wxShare(shareData) {
         fail: function () {
         }
     });
-    // 分享到QQ
+
+    /*// 分享到QQ
     window.wx && window.wx.onMenuShareQQ({
         title: shareData.title, // 分享标题
         desc: shareData.desc, // 分享描述
@@ -469,7 +472,7 @@ export function wxShare(shareData) {
         },
         fail: function () {
         }
-    });
+    });*/
 }
 
 // 去除字符串所有标点
@@ -539,4 +542,24 @@ export function dynaPush(funcParam = {
     } else {
         action_push(param, header, renderPushResult, fail);
     }
+}
+
+/**
+ * 微信授权后重定向到某链接
+ * @param appId 微信授权服务号appId
+ * @param apiDomain 接口地址
+ * @param cbUrl 重定向链接字符串
+ * @returns {string}
+ */
+export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
+    // 微信授权登录链接
+    const wxAuthorizedLink = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(Base64.btoa(cbUrl))}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
+
+    return `${apiDomain}/wx/process/toUrl?url=${encodeURIComponent(wxAuthorizedLink)}`;
+}
+
+// 检测是否获取用户信息
+export function isGetUserInfo() {
+    const pathname = location.pathname.split("/");
+    return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[3] === "play"));
 }

@@ -184,12 +184,14 @@ class Feedback extends BaseComponent {
                         <textarea
                             style={styles.questionDesc}
                             placeholder="亲爱的麦粉，把你遇到的问题或建议写下来吧......"
-                            maxLength="200"
                             onChange={(e) => {
-                                submitParams.content = e.target.value;
-                                if (submitParams.content.length >= 200) {
+                                let content = e.target.value;
+
+                                if (content.length >= 200) {
+                                    e.target.value = content.slice(0, 200);
                                     this.props.action_setGlobAlert("字太多啦，不准写了");
                                 }
+                                submitParams.content = content.slice(0, 200);
                                 this.setState({
                                     submitParams: submitParams
                                 });
@@ -254,6 +256,7 @@ class Feedback extends BaseComponent {
                                 type="text"
                                 placeholder="手机、QQ或邮箱"
                                 style={{width: "100%", height: "50px", backgroundColor: "#fff", border: "none", fontSize: "18px", textIndent: "10px", borderRadius: "4px"}}
+                                maxLength={30}
                                 onChange={(e) => {
                                     submitParams.tel = e.target.value;
                                     this.setState({
@@ -330,7 +333,20 @@ class Feedback extends BaseComponent {
     submit() {
         let header = null;
 
+        const actionGlobAlert = this.props.action_setGlobAlert;
         const submitParams = this.state.submitParams;
+
+        if (submitParams.questionIds === null) {
+            actionGlobAlert("至少选择一个问题类型");
+            return;
+        }
+
+        submitParams.content = submitParams.content.trim();
+        if (submitParams.content.length <= 0) {
+            actionGlobAlert("认真点！还差几个字");
+            return;
+        }
+
         let imgListIds = [];
         this.state.imgList.forEach((tile, ind) => {
             if (!tile.isShowAddBtn) {
@@ -357,7 +373,7 @@ class Feedback extends BaseComponent {
             if (status === 1) {
                 navUtils.replace(`/user/feedback/success/${matchParams.deviceId}`);
             } else {
-                this.props.action_setGlobAlert("网络开小差咯");
+                actionGlobAlert("网络开小差咯");
             }
         });
     }

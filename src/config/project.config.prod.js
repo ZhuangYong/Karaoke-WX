@@ -7,5 +7,6 @@ module.exports = {
     appVersion: '1.1.1',// 版本号
     environment: 'product',
     apiDomain: 'http://portal.j-make.cn',
-    contextPath : "/"
+    contextPath : "/",
+    appId: "wxb948b0bc6e5db6da"
 };

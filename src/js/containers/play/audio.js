@@ -5,7 +5,8 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/palyAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import {reqHeader, wxShare} from "../../utils/comUtils";
+import {reqHeader, wxAuthorizedUrl, wxShare} from "../../utils/comUtils";
+import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
@@ -50,6 +51,7 @@ class PlayAudio extends BaseComponent {
                     wxShare({
                         title: `刚刚唱了一首《${data.nameNorm}》快点来听`,
                         desc: "分享自金麦客家庭卡拉OK",
+                        // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.href),
                         link: location.href,
                         imgUrl: imgUrl === "" ? data.image : imgUrl,
                         dataUrl: data.musicUrl
@@ -67,7 +69,7 @@ class PlayAudio extends BaseComponent {
                 wxShare({
                     title: `金麦客微信点歌`,
                     desc: "分享自金麦客家庭卡拉OK",
-                    link: location.protocol + '//' + location.host,
+                    link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
                     imgUrl: "http://wx.j-make.cn/img/logo.png",
                     dataUrl: null
                 });
