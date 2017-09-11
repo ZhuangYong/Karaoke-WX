@@ -49,7 +49,6 @@ const style = {
         borderRadius: '1.5rem',
         backgroundColor: "rgba(255, 104, 50, 0.76)",
         position: "fixed",
-        bottom: '1rem',
         right: '1rem',
         display: 'flex',
         justifyContent: 'center',
@@ -138,6 +137,9 @@ class SongList extends BaseComponent {
     render() {
         const {noData} = this.state;
         const {singerId, catId, hotId, headImg, ...others} = this.props;
+        const paddingTop = this.props.paddingTop ? this.props.paddingTop : 5;
+        const paddingBottom = this.props.paddingBottom ? this.props.paddingBottom : 5;
+        const scrollToTopBottom = this.props.scrollToTopBottom ? this.props.scrollToTopBottom : '1rem';
         if (noData) {
             return (
                 <NoResult style={{position: 'absolute'}}/>
@@ -145,7 +147,7 @@ class SongList extends BaseComponent {
         } else {
             return (
                 <div className='common-song-list'
-                     style={{...style.commonSongList, paddingTop: this.props.paddingTop ? this.props.paddingTop : 5}}
+                     style={{...style.commonSongList, paddingTop: paddingTop, paddingBottom: paddingBottom}}
                      onScroll={this.onScroll.bind(this)}>
                     <img src={NoNetworkImg} style={{display: 'none'}}/>
                     {
@@ -157,7 +159,7 @@ class SongList extends BaseComponent {
                     <List className="song-list">{this.getContent()}</List>
 
                     {
-                        this.state.needScrollToTop ? <div style={style.scrollToTop} onClick={() => {
+                        this.state.needScrollToTop ? <div style={{...style.scrollToTop, bottom: scrollToTopBottom}} onClick={() => {
                             this.scrollTo(0);
                         }}>
                             <ScrollToTopIcon color="white"/>

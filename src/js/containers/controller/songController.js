@@ -25,6 +25,7 @@ import VIPIcon from "../../../img/common/icon_vip.png";
 import Const from "../../utils/const";
 import NoWifi from "../../components/common/NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
+import ActionTypes from "../../actions/actionTypes";
 
 const style = {
     controllerBtn: {
@@ -96,10 +97,10 @@ const style = {
     },
     chooseList: {
         operationArea: {
-            height: '1rem',
+            height: '100%',
             width: '2rem',
             display: "flex",
-            top: "auto",
+            top: "0",
             right: '.4rem'
         },
         deleteButton: {
@@ -146,6 +147,9 @@ class SongController extends BaseComponent {
         this.songSetTopButton = this.songSetTopButton.bind(this);
         this.chooseSongList = this.chooseSongList.bind(this);
         this.historySongList = this.historySongList.bind(this);
+        this.updateChooseSongList = this.updateChooseSongList.bind(this);
+        this.updateHistorySongList = this.updateHistorySongList.bind(this);
+        this.updateChooseSongListTimer = this.updateChooseSongListTimer.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -155,7 +159,19 @@ class SongController extends BaseComponent {
         if (preProps.songs.getHistorySongListStamp !== this.props.songs.getHistorySongListStamp) {
             this.updateHistorySong();
         }
-
+        if (preProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
+            const {userInfo} = this.props;
+            const isBindDevice = this.isBindDevice(userInfo.userInfoData);
+            if (isBindDevice === true) {
+                this.updateChooseSongList();
+                this.updateChooseSongListTimer();
+                this.updateHistorySongList();
+            } else {
+                this.setState({
+                    unBindDevice: true
+                });
+            }
+        }
     }
 
     componentWillUnmount() {
@@ -163,38 +179,16 @@ class SongController extends BaseComponent {
     }
 
     componentDidMount() {
-        const param = {};
-        const updateChooseSongsInterval = this.state.updateChooseSongsInterval;
-        const paramHistory = {type: "history"};
-        this.props.action_getChooseList(param, reqHeader(param), null, (msg, err) => {
-            if (err.code === Const.CODE_OFF_LINE) {
-                this.setState({
-                    offLine: true
-                });
-            }
-        });
-        this.props.action_getHistorySongList(paramHistory, reqHeader(paramHistory), null, (msg, err) => {
-            if (err.code === Const.CODE_OFF_LINE) {
-                this.setState({
-                    offLine: true
-                });
-            }
-        });
-        if (!updateChooseSongsInterval) {
-            this.state.updateChooseSongsInterval = setInterval(() => {
-                if (!this.state.offLine && this.state.updateChooseSongsCount >= UPDATE_CHOOSE_SONG_TIME_COUNT && this.state.tabIndex === 1) {
-                    this.props.action_getChooseList(param, reqHeader(param), null, (msg, err) => {
-                        if (err.code === Const.CODE_OFF_LINE) {
-                            this.setState({
-                                offLine: true
-                            });
-                        }
-                    });
-                    this.state.updateChooseSongsCount = 0;
-                } else {
-                    this.state.updateChooseSongsCount += 1;
-                }
-            }, 1000);
+        const {userInfo} = this.props;
+        const isBindDevice = this.isBindDevice(userInfo.userInfoData);
+        if (isBindDevice === true) {
+            this.updateChooseSongList();
+            this.updateChooseSongListTimer();
+            this.updateHistorySongList();
+        } else {
+            this.setState({
+                unBindDevice: true
+            });
         }
     }
 
@@ -216,6 +210,7 @@ class SongController extends BaseComponent {
                     tabItemContainerStyle={{alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: "6px 10%"}}
                 >
                     <Tab
+                        selected={this.state.tabIndex === 0}
                         onActive={() => {
                             this.handelChangeTab(0);
                         }}
@@ -340,6 +335,7 @@ class SongController extends BaseComponent {
 
                     </Tab>
                     <Tab
+                        selected={this.state.tabIndex === 1}
                         buttonStyle={{
                             ...style.tabs.centerTab,
                             backgroundColor: backgroundColor[1],
@@ -357,6 +353,7 @@ class SongController extends BaseComponent {
                     </Tab>
 
                     <Tab
+                        selected={this.state.tabIndex === 2}
                         onActive={() => {
                             this.handelChangeTab(2);
                         }}
@@ -394,6 +391,12 @@ class SongController extends BaseComponent {
         if (this.state.offLine) {
             return (
                 <NoWifi style={{position: 'absolute', top: '-1rem'}}/>
+            );
+        } else if (this.state.unBindDevice) {
+            return (
+                <Paper className="history-song-list" zDepth={0}>
+                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                </Paper>
             );
         } else if (!this.state.emptyChooseSongs) {
             return (
@@ -459,6 +462,42 @@ class SongController extends BaseComponent {
         }
     }
 
+    updateChooseSongList() {
+        const param = {};
+        this.props.action_getChooseList(param, reqHeader(param), null, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true
+                });
+            }
+        });
+    }
+
+    updateChooseSongListTimer() {
+        const updateChooseSongsInterval = this.state.updateChooseSongsInterval;
+        if (!updateChooseSongsInterval) {
+            this.state.updateChooseSongsInterval = setInterval(() => {
+                if (!this.state.offLine && this.state.updateChooseSongsCount >= UPDATE_CHOOSE_SONG_TIME_COUNT && this.state.tabIndex === 1) {
+                    this.updateChooseSongList();
+                    this.state.updateChooseSongsCount = 0;
+                } else {
+                    this.state.updateChooseSongsCount += 1;
+                }
+            }, 1000);
+        }
+    }
+
+    updateHistorySongList() {
+        const paramHistory = {type: "history"};
+        this.props.action_getHistorySongList(paramHistory, reqHeader(paramHistory), null, (msg, err) => {
+            if (err.code === Const.CODE_OFF_LINE) {
+                this.setState({
+                    offLine: true
+                });
+            }
+        });
+    }
+
     /**
      * 已唱歌曲列表
      * @param historySongList
@@ -484,7 +523,13 @@ class SongController extends BaseComponent {
                     </List>
                 </Paper>
             );
-        } else {
+        } else if (historySongList && historySongList.length === 0) {
+            return (
+                <Paper className="history-song-list" zDepth={0}>
+                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                </Paper>
+            );
+        } else if (this.state.unBindDevice) {
             return (
                 <Paper className="history-song-list" zDepth={0}>
                     <NoResult style={{position: 'absolute', top: '-1rem'}}/>
@@ -518,7 +563,7 @@ class SongController extends BaseComponent {
             return (
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        index !== 0 ? this.songSetTopButton(song) : <div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
+                        index !== 0 ? this.songSetTopButton(song) : "" //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
                     <img src={DelIcon} style={{width: '.4rem'}}
                          onTouchTap={() => {
@@ -530,7 +575,7 @@ class SongController extends BaseComponent {
             return (
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        index !== 0 ? this.songSetTopButton(song) : <div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
+                        index !== 0 ? this.songSetTopButton(song) : "" //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
                     <img src={DelIcon} style={{width: '.4rem'}}
                          onTouchTap={() => {
@@ -553,7 +598,7 @@ class SongController extends BaseComponent {
         if (needDownload === 1 && downloadStatus !== 1) {
             const downloadStatusStr = downloadStatus ? "下载失败！" : "正在下载…";
             return (
-                <p style={{fontSize: '.3rem', color: downloadStatus ? "red" : "gray", marginRight: '.2rem'}}>
+                <p style={{fontSize: '.3rem', color: downloadStatus ? "red" : "gray", marginRight: '.2rem', whiteSpace: 'nowrap'}}>
                     {downloadStatusStr}
                 </p>
             );
@@ -572,7 +617,7 @@ class SongController extends BaseComponent {
      */
     updateSong() {
         const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
-        if (!data) {
+        if (!this.props.songs.chooseList) {
             this.setState({
                 emptyChooseSongs: true
             });
@@ -661,7 +706,15 @@ class SongController extends BaseComponent {
     }
 
     handelChangeTab(index) {
+        let notBindDevice = false;
+        const {userInfo, action_setGlobAlert} = this.props;
+        const isBindDevice = this.isBindDevice(userInfo.userInfoData);
+        if (isBindDevice === false) {
+            notBindDevice = true;
+            action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
+        }
         this.setState({
+            notBindDevice: notBindDevice,
             tabIndex: index
         });
     }

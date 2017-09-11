@@ -5,7 +5,7 @@
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
-import {CircularProgress, List, ListItem, Snackbar, Tab, Tabs} from "material-ui";
+import {CircularProgress, List, ListItem, Snackbar, Tab, Tabs, TextField} from "material-ui";
 import SwipeableViews from "react-swipeable-views";
 import barrageImg from "../../../img/barrage/barrage.png";
 import barrageOnImg from "../../../img/barrage/barrage_on.png";
@@ -164,18 +164,19 @@ class Barrage extends BaseComponent {
                     });
                 }}>
                     {
-                        inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}} /> : <Input
+                        inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}} /> : <TextField
                             hintText="说点儿什么..."
                             hintStyle={{top: 0, padding: 12}}
                             textareaStyle={{paddingLeft: 12}}
                             multiLine={true}
                             rows={10}
+                            maxLength={50}
                             rowsMax={10}
                             fullWidth={true}
                             value={inputValue}
                             onFocus={this.onFocus}
                             onBlur={this.onBlur}
-                            bindState={this.bindState("inputValue")}
+                            onChange={this.handelChange.bind(this)}
                         />
                     }
                 </div>
@@ -202,7 +203,7 @@ class Barrage extends BaseComponent {
                             </div>
                         }>
                         {
-                            showTabContainer && this.getFastWord()
+                            (showTabContainer && this.getFastWord()) || <div/>
                         }
                     </Tab>
                     <Tab
@@ -223,7 +224,7 @@ class Barrage extends BaseComponent {
                             this.handelChangeEmotionPage(index);
                         }}>
                             {
-                                showTabContainer && this.getEmotion()
+                                (showTabContainer && this.getEmotion()) || <div/>
                             }
                         </SwipeableViews>
                         {
@@ -263,7 +264,7 @@ class Barrage extends BaseComponent {
                             const {id, name, url} = emotion;
                             if (index >= i * ROW_NUMBER && index < (i + 1) * ROW_NUMBER) {
                                 return <span key={index}
-                                             onClick={() => {
+                                             onTouchTap={() => {
                                                  this.chooseEmotion(url);
                                              }}
                                              style={{
@@ -303,7 +304,7 @@ class Barrage extends BaseComponent {
         return <List>
             {
                 fastWords.map((word, i) => (
-                    <ListItem key={i} primaryText={word.value} onClick={() => {
+                    <ListItem key={i} primaryText={word.value} onTouchTap={() => {
                         this.chooseFastWord(word.value);
                     }}/>
                 ))
@@ -430,6 +431,14 @@ class Barrage extends BaseComponent {
             //     });
             // });
         }
+    }
+
+    handelChange(t, value) {
+        value = value.trim() || "";
+        value = value.replace(/[\r\n]/g, "");
+        this.setState({
+            inputValue: value
+        });
     }
 
     onFocus() {

@@ -6,6 +6,7 @@ import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {Paper, Snackbar} from "material-ui";
 import DSongList from "../../components/common/SongList";
 import Const from "../../utils/const";
+import MBottomNavigation from "../../components/common/MBottomNavigation";
 
 
 class SongList extends BaseComponent {
@@ -33,6 +34,8 @@ class SongList extends BaseComponent {
                     onPushSongSuccess={this.onPushSongSuccess}
                     onPushSongFail={this.onPushSongFail}
                     headImg={headImg}
+                    paddingBottom={80}
+                    scrollToTopBottom="3rem"
                     {...props}/>
                 <Snackbar
                     open={this.state.barrageSendToast}
@@ -44,6 +47,7 @@ class SongList extends BaseComponent {
                         });
                     }}
                 />
+                <MBottomNavigation selectedIndex={0}/>
             </Paper>
         );
     }
