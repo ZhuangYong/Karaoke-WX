@@ -8,7 +8,6 @@ import {linkTo, reqHeader, timeToYmd, toRem} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
-import {findDOMNode} from "react-dom";
 import {Avatar, GridList, GridTile, FlatButton} from "material-ui";
 import SvgIcon from 'material-ui/SvgIcon';
 
@@ -286,23 +285,26 @@ class UserIndex extends BaseComponent {
         if (isReDevice !== 1) vipStatus = -1;
 
         let vipParams = {
-            bgColor: vipStatus === 0 ? "rgba(239, 238, 238, .3)" : "rgba(0, 0, 0, .4)",
+            bgColor: vipStatus === 0 ? "#373737" : "#1f100f",
             imgUrl: vipStatus === 0 ? VIPGrayIcon : VIPIcon,
             content: null,
-            contentColor: vipStatus === 0 ? "#909090" : "#f9f02c",
-            rightColor: vipStatus === 0 ? "#909090" : "#e0b544",
+            contentColor: vipStatus === 0 ? "#fff" : "#f3c752",
+            rightColor: vipStatus === 0 ? "#fff" : "#f3c752",
+            borderColor: vipStatus === 0 ? "#ababaa" : "#ffcb63",
             _content: (text) => {
                 if (!text) {
                     return (<img style={{
+                        position: "relative",
+                        top: toRem(-12),
                         width: toRem(86),
                         height: toRem(22)
                     }} src={VIPPayContent} alt="VIP充值"/>);
                 }
                 return (<span style={{
                     position: "relative",
-                    top: toRem(-5),
+                    top: toRem(-14),
                     lineHeight: toRem(50),
-                    fontSize: toRem(20),
+                    fontSize: toRem(24),
                     color: vipParams.contentColor
                 }}>{text}</span>);
             }
@@ -323,10 +325,12 @@ class UserIndex extends BaseComponent {
         }
         return (<div
             style={{
-                padding: `0 ${toRem(16)}`,
+                paddingRight: toRem(16),
                 height: toRem(50),
                 backgroundColor: vipParams.bgColor,
-                borderRadius: toRem(50)
+                borderRadius: toRem(10),
+                border: `${toRem(2)} solid ${vipParams.borderColor}`,
+                boxSizing: "border-box"
             }}
             onTouchTap={() => {
                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
@@ -344,15 +348,15 @@ class UserIndex extends BaseComponent {
                 }
             }}>
             <img style={{
-                marginTop: toRem(11),
-                marginRight: toRem(10),
-                width: toRem(43),
-                height: toRem(27)
+                marginRight: toRem(15),
+                width: "auto",
+                height: "100%"
             }} src={vipParams.imgUrl} alt=""/>
             {vipParams.content}
             <RightIcon style={{
-                marginTop: toRem(14),
-                marginLeft: toRem(14),
+                position: "relative",
+                top: toRem(-10),
+                marginLeft: toRem(15),
                 color: vipParams.rightColor,
                 width: toRem(16.5),
                 height: toRem(24)
