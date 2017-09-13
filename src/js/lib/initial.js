@@ -11,7 +11,11 @@ var HYAPP = {
         appw = ww;
         apph = wh;
         // 默认为宽度十分之一
-        remSize = ww / 10;
+        if (wh < ww) {
+            remSize = wh / 14;
+        } else {
+            remSize = ww / 10;
+        }
         document.documentElement.style.fontSize = remSize + "px";
         HYAPP.APP_W = appw;
         HYAPP.APP_H = apph;
