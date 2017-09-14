@@ -41,12 +41,14 @@ class GradeList extends BaseComponent {
 
                     {data.map((item) => (
                         <GridTile
+                            className="grade-tile"
                             key={item[idKey]}
                             title={item[labelKey]}
                             titleStyle={{
-                                textAlign: "center",
+                                display: "flex",
                                 marginRight: "16px",
-                                marginTop: cellMarinTop,
+                                justifyContent: 'center',
+                                alignItems: 'center',
                                 color: "black",
                                 fontSize: ".293rem"
                             }}
@@ -56,7 +58,7 @@ class GradeList extends BaseComponent {
                             }}
                         >
                             <div>
-                                <img className="img-not-loaded" src={item[imgKey]} style={{height: '2.8rem', width: "4.6rem", display: "table-cell", margin: "auto"}}/>
+                                <img className="img-not-loaded" src={item[imgKey]} style={{width: "100%", display: "table-cell", margin: "auto"}}/>
                             </div>
                         </GridTile>
                     ))}

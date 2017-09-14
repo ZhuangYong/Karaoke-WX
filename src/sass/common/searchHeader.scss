@@ -36,26 +36,27 @@
                 height: .9rem !important;
                 padding-left: 5%!important;
                 color: white!important;
+                font-size: .4rem!important;
             }
             font{
                 font-size: .4rem;
             }
             img.search{
-                height: 12px;
-                margin-right: 4px;
+                height: .32rem;
+                margin-right: .107rem;
             }
             img.voice{
                 display: block;
-                padding: 6px 10px 6px 18px;
-                width: 40px;
-                height: 30px;
+                padding: .16rem .267rem .16rem .48rem;
+                width: 1.067rem;
+                height: .8rem;
                 position: absolute;
-                right: 12px;
+                right: .32rem;
                 z-index: 1;
             }
         }
         .search-button{
-            width:14%;
+            width:1.4rem;
             display:table-cell;
         }
     }

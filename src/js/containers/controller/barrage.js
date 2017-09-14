@@ -64,16 +64,16 @@ const style = {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                fontSize: '.4rem',
                 img: {
-                    marginRight: 12,
-                    width: 22
+                    marginRight: '.32rem',
+                    width: '.587rem'
                 }
             }
         }
     },
     dots: {
         position: "absolute",
-        bottom: -20,
         width: "100%",
         display: "flex",
         justifyContent: "center",
@@ -88,33 +88,34 @@ const style = {
     bottomPanel: {
         position: "fixed",
         width: "100%",
-        height: 60,
+        height: '1.6rem',
         bottom: 0,
-        textAlign: "center",
         boxShadow: "0px -2px 3px 0px rgba(128, 128, 128, 0.48)",
         backgroundColor: "white",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         submitButton: {
-            display: "block",
-            width: 200,
-            height: 40,
-            fontSize: "18px",
-            padding: "10px",
-            margin: "10px auto",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             color: "#999999",
             backgroundColor: "#d7d7d7",
-            borderRadius: 20
+            width: '5.333rem',
+            height: '1.067rem',
+            fontSize: '.45rem',
+            borderRadius: '1.067rem'
         },
         submitButtonOn: {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            width: 200,
-            height: 40,
-            fontSize: "18px",
-            margin: "10px auto",
+            width: '5.333rem',
+            height: '1.067rem',
+            fontSize: '.45rem',
             color: "#ffffff",
             backgroundColor: "#ff6832",
-            borderRadius: 20
+            borderRadius: '1.067rem'
         }
     }
 };
@@ -149,6 +150,7 @@ class Barrage extends BaseComponent {
 
     render() {
         const {inputValue, inputImage} = this.state;
+        const {w, h} = this.props.common;
         const fastWordPanelHeight = document.documentElement.clientHeight - (5.336 + 1.2) * (document.documentElement.clientWidth / 10) - 60;
         let tabBackgroundColor = ["#d7d7d7", "#d7d7d7"];
         tabBackgroundColor[this.state.tabIndex] = "#ff6833";
@@ -156,9 +158,14 @@ class Barrage extends BaseComponent {
         let tabOnIcon = [barrageOnImg, emotionOnImg];
         tabIcon[this.state.tabIndex] = tabOnIcon[this.state.tabIndex];
         const showTabContainer = window.sysInfo.isAndroid ? !this.state.inputIng : true ;
+        const showInputAreaHeight = h * 0.3;
+        let inputAreaHeight = h * 0.54;
+        if (w > h) {
+            inputAreaHeight = h * 0.5;
+        }
         return (
             <div>
-                <div style={{textAlign: "center", height: '5.336rem', overflow: "hidden"}} onTouchTap={() => {
+                <div style={{textAlign: "center", height: showInputAreaHeight, overflow: "hidden"}} onTouchTap={() => {
                     inputImage && this.setState({
                         inputImage: ""
                     });
@@ -184,8 +191,9 @@ class Barrage extends BaseComponent {
                     tabItemContainerStyle={{backgroundColor: "#d7d7d7"}}
                     contentContainerStyle={{
                         position: "absolute",
-                        bottom: 60,
-                        height: fastWordPanelHeight || 200,
+                        bottom: '1.6rem',
+                        height: inputAreaHeight,
+                        width: '100%',
                         overflow: "auto",
                         zIndex: -1
                     }}>
@@ -255,6 +263,11 @@ class Barrage extends BaseComponent {
 
     getEmotion() {
         let html = [];
+        const {w, h} = this.props.common;
+        let emotionHeight = '3.334rem';
+        if (w > h) {
+            emotionHeight = '3rem';
+        }
         const swipeLength = (emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1;
         for (let i = 0; i < swipeLength; i++) {
             html.push(
@@ -269,13 +282,13 @@ class Barrage extends BaseComponent {
                                              }}
                                              style={{
                                                  width: "33.33%",
-                                                 height: '3.334rem',
+                                                 height: emotionHeight,
                                                  overflow: 'hidden',
-                                                 padding: 6,
-                                                 fontSize: 12,
+                                                 padding: '.213rem',
+                                                 fontSize: '.213rem',
                                                  textAlign: "center"
                                              }}>
-                                    <img src={url} alt='' style={{maxWidth: "100%"}}/>
+                                    <img src={url} alt='' style={{maxWidth: "100%", height: '100%'}}/>
                                 </span>;
                             }
                         })
@@ -304,7 +317,7 @@ class Barrage extends BaseComponent {
         return <List>
             {
                 fastWords.map((word, i) => (
-                    <ListItem key={i} primaryText={word.value} onTouchTap={() => {
+                    <ListItem key={i} innerDivStyle={{padding: '.4rem'}} primaryText={<font style={{fontSize: ".4rem"}}>{word.value}</font>} onTouchTap={() => {
                         this.chooseFastWord(word.value);
                     }}/>
                 ))

@@ -191,6 +191,7 @@ class App extends React.Component {
         super(props);
         this.state = {
             showMsg: false,
+            showDialog: false,
             msgText: '',
             timer: null,
             barrageSendToast: false,
@@ -270,10 +271,11 @@ class App extends React.Component {
 
     render() {
         const showAlert = !!this.props.globAlert && !this.props.alertData;
+        const validUserStatusDialog = this.validUserStatusDialog();
         return (
             <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
-                    <div>
+                    <div className={`${this.state.showDialog ? "show-alert" : ""}`}>
                     <Switch>
                         <Route path={`/`} exact component={HomeContainer}/>
                         <Route path={`/home`} component={HomeContainer}/>
@@ -326,7 +328,7 @@ class App extends React.Component {
                             this.props.action_setGlobAlert("");
                         }}
                     />
-                        {this.validUserStatusDialog()}
+                        {validUserStatusDialog}
                     </div>
                 </MuiThemeProvider>
             </div>
@@ -412,11 +414,14 @@ class App extends React.Component {
                 showAlert = false;
                 break;
         }
+        this.state.showDialog = showAlert;
         if (!alertStr) return;
         const handleClose = () => {
+            this.state.showDialog = false;
             this.props.action_setGlobAlert("", "");
         };
         const handleSure = () => {
+            this.state.showDialog = false;
             this.props.action_setGlobAlert("", "");
             doAction && doAction();
         };
@@ -425,13 +430,13 @@ class App extends React.Component {
                 label="取消"
                 className="cancel-button"
                 primary={true}
-                onTouchTap={handleClose}
+                onClick={handleClose}
             />,
             <FlatButton
                 label="确定"
                 className="sure-button"
                 primary={true}
-                onTouchTap={handleSure}
+                onClick={handleSure}
             />,
         ];
         return (

@@ -26,11 +26,13 @@ import Const from "../../utils/const";
 import NoWifi from "../../components/common/NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
 import ActionTypes from "../../actions/actionTypes";
+import Scroller from "silk-scroller";
 
 const style = {
     controllerBtn: {
         width: "50%",
         height: "3.4rem",
+        maxHeight: 170,
         textAlign: "center",
         marginTop: ".4rem",
         display: 'flex',
@@ -41,6 +43,8 @@ const style = {
             backgroundColor: '#ffc51b',
             width: '1.867rem',
             height: '1.867rem',
+            maxWidth: 100,
+            maxHeight: 100,
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -52,10 +56,8 @@ const style = {
         boxShadow: "none",
         width: "100%",
         display: "flex",
-        marginTop: "16%",
         padding: '0 1.4rem',
         justifyContent: "center",
-        alignItems: "center",
         btn: {
             display: "flex",
             justifyContent: "center",
@@ -137,6 +139,7 @@ class SongController extends BaseComponent {
             barrageToastMsg: '',
             offLine: false
         };
+        this.songName = this.songName.bind(this);
         this.unChoose = this.unChoose.bind(this);
         this.showAudioEffect = this.showAudioEffect.bind(this);
         this.playController = this.playController.bind(this);
@@ -195,19 +198,27 @@ class SongController extends BaseComponent {
     render() {
         const {playList, historySongList} = this.state;
         const {w, h} = this.props.common;
-        const tabContainerHeight = h - 48 - 60;
+        let tabContainerHeight = (10 * h / w - 2) + 'rem';
         const playingSong = this.state.playingSong;
         let backgroundColor = ['transparent', 'transparent', 'transparent'];
         let fontColor = ['white', 'white', 'white'];
         backgroundColor[this.state.tabIndex] = "white";
         fontColor[this.state.tabIndex] = "#ff6832";
-
+        let extAreaMarginTop = (h / w) < 1.4 ? "0" : "1.6rem";
+        let controllerButtonsMarginTop = (h / w) < 1.4 ? "1rem" : "2rem";
+        if (w >= 768 && h > w) {
+            controllerButtonsMarginTop = '3rem';
+            extAreaMarginTop = '1.6rem';
+        }
+        if (h < w) {
+            tabContainerHeight = (10 * w / h - 4.8) + 'rem';
+        }
         return (
             <div>
                 <img src={NoNetworkImg} style={{display: 'none'}}/>
                 <Tabs
                     inkBarStyle={{display: "none"}}
-                    tabItemContainerStyle={{alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: "6px 10%"}}
+                    tabItemContainerStyle={{top: 0, zIndex: 999, position: 'fixed', alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: ".08rem 10%"}}
                 >
                     <Tab
                         selected={this.state.tabIndex === 0}
@@ -216,15 +227,18 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.leftTab, backgroundColor: backgroundColor[0], color: fontColor[0]}}
                         label={
-                            <div>
+                            <div style={{fontSize: '.4rem'}}>
                                 播放控制
                             </div>
                         }>
                         <div style={{
-                            marginTop: "10%",
+                            position: 'absolute',
+                            top: 0,
+                            height: '10rem',
+                            marginTop: controllerButtonsMarginTop,
+                            marginBottom: "2rem",
                             display: "flex",
-                            width: "80%",
-                            marginLeft: "10%",
+                            width: "100%",
                             flexWrap: "wrap"
                         }}>
                             <div style={style.controllerBtn}>
@@ -241,7 +255,7 @@ class SongController extends BaseComponent {
                                         />
                                     }
                                 </div>
-                                <p style={{margin: '.3rem 0'}}>重唱</p>
+                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>重唱</p>
                             </div>
 
                             <div style={style.controllerBtn}>
@@ -253,13 +267,11 @@ class SongController extends BaseComponent {
                                             size={20}
                                             thickness={2}
                                             color="white"/> : (
-                                                <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}}>
-                                                    <img src={PlayStopIcon} style={{width: '60%'}}/>
-                                                </div>
+                                            <img src={PlayStopIcon} style={{width: '60%'}}/>
                                         )
                                     }
                                 </div>
-                                <p style={{margin: '.3rem 0'}}>播/暂</p>
+                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>播/暂</p>
                             </div>
 
                             <div style={style.controllerBtn}>
@@ -271,13 +283,11 @@ class SongController extends BaseComponent {
                                             size={20}
                                             thickness={2}
                                             color="white"/> : (
-                                            <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}}>
-                                                <img src={YuanBanIcon} style={{width: '60%'}}/>
-                                            </div>
+                                            <img src={YuanBanIcon} style={{width: '60%'}}/>
                                         )
                                     }
                                 </div>
-                                <p style={{margin: '.3rem 0'}}>原/伴</p>
+                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>原/伴</p>
                             </div>
 
                             <div style={{...style.controllerBtn}}>
@@ -292,29 +302,11 @@ class SongController extends BaseComponent {
                                             color="white"/> : <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
                                     }
                                 </div>
-                                <p style={{margin: '.3rem 0'}}>切歌</p>
+                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>切歌</p>
                             </div>
 
-                        </div>
-
-                        <Paper style={style.extArea}>
-                            <div style={{
-                                width: '50%',
-                                display: 'flex',
-                                justifyContent: 'center'
-                            }}>
-                                <div
-                                    style={style.extArea.btn}
-                                    onTouchTap={() => {
-                                        linkTo('controller/barrage', false, null);
-                                    }}
-                                >
-                                    <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                    <p style={style.extArea.btn.label}>弹幕</p>
-                                </div>
-                            </div>
-                            {
-                                this.showAudioEffect() ? <div style={{
+                            <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
+                                <div style={{
                                     width: '50%',
                                     display: 'flex',
                                     justifyContent: 'center'
@@ -322,17 +314,33 @@ class SongController extends BaseComponent {
                                     <div
                                         style={style.extArea.btn}
                                         onTouchTap={() => {
-                                            linkTo('controller/effect', false, null);
+                                            linkTo('controller/barrage', false, null);
                                         }}
                                     >
                                         <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                        <p style={style.extArea.btn.label}>音效</p>
+                                        <p style={style.extArea.btn.label}>弹幕</p>
                                     </div>
-                                </div> : ""
-                            }
+                                </div>
+                                {
+                                    this.showAudioEffect() ? <div style={{
+                                        width: '50%',
+                                        display: 'flex',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <div
+                                            style={style.extArea.btn}
+                                            onTouchTap={() => {
+                                                linkTo('controller/effect', false, null);
+                                            }}
+                                        >
+                                            <img src={BarrageIcon} style={style.extArea.btn.icon}/>
+                                            <p style={style.extArea.btn.label}>音效</p>
+                                        </div>
+                                    </div> : ""
+                                }
 
-                        </Paper>
-
+                            </Paper>
+                        </div>
                     </Tab>
                     <Tab
                         selected={this.state.tabIndex === 1}
@@ -344,8 +352,12 @@ class SongController extends BaseComponent {
                         onActive={() => {
                             this.handelChangeTab(1);
                         }}
-                        label="已点歌曲">
-                        <div style={{height: tabContainerHeight, width: "100%", position: 'absolute', overflowY: 'auto'}}>
+                        label={
+                            <div style={{fontSize: '.4rem'}}>
+                            已点歌曲
+                            </div>
+                        }>
+                        <div style={{paddingTop: '1rem', paddingBottom: '1.2rem', width: "100%"}}>
                             {
                                 this.chooseSongList(playingSong, playList)
                             }
@@ -358,8 +370,12 @@ class SongController extends BaseComponent {
                             this.handelChangeTab(2);
                         }}
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
-                        label="最近唱过">
-                        <div style={{height: tabContainerHeight, width: "100%", position: 'absolute', overflowY: 'auto'}}>
+                        label={
+                            <div style={{fontSize: '.4rem'}}>
+                            最近唱过
+                            </div>
+                                }>
+                        <div style={{paddingTop: '1rem', paddingBottom: '1.2rem'}}>
                             {
                                 this.historySongList(historySongList)
                             }
@@ -395,7 +411,7 @@ class SongController extends BaseComponent {
         } else if (this.state.unBindDevice) {
             return (
                 <Paper className="history-song-list" zDepth={0}>
-                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                    <NoResult style={{position: 'absolute'}}/>
                 </Paper>
             );
         } else if (!this.state.emptyChooseSongs) {
@@ -437,15 +453,14 @@ class SongController extends BaseComponent {
                                         <i className="label-vip">{song.vipStutas ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
                                     </div>
                                 }
-                                secondaryText={<div className="song-author">
-                                    {song.actorName}
-                                </div>}
+                                secondaryText={
+                                    this.songName(song, index)
+                                }
                                 rightToggle={
                                     <div style={style.chooseList.operationArea}>
                                         {
                                             this.songListButtons(song, index)
                                         }
-
                                     </div>
                                 }
                             />
@@ -563,7 +578,7 @@ class SongController extends BaseComponent {
             return (
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        index !== 0 ? this.songSetTopButton(song) : "" //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
+                        this.songSetTopButton(song, index) //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
                     <img src={DelIcon} style={{width: '.4rem'}}
                          onTouchTap={() => {
@@ -575,7 +590,7 @@ class SongController extends BaseComponent {
             return (
                 <div style={{display: "flex", justifyContent: "center", alignItems: "center", width: '100%'}}>
                     {
-                        index !== 0 ? this.songSetTopButton(song) : "" //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
+                        this.songSetTopButton(song, index) //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
                     <img src={DelIcon} style={{width: '.4rem'}}
                          onTouchTap={() => {
@@ -586,28 +601,65 @@ class SongController extends BaseComponent {
         }
     }
 
+    songName(song, index) {
+        // needDownload:id 0不需要下载 1 需要下载
+        const {needDownload, downloadStatus} = song;
+        let downloadStatusStr = "";
+        switch (downloadStatus) {
+            case Const.DOWNLOAD_STATUS_NOT_DOWN:
+                downloadStatusStr = "等待下载";
+                break;
+            case Const.DOWNLOAD_STATUS_DONE:
+                // downloadStatusStr = "下载完成";
+                break;
+            case Const.DOWNLOAD_STATUS_DOWNING:
+                downloadStatusStr = "正在下载…";
+                break;
+            case Const.DOWNLOAD_STATUS_DOWN_FAILED:
+                downloadStatusStr = "下载失败";
+                break;
+            default:
+                break;
+        }
+
+        return (
+            <div style={{marginTop: 0, display: 'inline-flex', height: '.8rem', alignItems: 'center', width: '100%'}}>
+                <div className="song-author" style={{marginTop: 'unset'}}>
+                    {song.actorName}
+                </div>
+                <div style={{fontSize: '.3rem', color: (downloadStatus === Const.DOWNLOAD_STATUS_DOWN_FAILED) ? "red" : "#ff8433", marginLeft: '.2rem', whiteSpace: 'nowrap'}}>
+                    {downloadStatusStr}
+                 </div>
+            </div>
+        );
+    }
+
     /**
      * 设置置顶按钮
      * @param song
+     * @param index
      * @returns {XML}
      */
-    songSetTopButton(song) {
+    songSetTopButton(song, index) {
         // needDownload:id 0不需要下载 1 需要下载
-        // downloadStatus: 1下载完成 0未下载 2下载失败
         const {needDownload, downloadStatus} = song;
-        if (needDownload === 1 && downloadStatus !== 1) {
-            const downloadStatusStr = downloadStatus ? "下载失败！" : "正在下载…";
-            return (
-                <p style={{fontSize: '.3rem', color: downloadStatus ? "red" : "gray", marginRight: '.2rem', whiteSpace: 'nowrap'}}>
-                    {downloadStatusStr}
-                </p>
-            );
+        const setTopButton = (
+            <img src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
+                 onClick={() => {
+                     this.setTop(song.musicNo);
+                 }}/>
+        );
+        if (index === 0) {
+            this.state.notDownloadIndex = -1;
+        }
+        if (downloadStatus === Const.DOWNLOAD_STATUS_NOT_DOWN && this.state.notDownloadIndex === -1) {
+            this.state.notDownloadIndex = index;
+        }
+        if (index !== 0 && downloadStatus !== Const.DOWNLOAD_STATUS_DOWNING && index !== this.state.notDownloadIndex) {
+            return setTopButton;
         } else {
             return (
-                    <img src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
-                         onTouchTap={() => {
-                             this.setTop(song.musicNo);
-                         }}/>
+                <div style={{display: 'block', marginRight: '0.6rem', width: '0.4rem'}}/>
             );
         }
     }
@@ -697,11 +749,13 @@ class SongController extends BaseComponent {
             setTopSongIdIng: musicNo
         });
         this.props.action_setSongTop(param, reqHeader(param), () => {
-            this.setState({
-                offLine: false,
-                setTopSongIdIng: 0,
-                playList: [topSong, ...newSongList]
-            });
+            setTimeout(() => {
+                this.setState({
+                    offLine: false,
+                    setTopSongIdIng: 0,
+                    updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
+                });
+            }, 500);
         });
     }
 

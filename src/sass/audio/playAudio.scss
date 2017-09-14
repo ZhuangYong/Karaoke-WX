@@ -1,15 +1,18 @@
 .audio-play{
     background-color: rgb(247, 247, 247);
     height: 100%;
+    width: 100%;
     position: absolute;
-    overflow: hidden;
+    overflow-x: hidden;
     .top-panel {
         position: relative;
+        display: flex;
+        justify-content: center;
         margin: 1.0667rem 1.0667rem .347rem ;
         .audio-item{
             .utilities{
                 position: absolute;
-                top: 2.7rem;
+                top: 2.4rem;
                 width: 88%;
                 left: 6%;
                 .control-buttons{
@@ -60,6 +63,7 @@
         .swipe-panel {
             width: 7.867rem;
             height: 7.867rem;
+            overflow: hidden;
             box-shadow: 0 0 20px 2px rgba(128, 128, 128, 0.28);
             .img-div {
                 width: 100%;
@@ -75,14 +79,14 @@
             position: absolute;
             bottom: 0;
             width: 100%;
-            padding: 20px;
+            padding: .533rem;
             .slider-panel {
                 width: 80%;
-                height: 40px;
+                height: 1.067rem;
                 /*background: linear-gradient(45deg, #3498DB 25%, #2980B9 0, #2980B9 50%, #3498DB 0%, #3498DB 75%, #2980B9 0);*/
-                padding: 15px;
+                padding: .4rem;
                 color: white;
-                margin-left: 30px;
+                margin-left: .8rem;
                 .current-time {
                     left: -1.1rem;
                     top: -5px;

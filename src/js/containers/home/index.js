@@ -18,8 +18,8 @@ import {List, RefreshIndicator, Snackbar} from "material-ui";
 import {bindActionCreators} from "redux";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import SongItem from "../../components/common/SongItem";
-import BlankImg from "../../../img/common/blank.png";
 import Const from "../../utils/const";
+import "../../../sass/home.scss";
 
 const style = {
     home: {
@@ -35,20 +35,20 @@ const style = {
         item: {
             display: "table-cell",
             width: "33.33%",
-            paddingTop: 13,
+            paddingTop: '.347rem',
             textAlign: "center"
         },
         img: {
-            width: "45%"
+            width: "1.5rem"
         },
         label: {
-            margin: 6,
+            margin: '.16rem',
             fontSize: ".4rem",
             color: "#ff6832"
         }
     },
     paper: {
-        margin: 4,
+        margin: '0 .267rem',
         minHeight: '5.2rem'
     },
     tile: {
@@ -57,8 +57,8 @@ const style = {
     },
     tileImg: {
         height: '3.067rem',
-        width: '4.4rem',
-        minWidth: '4.4rem',
+        width: '4.27rem',
+        minWidth: '4.27rem',
         margin: "auto",
         display: "inherit",
     },
@@ -70,8 +70,11 @@ const style = {
     },
     itemTitle: {
         fontSize: '.32rem',
-        lineHeight: "12px",
-        paddingTop: 6,
+        paddingTop: '.08rem',
+        height: '.6rem',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         textAlign: "center"
     },
     loading: {
@@ -198,9 +201,9 @@ class Home extends BaseComponent {
                     >
                         <CardTitle
                             style={{padding: "0 8px", height: '1.467rem'}}
-                            titleStyle={{fontSize: '.453rem', paddingTop: '.22rem'}}
+                            titleStyle={{fontSize: '.453rem', paddingTop: '.22rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
                             title="精选推荐"/>
-                        <div style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
+                        <div className="home-recommend" style={{width: "100%", overflowX: "visible", overflowY: "hidden", position: "absolute"}}>
                                 {getAlbumRecommendData.data.result.map((recommend) => (
                                     <GridTile
                                         key={recommend.id}
@@ -213,7 +216,7 @@ class Home extends BaseComponent {
                                             color: "black"
                                         }}
                                         titleBackground="transparent"
-                                        onTouchTap={() => {
+                                        onClick={() => {
                                             linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encoding(recommend.wxPic || recommend.imgurl)}`, false, null);
                                         }}
                                     >
@@ -232,17 +235,17 @@ class Home extends BaseComponent {
                     >
                         <CardTitle
                             style={{padding: "0 8px", height: '1.467rem'}}
-                            titleStyle={{fontSize: '.453rem', paddingTop: '.22rem'}}
+                            titleStyle={{fontSize: '.453rem', paddingTop: '.22rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
                             title="经典排行"
                         />
-                        <div style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
+                        <div className="home-rank" style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
                             {getRankingData.data.result.map((rank) => (
                                 <GridTile
                                     key={rank.id}
                                     title=""
                                     style={{display: "table-cell", padding: "0 .067rem"}}
                                     titleBackground="transparent"
-                                    onTouchTap={() => {
+                                    onClick={() => {
                                         linkTo(`songs/hotId/${rank.id}/${rank.name}/${encoding(rank.wxPic || rank.imgurl)}`, false, null);
                                     }}
                                 >
@@ -261,7 +264,7 @@ class Home extends BaseComponent {
                     >
                         <CardTitle
                             style={{padding: "0 8px"}}
-                            titleStyle={{fontSize: '.453rem'}}
+                            titleStyle={{fontSize: '.453rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
                             title="个性化推荐"
                         />
                         <List className="song-list">

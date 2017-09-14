@@ -12,5 +12,12 @@ export default{
     //不在线code
     CODE_OFF_LINE: "CODE_OFF_LINE",
 
-    STRING_NO_WIFI: "网络不给力，请稍后再试"
+    STRING_NO_WIFI: "网络开小差咯",
+
+    // downloadStatus: 1下载完成 0等待下载 2下载失败 3 正在下载
+    DOWNLOAD_STATUS_NOT_DOWN: 0,
+    DOWNLOAD_STATUS_DOWNING: 3,
+    DOWNLOAD_STATUS_DONE: 1,
+    DOWNLOAD_STATUS_DOWN_FAILED: 2,
+
 };

@@ -16,7 +16,11 @@ class SearchHeaderFake extends BaseComponent {
     render() {
 
         return (
-            <div className="search-header">
+            <div className="search-header" onTouchTap={
+                () => {
+                    linkTo('song/search', false, null);
+                }
+            }>
                 <span className="search-bar-panel" style={{display: "flex!important"}}>
                     <Input
                         ref="input"
@@ -25,17 +29,14 @@ class SearchHeaderFake extends BaseComponent {
                             <div>
                                 <img className="search" src={SearchIcon}/>
                                 <font>请输入你要找的歌曲或歌星</font>
-                                <img onClick={() => {
+                                <img onTouchTap={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
                                     linkTo("voiceSearch", false, "");
                                 }} className="voice" src={VoiceIcon}/>
                             </div>
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}
-                        onTouchTap={
-                            () => {
-                                linkTo('song/search', false, null);
-                            }
-                        }
                     />
                 </span>
             </div>

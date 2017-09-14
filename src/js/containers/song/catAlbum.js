@@ -34,7 +34,7 @@ class CatAlbum extends BaseComponent {
     render() {
         const {getCatAlbum} = this.props.songs;
         return (
-            <Paper zDepth={0} style={{paddingTop: 44}}>
+            <Paper zDepth={0} style={{paddingTop: '1.2rem'}}>
                 <SearchHeadFake/>
                 {
                     getCatAlbum && getCatAlbum.data.result.map((cats) => {

@@ -4,11 +4,12 @@ import {withRouter} from "react-router-dom";
 import {getSingerCategoryAlbum} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
-import {List, ListItem, Paper} from "material-ui";
+import {GridList, GridTile, List, ListItem, Paper} from "material-ui";
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import BlankImg from "../../../img/common/blank.png";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
+import GradeList from "../../components/common/GradeList";
 
 const style = {
     albumImg: {
@@ -39,29 +40,44 @@ class SingerAlumb extends BaseComponent {
     }
 
     render() {
+        const {w} = this.props.common;
+        const cellHeight = 3 * w / 10 - 4;
+        const cellPadding = 0.267 * w / 10;
         const {getSingerAlbum} = this.props.songs;
         return (
             <Paper zDepth={0} style={{paddingBottom: 66}}>
                 <SearchHeadFake/>
-                <List
-                    style={{padding: '50px .133rem'}}
+                <GridList
+                    cellHeight={cellHeight}
+                    padding={cellPadding}
+                    style={{margin: '0.133rem'}}
+                    cols={2}
                     className="singer-album-list"
                 >
                     {getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result && getSingerAlbum.data.result.map((singer) => (
-                        <ListItem
-                            innerDivStyle={{padding: '0.133rem'}}
-                            key={singer.id}
-                            onClick={() => {
-                                linkTo(`singer/${singer.id}/${singer.name}`, false, null);
-                            }}
-                            primaryText={(
-                                <div style={style.albumImg}>
-                                    <img style={{width: "100%"}} src={singer.wxPic || singer.ottPic}/>
-                                </div>
-                            )}
-                        />
+                        <GridTile
+                        className="grade-tile"
+                        key={singer.id}
+                        title=""
+                        titleStyle={{
+                        display: "flex",
+                        marginRight: "16px",
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: "black",
+                        fontSize: ".293rem"
+                    }}
+                        titleBackground="transparent"
+                        onClick={() => {
+                        linkTo(`singer/${singer.id}/${singer.name}`, false, null);
+                    }}
+                        >
+                        <div>
+                        <img className="img-not-loaded" src={singer.wxPic || singer.ottPic} style={{width: "100%", display: "table-cell", margin: "auto"}}/>
+                        </div>
+                        </GridTile>
                     ))}
-                </List>
+                </GridList>
                 <MBottomNavigation selectedIndex={0}/>
             </Paper>
         );
@@ -71,7 +87,8 @@ class SingerAlumb extends BaseComponent {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        songs: state.app.songs
+        songs: state.app.songs,
+        common: state.app.common
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

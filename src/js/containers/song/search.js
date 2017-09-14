@@ -7,13 +7,14 @@ import SearchHeader from "../../components/common/header/searchHeader";
 import {Paper, Snackbar, Subheader} from "material-ui";
 import {bindActionCreators} from "redux";
 import SongList from "../../components/common/SongList";
-import navutils from "../../utils/navUtils";
 import Const from "../../utils/const";
+import MBottomNavigation from "../../components/common/MBottomNavigation";
 
 const style = {
     searchWord: {
-        maxWidth: '6rem',
+        maxWidth: '70%',
         overflow: 'hidden',
+        fontSize: '.32rem',
         textOverflow: 'ellipsis',
         display: 'inline-block',
         whiteSpace: 'nowrap'
@@ -47,9 +48,9 @@ class Search extends BaseComponent {
         return (
             <Paper zDepth={0}>
                 <SearchHeader defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
-                {this.state.keyword ? <Paper style={{position: "fixed", top: '1.2rem', width: "100%", zIndex: 1}}>
-                    <Subheader style={{display: 'flex', alignItems: 'center'}}>
-                        “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font>的搜索结果</font>
+                {this.state.keyword ? <Paper style={{height: '1.2rem', position: "fixed", top: '1.2rem', width: "100%", zIndex: 1}}>
+                    <Subheader style={{height: '1.2rem', display: 'flex', alignItems: 'center'}}>
+                        “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font style={style.searchWord}>的搜索结果</font>
                     </Subheader>
                 </Paper> : ""}
                 <div>
@@ -70,6 +71,7 @@ class Search extends BaseComponent {
                         });
                     }}
                 />
+                <MBottomNavigation selectedIndex={0}/>
             </Paper>
         );
     }

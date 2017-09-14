@@ -25,7 +25,8 @@ const style = {
         position: "absolute",
         height: "100%",
         overflowY: "auto",
-        width: "100%"
+        width: "100%",
+        top: 0
     },
     loading: {
         position: "relative",
@@ -52,7 +53,8 @@ const style = {
         right: '1rem',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        zIndex: 4
     }
 };
 class SongList extends BaseComponent {
@@ -137,7 +139,7 @@ class SongList extends BaseComponent {
     render() {
         const {noData} = this.state;
         const {singerId, catId, hotId, headImg, ...others} = this.props;
-        const paddingTop = this.props.paddingTop ? this.props.paddingTop : 5;
+        const paddingTop = this.props.paddingTop ? this.props.paddingTop : '1.18rem';
         const paddingBottom = this.props.paddingBottom ? this.props.paddingBottom : 5;
         const scrollToTopBottom = this.props.scrollToTopBottom ? this.props.scrollToTopBottom : '1rem';
         if (noData) {
@@ -218,6 +220,10 @@ class SongList extends BaseComponent {
         );
     }
 
+    /**
+     * 加载下一页
+     * @param callback
+     */
     nextPage(callback) {
         if (this.state.lastPage) return;
         this.state.currentPage += 1;
@@ -240,6 +246,10 @@ class SongList extends BaseComponent {
         });
     }
 
+    /**
+     * 刷新页面
+     * @param callback
+     */
     refreshPage(callback) {
         this.setState({
             currentPage: 1,
@@ -268,6 +278,10 @@ class SongList extends BaseComponent {
         });
     }
 
+    /**
+     * 滚动触发
+     * @param e
+     */
     onScroll(e) {
         if (!this.state.loading && e.target.classList && e.target.classList.contains("common-song-list")) {
             this.state.scrollTarget = e.target;
@@ -287,6 +301,10 @@ class SongList extends BaseComponent {
         }
     }
 
+    /**
+     * 滑动到
+     * @param to number to scroll
+     */
     scrollTo(to) {
         const {scrollTarget} = this.state || {scrollTo: f => f};
         scrollTarget.scrollTop = to;
