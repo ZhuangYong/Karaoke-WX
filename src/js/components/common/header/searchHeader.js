@@ -34,13 +34,13 @@ const style = {
         height: '1.2rem',
         overflow: 'hidden',
         position: 'fixed',
-        right: '1.6rem',
+        right: '1.7rem',
         top: 0,
         zIndex: 7,
         icon: {
             width: '.6rem',
             height: '.6rem',
-            color: 'rgba(0, 0, 0, 0.38)'
+            color: 'rgba(255, 255, 255, 0.77)'
         }
     }
 };
@@ -174,10 +174,13 @@ class SearchHeader extends BaseComponent {
                                             innerDivStyle={{overflow: 'hidden', textOverflow: 'ellipsis'}}
                                             primaryText={<font color="#252525">{word}</font>}
                                             rightIcon={
-                                                <DelIcon onTouchTap={(e) => {
+                                                <div onTouchTap={(e) => {
                                                     e.stopPropagation();
                                                     this.handelDelHistoryWord(word);
-                                                }}/>
+                                                }} style={{width: 60, height: '100%', margin: 0, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                                    <DelIcon color="gray"/>
+                                                </div>
+
                                             }
                                             onTouchTap={() => {
                                                 this.handelHotSearch(word);
@@ -227,7 +230,7 @@ class SearchHeader extends BaseComponent {
 
         const searchHistoryStr = getCookie("searchHistory");
         let cookieSearchHistory = searchHistoryStr ? searchHistoryStr.split(",") : [];
-        cookieSearchHistory.push(encodeURIComponent(searchKey));
+        cookieSearchHistory = [encodeURIComponent(searchKey), ...cookieSearchHistory];
         const searchHistory = Array.from(new Set(cookieSearchHistory)).join(",");
         setCookie("searchHistory", searchHistory);
         this.setState({

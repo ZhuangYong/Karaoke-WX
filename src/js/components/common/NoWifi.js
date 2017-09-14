@@ -24,7 +24,7 @@ export default class NoWifi extends React.Component {
         const extStyle = this.props.style || {};
         return (
             <div style={{...style.noResult, ...extStyle}}>
-                <img src={NoNetworkImg} style={{maxWidth: "70%"}}/>
+                <img src={NoNetworkImg} style={{maxWidth: "7rem"}}/>
                 <p style={{color: "#7e7e7e", margin: 0, fontSize: '.4rem'}}>网络已被带走</p>
             </div>
         );

@@ -204,7 +204,7 @@ class SingerList extends BaseComponent {
                             <List className="single-list" style={{paddingTop: '2.4rem'}}>
                                 {this.state.pageData.map((singer) => (
                                     <ListItem
-                                        innerDivStyle={{paddingLeft: '2rem'}}
+                                        innerDivStyle={{paddingLeft: '2rem', paddingTop: '.553rem'}}
                                         className="single-item"
                                         key={singer.id}
                                         onClick={() => {
@@ -215,12 +215,12 @@ class SingerList extends BaseComponent {
                                         }}
                                         leftAvatar={
                                             <Avatar
-                                                style={{overflow: 'hidden'}}
+                                                style={{overflow: 'hidden', height: '1.12rem', width: '1.12rem'}}
                                                 src={singer.image}
                                                 size={avatarSize}
                                             />
                                         }
-                                        rightIcon={<RightArrowIcon/>}
+                                        rightIcon={<RightArrowIcon style={{top: '.01rem', margin: '.4rem', height: '.64rem', width: '.64rem'}}/>}
                                         primaryText={<div style={{fontSize: '.4rem'}}>{singer.nameNorm}</div>}
                                     />
                                 ))}

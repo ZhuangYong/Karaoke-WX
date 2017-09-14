@@ -14,7 +14,11 @@ var HYAPP = {
         if (wh < ww) {
             remSize = wh / 14;
         } else {
-            remSize = ww / 10;
+            if (ww >= 768) {
+                remSize = ww / 14;
+            } else {
+                remSize = ww / 10;
+            }
         }
         document.documentElement.style.fontSize = remSize + "px";
         HYAPP.APP_W = appw;

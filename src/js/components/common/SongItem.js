@@ -148,7 +148,7 @@ class SongItem extends BaseComponent {
             );
         } else {
             return (
-                <div className="choose-button" onTouchTap={this.pushSong}>点歌</div>
+                <div className="choose-button" onClick={this.pushSong}>点歌</div>
             );
         }
     }

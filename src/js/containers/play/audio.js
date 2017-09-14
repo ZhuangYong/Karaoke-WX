@@ -2,7 +2,7 @@ import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import "../../../sass/audio/palyAudio.scss";
+import "../../../sass/audio/playAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
 import {reqHeader, wxAuthorizedUrl, wxShare} from "../../utils/comUtils";
@@ -78,12 +78,23 @@ class PlayAudio extends BaseComponent {
     }
 
     render() {
+        const {w, h} = this.props.common;
         const {status, data, msg} = this.props.audio.audioInfo;
         const {image, musicUrl, musicTime, nameNorm} = data || {};
+        let swipePanelStyle = {};
+        let topPanelStyle = {};
+        if (w > h) {
+            swipePanelStyle.height = "5.867rem";
+            swipePanelStyle.width = "5.867rem";
+            // swipePanelStyle.overflow = "hidden";
+            topPanelStyle.marginTop = ".4rem";
+        }
+
+        super.title(nameNorm || "录音分享");
         return (
             <div className="audio-play">
-                <div className="top-panel">
-                    <AutoPlaySwipeAbleViews className="swipe-panel">
+                <div className="top-panel" style={topPanelStyle}>
+                    <AutoPlaySwipeAbleViews className="swipe-panel" style={swipePanelStyle}>
                         <div className="img-div"><img src={SlidePng1}/></div>
                         <div className="img-div"><img src={SlidePng2}/></div>
                         <div className="img-div"><img src={SlidePng3}/></div>
@@ -123,7 +134,8 @@ class PlayAudio extends BaseComponent {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        audio: state.app.audio
+        audio: state.app.audio,
+        common: state.app.common
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

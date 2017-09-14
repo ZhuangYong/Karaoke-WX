@@ -17,10 +17,10 @@ import navControllerIcon from "../../../img/common/nav_controll.png";
 
 const style = {
     nav: {
-        height: 60,
+        height: "1.4rem",
         position: "fixed",
         borderTop: "1px solid #efeeef",
-        bottom: "0",
+        bottom: -1,
         zIndex: "2",
         playController: {
             position: "relative",
@@ -28,31 +28,31 @@ const style = {
             paddingRight: 0,
             circle: {
                 position: "absolute",
-                top: -35,
-                height: 90,
+                top: '-.93rem',
+                height: '2.4rem',
                 arc: {
                     border: "1px solid #efeeef",
                     position: "absolute",
-                    marginLeft: -34,
+                    marginLeft: '-.907rem',
                     left: "50%",
-                    width: 68,
-                    height: 40,
-                    bottom: 40,
-                    borderRadius: "40px 40px 0 0",
+                    width: '1.813rem',
+                    height: '1.067rem',
+                    bottom: '1.1rem',
+                    borderRadius: "1.067rem 1.067rem 0 0",
                     backgroundColor: "white"
                 },
                 maskLine: {
-                    height: 56,
+                    height: '1.493rem',
                     borderTop: "1px solid white",
-                    width: 64,
+                    width: '1.707rem',
                     position: "absolute",
                     bottom: 0,
                     left: "50%",
-                    marginLeft: -32,
+                    marginLeft: '-.853rem',
                     backgroundColor: "white"
                 },
                 maskArc: {
-                    height: 55,
+                    height: '1.467rem',
                     width: "100%",
                     position: "absolute",
                     bottom: 0,
@@ -61,9 +61,9 @@ const style = {
                 icon: {
                     position: "absolute",
                     left: "50%",
-                    marginLeft: -28,
-                    width: 56,
-                    bottom: 18
+                    marginLeft: '-.7rem',
+                    width: '1.4rem',
+                    bottom: '.56rem'
                 }
             }
         },
@@ -72,7 +72,8 @@ const style = {
             width: "100%",
             textAlign: "center",
             bottom: 4,
-            left: 0
+            left: 0,
+            fontSize: ".267rem"
         }
     }
 };
@@ -96,16 +97,17 @@ class MBottomNavigation extends BaseComponent {
                 style={style.nav}
             >
                 <BottomNavigationItem
+                    style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
                     label={<div style={{...style.nav.label, color: labelColor[0]}}>主页</div>}
                     icon={
-                        <div style={{height: 30, marginBottom: 12}}>
+                        <div style={{height: '.667rem', marginBottom: '.4rem'}}>
                             <img style={{height: "100%"}} src={indexIcon}/>
                         </div>
                     }
                     onTouchTap={() => this.navSelect(0)}
                 />
                 <BottomNavigationItem
-                    style={style.nav.playController}
+                    style={{...style.nav.playController, maxWidth: '100%'}}
                     label={<div style={{...style.nav.label, color: labelColor[1]}}>播控</div>}
                     icon={
                         <div style={style.nav.playController.circle}>
@@ -118,9 +120,10 @@ class MBottomNavigation extends BaseComponent {
                     onTouchTap={() => this.navSelect(1)}
                 />
                 <BottomNavigationItem
+                    style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
                     label={<div style={{...style.nav.label, color: labelColor[2]}}>我的</div>}
                     icon={
-                        <div style={{height: 30, marginBottom: 12}}>
+                        <div style={{height: '.667rem', marginBottom: '.4rem'}}>
                             <img style={{height: "100%"}} src={meIcon}/>
                         </div>
                     }

@@ -35,7 +35,7 @@ class SongList extends BaseComponent {
                     onPushSongFail={this.onPushSongFail}
                     headImg={headImg}
                     paddingBottom={80}
-                    scrollToTopBottom="3rem"
+                    scrollToTopBottom="2rem"
                     {...props}/>
                 <Snackbar
                     open={this.state.barrageSendToast}
