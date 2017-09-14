@@ -294,19 +294,23 @@ class UserIndex extends BaseComponent {
             _content: (text) => {
                 if (!text) {
                     return (<img style={{
-                        position: "relative",
-                        top: toRem(-12),
+                        display: "block",
+                        float: "left",
+                        marginTop: toRem(14),
+                        marginLeft: toRem(15),
+                        marginRight: toRem(15),
                         width: toRem(86),
                         height: toRem(22)
                     }} src={VIPPayContent} alt="VIP充值"/>);
                 }
-                return (<span style={{
-                    position: "relative",
-                    top: toRem(-14),
+                return (<div style={{
+                    float: "left",
+                    marginLeft: toRem(15),
+                    marginRight: toRem(15),
                     lineHeight: toRem(50),
                     fontSize: toRem(24),
                     color: vipParams.contentColor
-                }}>{text}</span>);
+                }}>{text}</div>);
             }
         };
         switch (vipStatus) {
@@ -325,7 +329,6 @@ class UserIndex extends BaseComponent {
         }
         return (<div
             style={{
-                paddingRight: toRem(16),
                 height: toRem(50),
                 backgroundColor: vipParams.bgColor,
                 borderRadius: toRem(10),
@@ -348,19 +351,21 @@ class UserIndex extends BaseComponent {
                 }
             }}>
             <img style={{
-                marginRight: toRem(15),
+                float: "left",
                 width: "auto",
                 height: "100%"
             }} src={vipParams.imgUrl} alt=""/>
             {vipParams.content}
             <RightIcon style={{
-                position: "relative",
-                top: toRem(-10),
-                marginLeft: toRem(15),
+                float: "left",
+                marginTop: toRem(13),
+                marginRight: toRem(15),
                 color: vipParams.rightColor,
                 width: toRem(16.5),
                 height: toRem(24)
             }}/>
+            <div style={{clear: "both"}}>
+            </div>
         </div>);
     }
 
