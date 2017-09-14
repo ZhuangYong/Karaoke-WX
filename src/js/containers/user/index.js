@@ -294,9 +294,6 @@ class UserIndex extends BaseComponent {
             _content: (text) => {
                 if (!text) {
                     return (<img style={{
-                        display: "block",
-                        float: "left",
-                        marginTop: toRem(14),
                         marginLeft: toRem(15),
                         marginRight: toRem(15),
                         width: toRem(86),
@@ -304,7 +301,6 @@ class UserIndex extends BaseComponent {
                     }} src={VIPPayContent} alt="VIP充值"/>);
                 }
                 return (<div style={{
-                    float: "left",
                     marginLeft: toRem(15),
                     marginRight: toRem(15),
                     lineHeight: toRem(50),
@@ -329,11 +325,13 @@ class UserIndex extends BaseComponent {
         }
         return (<div
             style={{
+                display: "flex",
+                alignItems: "center",
                 height: toRem(50),
                 backgroundColor: vipParams.bgColor,
                 borderRadius: toRem(10),
                 border: `${toRem(2)} solid ${vipParams.borderColor}`,
-                boxSizing: "border-box"
+                boxSizing: "initial"
             }}
             onTouchTap={() => {
                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
@@ -351,21 +349,16 @@ class UserIndex extends BaseComponent {
                 }
             }}>
             <img style={{
-                float: "left",
-                width: "auto",
-                height: "100%"
+                width: toRem(100),
+                height: toRem(50)
             }} src={vipParams.imgUrl} alt=""/>
             {vipParams.content}
             <RightIcon style={{
-                float: "left",
-                marginTop: toRem(13),
                 marginRight: toRem(15),
                 color: vipParams.rightColor,
                 width: toRem(16.5),
                 height: toRem(24)
             }}/>
-            <div style={{clear: "both"}}>
-            </div>
         </div>);
     }
 
