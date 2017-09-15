@@ -72,8 +72,8 @@ class SingerAlumb extends BaseComponent {
                         linkTo(`singer/${singer.id}/${singer.name}`, false, null);
                     }}
                         >
-                        <div>
-                        <img className="img-not-loaded" src={singer.wxPic || singer.ottPic} style={{width: "100%", display: "table-cell", margin: "auto"}}/>
+                        <div style={{height: "100%"}}>
+                            <img className="img-not-loaded" src={singer.wxPic || singer.ottPic} style={{width: "100%", height: "100%", display: "table-cell", margin: "auto"}}/>
                         </div>
                         </GridTile>
                     ))}

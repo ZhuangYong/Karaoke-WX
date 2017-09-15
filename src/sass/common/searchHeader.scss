@@ -83,4 +83,18 @@
             }
         }
     }
+    &.gray{
+        .search-bar-panel{
+            top: 1.2rem;
+            background: #d7d7d7;
+            .key-word-input {
+                background-color: white!important;
+                border: 1px solid white!important;
+                div:nth-child(1){
+                    color: #999999;
+                }
+            }
+
+        }
+    }
 }

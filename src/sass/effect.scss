@@ -5,7 +5,7 @@
     flex-direction: column;
     .top-area {
         display: flex;
-        padding-top: .5rem;
+        padding-top: 1.2rem;
         justify-content: center;
         .big-circle {
             border: 1px solid #ffe1d6;
@@ -91,7 +91,11 @@
                 background-color: #ffe1d6;
             }
             .label {
+                height: 1rem;
+                margin: 0;
                 color: #ff6832;
+                display: flex;
+                align-items: center;
                 font-size: .32rem;
             }
         }
@@ -139,7 +143,11 @@
                 background-color: #fbeae5;
             }
             .label {
+                height: 1rem;
+                margin: 0;
                 color: #ff6832;
+                display: flex;
+                align-items: center;
                 font-size: .32rem;
             }
         }

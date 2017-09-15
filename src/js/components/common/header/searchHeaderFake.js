@@ -7,6 +7,8 @@ import {linkTo} from "../../../utils/comUtils";
 import {withRouter} from "react-router-dom";
 import VoiceIcon from "../../../../img/common/icon_voice.png";
 import SearchIcon from "../../../../img/common/icon_search.png";
+import VoiceIconGray from "../../../../img/common/icon_voice_gray.png";
+import SearchIconGray from "../../../../img/common/icon_search_gray.png";
 
 class SearchHeaderFake extends BaseComponent {
     constructor(props) {
@@ -14,9 +16,15 @@ class SearchHeaderFake extends BaseComponent {
     }
 
     render() {
-
+        const grayTheme = this.props.grayTheme || "";
+        let searchIcon = SearchIcon;
+        let voiceIcon = VoiceIcon;
+        if (grayTheme === "gray") {
+            searchIcon = SearchIconGray;
+            voiceIcon = VoiceIconGray;
+        }
         return (
-            <div className="search-header" onTouchTap={
+            <div className={`search-header ${grayTheme}`} onTouchTap={
                 () => {
                     linkTo('song/search', false, null);
                 }
@@ -27,13 +35,13 @@ class SearchHeaderFake extends BaseComponent {
                         className="key-word-input"
                         hintText={
                             <div>
-                                <img className="search" src={SearchIcon}/>
+                                <img className="search" src={searchIcon}/>
                                 <font>请输入你要找的歌曲或歌星</font>
                                 <img onTouchTap={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
                                     linkTo("voiceSearch", false, "");
-                                }} className="voice" src={VoiceIcon}/>
+                                }} className="voice" src={voiceIcon}/>
                             </div>
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}

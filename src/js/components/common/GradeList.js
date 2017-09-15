@@ -57,8 +57,8 @@ class GradeList extends BaseComponent {
                                 linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encoding(item[imgKey])}`, false, null);
                             }}
                         >
-                            <div>
-                                <img className="img-not-loaded" src={item[imgKey]} style={{width: "100%", display: "table-cell", margin: "auto"}}/>
+                            <div style={{height: '83%'}}>
+                                <img className="img-not-loaded" src={item[imgKey]} style={{width: "100%", height: "100%", display: "table-cell", margin: "auto"}}/>
                             </div>
                         </GridTile>
                     ))}

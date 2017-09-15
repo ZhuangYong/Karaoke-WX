@@ -102,13 +102,13 @@ class PlayAudio extends BaseComponent {
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>
                 <p className="song-label">
-                    {nameNorm}&nbsp;
+                    <font style={{fontSize: '.4rem'}}>{nameNorm}</font>
                 </p>
-                <Subheader style={{lineHeight: "18px", marginTop: '.267rem', textAlign: "center", fontSize: '.4rem'}}>
-                    一首好听的《{nameNorm}》，快去分享吧
-                    <p style={{fontSize: '.32rem'}}>&nbsp;{musicTime}&nbsp;</p>
+                <Subheader style={{textAlign: "center", fontSize: '.4rem', lineHeight: '.6rem'}}>
+                    <font style={{fontSize: '.4rem'}}>{`一首好听的《${nameNorm}》，快去分享吧`}</font>
+                    <p style={{fontSize: '.32rem', height: '.4rem', margin: 0}}>&nbsp;{`${musicTime}`}&nbsp;</p>
                 </Subheader>
-                <Subheader style={{lineHeight: "18px", textAlign: "center", bottom: '.8rem'}}>
+                <Subheader style={{textAlign: "center", bottom: '.8rem'}}>
                     <p style={{color: '#ff6832', fontSize: '.32rem'}}>来自金麦客专业家庭卡拉OK</p>
                 </Subheader>
 

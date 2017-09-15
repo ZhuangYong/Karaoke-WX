@@ -26,7 +26,7 @@ import Const from "../../utils/const";
 import NoWifi from "../../components/common/NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
 import ActionTypes from "../../actions/actionTypes";
-import Scroller from "silk-scroller";
+import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 
 const style = {
     controllerBtn: {
@@ -198,24 +198,28 @@ class SongController extends BaseComponent {
     render() {
         const {playList, historySongList} = this.state;
         const {w, h} = this.props.common;
-        let tabContainerHeight = (10 * h / w - 2) + 'rem';
+        let tabContainerHeight = '10rem';
         const playingSong = this.state.playingSong;
         let backgroundColor = ['transparent', 'transparent', 'transparent'];
         let fontColor = ['white', 'white', 'white'];
         backgroundColor[this.state.tabIndex] = "white";
         fontColor[this.state.tabIndex] = "#ff6832";
-        let extAreaMarginTop = (h / w) < 1.4 ? "0" : "1.6rem";
-        let controllerButtonsMarginTop = (h / w) < 1.4 ? "1rem" : "2rem";
+        let extAreaMarginTop = (h / w) < 1.4 ? "0" : ".6rem";
+        let controllerButtonsMarginTop = (h / w) < 1.4 ? "2.4rem" : "2.8rem";
         if (w >= 768 && h > w) {
-            controllerButtonsMarginTop = '3rem';
-            extAreaMarginTop = '1.6rem';
+            controllerButtonsMarginTop = '3.6rem';
+            extAreaMarginTop = '.6rem';
         }
         if (h < w) {
-            tabContainerHeight = (10 * w / h - 4.8) + 'rem';
+            tabContainerHeight = '8rem';
+        }
+        if (h < w && h < 768) {
+            extAreaMarginTop = '-.6rem';
         }
         return (
             <div>
                 <img src={NoNetworkImg} style={{display: 'none'}}/>
+                <SearchHeadFake grayTheme={"gray"}/>
                 <Tabs
                     inkBarStyle={{display: "none"}}
                     tabItemContainerStyle={{top: 0, zIndex: 999, position: 'fixed', alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: ".08rem 10%"}}
@@ -234,7 +238,7 @@ class SongController extends BaseComponent {
                         <div style={{
                             position: 'absolute',
                             top: 0,
-                            height: '10rem',
+                            height: tabContainerHeight,
                             marginTop: controllerButtonsMarginTop,
                             marginBottom: "2rem",
                             display: "flex",
@@ -271,7 +275,7 @@ class SongController extends BaseComponent {
                                         )
                                     }
                                 </div>
-                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>播/暂</p>
+                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>播/停</p>
                             </div>
 
                             <div style={style.controllerBtn}>
@@ -307,7 +311,7 @@ class SongController extends BaseComponent {
 
                             <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
                                 <div style={{
-                                    width: '50%',
+                                    margin: '0 .5rem',
                                     display: 'flex',
                                     justifyContent: 'center'
                                 }}>
@@ -323,7 +327,7 @@ class SongController extends BaseComponent {
                                 </div>
                                 {
                                     this.showAudioEffect() ? <div style={{
-                                        width: '50%',
+                                        margin: '0 .5rem',
                                         display: 'flex',
                                         justifyContent: 'center'
                                     }}>
@@ -357,7 +361,7 @@ class SongController extends BaseComponent {
                             已点歌曲
                             </div>
                         }>
-                        <div style={{paddingTop: '1rem', paddingBottom: '1.2rem', width: "100%"}}>
+                        <div style={{paddingTop: '2rem', paddingBottom: '1.2rem', width: "100%"}}>
                             {
                                 this.chooseSongList(playingSong, playList)
                             }
@@ -375,7 +379,7 @@ class SongController extends BaseComponent {
                             最近唱过
                             </div>
                                 }>
-                        <div style={{paddingTop: '1rem', paddingBottom: '1.2rem'}}>
+                        <div style={{paddingTop: '2rem', paddingBottom: '1.2rem'}}>
                             {
                                 this.historySongList(historySongList)
                             }
@@ -404,14 +408,15 @@ class SongController extends BaseComponent {
      * @returns {XML}
      */
     chooseSongList(playingSong, playList) {
+        const {w, h} = this.props.common;
         if (this.state.offLine) {
             return (
-                <NoWifi style={{position: 'absolute', top: '-1rem'}}/>
+                <NoWifi style={{marginTop: w > h ? '.4rem' : '2.2rem'}}/>
             );
         } else if (this.state.unBindDevice) {
             return (
                 <Paper className="history-song-list" zDepth={0}>
-                    <NoResult style={{position: 'absolute'}}/>
+                    <NoResult style={{marginTop: w > h ? '.4rem' : '2.2rem'}}/>
                 </Paper>
             );
         } else if (!this.state.emptyChooseSongs) {
@@ -471,7 +476,7 @@ class SongController extends BaseComponent {
         } else {
             return (
                 <Paper style={style.chooseList} zDepth={0}>
-                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                    <NoResult style={{marginTop: w > h ? '.4rem' : '2.2rem'}}/>
                 </Paper>
             );
         }
@@ -519,9 +524,10 @@ class SongController extends BaseComponent {
      * @returns {XML}
      */
     historySongList(historySongList) {
+        const {w, h} = this.props.common;
         if (this.state.offLine) {
             return (
-                <NoWifi style={{position: 'absolute', top: '-1rem'}}/>
+                <NoWifi style={{marginTop: w > h ? '.4rem' : '2.2rem'}}/>
             );
         } else if (historySongList && historySongList.length > 0) {
             return (
@@ -541,13 +547,13 @@ class SongController extends BaseComponent {
         } else if (historySongList && historySongList.length === 0) {
             return (
                 <Paper className="history-song-list" zDepth={0}>
-                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                    <NoResult style={{marginTop: w > h ? '.4rem' : '2.2rem'}}/>
                 </Paper>
             );
         } else if (this.state.unBindDevice) {
             return (
                 <Paper className="history-song-list" zDepth={0}>
-                    <NoResult style={{position: 'absolute', top: '-1rem'}}/>
+                    <NoResult style={{marginTop: w > h ? '.4rem' : '2.2rem'}}/>
                 </Paper>
             );
         }
