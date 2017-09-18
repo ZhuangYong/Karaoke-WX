@@ -90,7 +90,7 @@ class PlayAudio extends BaseComponent {
             topPanelStyle.marginTop = ".4rem";
         }
 
-        super.title(nameNorm + "-金麦客，把专业卡拉OK带回家" || "录音分享");
+        super.title((nameNorm || "录音分享") + "-金麦客，把专业卡拉OK带回家");
         return (
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
