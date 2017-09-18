@@ -24,15 +24,6 @@ const style = {
         overflowY: "auto",
         width: "100%"
     },
-    loading: {
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        height: 30,
-        fontSize: "14px",
-        marginBottom: 84,
-        alignItems: "center"
-    },
     loadingBar: {
         boxShadow: "none",
         top: "none",
@@ -59,19 +50,6 @@ const style = {
             justifyContent: 'center',
             border: '1px solid #ff6832'
         }
-    },
-    scrollToTop: {
-        width: '1.5rem',
-        height: '1.5rem',
-        borderRadius: '1.5rem',
-        backgroundColor: "rgba(255, 104, 50, 0.76)",
-        position: "fixed",
-        bottom: '2.9rem',
-        right: '1rem',
-        zIndex: 1,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
     }
 };
 class SingerList extends BaseComponent {
@@ -84,7 +62,7 @@ class SingerList extends BaseComponent {
         const {pageData, loading, currentPage, lastPage, keyWord, scrollTop} = cacheId === id ? this.props.common.singerList : {};
         this.state = {
             pageSize: 20,
-            pageData: pageData || [],
+            pageData: [],
             loading: loading || false,
             currentPage: currentPage || 0,
             lastPage: typeof lastPage !== "undefined" ? lastPage : false,
@@ -128,14 +106,8 @@ class SingerList extends BaseComponent {
 
             this.props.action_setSingerList(cacheData);
         }
-    }
 
-    componentDidMount() {
-        // http://portal.j-make.cn/singer_catagory/album?currentPage=1&pageSize=20&keyword=&id=3
-        // const {currentPage, pageSize, keyWord, id} = this.state;
-        // const param = Object.assign({currentPage, pageSize, keyWord, id}, this.props.match.params);
-        // this.props.action_getSingerList(param, reqHeader(param));
-        if (!this.state.initialScrollTop) {
+        if (this.state.pageData.length > 0 && !this.state.initialScrollTop) {
             console.log(this.state.scrollTop);
             const {scrollTop} = this.state;
             if (scrollTop) this.refs.commSingerList.scrollTop = scrollTop;
@@ -149,7 +121,25 @@ class SingerList extends BaseComponent {
             this.state.cacheData = cacheData;
             this.state.initialScrollTop = true;
         }
+    }
+
+    componentDidMount() {
         if (this.state.currentPage === 0) this.loadMoreAction();
+
+        const {id} = this.props.match.params || {};
+        const cacheId = this.props.common.singerList.id;
+        if (cacheId === id) {
+            const {pageData} = this.props.common.singerList;
+            this.setState({
+                loading: true
+            });
+            setTimeout(() => {
+                this.setState({
+                    loading: false,
+                    pageData: pageData
+                });
+            }, 50);
+        }
     }
 
     render() {
@@ -157,6 +147,12 @@ class SingerList extends BaseComponent {
         const {w, h} = this.props.common;
         const avatarSize = 42 * (w / 375);
         const {keyWord} = this.state;
+        let scrollTopStyle = {};
+        if (!this.state.needScrollToTop) {
+            scrollTopStyle = {
+                opacity: 0
+            };
+        }
         return (
 
             <Paper zDepth={0}>
@@ -169,12 +165,17 @@ class SingerList extends BaseComponent {
                     onScroll={this.onScroll.bind(this)}>
 
                     <div style={style.hotFilter}>
-                        {
-                            keyWord || "热门"
-                        }
+                        <div style={{width: '3rem',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'}} onTouchTap={this.handleHotPanel}>
+                            {
+                                keyWord || "热门"
+                            }
 
-                        <div style={style.hotFilter.icon} onTouchTap={this.handleHotPanel}>
-                            <ArrowDownIcon color="#ff6832"/>
+                            <div style={style.hotFilter.icon}>
+                                <ArrowDownIcon color="#ff6832"/>
+                            </div>
                         </div>
 
                         <Popover
@@ -203,30 +204,31 @@ class SingerList extends BaseComponent {
                         (this.state.dataLoaded && this.state.currentPage >= 1 && this.state.pageData.length === 0) ? <NoResult style={{position: 'absolute', top: '-1rem'}}/> : <div>
                             <List className="single-list" style={{paddingTop: '2.4rem'}}>
                                 {this.state.pageData.map((singer) => (
-                                    <ListItem
-                                        innerDivStyle={{paddingLeft: '2rem', paddingTop: '.553rem'}}
-                                        className="single-item"
-                                        key={singer.id}
-                                        onClick={() => {
-                                            let {cacheData, scrollTop} = this.state;
-                                            cacheData.scrollTop = scrollTop;
-                                            this.props.action_setSingerList(cacheData);
-                                            linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
-                                        }}
-                                        leftAvatar={
-                                            <Avatar
-                                                style={{overflow: 'hidden', height: '1.12rem', width: '1.12rem'}}
-                                                src={singer.image}
-                                                size={avatarSize}
-                                            />
-                                        }
-                                        rightIcon={<RightArrowIcon style={{top: '.01rem', margin: '.4rem', height: '.64rem', width: '.64rem'}}/>}
-                                        primaryText={<div style={{fontSize: '.4rem'}}>{singer.nameNorm}</div>}
-                                    />
+
+                                    <div key={singer.id} onClick={() => {
+                                        let {cacheData, scrollTop} = this.state;
+                                        cacheData.scrollTop = scrollTop;
+                                        this.props.action_setSingerList(cacheData);
+                                        linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
+                                    }}>
+                                        <span className="single-item">
+                                            <div>
+                                                <div>
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+                                                    </svg>
+                                                    <img size="35.84" src={singer.image}/>
+                                                    <div style={{fontSize: '0.4rem'}}>
+                                                        {singer.nameNorm}
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </div>
                                 ))}
                             </List>
-                            <div style={style.loading}>
-                                {this.state.loading ? (<div><RefreshIndicator
+                            <div className="loading-bottom">
+                                {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}><RefreshIndicator
                                     size={30}
                                     left={70}
                                     top={0}
@@ -245,11 +247,11 @@ class SingerList extends BaseComponent {
                 </div>
 
                 {
-                    this.state.needScrollToTop ? <div style={style.scrollToTop} onClick={() => {
+                    <div className="scroll-to-top-button" style={scrollTopStyle} onClick={() => {
                         this.scrollTo(0);
                     }}>
                         <ScrollToTopIcon color="white"/>
-                    </div> : ""
+                    </div>
                 }
 
                 <MBottomNavigation selectedIndex={0}/>
@@ -258,11 +260,11 @@ class SingerList extends BaseComponent {
     }
 
     onScroll(e) {
-        if (!this.state.loading && e.target.classList && e.target.classList.contains("common-singer-list")) {
+        if (e.target.classList && e.target.classList.contains("common-singer-list")) {
             this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
             this.state.scrollTop = e.target.scrollTop;
-            if (betweenBottom < 50) {
+            if (!this.state.loading && betweenBottom < 50) {
                 this.loadMoreAction();
             }
             if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
@@ -280,6 +282,9 @@ class SingerList extends BaseComponent {
     scrollTo(to) {
         const {scrollTarget} = this.state || {scrollTo: f => f};
         scrollTarget.scrollTop = to;
+        setTimeout(() => {
+            scrollTarget.scrollTop = to;
+        }, 100);
     }
 
     /**

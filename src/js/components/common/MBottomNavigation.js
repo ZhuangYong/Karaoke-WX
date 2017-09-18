@@ -13,7 +13,7 @@ import navIndexIcon from "../../../img/common/nav_index.png";
 import navIndexOnIcon from "../../../img/common/nav_index_on.png";
 import navMeIcon from "../../../img/common/nav_me.png";
 import navMeOnIcon from "../../../img/common/nav_me_on.png";
-import navControllerIcon from "../../../img/common/nav_controll.png";
+import navControllerIcon from "../../../img/common/nav_controll_gif.png";
 
 const style = {
     nav: {
@@ -21,7 +21,7 @@ const style = {
         position: "fixed",
         borderTop: "1px solid #efeeef",
         bottom: -1,
-        zIndex: "2",
+        zIndex: "5",
         playController: {
             position: "relative",
             paddingLeft: 0,
@@ -63,7 +63,9 @@ const style = {
                     left: "50%",
                     marginLeft: '-.7rem',
                     width: '1.4rem',
-                    bottom: '.56rem'
+                    bottom: '.56rem',
+                    backgroundColor: '#ff6d32',
+                    borderRadius: '50%'
                 }
             }
         },
@@ -98,17 +100,17 @@ class MBottomNavigation extends BaseComponent {
             >
                 <BottomNavigationItem
                     style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
-                    label={<div style={{...style.nav.label, color: labelColor[0]}}>主页</div>}
+                    label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>主页</div>}
                     icon={
-                        <div style={{height: '.667rem', marginBottom: '.4rem'}}>
-                            <img style={{height: "100%"}} src={indexIcon}/>
+                        <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                            <img style={{height: ".667rem", width: '.62rem'}} src={indexIcon}/>
                         </div>
                     }
                     onTouchTap={() => this.navSelect(0)}
                 />
                 <BottomNavigationItem
                     style={{...style.nav.playController, maxWidth: '100%'}}
-                    label={<div style={{...style.nav.label, color: labelColor[1]}}>播控</div>}
+                    label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>播控</div>}
                     icon={
                         <div style={style.nav.playController.circle}>
                             <div style={style.nav.playController.circle.arc}/>
@@ -121,10 +123,10 @@ class MBottomNavigation extends BaseComponent {
                 />
                 <BottomNavigationItem
                     style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
-                    label={<div style={{...style.nav.label, color: labelColor[2]}}>我的</div>}
+                    label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>我的</div>}
                     icon={
-                        <div style={{height: '.667rem', marginBottom: '.4rem'}}>
-                            <img style={{height: "100%"}} src={meIcon}/>
+                        <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                            <img style={{height: ".667rem", width: ".667rem"}} src={meIcon}/>
                         </div>
                     }
                     onTouchTap={() => this.navSelect(2)}

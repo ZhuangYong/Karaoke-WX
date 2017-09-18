@@ -9,6 +9,7 @@ import {bindActionCreators} from "redux";
 import SongList from "../../components/common/SongList";
 import Const from "../../utils/const";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
+import {chkDevice} from "../../utils/comUtils";
 
 const style = {
     searchWord: {
@@ -28,11 +29,14 @@ class Search extends BaseComponent {
         this.state = {
             keyword: "",
             barrageSendToast: false,
-            barrageToastMsg: ""
+            barrageToastMsg: "",
+            focus: false
         };
         this.search = this.search.bind(this);
         this.onPushSongFail = this.onPushSongFail.bind(this);
         this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
+        this.handelFocus = this.handelFocus.bind(this);
+        this.handelBlur = this.handelBlur.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -45,9 +49,10 @@ class Search extends BaseComponent {
 
     render() {
         const {keyword} = this.props.match.params;
+        const {isAndroid} = chkDevice();
         return (
             <Paper zDepth={0}>
-                <SearchHeader defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
+                <SearchHeader handelBlur={this.handelBlur} handelFocus={this.handelFocus} defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
                 {this.state.keyword ? <Paper style={{height: '1.2rem', position: "fixed", top: '1.2rem', width: "100%", zIndex: 1}}>
                     <Subheader style={{height: '1.2rem', display: 'flex', alignItems: 'center'}}>
                         “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font style={style.searchWord}>的搜索结果</font>
@@ -71,7 +76,10 @@ class Search extends BaseComponent {
                         });
                     }}
                 />
-                <MBottomNavigation selectedIndex={0}/>
+                {
+                    ((!this.state.focus && isAndroid) || !isAndroid) ? <MBottomNavigation selectedIndex={0}/> : ""
+                }
+
             </Paper>
         );
     }
@@ -94,6 +102,18 @@ class Search extends BaseComponent {
         this.setState({
             barrageSendToast: true,
             barrageToastMsg: msg
+        });
+    }
+
+    handelFocus() {
+        this.setState({
+            focus: true
+        });
+    }
+
+    handelBlur() {
+        this.setState({
+            focus: false
         });
     }
 }

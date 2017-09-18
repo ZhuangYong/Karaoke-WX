@@ -14,10 +14,11 @@ import emotionOnImg from "../../../img/barrage/emotion_on.png";
 import Input from "../../components/common/Input";
 import {push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
-import {dynaPush, reqHeader} from "../../utils/comUtils";
+import {chkDevice, dynaPush, reqHeader} from "../../utils/comUtils";
 
 import bindActionCreators from "redux/es/bindActionCreators";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
+import * as ReactDOM from "react-dom";
 
 const fastWords = [
     {value: "哇塞!唱得太好听了"},
@@ -146,12 +147,25 @@ class Barrage extends BaseComponent {
         this.handelChangeTab = this.handelChangeTab.bind(this);
         this.sendBarrage = this.sendBarrage.bind(this);
         this.handelChangeEmotionPage = this.handelChangeEmotionPage.bind(this);
+        this.blurSearchInput = this.blurSearchInput.bind(this);
+        this.handelResize = this.handelResize.bind(this);
+        this.handelInputBlur = this.handelInputBlur.bind(this);
+    }
+
+    componentDidMount() {
+        document.addEventListener("touchstart", this.handelInputBlur);
+        window.addEventListener("resize", this.handelResize);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("touchstart", this.handelInputBlur);
+        window.removeEventListener("resize", this.handelResize);
     }
 
     render() {
         const {inputValue, inputImage} = this.state;
-        const {w, h} = this.props.common;
-        const fastWordPanelHeight = document.documentElement.clientHeight - (5.336 + 1.2) * (document.documentElement.clientWidth / 10) - 60;
+        const {w, h, r} = this.props.common;
+        const {isAndroid} = chkDevice();
         let tabBackgroundColor = ["#d7d7d7", "#d7d7d7"];
         tabBackgroundColor[this.state.tabIndex] = "#ff6833";
         let tabIcon = [barrageImg, emotionImg];
@@ -159,25 +173,23 @@ class Barrage extends BaseComponent {
         tabIcon[this.state.tabIndex] = tabOnIcon[this.state.tabIndex];
         const showTabContainer = window.sysInfo.isAndroid ? !this.state.inputIng : true ;
         const showInputAreaHeight = h * 0.3;
-        let inputAreaHeight = h * 0.54;
-        if (w > h) {
-            inputAreaHeight = h * 0.5;
-        }
+        const inputAreaHeight = h * 0.7 - 1.6 * r - 1.2 * r;
+
         return (
             <div>
-                <div style={{textAlign: "center", height: showInputAreaHeight, overflow: "hidden"}} onTouchTap={() => {
+                <div style={{backgroundColor: 'white', textAlign: "center", height: showInputAreaHeight, overflow: "hidden"}} onTouchTap={() => {
                     inputImage && this.setState({
                         inputImage: ""
                     });
                 }}>
                     {
                         inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}} /> : <TextField
-                            hintText="说点儿什么..."
+                            ref="input"
+                            hintText={`说点儿什么...`}
                             hintStyle={{top: 0, padding: 12}}
-                            textareaStyle={{paddingLeft: 12}}
+                            textareaStyle={{width: '94%'}}
                             multiLine={true}
                             rows={10}
-                            maxLength={50}
                             rowsMax={10}
                             fullWidth={true}
                             value={inputValue}
@@ -188,7 +200,7 @@ class Barrage extends BaseComponent {
                     }
                 </div>
                 <Tabs
-                    tabItemContainerStyle={{backgroundColor: "#d7d7d7"}}
+                    tabItemContainerStyle={{height: '1.2rem', backgroundColor: "#d7d7d7"}}
                     contentContainerStyle={{
                         position: "absolute",
                         bottom: '1.6rem',
@@ -241,11 +253,11 @@ class Barrage extends BaseComponent {
                     </Tab>
                 </Tabs>
 
-                <div style={style.bottomPanel}>
+                {((!this.state.inputIng && isAndroid) || !isAndroid) ? <div style={style.bottomPanel}>
                     {
                         this.getSendButton()
                     }
-                </div>
+                </div> : ""}
 
                 <Snackbar
                     open={this.state.barrageSendToast}
@@ -263,11 +275,9 @@ class Barrage extends BaseComponent {
 
     getEmotion() {
         let html = [];
-        const {w, h} = this.props.common;
-        let emotionHeight = '3.334rem';
-        if (w > h) {
-            emotionHeight = '3rem';
-        }
+        const {w, h, r} = this.props.common;
+        const inputAreaHeight = h * 0.7 - 1.6 * r - 1.2 * r;
+        let emotionHeight = inputAreaHeight * 0.4;
         const swipeLength = (emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1;
         for (let i = 0; i < swipeLength; i++) {
             html.push(
@@ -282,13 +292,13 @@ class Barrage extends BaseComponent {
                                              }}
                                              style={{
                                                  width: "33.33%",
+                                                 display: "flex",
                                                  height: emotionHeight,
                                                  overflow: 'hidden',
-                                                 padding: '.213rem',
-                                                 fontSize: '.213rem',
-                                                 textAlign: "center"
+                                                 justifyContent: 'center',
+                                                 alignItems: 'center'
                                              }}>
-                                    <img src={url} alt='' style={{maxWidth: "100%", height: '100%'}}/>
+                                    <img src={url} alt='' style={{maxWidth: "90%", maxHeight: '100%'}}/>
                                 </span>;
                             }
                         })
@@ -448,14 +458,20 @@ class Barrage extends BaseComponent {
 
     handelChange(t, value) {
         value = value.trim() || "";
-        value = value.replace(/[\r\n]/g, "");
+        // value = value.replace(/[\r\n]/g, "");
+        if (value.length >= 50) {
+            this.props.action_setGlobAlert("最多只能输入50个字符", "");
+            value = value.substr(0, 50);
+        }
         this.setState({
             inputValue: value
         });
     }
 
     onFocus() {
+        const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
         this.setState({
+            focusHeight: h,
             inputIng: true
         });
     }
@@ -464,6 +480,28 @@ class Barrage extends BaseComponent {
         this.setState({
             inputIng: false
         });
+    }
+
+    handelResize() {
+        const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        const {focusHeight} = this.state;
+        if (h > focusHeight) {
+            this.blurSearchInput();
+        }
+        this.setState({
+            focusHeight: h
+        });
+    }
+
+    handelInputBlur(e) {
+        const input = ReactDOM.findDOMNode(this.refs.input);
+        if (!input.contains(e.target)) {
+            this.blurSearchInput();
+        }
+    }
+
+    blurSearchInput() {
+        this.refs.input.input.refs.input.blur();
     }
 }
 

@@ -22,10 +22,15 @@ class GradeList extends BaseComponent {
         const idKey = this.props.idKey;
         const linkHead = this.props.linHeadKey;
         const title = this.props.title;
-        const {w} = this.props.common;
-        const cellHeight = 3.467 * w / 10 - 4;
-        const cellPadding = 0.267 * w / 10;
-        const cellMarinTop = 22 + 0.187 * w / 10;
+        const {w, h} = this.props.common;
+        let cellHeight = 3.467 * w / 10 - 4;
+        let cellPadding = 0.267 * w / 10;
+        let rowNumber = 2;
+        if (w >= 568 && h < w) {
+            rowNumber = 3;
+            cellPadding = 0.16 * w / 10;
+            cellHeight = 2.28 * w / 10 - 4;
+        }
 
         return (
             <div>
@@ -36,7 +41,7 @@ class GradeList extends BaseComponent {
                     cellHeight={cellHeight}
                     padding={cellPadding}
                     style={{margin: '0.133rem'}}
-                    cols={2}
+                    cols={rowNumber}
                 >
 
                     {data.map((item) => (
@@ -54,11 +59,11 @@ class GradeList extends BaseComponent {
                             }}
                             titleBackground="transparent"
                             onClick={() => {
-                                linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encoding(item[imgKey])}`, false, null);
+                                if (item[labelKey]) linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encoding(item[imgKey])}`, false, null);
                             }}
                         >
-                            <div>
-                                <img className="img-not-loaded" src={item[imgKey]} style={{width: "100%", display: "table-cell", margin: "auto"}}/>
+                            <div style={{height: '83%'}} className="img-not-loaded">
+                                <img src={item[imgKey]} style={{width: "100%", display: "table-cell", margin: "auto"}}/>
                             </div>
                         </GridTile>
                     ))}

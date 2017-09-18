@@ -46,9 +46,11 @@ class AudioEffect extends BaseComponent {
     }
 
     render() {
+        const {w, h} = this.props.common;
+        const revert = w > h;
         return (
             <div className="effect">
-                <div className="top-area">
+                <div className="top-area" style={revert ? {paddingTop: '.2rem'} : {}}>
                     <div className="big-circle">
                         <div className="left-choose">
                             <LeftArrowIcon style={{
@@ -76,7 +78,7 @@ class AudioEffect extends BaseComponent {
                     </div>
                 </div>
 
-                <div className="center-area">
+                <div className="center-area" style={revert ? {paddingTop: '.2rem'} : {}}>
                     <div className="fun-button">
                         <div className="button" onClick={() => {
                             this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
@@ -103,7 +105,7 @@ class AudioEffect extends BaseComponent {
                     </div>
                 </div>
 
-                <div className="bottom-area">
+                <div className="bottom-area" style={revert ? {marginTop: '.2rem'} : {}}>
                     <div className="fun-button">
                         <div className="haf-top-button" onClick={() => {
                             this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);
@@ -285,6 +287,7 @@ const mapStateToProps = (state, ownProps) => {
         userInfoData: state.app.user.userInfo.userInfoData,
         userInfo: state.app.user.userInfo,
         ottInfo: state.app.device.ottInfo,
+        common: state.app.common,
         localNetIsWork: state.app.common.localNetIsWork
     };
 };

@@ -9,6 +9,7 @@ import "../../../sass/common/Scroller.scss";
 import {getAlbumRecommend, getRanking, getRecommend} from "../../actions/audioActons";
 import {btoa as encoding} from "Base64";
 
+import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import IconCate from "../../../img/common/icon_catelog.png";
@@ -19,7 +20,6 @@ import {bindActionCreators} from "redux";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import SongItem from "../../components/common/SongItem";
 import Const from "../../utils/const";
-import "../../../sass/home.scss";
 
 const style = {
     home: {
@@ -77,15 +77,6 @@ const style = {
         alignItems: 'center',
         textAlign: "center"
     },
-    loading: {
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        height: 30,
-        fontSize: "14px",
-        marginBottom: 88,
-        alignItems: "center"
-    },
     loadingBar: {
         boxShadow: "none",
         top: "none",
@@ -94,22 +85,15 @@ const style = {
         marginLeft: -50,
     }
 };
+const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
 const defaultGetAlbumRecommendData = [
-    {
-        id: 'dfAlbum1',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum2',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum3',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    }
+    {id: 'defaultData0', wxPic: blankImg},
+    {id: 'defaultData1', wxPic: blankImg},
+    {id: 'defaultData2', wxPic: blankImg},
+    {id: 'defaultData3', wxPic: blankImg},
+    {id: 'defaultData4', wxPic: blankImg},
+    {id: 'defaultData5', wxPic: blankImg},
+    {id: 'defaultData6', wxPic: blankImg}
 ];
 
 const defaultGetRankingData = defaultGetAlbumRecommendData;
@@ -159,17 +143,24 @@ class Home extends BaseComponent {
     }
 
     componentWillUnmount() {
+
     }
 
     render() {
         const getAlbumRecommendData = this.props.songs.getAlbumRecommend || {data: {result: defaultGetAlbumRecommendData}};
         const getRankingData = this.props.songs.getRanking || {data: {result: defaultGetRankingData}};
+        let scrollTopStyle = {};
+        if (!this.state.needScrollToTop) {
+            scrollTopStyle = {
+                opacity: 0
+            };
+        }
         return (
             <div>
                 <SearchHeadFake back={this.back}/>
                 <div className='home'
                      style={style.home}
-                     onScroll={this.onScroll.bind(this)}>
+                     onScroll={this.onScroll.bind(this)} onTouchEnd={this.onScroll.bind(this)}>
                     <Paper
                         zDepth={0}
                     >
@@ -217,7 +208,7 @@ class Home extends BaseComponent {
                                         }}
                                         titleBackground="transparent"
                                         onClick={() => {
-                                            linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encoding(recommend.wxPic || recommend.imgurl)}`, false, null);
+                                            recommend.name && linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encoding(recommend.wxPic || recommend.imgurl)}`, false, null);
                                         }}
                                     >
                                         <div style={style.tile}>
@@ -246,7 +237,7 @@ class Home extends BaseComponent {
                                     style={{display: "table-cell", padding: "0 .067rem"}}
                                     titleBackground="transparent"
                                     onClick={() => {
-                                        linkTo(`songs/hotId/${rank.id}/${rank.name}/${encoding(rank.wxPic || rank.imgurl)}`, false, null);
+                                        rank.name && linkTo(`songs/hotId/${rank.id}/${rank.name}/${encoding(rank.wxPic || rank.imgurl)}`, false, null);
                                     }}
                                 >
                                     <div style={style.tile}>
@@ -272,7 +263,7 @@ class Home extends BaseComponent {
                         </List>
 
 
-                        <div style={style.loading}>
+                        <div className="loading-bottom">
                             {this.state.loading ? (<div><RefreshIndicator
                                 size={30}
                                 left={70}
@@ -299,18 +290,46 @@ class Home extends BaseComponent {
                         });
                     }}
                 />
+
+                {
+                    <div className="scroll-to-top-button" style={scrollTopStyle} onClick={() => {
+                        this.scrollTo(0);
+                    }}>
+                        <ScrollToTopIcon color="white"/>
+                    </div>
+                }
+
                 <MBottomNavigation selectedIndex={0}/>
             </div>
         );
     }
 
     onScroll(e) {
-        if (!this.state.loading && e.target.classList && e.target.classList.contains("home")) {
+        if (e.target.classList && e.target.classList.contains("home")) {
+            this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
-            if (betweenBottom < 50) {
+            this.state.scrollTop = e.target.scrollTop;
+            if (!this.state.loading && betweenBottom < 50) {
                 this.loadMoreAction();
             }
+            if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
+                this.setState({
+                    needScrollToTop: true
+                });
+            } else {
+                this.setState({
+                    needScrollToTop: false
+                });
+            }
         }
+    }
+
+    scrollTo(to) {
+        const {scrollTarget} = this.state || {scrollTo: f => f};
+        scrollTarget.scrollTop = to;
+        setTimeout(() => {
+            scrollTarget.scrollTop = to;
+        }, 100);
     }
 
     /**

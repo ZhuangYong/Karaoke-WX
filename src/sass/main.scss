@@ -1,8 +1,8 @@
 @import "common/variables";
 @import "common/base";
 
-.no-border{
-    border: none!important;
+.no-border {
+    border: none !important;
 }
 
 .song-list {
@@ -20,12 +20,14 @@
             width: 7rem;
             display: inline-flex;
             height: .7rem;
+            align-items: center;
             font {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                display: flex;
                 align-items: center;
+                line-height: .4rem;
+                height: .4rem;
             }
             .label-vip {
                 margin-left: .133rem;
@@ -37,7 +39,7 @@
             font-size: .32rem !important;
             margin-top: .133rem;
             width: 95%;
-            height: .5rem!important;
+            height: .5rem !important;
             display: flex;
             align-items: center;
             max-width: 5.6rem;
@@ -46,7 +48,7 @@
         }
         .choose-button {
             width: 1.333rem !important;
-            height: .8rem!important;
+            height: .8rem !important;
             border: .027rem solid #ff895f;
             padding: .053rem .106rem;
             border-radius: .4rem;
@@ -76,6 +78,58 @@
     .single-item {
         height: 1.467rem;
         overflow: hidden;
+        border: 10px;
+        box-sizing: border-box;
+        display: block;
+        font-family: Roboto, sans-serif;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        cursor: pointer;
+        text-decoration: none;
+        margin: 0;
+        padding: 0;
+        outline: none;
+        font-size: 16px;
+        font-weight: inherit;
+        position: relative;
+        z-index: 1;
+        color: rgba(0, 0, 0, 0.87);
+        line-height: 16px;
+        transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+        background: none;
+        & > div > div {
+            margin-left: 0;
+            padding: 0.553rem 56px 20px 2rem;
+            position: relative;
+        }
+        svg {
+            display: block;
+            color: rgba(0, 0, 0, 0.87);
+            fill: rgb(117, 117, 117);
+            height: 0.64rem;
+            width: 0.64rem;
+            transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+            position: absolute;
+            top: 0.01rem;
+            margin: 0.4rem;
+            right: 4px;
+            user-select: none;
+        }
+        img {
+            color: rgb(255, 255, 255);
+            background-color: rgb(188, 188, 188);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17.92px;
+            border-radius: 50%;
+            height: 1.12rem;
+            width: 1.12rem;
+            position: absolute;
+            top: 8px;
+            left: 16px;
+            overflow: hidden;
+            user-select: none;
+        }
     }
     .single-item:after {
         border-top: .027rem solid #e5e5e5;
@@ -106,8 +160,7 @@ input, textarea {
 }
 
 .hot-key {
-    width: 7.6rem;
-    height: 7.6rem;
+    width: 7.2rem;
     display: flex;
     flex-wrap: wrap;
     padding: .6rem;
@@ -154,46 +207,109 @@ input, textarea {
     background-position: center center;
 }
 
-.dialog-panel{
-    &>div *{
-        font-size: .4rem!important;
+.dialog-panel {
+    & > div * {
+        font-size: .4rem !important;
     }
-    &>div>div{
-        width: 7.5rem !important;
+    & > div > div {
+        width: 7.8rem !important;
     }
-    &>div>div>div>div{
+    & > div > div > div > div {
         &:nth-child(1) {
             display: flex;
             justify-content: center;
             align-items: center;
-            height:2.4rem!important;
+            height: 2.4rem !important;
         }
-        &:nth-child(2){
+        &:nth-child(2) {
             padding: 0 !important;
-            border-top: 0.02rem solid rgb(224, 224, 224)!important;
-            button{
-                height:1.4rem!important;
+            border-top: 0.02rem solid rgb(224, 224, 224) !important;
+            button {
+                height: 1.4rem !important;
                 width: 50%;
-                &:nth-child(1){
-                    border-right: 0.02rem solid rgb(224, 224, 224)!important;
-                    border-radius: 0!important;
+                &:nth-child(1) {
+                    border-right: 0.02rem solid rgb(224, 224, 224) !important;
+                    border-radius: 0 !important;
                 }
-                &>div{
-                    padding-bottom:2px;
+                & > div {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 1.4rem !important;
                 }
             }
         }
     }
 }
 
-.show-alert{
-    .home,.home-recommend,.home-rank,.common-song-list{
-        overflow: hidden!important;
+.show-alert {
+    .home, .home-recommend, .home-rank, .common-song-list {
+        overflow: hidden !important;
     }
 }
 
-.grade-tile{
-    >div:nth-child(2){
-        height: .6rem!important;
+.grade-tile {
+    > div:nth-child(2) {
+        height: .6rem !important;
+        & > div > div {
+            line-height: .3rem !important;
+        }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .grade-tile {
+        > div:nth-child(2) {
+            height: .6rem !important;
+            & > div > div {
+                line-height: .3rem !important;
+            }
+        }
+    }
+}
+
+.loading-bottom {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    height: .8rem;
+    font-size: 14px;
+    margin-bottom: 2.347rem;
+    align-items: center;
+    span {
+        font-size: .34rem;
+    }
+    &>div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+.scroll-to-top-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1.5rem;
+    background-color: rgba(255, 104, 50, 0.76);
+    position: fixed;
+    bottom: 1.9rem;
+    right: 1rem;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .4s ease;
+    svg {
+        width: .8rem !important;
+        height: .8rem !important;
+    }
+    svg:active {
+        fill: red !important;
+    }
+}
+
+.scroll-to-top-button:active {
+    svg {
+        fill: red !important;
     }
 }

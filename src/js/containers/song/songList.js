@@ -34,7 +34,6 @@ class SongList extends BaseComponent {
                     onPushSongSuccess={this.onPushSongSuccess}
                     onPushSongFail={this.onPushSongFail}
                     headImg={headImg}
-                    paddingBottom={80}
                     scrollToTopBottom="2rem"
                     {...props}/>
                 <Snackbar

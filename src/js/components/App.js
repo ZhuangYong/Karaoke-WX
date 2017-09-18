@@ -235,6 +235,8 @@ class App extends React.Component {
                 dataUrl: null
             });
         });
+
+        window.lockResize = true;
     }
 
     componentDidUpdate(prevProps) {
@@ -408,7 +410,10 @@ class App extends React.Component {
                 };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE:
-                alertStr = '设备不在线';
+                showAlert = false;
+                setTimeout(() => {
+                    this.props.action_setGlobAlert("设备不在线", "");
+                }, 100);
                 break;
             default:
                 showAlert = false;

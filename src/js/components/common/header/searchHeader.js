@@ -57,21 +57,27 @@ class SearchHeader extends BaseComponent {
         };
         this.handelBlur = this.handelBlur.bind(this);
         this.handelFocus = this.handelFocus.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+        this.handelFocus = this.handelFocus.bind(this);
         this.handelDelHistoryWord = this.handelDelHistoryWord.bind(this);
         this.handelInputBlur = this.handelInputBlur.bind(this);
         this.handelSearch = this.handelSearch.bind(this);
         this.cleanKeyWord = this.cleanKeyWord.bind(this);
+        this.handelResize = this.handelResize.bind(this);
+        this.blurSearchInput = this.blurSearchInput.bind(this);
     }
 
     componentDidMount() {
         const param = {};
         this.props.action_getKeyWord(param, reqHeader(param));
-        const input = ReactDOM.findDOMNode(this.refs.input);
         document.addEventListener("touchstart", this.handelInputBlur);
+        window.addEventListener("resize", this.handelResize);
     }
 
     componentWillUnmount() {
         document.removeEventListener("touchstart", this.handelInputBlur);
+        window.removeEventListener('resize', this.handelResize);
+        this.blurSearchInput();
     }
 
     render() {
@@ -128,6 +134,7 @@ class SearchHeader extends BaseComponent {
                         }
                         hintStyle={{color: "white", textAlign: "center", width: "100%"}}
                         onFocus={this.handelFocus}
+                        onBlur={this.onBlur}
                         bindState={this.bindState("searchKey")}
                         onClick={this.handelFocus}
                     />
@@ -141,7 +148,7 @@ class SearchHeader extends BaseComponent {
                     >
                         <div className="search-words">
                             <Subheader>
-                                <font style={{fontWeight: 'bold'}} color="#000000">热门搜索</font>
+                                <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">热门搜索</font>
                             </Subheader>
                             <div className="hot-words">
                                 {hotKeyWords && hotKeyWords.data.list.map((word) => (
@@ -157,9 +164,9 @@ class SearchHeader extends BaseComponent {
                                 this.state.searchHistory && (
                                     <div className="history-words-title">
                                         <Subheader style={{position: "relative"}}>
-                                            <font style={{fontWeight: 'bold'}} color="#000000">最近搜索</font>
+                                            <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">最近搜索</font>
                                             <div style={{top: "0", right: "5%", position: "absolute"}}
-                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}><font color="#ff6832">清除搜索记录</font>
+                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}><font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#ff6832">清除搜索记录</font>
                                             </div>
                                         </Subheader>
                                     </div>
@@ -171,8 +178,8 @@ class SearchHeader extends BaseComponent {
                                     {searchHistory.map((word) => (
                                         <ListItem
                                             key={word}
-                                            innerDivStyle={{overflow: 'hidden', textOverflow: 'ellipsis'}}
-                                            primaryText={<font color="#252525">{word}</font>}
+                                            innerDivStyle={{padding: '.426rem 1.493rem .426rem .426rem', overflow: 'hidden', textOverflow: 'ellipsis'}}
+                                            primaryText={<font color="#252525" style={{fontSize: '.32rem'}}>{word}</font>}
                                             rightIcon={
                                                 <div onTouchTap={(e) => {
                                                     e.stopPropagation();
@@ -213,10 +220,18 @@ class SearchHeader extends BaseComponent {
         });
     }
 
+    onBlur() {
+        this.props.handelBlur && this.props.handelBlur();
+    }
+
+
     handelFocus() {
+        const {h} = this.props.common;
         this.setState({
+            focusHeight: h,
             inputting: true
         });
+        this.props.handelFocus && this.props.handelFocus();
     }
 
     handelHotSearch(searchKey) {
@@ -265,6 +280,21 @@ class SearchHeader extends BaseComponent {
             searchKey: ""
         });
     }
+
+    handelResize() {
+        const h = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        const {focusHeight} = this.state;
+        if (h > focusHeight) {
+            this.blurSearchInput();
+        }
+        this.setState({
+            focusHeight: h
+        });
+    }
+
+    blurSearchInput() {
+        this.refs.input.refs.input.input.blur();
+    }
 }
 
 SearchHeader.propTypes = {
@@ -275,7 +305,8 @@ SearchHeader.propTypes = {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        hotKeys: state.app.search
+        hotKeys: state.app.search,
+        common: state.app.common
     };
 };
 const mapActionToProps = (dispatch, ownProps) => {

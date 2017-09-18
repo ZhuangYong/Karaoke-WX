@@ -28,33 +28,12 @@ const style = {
         width: "100%",
         top: 0
     },
-    loading: {
-        position: "relative",
-        display: "flex",
-        justifyContent: "center",
-        height: 30,
-        fontSize: "14px",
-        marginBottom: 14,
-        alignItems: "center"
-    },
     loadingBar: {
         boxShadow: "none",
         top: "none",
         left: "none",
         transform: "none",
         marginLeft: -50,
-    },
-    scrollToTop: {
-        width: '1.5rem',
-        height: '1.5rem',
-        borderRadius: '1.5rem',
-        backgroundColor: "rgba(255, 104, 50, 0.76)",
-        position: "fixed",
-        right: '1rem',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 4
     }
 };
 class SongList extends BaseComponent {
@@ -142,7 +121,13 @@ class SongList extends BaseComponent {
         const paddingTop = this.props.paddingTop ? this.props.paddingTop : '1.18rem';
         const paddingBottom = this.props.paddingBottom ? this.props.paddingBottom : 5;
         const scrollToTopBottom = this.props.scrollToTopBottom ? this.props.scrollToTopBottom : '1rem';
-        if (noData) {
+        let scrollTopStyle = {};
+        if (!this.state.needScrollToTop) {
+            scrollTopStyle = {
+                opacity: 0
+            };
+        }
+        if (!this.state.loading && noData) {
             return (
                 <NoResult style={{position: 'absolute'}}/>
             );
@@ -156,20 +141,22 @@ class SongList extends BaseComponent {
                         (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
                     {
-                        !this.state.offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', height: '6.973rem'}} src={decoding(headImg)}/>
+                        !this.state.offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', minHeight: '6.08rem', maxHeight: '7rem'}} src={decoding(headImg)}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
 
                     {
-                        this.state.needScrollToTop ? <div style={{...style.scrollToTop, bottom: scrollToTopBottom}} onClick={() => {
-                            this.scrollTo(0);
-                        }}>
+
+                        <div className="scroll-to-top-button" style={{bottom: scrollToTopBottom, ...scrollTopStyle}}
+                             onClick={() => {
+                                 this.scrollTo(0);
+                             }}>
                             <ScrollToTopIcon color="white"/>
-                        </div> : ""
+                        </div>
                     }
 
-                    <div style={style.loading}>
-                        {this.state.loading ? (<div><RefreshIndicator
+                    <div className="loading-bottom">
+                        {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}><RefreshIndicator
                             size={30}
                             left={70}
                             top={0}
@@ -283,10 +270,10 @@ class SongList extends BaseComponent {
      * @param e
      */
     onScroll(e) {
-        if (!this.state.loading && e.target.classList && e.target.classList.contains("common-song-list")) {
+        if (e.target.classList && e.target.classList.contains("common-song-list")) {
             this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
-            if (betweenBottom < 50) {
+            if (!this.state.loading && betweenBottom < 50) {
                 this.loadMoreAction();
             }
             if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
@@ -308,6 +295,9 @@ class SongList extends BaseComponent {
     scrollTo(to) {
         const {scrollTarget} = this.state || {scrollTo: f => f};
         scrollTarget.scrollTop = to;
+        setTimeout(() => {
+            scrollTarget.scrollTop = to;
+        }, 100);
     }
 
 }

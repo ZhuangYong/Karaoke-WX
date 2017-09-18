@@ -6,80 +6,51 @@
     <meta name="format-detection" content="email=no,telephone=no"/>
     <title></title>
     <style id="appLoadingStyle">
-        .sk-cube-grid {
-            width: 40px;
-            height: 40px;
-            margin: 45% auto;
+        .word path {
+            stroke-width: .2px;
+            stroke: #ff6832;
+            -webkit-text-stroke-color: #ff6832;
+            height: 22px;
+            width: 22px;
+            stroke-dasharray: 21px, 7px;
+            stroke-dashoffset: 60000;
+            stroke-opacity: 1;
+            flood-color: red;
+            animation: draw 1000s infinite both;
+            -webkit-animation: draw 1000s infinite both;
         }
-        .sk-cube-grid .sk-cube {
-            width: 33%;
-            height: 33%;
-            background-color: #00bcd4;
-            float: left;
-            -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
-            animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+        @keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
         }
-        .sk-cube-grid .sk-cube1 {
-            -webkit-animation-delay: 0.2s;
-            animation-delay: 0.2s; }
-        .sk-cube-grid .sk-cube2 {
-            -webkit-animation-delay: 0.3s;
-            animation-delay: 0.3s; }
-        .sk-cube-grid .sk-cube3 {
-            -webkit-animation-delay: 0.4s;
-            animation-delay: 0.4s; }
-        .sk-cube-grid .sk-cube4 {
-            -webkit-animation-delay: 0.1s;
-            animation-delay: 0.1s; }
-        .sk-cube-grid .sk-cube5 {
-            -webkit-animation-delay: 0.2s;
-            animation-delay: 0.2s; }
-        .sk-cube-grid .sk-cube6 {
-            -webkit-animation-delay: 0.3s;
-            animation-delay: 0.3s; }
-        .sk-cube-grid .sk-cube7 {
-            -webkit-animation-delay: 0s;
-            animation-delay: 0s; }
-        .sk-cube-grid .sk-cube8 {
-            -webkit-animation-delay: 0.1s;
-            animation-delay: 0.1s; }
-        .sk-cube-grid .sk-cube9 {
-            -webkit-animation-delay: 0.2s;
-            animation-delay: 0.2s; }
-
-        @-webkit-keyframes sk-cubeGridScaleDelay {
-            0%, 70%, 100% {
-                -webkit-transform: scale3D(1, 1, 1);
-                transform: scale3D(1, 1, 1);
-            } 35% {
-                  -webkit-transform: scale3D(0, 0, 1);
-                  transform: scale3D(0, 0, 1);
-              }
-        }
-        @keyframes sk-cubeGridScaleDelay {
-            0%, 70%, 100% {
-                -webkit-transform: scale3D(1, 1, 1);
-                transform: scale3D(1, 1, 1);
-            } 35% {
-                  -webkit-transform: scale3D(0, 0, 1);
-                  transform: scale3D(0, 0, 1);
-              }
+        @-webkit-keyframes draw {
+            to {
+                stroke-dashoffset: 0;
+            }
         }
     </style>
     <script async src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
 </head>
 <body>
-<div class="sk-cube-grid" id="appLoadingDiv">
-    <div class="sk-cube sk-cube1"></div>
-    <div class="sk-cube sk-cube2"></div>
-    <div class="sk-cube sk-cube3"></div>
-    <div class="sk-cube sk-cube4"></div>
-    <div class="sk-cube sk-cube5"></div>
-    <div class="sk-cube sk-cube6"></div>
-    <div class="sk-cube sk-cube7"></div>
-    <div class="sk-cube sk-cube8"></div>
-    <div class="sk-cube sk-cube9"></div>
+<div id="appLoadingDiv">
+    <div style="position: absolute; width: 100%; height: 60%; left: 0; top: 18%; overflow: hidden;">
+        <svg viewBox="0 30 70 80" class="word">
+            <path fill-opacity="0"
+                  d="m 16.592529,36.464789 v 5.59139 q 0,1.255737 -0.02584,1.617472 -0.02584,0.356568 -0.237711,0.645956 -0.206706,0.289388 -0.568441,0.403076 -0.356567,0.10852 -1.080037,0.10852 H 13.590128 V 43.36876 q 0.19637,0.0155 0.28422,0.0155 0.232544,0 0.366903,-0.113688 0.134359,-0.113688 0.155029,-0.279052 0.02067,-0.165365 0.02067,-0.640788 v -5.885946 z"></path>
+            <path fill-opacity="0" d="m 22.057829,40.681586 v 1.441772 h -2.744018 v -1.441772 z"></path>
+            <path fill-opacity="0"
+                  d="m 31.512551,36.464789 v 8.366414 H 29.610858 V 39.18297 l -0.759644,5.648233 H 27.50246 l -0.800985,-5.519042 v 5.519042 h -1.901693 v -8.366414 h 2.816366 q 0.124023,0.754476 0.26355,1.77767 l 0.299723,2.129068 0.496094,-3.906738 z"></path>
+            <path fill-opacity="0"
+                  d="m 36.306057,40.62991 h -1.958536 v -0.459921 q 0,-0.795817 0.180867,-1.224731 0.186035,-0.434082 0.738973,-0.764811 0.552938,-0.330729 1.436605,-0.330729 1.059367,0 1.596802,0.377238 0.537434,0.37207 0.645955,0.91984 0.10852,0.542603 0.10852,2.242757 v 3.44165 H 37.02436 v -0.609781 q -0.191203,0.366902 -0.496094,0.552937 -0.299723,0.180868 -0.718302,0.180868 -0.547771,0 -1.007691,-0.304891 -0.454752,-0.310059 -0.454752,-1.348755 v -0.563273 q 0,-0.769979 0.242879,-1.049032 0.242879,-0.279052 1.204061,-0.651123 1.028361,-0.403076 1.100708,-0.542602 0.07235,-0.139526 0.07235,-0.568441 0,-0.537435 -0.08268,-0.697632 -0.07751,-0.165364 -0.263549,-0.165364 -0.211874,0 -0.26355,0.139526 -0.05168,0.134359 -0.05168,0.707967 z m 0.661459,0.940511 q -0.501262,0.366902 -0.583944,0.614949 -0.07751,0.248047 -0.07751,0.713135 0,0.532267 0.06718,0.687296 0.07235,0.15503 0.279052,0.15503 0.196371,0 0.253215,-0.118856 0.06201,-0.124023 0.06201,-0.640788 z"></path>
+            <path fill-opacity="0"
+                  d="m 46.386063,37.973741 -0.847493,2.733683 1.100708,4.123779 h -2.010213 l -0.651123,-2.986897 v 2.986897 h -2.087728 v -8.366414 h 2.087728 v 3.513998 l 0.651123,-2.005046 z"></path>
+            <path fill-opacity="0"
+                  d="m 53.799566,41.523912 h -2.702677 v 1.483113 q 0,0.465088 0.06718,0.599447 0.06718,0.134359 0.258383,0.134359 0.237711,0 0.315226,-0.1757 0.08268,-0.180868 0.08268,-0.692464 v -0.904338 h 1.979207 v 0.506429 q 0,0.63562 -0.08268,0.976685 -0.07751,0.341064 -0.37207,0.728637 -0.294556,0.387574 -0.749308,0.583944 -0.449585,0.191203 -1.131714,0.191203 -0.661459,0 -1.167888,-0.191203 -0.506429,-0.191203 -0.790649,-0.521932 -0.279053,-0.335897 -0.387573,-0.733805 -0.108521,-0.403076 -0.108521,-1.167888 v -1.999877 q 0,-0.89917 0.24288,-1.415935 0.242879,-0.521932 0.795817,-0.795817 0.552937,-0.279052 1.27124,-0.279052 0.878499,0 1.44694,0.335896 0.573608,0.33073 0.800984,0.883667 0.232544,0.547771 0.232544,1.545126 z M 51.706671,40.407701 V 39.90644 q 0,-0.532268 -0.05684,-0.687297 -0.05684,-0.155029 -0.232544,-0.155029 -0.217041,0 -0.268717,0.134359 -0.05168,0.129191 -0.05168,0.707967 v 0.501261 z"></path>
+        </svg>
+    </div>
 </div>
+
 <div id="reactApp"></div>
 </body>
 <!--<script src="http://wx.j-make.cn:6789/target/target-script-min.js#anonymous"></script>-->
