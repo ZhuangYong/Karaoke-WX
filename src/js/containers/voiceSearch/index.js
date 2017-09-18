@@ -44,9 +44,7 @@ class VoiceSearch extends BaseComponent {
     }
 
     componentWillUnmount() {
-        if (this.state.isRecordStart) {
-            window.wx && window.wx.stopRecord();
-        }
+        window.wx && window.wx.stopRecord();
 
         const stopRecordTimer = this.state.stopRecordTimer;
         if (stopRecordTimer !== null) {
@@ -233,7 +231,7 @@ class VoiceSearch extends BaseComponent {
                 },
                 fail: function () {
                     _this.setState({
-                        pageState: 0,
+                        pageState: 3,
                         isRecordStart: isRecordStart
                     });
                 }
