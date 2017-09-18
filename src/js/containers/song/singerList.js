@@ -247,7 +247,7 @@ class SingerList extends BaseComponent {
                 </div>
 
                 {
-                    <div className="scroll-to-top-button" style={scrollTopStyle} onClick={() => {
+                    <div className="scroll-to-top-button" style={scrollTopStyle} onTouchTap={() => {
                         this.scrollTo(0);
                     }}>
                         <ScrollToTopIcon color="white"/>

@@ -252,7 +252,7 @@ class SongController extends BaseComponent {
                             //播放控制页面
                             this.state.tabIndex === 0 ? <div style={{...style.controllerPan, height: tabContainerHeight, marginTop: controllerButtonsMarginTop}}>
                                 <div style={style.controllerBtn}>
-                                    <div style={style.controllerBtn.button} onTouchTap={() => {
+                                    <div style={style.controllerBtn.button} onClick={() => {
                                         this.state.controllerIng[PLAY_CONTROLLER_RE_SING] !== true && this.playController(PLAY_CONTROLLER_RE_SING);
                                     }}>
                                         {
@@ -269,7 +269,7 @@ class SongController extends BaseComponent {
                                 </div>
 
                                 <div style={style.controllerBtn}>
-                                    <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onTouchTap={() => {
+                                    <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onClick={() => {
                                         this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] !== true && this.playController(PLAY_CONTROLLER_PAUSE_PLAY);
                                     }}>
                                         {
@@ -285,7 +285,7 @@ class SongController extends BaseComponent {
                                 </div>
 
                                 <div style={style.controllerBtn}>
-                                    <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}} onTouchTap={() => {
+                                    <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}} onClick={() => {
                                         this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] !== true && this.playController(PLAY_CONTROLLER_ORIGINAL_ACCOMPANY);
                                     }}>
                                         {
@@ -302,7 +302,7 @@ class SongController extends BaseComponent {
 
                                 <div style={{...style.controllerBtn}}>
                                     <div style={{...style.controllerBtn.button, backgroundColor: "#ff5223"}}
-                                         onTouchTap={() => {
+                                         onClick={() => {
                                              this.state.controllerIng[PLAY_CONTROLLER_NEXT] !== true && this.playController(PLAY_CONTROLLER_NEXT);
                                          }}>
                                         {
