@@ -23,7 +23,7 @@ async function copydev() {
         copyFile('src/favicon.ico', 'build/favicon.ico'),
         copyFile('src/tile.png', 'build/tile.png'),
         copyFile('src/tile-wide.png', 'build/tile-wide.png'),
-        copyDir('testapi', 'build'),
+        // copyDir('testapi', 'build'),
     ]);
 
     if (process.argv.includes('--watch')) {

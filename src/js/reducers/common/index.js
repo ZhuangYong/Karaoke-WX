@@ -15,6 +15,7 @@ let common = function (state = initialState, action = {}) {
     switch (action.type) {
         case ActionTypes.COMMON.COMMON_UPDATE_SCREEN:
             return Object.assign({}, state, {
+                r: HYAPP.APP_PX,
                 w: HYAPP.APP_W,
                 h: HYAPP.APP_H
             });

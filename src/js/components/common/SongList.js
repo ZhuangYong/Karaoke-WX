@@ -127,7 +127,7 @@ class SongList extends BaseComponent {
                 opacity: 0
             };
         }
-        if (noData) {
+        if (!this.state.loading && noData) {
             return (
                 <NoResult style={{position: 'absolute'}}/>
             );
@@ -156,7 +156,7 @@ class SongList extends BaseComponent {
                     }
 
                     <div className="loading-bottom">
-                        {this.state.loading ? (<div><RefreshIndicator
+                        {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}><RefreshIndicator
                             size={30}
                             left={70}
                             top={0}

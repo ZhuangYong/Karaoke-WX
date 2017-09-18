@@ -21,7 +21,7 @@ const style = {
         position: "fixed",
         borderTop: "1px solid #efeeef",
         bottom: -1,
-        zIndex: "2",
+        zIndex: "5",
         playController: {
             position: "relative",
             paddingLeft: 0,

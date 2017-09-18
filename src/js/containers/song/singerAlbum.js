@@ -11,18 +11,16 @@ import BlankImg from "../../../img/common/blank.png";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import GradeList from "../../components/common/GradeList";
 
-const style = {
-    albumImg: {
-        height: "2.8rem",
-        width: "4.6rem",
-        overflow: "hidden",
-        backgroundImage: `url(${BlankImg})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'auto 60%',
-        backgroundColor: '#eaeaea',
-        backgroundPosition: 'center'
-    }
-};
+const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
+const defaultData = [
+    {id: 'defaultData0', wxPic: blankImg},
+    {id: 'defaultData1', wxPic: blankImg},
+    {id: 'defaultData2', wxPic: blankImg},
+    {id: 'defaultData3', wxPic: blankImg},
+    {id: 'defaultData4', wxPic: blankImg},
+    {id: 'defaultData5', wxPic: blankImg},
+    {id: 'defaultData6', wxPic: blankImg}
+];
 class SingerAlumb extends BaseComponent {
 
     constructor(props) {
@@ -40,10 +38,17 @@ class SingerAlumb extends BaseComponent {
     }
 
     render() {
-        const {w} = this.props.common;
-        const cellHeight = 3 * w / 10 - 4;
-        const cellPadding = 0.267 * w / 10;
+        const {w, h} = this.props.common;
+        let cellHeight = 3 * w / 10 - 8;
+        let cellPadding = 0.267 * w / 10;
         const {getSingerAlbum} = this.props.songs;
+        let rowNumber = 2;
+        if (w >= 568 && h < w) {
+            rowNumber = 3;
+            cellPadding = 0.16 * w / 10;
+            cellHeight = 2 * w / 10 - 8;
+        }
+        const listData = (getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result) || defaultData;
         return (
             <Paper zDepth={0} style={{paddingBottom: 66}}>
                 <SearchHeadFake/>
@@ -51,12 +56,12 @@ class SingerAlumb extends BaseComponent {
                     cellHeight={cellHeight}
                     padding={cellPadding}
                     style={{margin: '0.133rem'}}
-                    cols={2}
+                    cols={rowNumber}
                     className="singer-album-list"
                 >
-                    {getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result && getSingerAlbum.data.result.map((singer) => (
+                    {listData.map((singer) => (
                         <GridTile
-                        className="grade-tile"
+                        className="grade-tile img-not-loaded"
                         key={singer.id}
                         title=""
                         titleStyle={{
@@ -69,11 +74,11 @@ class SingerAlumb extends BaseComponent {
                     }}
                         titleBackground="transparent"
                         onClick={() => {
-                        linkTo(`singer/${singer.id}/${singer.name}`, false, null);
-                    }}
+                            if (singer.name) linkTo(`singer/${singer.id}/${singer.name}`, false, null);
+                        }}
                         >
-                        <div style={{height: "100%"}}>
-                            <img className="img-not-loaded" src={singer.wxPic || singer.ottPic} style={{width: "100%", height: "100%", display: "table-cell", margin: "auto"}}/>
+                        <div>
+                            <img src={singer.wxPic || singer.ottPic} style={{width: "100%", height: "100%", display: "table-cell", margin: "auto"}}/>
                         </div>
                         </GridTile>
                     ))}

@@ -13,6 +13,19 @@ import {linkTo, reqHeader} from "../../utils/comUtils";
 import GradeList from "../../components/common/GradeList";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 
+const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
+const defaultData = [
+    {id: 'defaultData0', wxPic: blankImg},
+    {id: 'defaultData1', wxPic: blankImg},
+    {id: 'defaultData2', wxPic: blankImg},
+    {id: 'defaultData3', wxPic: blankImg},
+    {id: 'defaultData4', wxPic: blankImg},
+    {id: 'defaultData5', wxPic: blankImg},
+    {id: 'defaultData6', wxPic: blankImg},
+    {id: 'defaultData7', wxPic: blankImg},
+    {id: 'defaultData8', wxPic: blankImg},
+    {id: 'defaultData9', wxPic: blankImg}
+];
 
 class CatAlbum extends BaseComponent {
 
@@ -32,12 +45,12 @@ class CatAlbum extends BaseComponent {
     }
 
     render() {
-        const {getCatAlbum} = this.props.songs;
+        const getCatAlbum = this.props.songs.getCatAlbum || {data: {result: [{name: "主题", data: defaultData}]}};
         return (
             <Paper zDepth={0} style={{paddingTop: '1.2rem'}}>
                 <SearchHeadFake/>
                 {
-                    getCatAlbum && getCatAlbum.data.result.map((cats) => {
+                    getCatAlbum.data.result.map((cats) => {
                         const name = cats.name;
                         const catArr = cats.data;
                         if (name === "主题") {

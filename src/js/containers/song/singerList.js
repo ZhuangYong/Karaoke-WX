@@ -62,7 +62,7 @@ class SingerList extends BaseComponent {
         const {pageData, loading, currentPage, lastPage, keyWord, scrollTop} = cacheId === id ? this.props.common.singerList : {};
         this.state = {
             pageSize: 20,
-            pageData: pageData || [],
+            pageData: [],
             loading: loading || false,
             currentPage: currentPage || 0,
             lastPage: typeof lastPage !== "undefined" ? lastPage : false,
@@ -106,14 +106,8 @@ class SingerList extends BaseComponent {
 
             this.props.action_setSingerList(cacheData);
         }
-    }
 
-    componentDidMount() {
-        // http://portal.j-make.cn/singer_catagory/album?currentPage=1&pageSize=20&keyword=&id=3
-        // const {currentPage, pageSize, keyWord, id} = this.state;
-        // const param = Object.assign({currentPage, pageSize, keyWord, id}, this.props.match.params);
-        // this.props.action_getSingerList(param, reqHeader(param));
-        if (!this.state.initialScrollTop) {
+        if (this.state.pageData.length > 0 && !this.state.initialScrollTop) {
             console.log(this.state.scrollTop);
             const {scrollTop} = this.state;
             if (scrollTop) this.refs.commSingerList.scrollTop = scrollTop;
@@ -127,7 +121,25 @@ class SingerList extends BaseComponent {
             this.state.cacheData = cacheData;
             this.state.initialScrollTop = true;
         }
+    }
+
+    componentDidMount() {
         if (this.state.currentPage === 0) this.loadMoreAction();
+
+        const {id} = this.props.match.params || {};
+        const cacheId = this.props.common.singerList.id;
+        if (cacheId === id) {
+            const {pageData} = this.props.common.singerList;
+            this.setState({
+                loading: true
+            });
+            setTimeout(() => {
+                this.setState({
+                    loading: false,
+                    pageData: pageData
+                });
+            }, 50);
+        }
     }
 
     render() {
@@ -192,30 +204,31 @@ class SingerList extends BaseComponent {
                         (this.state.dataLoaded && this.state.currentPage >= 1 && this.state.pageData.length === 0) ? <NoResult style={{position: 'absolute', top: '-1rem'}}/> : <div>
                             <List className="single-list" style={{paddingTop: '2.4rem'}}>
                                 {this.state.pageData.map((singer) => (
-                                    <ListItem
-                                        innerDivStyle={{paddingLeft: '2rem', paddingTop: '.553rem'}}
-                                        className="single-item"
-                                        key={singer.id}
-                                        onClick={() => {
-                                            let {cacheData, scrollTop} = this.state;
-                                            cacheData.scrollTop = scrollTop;
-                                            this.props.action_setSingerList(cacheData);
-                                            linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
-                                        }}
-                                        leftAvatar={
-                                            <Avatar
-                                                style={{overflow: 'hidden', height: '1.12rem', width: '1.12rem'}}
-                                                src={singer.image}
-                                                size={avatarSize}
-                                            />
-                                        }
-                                        rightIcon={<RightArrowIcon style={{top: '.01rem', margin: '.4rem', height: '.64rem', width: '.64rem'}}/>}
-                                        primaryText={<div style={{fontSize: '.4rem'}}>{singer.nameNorm}</div>}
-                                    />
+
+                                    <div key={singer.id} onClick={() => {
+                                        let {cacheData, scrollTop} = this.state;
+                                        cacheData.scrollTop = scrollTop;
+                                        this.props.action_setSingerList(cacheData);
+                                        linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
+                                    }}>
+                                        <span className="single-item">
+                                            <div>
+                                                <div>
+                                                    <svg viewBox="0 0 24 24">
+                                                        <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+                                                    </svg>
+                                                    <img size="35.84" src={singer.image}/>
+                                                    <div style={{fontSize: '0.4rem'}}>
+                                                        {singer.nameNorm}
+                                                        </div>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </div>
                                 ))}
                             </List>
                             <div className="loading-bottom">
-                                {this.state.loading ? (<div><RefreshIndicator
+                                {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}><RefreshIndicator
                                     size={30}
                                     left={70}
                                     top={0}

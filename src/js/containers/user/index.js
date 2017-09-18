@@ -184,7 +184,7 @@ class UserIndex extends BaseComponent {
                             float: "right",
                             marginRight: toRem(20)
                         }}
-                             onTouchTap={() => {
+                             onClick={() => {
                                  if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
 
                                  if (recordsListTotalCounts < 1) {

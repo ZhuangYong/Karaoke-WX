@@ -1,51 +1,52 @@
 @import "variables";
+
 .search-header {
-    .search-bar-panel{
-        top: 0 ;
+    .search-bar-panel {
+        top: 0;
         z-index: 6;
         width: 100%;
-        color:white;
+        color: white;
         position: fixed;
         padding: .13rem .107rem;
         text-align: center;
         height: $bar-base-height;
-        background:-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332));
-        display: inline-table!important;
-        .key-word-input{
+        background: -webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332));
+        display: inline-table !important;
+        .key-word-input {
             margin: 0;
             padding: 0;
             overflow: hidden;
-            width:100%!important;
-            display:flex!important;
+            width: 100% !important;
+            display: flex !important;
             border-radius: 1.2rem;
-            background-color:#fe9e62!important;
-            height: .93rem!important;
+            background-color: #fe9e62 !important;
+            height: .93rem !important;
             border: 1px solid #fe9e62;
-            div:nth-child(1){
+            div:nth-child(1) {
                 display: flex;
                 width: 90%;
                 height: 100%;
                 justify-content: center;
                 align-items: center;
-                bottom: auto!important;
+                bottom: auto !important;
             }
-            hr{
-                display: none!important;
+            hr {
+                display: none !important;
             }
-            input{
+            input {
                 height: .9rem !important;
-                padding-left: 5%!important;
-                color: white!important;
-                font-size: .4rem!important;
+                padding-left: 5% !important;
+                color: white !important;
+                font-size: .4rem !important;
             }
-            font{
+            font {
                 font-size: .4rem;
             }
-            img.search{
+            img.search {
                 height: .32rem;
                 margin-right: .107rem;
             }
-            img.voice{
+            img.voice {
                 display: block;
                 padding: .16rem .267rem .16rem .48rem;
                 width: 1.067rem;
@@ -55,42 +56,50 @@
                 z-index: 1;
             }
         }
-        .search-button{
-            width:1.4rem;
-            display:table-cell;
+        .search-button {
+            width: 1.4rem;
+            display: table-cell;
         }
     }
     .search-panel {
         width: 100%;
-        height:100%;
-        z-index: 2;
+        height: 100%;
+        z-index: 4;
         position: fixed;
         background-color: white;
         .search-words {
-            height:100%;
+            height: 100%;
             padding: $container-padding;
             padding-top: 0;
             .hot-words {
                 display: flex;
                 flex-wrap: wrap;
                 .word {
-                    margin:4px 0 0 4px !important;
+                    -webkit-border-radius: 0.5rem !important;
+                    -moz-border-radius: 0.5rem !important;
+                    border-radius: 0.5rem !important;
+                    margin: .107rem 0 0 4px !important;
+                    span {
+                        font-size: .32rem !important;
+                        line-height: .4rem !important;
+                        padding: .26rem .32rem !important;
+                    }
                 }
             }
-            .history-words-title{
+            .history-words-title {
                 height: .8rem;
                 margin-top: .6rem;
             }
         }
     }
-    &.gray{
-        .search-bar-panel{
+    &.gray {
+        .search-bar-panel {
             top: 1.2rem;
             background: #d7d7d7;
             .key-word-input {
-                background-color: white!important;
-                border: 1px solid white!important;
-                div:nth-child(1){
+                background-color: white !important;
+                border: 1px solid white !important;
+                div:nth-child(1) {
                     color: #999999;
                 }
             }

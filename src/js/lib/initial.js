@@ -11,7 +11,9 @@ var HYAPP = {
         appw = ww;
         apph = wh;
         // 默认为宽度十分之一
-        if (wh < ww) {
+        if (1.9 * wh < ww) {
+            remSize = ww / 14 / 1.9;
+        } else if (wh < ww) {
             remSize = wh / 14;
         } else {
             if (ww >= 768) {
@@ -21,6 +23,7 @@ var HYAPP = {
             }
         }
         document.documentElement.style.fontSize = remSize + "px";
+        HYAPP.APP_PX = remSize;
         HYAPP.APP_W = appw;
         HYAPP.APP_H = apph;
     }
@@ -29,8 +32,15 @@ var HYAPP = {
 
     // window.addEventListener('resize', setSize);
     window.addEventListener('resize', function () {
+        if (window.lockResize) return;
         clearTimeout(timer);
         timer = setTimeout(setSize, 300);
+    });
+    window.addEventListener('orientationchange',function(e){
+        if (window.lastRotate === window.orientation) return;
+        clearTimeout(timer);
+        timer = setTimeout(setSize, 300);
+        window.lastRotate = window.orientation;
     });
 
     HYAPP.setSize = setSize;

@@ -29,6 +29,14 @@ import ActionTypes from "../../actions/actionTypes";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 
 const style = {
+    controllerPan: {
+        position: 'absolute',
+        top: 0,
+        marginBottom: "2.2rem",
+        display: "flex",
+        width: "100%",
+        flexWrap: "wrap"
+    },
     controllerBtn: {
         width: "50%",
         height: "3.4rem",
@@ -49,6 +57,10 @@ const style = {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '1.867rem'
+        },
+        label: {
+            margin: '.3rem 0',
+            fontSize: '.4rem'
         }
     },
     extArea: {
@@ -235,98 +247,76 @@ class SongController extends BaseComponent {
                                 播放控制
                             </div>
                         }>
-                        <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            height: tabContainerHeight,
-                            marginTop: controllerButtonsMarginTop,
-                            marginBottom: "2rem",
-                            display: "flex",
-                            width: "100%",
-                            flexWrap: "wrap"
-                        }}>
-                            <div style={style.controllerBtn}>
-                                <div style={style.controllerBtn.button} onTouchTap={() => {
-                                    this.state.controllerIng[PLAY_CONTROLLER_RE_SING] !== true && this.playController(PLAY_CONTROLLER_RE_SING);
-                                }}>
-                                    {
-                                        this.state.controllerIng[PLAY_CONTROLLER_RE_SING] === true ? <CircularProgress
-                                            size={20}
-                                            thickness={2}
-                                            color="white"/> : <ReloadIcon
-                                            color="white"
-                                            style={{width: '1.1rem', height: '1.1rem'}}
-                                        />
-                                    }
-                                </div>
-                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>重唱</p>
-                            </div>
 
-                            <div style={style.controllerBtn}>
-                                <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onTouchTap={() => {
-                                    this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] !== true && this.playController(PLAY_CONTROLLER_PAUSE_PLAY);
-                                }}>
-                                    {
-                                        this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] === true ? <CircularProgress
-                                            size={20}
-                                            thickness={2}
-                                            color="white"/> : (
-                                            <img src={PlayStopIcon} style={{width: '60%'}}/>
-                                        )
-                                    }
-                                </div>
-                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>播/停</p>
-                            </div>
-
-                            <div style={style.controllerBtn}>
-                                <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}} onTouchTap={() => {
-                                    this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] !== true && this.playController(PLAY_CONTROLLER_ORIGINAL_ACCOMPANY);
-                                }}>
-                                    {
-                                        this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] === true ? <CircularProgress
-                                            size={20}
-                                            thickness={2}
-                                            color="white"/> : (
-                                            <img src={YuanBanIcon} style={{width: '60%'}}/>
-                                        )
-                                    }
-                                </div>
-                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>原/伴</p>
-                            </div>
-
-                            <div style={{...style.controllerBtn}}>
-                                <div style={{...style.controllerBtn.button, backgroundColor: "#ff5223"}}
-                                     onTouchTap={() => {
-                                         this.state.controllerIng[PLAY_CONTROLLER_NEXT] !== true && this.playController(PLAY_CONTROLLER_NEXT);
-                                }}>
-                                    {
-                                        this.state.controllerIng[PLAY_CONTROLLER_NEXT] === true ? <CircularProgress
-                                            size={20}
-                                            thickness={2}
-                                            color="white"/> : <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
-                                    }
-                                </div>
-                                <p style={{margin: '.3rem 0', fontSize: '.4rem'}}>切歌</p>
-                            </div>
-
-                            <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
-                                <div style={{
-                                    margin: '0 .5rem',
-                                    display: 'flex',
-                                    justifyContent: 'center'
-                                }}>
-                                    <div
-                                        style={style.extArea.btn}
-                                        onTouchTap={() => {
-                                            linkTo('controller/barrage', false, null);
-                                        }}
-                                    >
-                                        <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                        <p style={style.extArea.btn.label}>弹幕</p>
+                        {
+                            //播放控制页面
+                            this.state.tabIndex === 0 ? <div style={{...style.controllerPan, height: tabContainerHeight, marginTop: controllerButtonsMarginTop}}>
+                                <div style={style.controllerBtn}>
+                                    <div style={style.controllerBtn.button} onTouchTap={() => {
+                                        this.state.controllerIng[PLAY_CONTROLLER_RE_SING] !== true && this.playController(PLAY_CONTROLLER_RE_SING);
+                                    }}>
+                                        {
+                                            this.state.controllerIng[PLAY_CONTROLLER_RE_SING] === true ? <CircularProgress
+                                                size={20}
+                                                thickness={2}
+                                                color="white"/> : <ReloadIcon
+                                                color="white"
+                                                style={{width: '1.1rem', height: '1.1rem'}}
+                                            />
+                                        }
                                     </div>
+                                    <p style={style.controllerBtn.label}>重唱</p>
                                 </div>
-                                {
-                                    this.showAudioEffect() ? <div style={{
+
+                                <div style={style.controllerBtn}>
+                                    <div style={{...style.controllerBtn.button, backgroundColor: "#0ebc0e"}} onTouchTap={() => {
+                                        this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] !== true && this.playController(PLAY_CONTROLLER_PAUSE_PLAY);
+                                    }}>
+                                        {
+                                            this.state.controllerIng[PLAY_CONTROLLER_PAUSE_PLAY] === true ? <CircularProgress
+                                                size={20}
+                                                thickness={2}
+                                                color="white"/> : (
+                                                <img src={PlayStopIcon} style={{width: '60%'}}/>
+                                            )
+                                        }
+                                    </div>
+                                    <p style={style.controllerBtn.label}>播/停</p>
+                                </div>
+
+                                <div style={style.controllerBtn}>
+                                    <div style={{...style.controllerBtn.button, backgroundColor: "#2cabe9"}} onTouchTap={() => {
+                                        this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] !== true && this.playController(PLAY_CONTROLLER_ORIGINAL_ACCOMPANY);
+                                    }}>
+                                        {
+                                            this.state.controllerIng[PLAY_CONTROLLER_ORIGINAL_ACCOMPANY] === true ? <CircularProgress
+                                                size={20}
+                                                thickness={2}
+                                                color="white"/> : (
+                                                <img src={YuanBanIcon} style={{width: '60%'}}/>
+                                            )
+                                        }
+                                    </div>
+                                    <p style={style.controllerBtn.label}>原/伴</p>
+                                </div>
+
+                                <div style={{...style.controllerBtn}}>
+                                    <div style={{...style.controllerBtn.button, backgroundColor: "#ff5223"}}
+                                         onTouchTap={() => {
+                                             this.state.controllerIng[PLAY_CONTROLLER_NEXT] !== true && this.playController(PLAY_CONTROLLER_NEXT);
+                                         }}>
+                                        {
+                                            this.state.controllerIng[PLAY_CONTROLLER_NEXT] === true ? <CircularProgress
+                                                size={20}
+                                                thickness={2}
+                                                color="white"/> : <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
+                                        }
+                                    </div>
+                                    <p style={style.controllerBtn.label}>切歌</p>
+                                </div>
+
+                                <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
+                                    <div style={{
                                         margin: '0 .5rem',
                                         display: 'flex',
                                         justifyContent: 'center'
@@ -334,17 +324,35 @@ class SongController extends BaseComponent {
                                         <div
                                             style={style.extArea.btn}
                                             onTouchTap={() => {
-                                                linkTo('controller/effect', false, null);
+                                                linkTo('controller/barrage', false, null);
                                             }}
                                         >
                                             <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                            <p style={style.extArea.btn.label}>音效</p>
+                                            <p style={style.extArea.btn.label}>弹幕</p>
                                         </div>
-                                    </div> : ""
-                                }
+                                    </div>
+                                    {
+                                        this.showAudioEffect() ? <div style={{
+                                            margin: '0 .5rem',
+                                            display: 'flex',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <div
+                                                style={style.extArea.btn}
+                                                onTouchTap={() => {
+                                                    linkTo('controller/effect', false, null);
+                                                }}
+                                            >
+                                                <img src={BarrageIcon} style={style.extArea.btn.icon}/>
+                                                <p style={style.extArea.btn.label}>音效</p>
+                                            </div>
+                                        </div> : ""
+                                    }
 
-                            </Paper>
-                        </div>
+                                </Paper>
+                            </div> : <div/>
+                        }
+
                     </Tab>
                     <Tab
                         selected={this.state.tabIndex === 1}
@@ -361,11 +369,16 @@ class SongController extends BaseComponent {
                             已点歌曲
                             </div>
                         }>
-                        <div style={{paddingTop: '2rem', paddingBottom: '1.2rem', width: "100%"}}>
-                            {
-                                this.chooseSongList(playingSong, playList)
-                            }
-                        </div>
+
+                        {
+                            //已点歌曲页面
+                            this.state.tabIndex === 1 ? <div style={{paddingTop: '2rem', paddingBottom: '1.2rem', width: "100%"}}>
+                                {
+                                    this.chooseSongList(playingSong, playList)
+                                }
+                            </div> : <div/>
+                        }
+
                     </Tab>
 
                     <Tab
@@ -376,20 +389,25 @@ class SongController extends BaseComponent {
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
                         label={
                             <div style={{fontSize: '.4rem'}}>
-                            最近唱过
+                                最近唱过
                             </div>
-                                }>
-                        <div style={{paddingTop: '2rem', paddingBottom: '1.2rem'}}>
-                            {
-                                this.historySongList(historySongList)
-                            }
-                        </div>
+                        }>
+
+                        {
+                            // 最近唱过页面
+                            this.state.tabIndex === 2 ? <div style={{paddingTop: '2rem', paddingBottom: '1.2rem'}}>
+                                {
+                                    this.historySongList(historySongList)
+                                }
+                            </div> : <div/>
+                        }
+
                     </Tab>
                 </Tabs>
                 <Snackbar
                     open={!!this.state.barrageSendToast}
                     message={this.state.barrageToastMsg}
-                    autoHideDuration={500}
+                    autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}
                     onRequestClose={() => {
                         this.setState({
                             barrageSendToast: false
@@ -661,7 +679,7 @@ class SongController extends BaseComponent {
         if (downloadStatus === Const.DOWNLOAD_STATUS_NOT_DOWN && this.state.notDownloadIndex === -1) {
             this.state.notDownloadIndex = index;
         }
-        if (index !== 0 && downloadStatus !== Const.DOWNLOAD_STATUS_DOWNING && index !== this.state.notDownloadIndex) {
+        if (index !== 0 && downloadStatus !== Const.DOWNLOAD_STATUS_DOWNING && downloadStatus !== Const.DOWNLOAD_STATUS_DOWN_FAILED && index !== this.state.notDownloadIndex) {
             return setTopButton;
         } else {
             return (
@@ -759,6 +777,8 @@ class SongController extends BaseComponent {
                 this.setState({
                     offLine: false,
                     setTopSongIdIng: 0,
+                    barrageSendToast: true,
+                    barrageToastMsg: "置顶成功",
                     updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
                 });
             }, 500);
@@ -806,6 +826,8 @@ class SongController extends BaseComponent {
             delChooseSongIdIng[musicNo] = false;
             this.setState({
                 offLine: false,
+                barrageSendToast: true,
+                barrageToastMsg: "删除成功",
                 delChooseSongIdIng: delChooseSongIdIng,
                 playList: playList.filter((song) => {
                     return song.musicNo !== musicNo;

@@ -85,37 +85,15 @@ const style = {
         marginLeft: -50,
     }
 };
+const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
 const defaultGetAlbumRecommendData = [
-    {
-        id: 'dfAlbum1',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum2',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum3',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum4',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum5',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    },
-    {
-        id: 'dfAlbum6',
-        wxPic: 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==',
-        name: ''
-    }
+    {id: 'defaultData0', wxPic: blankImg},
+    {id: 'defaultData1', wxPic: blankImg},
+    {id: 'defaultData2', wxPic: blankImg},
+    {id: 'defaultData3', wxPic: blankImg},
+    {id: 'defaultData4', wxPic: blankImg},
+    {id: 'defaultData5', wxPic: blankImg},
+    {id: 'defaultData6', wxPic: blankImg}
 ];
 
 const defaultGetRankingData = defaultGetAlbumRecommendData;
