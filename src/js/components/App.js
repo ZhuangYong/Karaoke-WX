@@ -549,7 +549,8 @@ const mapStateToProps = (state, ownProps) => {
         globAlert: state.app.common.globAlert,
         alertData: state.app.common.alertData,
         localNetIsWork: state.app.common.localNetIsWork,
-        ottInfo: state.app.device.ottInfo
+        ottInfo: state.app.device.ottInfo,
+        audioInfo: state.app.audio.audioInfo
     };
 };
 // 映射dispatch到props

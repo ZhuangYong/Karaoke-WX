@@ -231,15 +231,15 @@ class UserIndex extends BaseComponent {
                         });
                     }}
                     actions={[
-                        <FlatButton
+                        <button
                             style={{
                                 width: "80%",
-                                height: "80%",
-                                color: "#ff6832"
+                                height: "100%",
+                                color: "#ff6832",
+                                fontSize: toRem(38),
+                                background: "#fff",
+                                border: "none"
                             }}
-                            labelStyle={{fontSize: toRem(38)}}
-                            label="删除"
-                            primary={true}
                             onClick={() => {
                                 const uid = this.state.deleteRecordingUid;
                                 const params = {
@@ -259,7 +259,7 @@ class UserIndex extends BaseComponent {
                                     });
                                 });
                             }}
-                        />
+                        >删除</button>
                     ]}
                 />
             </div>
