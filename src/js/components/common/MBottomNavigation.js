@@ -13,7 +13,8 @@ import navIndexIcon from "../../../img/common/nav_index.png";
 import navIndexOnIcon from "../../../img/common/nav_index_on.png";
 import navMeIcon from "../../../img/common/nav_me.png";
 import navMeOnIcon from "../../../img/common/nav_me_on.png";
-import navControllerIcon from "../../../img/common/nav_controll_gif.png";
+import navControllerGifIcon from "../../../img/common/nav_controll_gif.png";
+import navControllerIcon from "../../../img/common/nav_controll.png";
 
 const style = {
     nav: {
@@ -116,7 +117,7 @@ class MBottomNavigation extends BaseComponent {
                             <div style={style.nav.playController.circle.arc}/>
                             <div style={style.nav.playController.circle.maskLine}/>
                             <div style={style.nav.playController.circle.maskArc}/>
-                            <img style={style.nav.playController.circle.icon} src={navControllerIcon}/>
+                            <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerGifIcon : navControllerIcon}/>
                         </div>
                     }
                     onTouchTap={() => this.navSelect(1)}
@@ -162,7 +163,9 @@ MBottomNavigation.defaultProps = {
 
 
 const mapStateToProps = (state, ownPorps) => {
-    return {};
+    return {
+        common: state.app.common
+    };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {};

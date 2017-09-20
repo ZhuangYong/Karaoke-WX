@@ -313,3 +313,17 @@ input, textarea {
         fill: red !important;
     }
 }
+
+.rotate {
+    animation: rotate 1s infinite both;
+}
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+@-webkit-keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}

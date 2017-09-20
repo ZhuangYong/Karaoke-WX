@@ -194,6 +194,9 @@ class SearchHeader extends BaseComponent {
                                             }}
                                         />
                                     ))}
+                                    <br/>
+                                    <br/>
+                                    <br/>
                                 </List>
                             </div>
                         </div>

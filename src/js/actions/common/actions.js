@@ -56,3 +56,10 @@ export function setSingerList(data) {
         singerList: data
     };
 }
+
+export function setCommonInfo(data) {
+    return {
+        type: ActionTypes.COMMON.COMMON_SET_COMMON_INOF,
+        commonInfo: data
+    };
+}

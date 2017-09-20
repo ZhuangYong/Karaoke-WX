@@ -4,7 +4,7 @@ import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {getUserConfig, getUserInfo} from "../actions/userActions";
 import {
-    getUserInfoFromSession, setGlobAlert, setLocalNet, setWeixinConfigFinished,
+    getUserInfoFromSession, setCommonInfo, setGlobAlert, setLocalNet, setWeixinConfigFinished,
     updateScreen
 } from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
@@ -235,6 +235,11 @@ class App extends React.Component {
         });
 
         window.lockResize = true;
+        setTimeout(() => {
+            let commonInfo = this.props.commonInfo || {};
+            commonInfo.stopNavFlash = false;
+            this.props.action_setCommonInfo(commonInfo);
+        }, 30000);
     }
 
     componentDidUpdate(prevProps) {
@@ -534,6 +539,7 @@ const mapStateToProps = (state, ownProps) => {
         userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
         alertData: state.app.common.alertData,
+        commonInfo: state.app.common.commonInfo,
         localNetIsWork: state.app.common.localNetIsWork,
         ottInfo: state.app.device.ottInfo,
         audioInfo: state.app.audio.audioInfo
@@ -549,7 +555,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         action_getOttStatus: bindActionCreators(getOttStatus, dispatch),
         action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
-        action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch)
+        action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch),
+        action_setCommonInfo: bindActionCreators(setCommonInfo, dispatch)
     };
 };
 

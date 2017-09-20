@@ -7,7 +7,8 @@ let initialState = {
     testLocalPushStamp: 0,
     localNetIsWork: true,
     weixinConfigFinish: false,
-    singerList: {}
+    singerList: {},
+    commonInfo: {}
 };
 
 let common = function (state = initialState, action = {}) {
@@ -43,7 +44,10 @@ let common = function (state = initialState, action = {}) {
             return Object.assign({}, state, {
                 singerList: action.singerList
             });
-
+        case ActionTypes.COMMON.COMMON_SET_COMMON_INOF:
+            return Object.assign({}, state, {
+                commonInfo: action.commonInfo
+            });
         default:
             return state;
     }

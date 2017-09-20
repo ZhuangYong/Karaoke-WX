@@ -108,7 +108,6 @@ class SingerList extends BaseComponent {
         }
 
         if (this.state.pageData.length > 0 && !this.state.initialScrollTop) {
-            console.log(this.state.scrollTop);
             const {scrollTop} = this.state;
             if (scrollTop) this.refs.commSingerList.scrollTop = scrollTop;
             const cacheData = {
@@ -139,6 +138,10 @@ class SingerList extends BaseComponent {
                     pageData: pageData
                 });
             }, 50);
+            //再次从分类进来的时候不定向
+            let {cacheData} = this.state;
+            cacheData.scrollTop = 0;
+            this.props.action_setSingerList(cacheData);
         }
     }
 
@@ -228,14 +231,17 @@ class SingerList extends BaseComponent {
                                 ))}
                             </List>
                             <div className="loading-bottom">
-                                {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}><RefreshIndicator
-                                    size={30}
-                                    left={70}
-                                    top={0}
-                                    loadingColor="#FF9800"
-                                    status="loading"
-                                    style={style.loadingBar}
-                                />
+                                {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}>
+                                    <svg className="rotate" viewBox="0 0 40 40" style={{width: '.42rem', height: '.42rem', marginRight: '.2rem', position: 'relative'}}>
+                                        <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20"
+                                                style={{
+                                                    stroke: '#FF9800',
+                                                    strokeLinecap: 'round',
+                                                    transition: 'all 850ms ease-in-out 0ms',
+                                                    strokeDasharray: '80, 114',
+                                                    strokeDashoffset: '-403.668'
+                                                }}/>
+                                    </svg>
                                     <span>正在加载</span>
                                 </div>) : ""}
 

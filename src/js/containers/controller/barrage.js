@@ -177,7 +177,7 @@ class Barrage extends BaseComponent {
 
         return (
             <div>
-                <div style={{backgroundColor: 'white', textAlign: "center", height: showInputAreaHeight, overflow: "hidden"}} onTouchTap={() => {
+                <div style={{position: 'relative', backgroundColor: 'white', textAlign: "center", height: showInputAreaHeight, overflow: "hidden"}} onTouchTap={() => {
                     inputImage && this.setState({
                         inputImage: ""
                     });
@@ -198,6 +198,17 @@ class Barrage extends BaseComponent {
                             onChange={this.handelChange.bind(this)}
                         />
                     }
+                    <Snackbar
+                        style={{position: 'absolute'}}
+                        open={this.state.barrageSendToast}
+                        message={this.state.barrageToastMsg}
+                        autoHideDuration={500}
+                        onRequestClose={() => {
+                            this.setState({
+                                barrageSendToast: false
+                            });
+                        }}
+                    />
                 </div>
                 <Tabs
                     tabItemContainerStyle={{height: '1.2rem', backgroundColor: "#d7d7d7"}}
@@ -258,17 +269,6 @@ class Barrage extends BaseComponent {
                         this.getSendButton()
                     }
                 </div> : ""}
-
-                <Snackbar
-                    open={this.state.barrageSendToast}
-                    message={this.state.barrageToastMsg}
-                    autoHideDuration={500}
-                    onRequestClose={() => {
-                        this.setState({
-                            barrageSendToast: false
-                        });
-                    }}
-                />
             </div>
         );
     }
@@ -413,17 +413,15 @@ class Barrage extends BaseComponent {
                 this.setState({
                     inputImage: "",
                     inputValue: "",
-                    sendBarrageIng: false,
-                    barrageSendToast: true,
-                    barrageToastMsg: "发送成功"
+                    sendBarrageIng: false
                 });
+                this.props.action_setGlobAlert("发送成功", "");
             };
             const fail = (msg) => {
                 this.setState({
-                    sendBarrageIng: false,
-                    barrageSendToast: true,
-                    barrageToastMsg: msg
+                    sendBarrageIng: false
                 });
+                this.props.action_setGlobAlert(msg, "");
             };
             dynaPush({
                 ottInfo: this.props.ottInfo,
@@ -460,7 +458,10 @@ class Barrage extends BaseComponent {
         value = value.trim() || "";
         // value = value.replace(/[\r\n]/g, "");
         if (value.length >= 50) {
-            this.props.action_setGlobAlert("最多只能输入50个字符", "");
+            this.setState({
+                barrageSendToast: true,
+                barrageToastMsg: "最多只能输入50个字符"
+            });
             value = value.substr(0, 50);
         }
         this.setState({
@@ -495,7 +496,7 @@ class Barrage extends BaseComponent {
 
     handelInputBlur(e) {
         const input = ReactDOM.findDOMNode(this.refs.input);
-        if (!input.contains(e.target)) {
+        if (input && !input.contains(e.target)) {
             this.blurSearchInput();
         }
     }
