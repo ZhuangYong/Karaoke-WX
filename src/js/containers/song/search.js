@@ -63,6 +63,7 @@ class Search extends BaseComponent {
                         onPushSongSuccess={this.onPushSongSuccess}
                         onPushSongFail={this.onPushSongFail}
                         paddingTop="2.4rem"
+                        scrollToTopBottom="2rem"
                         keyword={this.state.keyword}
                         search={true}/>
                 </div>

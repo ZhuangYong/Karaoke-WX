@@ -79,7 +79,6 @@ class SongList extends BaseComponent {
         this.getContent = this.getContent.bind(this);
         this.scrollTo = this.scrollTo.bind(this);
     }
-
     componentDidMount() {
         if (this.props.search) {
             this.state.currentPage = 1;
@@ -148,7 +147,7 @@ class SongList extends BaseComponent {
                     {
 
                         <div className="scroll-to-top-button" style={{bottom: scrollToTopBottom, ...scrollTopStyle}}
-                             onClick={() => {
+                             onTouchTap={() => {
                                  this.scrollTo(0);
                              }}>
                             <ScrollToTopIcon color="white"/>

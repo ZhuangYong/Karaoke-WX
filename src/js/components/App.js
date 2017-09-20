@@ -210,13 +210,11 @@ class App extends React.Component {
     }
 
     componentWillMount() {
-        console.log("App will mount");
     }
 
     componentDidMount() {
         if (isGetUserInfo()) this.updateUserInfo();
         this.runCheckLocal();
-        console.log("App component did mount ");
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
         this.props.action_updateScreen();
@@ -240,12 +238,6 @@ class App extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log('App did Updated');
-        // if (this.props.userInfo.userInfoData && !this.state.updateDevice) {
-        //     const param = {};
-        //     this.props.action_getOttStatus(param, reqHeader(param));
-        //     this.state.updateDevice = true;
-        // }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
             linkTo("pay/deviceRegister", false, "");
@@ -494,12 +486,6 @@ class App extends React.Component {
     updateUserInfo() {
         let {isWeixin} = window.sysInfo;
         if (isWeixin) {
-            // const param = {url: location.href.split('#')[0]};
-            // this.props.action_getUserConfig(param, reqHeader(param), (json) => {
-            //     const {data} = json;
-            //     wxConfig(data);
-            // });
-
             // 获取用户信息
             let wxInfo = {
                 wxId: getQueryString("uuid") || "",
