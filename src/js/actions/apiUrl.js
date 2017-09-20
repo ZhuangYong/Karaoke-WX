@@ -11,6 +11,9 @@ export default {
     // OTT免费激活
     "API_DEVICE_REGISTER": "/user/userActivation",
 
+    // 绑定设备
+    "API_BIND_DEVICE": "/user/wxBind",
+
     /**
      * 获取用户信息
      * 参数如下：

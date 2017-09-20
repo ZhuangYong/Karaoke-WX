@@ -45,7 +45,10 @@ const USER = {
     // 微信API上传图片
     API_UPLOAD_IMG_WX: "API_UPLOAD_IMG_WX",
     // 获取微信js sdk config参数
-    API_GET_USER_CONFIG: "API_GET_USER_CONFIG"
+    API_GET_USER_CONFIG: "API_GET_USER_CONFIG",
+
+    // 绑定设备
+    API_BIND_DEVICE: "API_BIND_DEVICE"
 };
 
 const SONG = {

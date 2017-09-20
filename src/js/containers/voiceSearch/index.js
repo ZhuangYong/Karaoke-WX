@@ -180,7 +180,6 @@ class VoiceSearch extends BaseComponent {
             return;
         }
 
-        const _this = this;
         const actionGlobAlert = this.props.action_setGlobAlert;
         let stopRecordTimer = this.state.stopRecordTimer;
         if (stopRecordTimer !== null) {
@@ -188,13 +187,13 @@ class VoiceSearch extends BaseComponent {
         }
         if (isRecordStart) {
             window.wx && window.wx.startRecord({
-                success: function () {
+                success: () => {
                     stopRecordTimer = setTimeout(() => {
-                        _this.voiceRecognite(false);
+                        this.voiceRecognite(false);
                     }, 30000);
                 },
-                fail: function () {
-                    _this.setState({
+                fail: () => {
+                    this.setState({
                         pageState: 0,
                         isRecordStart: !isRecordStart
                     });
@@ -204,33 +203,33 @@ class VoiceSearch extends BaseComponent {
             });
         } else {
             window.wx && window.wx.stopRecord({
-                success: function (res) {
+                success: (res) => {
                     // alert(res.localId);
                     window.wx.translateVoice({
                         localId: res.localId, // 需要识别的音频的本地Id，由录音相关接口获得
                         isShowProgressTips: 1, // 默认为1，显示进度提示
-                        success: function (resl) {
+                        success: (resl) => {
                             const res = resl.translateResult;
                             if (typeof res !== "undefined") {
                                 linkTo(`song/search/${encodeURIComponent(stripScript(res))}`, false, null);
                             } else {
-                                _this.setState({
+                                this.setState({
                                     isRecordStart: false,
                                     pageState: 3
                                 });
                             }
                         },
-                        fail: function () {
-                            _this.setState({
+                        fail: () => {
+                            this.setState({
                                 pageState: 3,
                                 isRecordStart: isRecordStart
                             });
-                            actionGlobAlert('语音识别失败');
+                            // actionGlobAlert('语音识别失败');
                         }
                     });
                 },
-                fail: function () {
-                    _this.setState({
+                fail: () => {
+                    this.setState({
                         pageState: 3,
                         isRecordStart: isRecordStart
                     });
