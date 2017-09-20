@@ -2,7 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
-import {getUserConfig, getUserInfo} from "../actions/userActions";
+import {bindDevice, getUserConfig, getUserInfo} from "../actions/userActions";
 import {
     getUserInfoFromSession, setCommonInfo, setGlobAlert, setLocalNet, setWeixinConfigFinished,
     updateScreen
@@ -381,15 +381,42 @@ class App extends React.Component {
                 //TODO BIND DEVICE
                 doAction = () => {
                     window.wx && window.wx.scanQRCode({
-                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
                         scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                        success: function (res) {
-                            // let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                            console.log('扫一扫成功');
-                            // alert(result);
+                        success: (res) => {
+                            let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+
+                            const userInfo = this.props.userInfo.userInfoData.data;
+                            const params = {
+                                openId: userInfo.openid,
+                                url: result
+                            };
+
+                            this.props.action_bindDevice(params, reqHeader(params), (res) => {
+                                const {status} = res;
+                                if (status === 1) {
+                                    const getUserInfoParams = {
+                                        url: window.location.href.split("#")[0]
+                                    };
+                                    this.props.action_getUserInfo(getUserInfoParams, reqHeader(getUserInfoParams), (res) => {
+                                        const {status} = res;
+                                        if (status === 1) {
+                                            this.props.action_getOttStatus({}, reqHeader(), () => {
+                                                this.props.action_setLocalNet(true);
+                                            });
+                                            this.state.checkLocalCount = 0;
+                                        }
+                                    });
+                                    this.props.action_setGlobAlert("绑定成功", "");
+
+                                } else {
+                                    this.props.action_setGlobAlert("绑定失败", "");
+                                }
+                            });
                         },
-                        fail: function (res) {
+                        fail: (res) => {
                             console.log(res);
+                            this.props.action_setGlobAlert("绑定失败", "");
                         }
                     });
                 };
@@ -556,6 +583,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_getOttStatus: bindActionCreators(getOttStatus, dispatch),
         action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
         action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch),
+        action_bindDevice: bindActionCreators(bindDevice, dispatch),
         action_setCommonInfo: bindActionCreators(setCommonInfo, dispatch)
     };
 };

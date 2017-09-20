@@ -10,6 +10,7 @@ import ottLogin from "./ottLogin";
 import uploadImg from "./uploadImg";
 import userConfig from "./userConfig";
 import userInfo from "./userInfo";
+import bindDevice from "./bindDevice";
 
 let appReducer = combineReducers({
     feedback,
@@ -18,7 +19,8 @@ let appReducer = combineReducers({
     ottLogin,
     uploadImg,
     userConfig,
-    userInfo
+    userInfo,
+    bindDevice
 });
 
 export default appReducer;
