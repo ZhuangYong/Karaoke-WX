@@ -13,15 +13,22 @@ import BtnIcon from '../../../img/voice_search.png';
 import "../../../sass/voiceSearch.scss";
 import {linkTo, stripScript} from "../../utils/comUtils";
 import {setGlobAlert} from "../../actions/common/actions";
+import ActionTypes from "../../actions/actionTypes";
 
 const styles = {
     btn: {
+        // display: "flex",
+        // alignItems: "center",
+        // justifyContent: "center",
+        // background: `#ff6c00 url(${BtnIcon}) no-repeat center`,
+        // backgroundSize: "auto 35px",
         position: "absolute",
         top: "120px",
         left: "50%",
         marginLeft: "-42.5px",
         width: "80px",
-        height: "80px"
+        height: "80px",
+        // borderRadius: "80px"
     },
     headerDesc: {
         color: "#7e7e7e",
@@ -40,16 +47,34 @@ class VoiceSearch extends BaseComponent {
             pageState: 0,
             stopRecordTimer: null,
             btnDisabled: false
+            // startX: null,
+            // startY: null
         };
     }
 
+    /*componentDidMount() {
+        document.addEventListener("touchend", (e) => {
+            if (!this.state.isRecordStart) return;
+
+            this.setState({
+                isRecordStart: false,
+                pageState: 0
+            });
+            this.voiceRecognite(false);
+        });
+    }*/
+
     componentWillUnmount() {
-        window.wx && window.wx.stopRecord();
+        if (this.state.isRecordStart) {
+            this.stopRecord(0);
+        }
 
         const stopRecordTimer = this.state.stopRecordTimer;
         if (stopRecordTimer !== null) {
             clearTimeout(stopRecordTimer);
         }
+
+        // document.removeEventListener("touchend");
     }
 
 
@@ -59,13 +84,23 @@ class VoiceSearch extends BaseComponent {
             <div>
                 {this.pageStateRecognite()}
                 <section style={{
-                    position: "absolute",
-                    width: "100%",
-                    height: "300px",
-                    bottom: 0,
-                    left: 0,
-                    overflow: "hidden"
-                }}>
+                        position: "absolute",
+                        width: "100%",
+                        height: "300px",
+                        bottom: 0,
+                        left: 0,
+                        overflow: "hidden"
+                     }}
+                     // onTouchStart={(e) => {
+                     //     e.preventDefault();
+                     // }}
+                     // onTouchMove={(e) => {
+                     //     e.preventDefault();
+                     // }}
+                     // onTouchEnd={(e) => {
+                     //     e.preventDefault();
+                     // }}
+                >
                     <header style={{
                         marginTop: "90px",
                         textAlign: "center",
@@ -107,6 +142,41 @@ class VoiceSearch extends BaseComponent {
                             </div>
                         </div>)}
                     </FloatingActionButton>
+
+                    {/*<div
+                        style={styles.btn}
+                        onTouchStart={(e) => {
+                            e.preventDefault();
+                            const {isWeixin} = window.sysInfo;
+                            if (!isWeixin) {
+                                this.props.action_setGlobAlert("请在微信客户端操作");
+                                return;
+                            }
+                            const touch = e.targetTouches[0];
+                            this.setState({
+                                startX: touch.pageX,
+                                startY: touch.pageY,
+                                pageState: 1,
+                                isRecordStart: true
+                            });
+                            this.voiceRecognite(true);
+                        }}
+                        onTouchMove={(e) => {
+                            e.preventDefault();
+
+                            const startX = this.state.startX;
+                            const startY = this.state.startY;
+
+                            const touch = e.targetTouches[0];
+                            const moveX = touch.pageX;
+                            const moveY = touch.pageY;
+
+                            if (Math.abs(moveX - startX) > 80 || Math.abs(moveY - startY) > 80) this.stopRecord();
+
+                        }}
+                        onTouchEnd={(e) => {
+                            e.preventDefault();
+                        }}/>*/}
 
                     {isRecordStart && (<div>
                         <div className="btnBfAnimationA" style={styles.btn}>
@@ -198,7 +268,7 @@ class VoiceSearch extends BaseComponent {
                         isRecordStart: !isRecordStart
                     });
 
-                    actionGlobAlert('录音失败');
+                    actionGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
                 }
             });
         } else {
@@ -209,6 +279,7 @@ class VoiceSearch extends BaseComponent {
                         localId: res.localId, // 需要识别的音频的本地Id，由录音相关接口获得
                         isShowProgressTips: 1, // 默认为1，显示进度提示
                         success: (resl) => {
+                            if (window.location.pathname !== "/voiceSearch") return;
                             const res = resl.translateResult;
                             if (typeof res !== "undefined") {
                                 linkTo(`song/search/${encodeURIComponent(stripScript(res))}`, false, null);
@@ -236,6 +307,25 @@ class VoiceSearch extends BaseComponent {
                 }
             });
         }
+    }
+
+    stopRecord(times) {
+        window.wx && window.wx.stopRecord({
+            fail: () => {
+                if (times >= 3) return;
+                let timer = 1000;
+                if (times > 0) timer = 2000;
+                setTimeout(() => {
+                    // this.props.action_setGlobAlert(times.toString());
+                    times++;
+                    this.stopRecord(times);
+                }, timer);
+                // this.setState({
+                //     pageState: 0,
+                //     isRecordStart: false
+                // });
+            }
+        });
     }
 }
 

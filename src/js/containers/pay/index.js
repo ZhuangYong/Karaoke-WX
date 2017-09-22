@@ -22,6 +22,7 @@ import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import {setGlobAlert} from "../../actions/common/actions";
 import {getUserInfo} from "../../actions/userActions";
+import ActionTypes from "../../actions/actionTypes";
 
 const styles = {
     itemBox: {
@@ -275,7 +276,7 @@ class Pay extends BaseComponent {
                 package: data.package, // 统一支付接口返回的prepay_id参数值，提交格式如：prepay_id=***）
                 signType: data.signType, // 签名方式，默认为'SHA1'，使用新版支付需传入'MD5'
                 paySign: data.paySign, // 支付签名
-                success: function (res) {
+                success: (res) => {
                     // 支付成功后的回调函数
                     actionSetGlobAlert("支付成功");
                     if (matchParams.openid !== "") {
@@ -287,7 +288,7 @@ class Pay extends BaseComponent {
                         window.history.back();
                     }
                 },
-                cancel: function (res) {
+                cancel: (res) => {
                     actionSetGlobAlert("取消支付");
                     if (matchParams.openid !== "") {
                         setTimeout(() => {
@@ -297,15 +298,8 @@ class Pay extends BaseComponent {
                         window.history.back();
                     }
                 },
-                fail: function (res) {
-                    actionSetGlobAlert("支付失败");
-                    if (matchParams.openid !== "") {
-                        setTimeout(() => {
-                            window.WeixinJSBridge.call('closeWindow');
-                        }, 500);
-                    } else {
-                        window.history.back();
-                    }
+                fail: (res) => {
+                    actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
                 }
             });
         });

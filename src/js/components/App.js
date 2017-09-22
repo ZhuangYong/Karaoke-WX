@@ -372,6 +372,7 @@ class App extends React.Component {
     validUserStatusDialog() {
         const alertData = this.props.alertData;
         if (!alertData) return;
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
         let alertStr = "";
         let showAlert = true;
         let doAction;
@@ -385,6 +386,11 @@ class App extends React.Component {
                         scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
                         success: (res) => {
                             let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+
+                            if (result.indexOf("/q/") <= 0) {
+                                actionSetGlobAlert && actionSetGlobAlert("无效二维码", "");
+                                return;
+                            }
 
                             const userInfo = this.props.userInfo.userInfoData.data;
                             const params = {
@@ -401,22 +407,19 @@ class App extends React.Component {
                                     this.props.action_getUserInfo(getUserInfoParams, reqHeader(getUserInfoParams), (res) => {
                                         const {status} = res;
                                         if (status === 1) {
-                                            this.props.action_getOttStatus({}, reqHeader(), () => {
-                                                this.props.action_setLocalNet(true);
-                                            });
-                                            this.state.checkLocalCount = 0;
+                                            window.location.reload(true);
                                         }
                                     });
-                                    this.props.action_setGlobAlert("绑定成功", "");
+                                    actionSetGlobAlert("绑定成功", "");
 
                                 } else {
-                                    this.props.action_setGlobAlert("绑定失败", "");
+                                    actionSetGlobAlert("绑定失败", "");
                                 }
                             });
                         },
                         fail: (res) => {
                             console.log(res);
-                            this.props.action_setGlobAlert("绑定失败", "");
+                            actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
                         }
                     });
                 };
@@ -425,6 +428,14 @@ class App extends React.Component {
                 // alertStr = '激活vip免费体验';
                 //TODO ACTIVE
                 //linkTo("", false, "");
+                break;
+            case ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL:
+                alertStr = '该操作需要授权';
+                //TODO ACTIVE
+                //linkTo("", false, "");
+                doAction = () => {
+                    window.location.reload(true);
+                };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
                 alertStr = '充值成为VIP';
