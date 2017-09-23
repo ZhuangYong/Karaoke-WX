@@ -18,7 +18,8 @@ export default class Input extends React.Component {
             hash: getRandomString(24),
             value: "",
             errorText: "",
-            trim: this.props.trim || false
+            trim: this.props.trim || false,
+            trimStart: this.props.trimStart || false
         };
         this.handelValidate.bind(this);
     }
@@ -29,7 +30,7 @@ export default class Input extends React.Component {
     }
 
     render() {
-        const {onChange, errorStyle, errorText, minLength, maxLength, bindState, validate, doValidate, trim, ...other} = this.props;
+        const {onChange, errorStyle, errorText, minLength, maxLength, bindState, validate, doValidate, trim, trimStart, ...other} = this.props;
         return (
             <TextField
                 ref="input"
@@ -44,6 +45,9 @@ export default class Input extends React.Component {
     handelChange(t, value) {
         if (this.state.trim) {
             value = value.trim();
+        }
+        if (this.state.trimStart) {
+            value = value.replace(/^( )*/g, "");
         }
         this.setState({
             value: value

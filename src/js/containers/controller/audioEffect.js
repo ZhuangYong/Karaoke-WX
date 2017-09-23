@@ -229,7 +229,7 @@ class AudioEffect extends BaseComponent {
             type: 14, id: JSON.stringify({
                 model: "serialport",
                 serialport: {
-                    msgID: type,
+                    msgID: msgId,
                     data: data
                 }
             })

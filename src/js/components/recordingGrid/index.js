@@ -2,7 +2,7 @@
  * Created by Zed on 2017/8/23.
  */
 import React from "react";
-import {linkTo, toRem} from "../../utils/comUtils";
+import {chkDevice, linkTo, toRem} from "../../utils/comUtils";
 import {GridList, GridTile} from "material-ui";
 import MoreHorizIcon from 'material-ui/svg-icons/navigation/more-horiz';
 
@@ -15,6 +15,7 @@ class RecordingGrid extends React.Component {
 
     render() {
         const recordsList = this.props.data;
+        const {isIos} = chkDevice();
         return (<GridList
             cellHeight={"auto"}
             style={{margin: `0 ${toRem(20)}`, clear: "both"}}
@@ -41,7 +42,11 @@ class RecordingGrid extends React.Component {
                             height: toRem(230)
                         }}
                         onTouchTap={() => {
-                            linkTo(`user/recordings/play/${tile.uid}`, false, null);
+                            if (isIos) {
+                                location.href = `user/recordings/play/${tile.uid}`;
+                            } else {
+                                linkTo(`user/recordings/play/${tile.uid}`, false, null);
+                            }
                         }}
                     />
                     <div

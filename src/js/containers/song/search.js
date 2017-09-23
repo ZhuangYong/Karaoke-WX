@@ -60,6 +60,7 @@ class Search extends BaseComponent {
                 </Paper> : ""}
                 <div>
                     <SongList
+                        ref="SongList"
                         onPushSongSuccess={this.onPushSongSuccess}
                         onPushSongFail={this.onPushSongFail}
                         paddingTop="2.4rem"
@@ -86,9 +87,13 @@ class Search extends BaseComponent {
     }
 
     search(keyword) {
-        this.setState({
-            keyword: keyword
-        });
+        if (keyword === this.state.keyword) {
+            console.log(this.refs);
+        } else {
+            this.setState({
+                keyword: keyword
+            });
+        }
         //if (!location.href.endsWith("/"))navutils.replace(keyword);
     }
     onPushSongSuccess(song) {
@@ -113,9 +118,11 @@ class Search extends BaseComponent {
     }
 
     handelBlur() {
-        this.setState({
-            focus: false
-        });
+        setTimeout(() => {
+            this.setState({
+                focus: false
+            });
+        }, 300);
     }
 }
 

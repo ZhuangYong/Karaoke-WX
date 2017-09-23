@@ -48,6 +48,7 @@ import {getOttStatus} from "../actions/deviceAction";
 import Suggestions from "../containers/forOldVersion/suggestions";
 import RedirectPay from "../containers/forOldVersion/pay";
 import sysConfig from "../utils/sysConfig";
+import Const from "../utils/const";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -269,7 +270,13 @@ class App extends React.Component {
     }
 
     render() {
-        const showAlert = !!this.props.globAlert && !this.props.alertData;
+        let showAlert = !!this.props.globAlert && !this.props.alertData;
+        if (this.props.globAlert === Const.STRING_NO_WIFI && window.lockShowNoWIfi) {
+            setTimeout(() => {
+                this.props.action_setGlobAlert("");
+            }, 200);
+            showAlert = false;
+        }
         const validUserStatusDialog = this.validUserStatusDialog();
         return (
             <div>

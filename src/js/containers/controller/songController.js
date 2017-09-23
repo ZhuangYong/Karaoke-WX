@@ -209,6 +209,7 @@ class SongController extends BaseComponent {
 
     render() {
         const {playList, historySongList} = this.state;
+        //const playListStr = JSON.stringify(playList || {});
         const {w, h} = this.props.common;
         let tabContainerHeight = '10rem';
         const playingSong = this.state.playingSong;
@@ -230,6 +231,11 @@ class SongController extends BaseComponent {
         }
         return (
             <div>
+               {/* <div style={{position: 'absolute', width: "100%", height: 500, fontSize: 10, overflow: 'auto', zIndex: 5}}>
+                    {
+                        playListStr
+                    }
+                </div>*/}
                 <img src={NoNetworkImg} style={{display: 'none'}}/>
                 <SearchHeadFake grayTheme={"gray"}/>
                 <Tabs
@@ -679,7 +685,7 @@ class SongController extends BaseComponent {
         if (downloadStatus === Const.DOWNLOAD_STATUS_NOT_DOWN && this.state.notDownloadIndex === -1) {
             this.state.notDownloadIndex = index;
         }
-        if (index !== 0 && downloadStatus !== Const.DOWNLOAD_STATUS_DOWNING && downloadStatus !== Const.DOWNLOAD_STATUS_DOWN_FAILED && index !== this.state.notDownloadIndex) {
+        if (index !== 0 && downloadStatus !== Const.DOWNLOAD_STATUS_DOWNING && index !== this.state.notDownloadIndex) {
             return setTopButton;
         } else {
             return (

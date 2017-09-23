@@ -112,7 +112,8 @@ class Home extends BaseComponent {
             currentPage: 0,
             lastPage: false,
             barrageSendToast: false,
-            barrageToastMsg: ""
+            barrageToastMsg: "",
+            offLineLock: false
         };
         this.onPushSongFail = this.onPushSongFail.bind(this);
         this.onPushSongSuccess = this.onPushSongSuccess.bind(this);
@@ -142,11 +143,8 @@ class Home extends BaseComponent {
         }
     }
 
-    componentWillUnmount() {
-
-    }
-
     render() {
+        const {offLine, loading, lastPage, currentPage, pageData} = this.state;
         const getAlbumRecommendData = this.props.songs.getAlbumRecommend || {data: {result: defaultGetAlbumRecommendData}};
         const getRankingData = this.props.songs.getRanking || {data: {result: defaultGetRankingData}};
         let scrollTopStyle = {};
@@ -264,19 +262,26 @@ class Home extends BaseComponent {
 
 
                         <div className="loading-bottom">
-                            {this.state.loading ? (<div><RefreshIndicator
+                            <div><RefreshIndicator
                                 size={30}
                                 left={70}
                                 top={0}
                                 loadingColor="#FF9800"
                                 status="loading"
-                                style={style.loadingBar}
+                                style={{...style.loadingBar, opacity: loading ? 1 : 0}}
                             />
-                                <span>正在加载</span>
-                            </div>) : ""}
-
-                            <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
-                            <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
+                                <span>
+                                    {
+                                        loading ? "正在加载" : ""
+                                    }
+                                    {
+                                        (!offLine && lastPage) ? "亲爱滴，已经到底了" : ""
+                                    }
+                                    {
+                                        (offLine && !loading) ? Const.STRING_NO_WIFI : ""
+                                    }
+                                </span>
+                            </div>
                         </div>
                     </Paper>
                 </div>
@@ -309,7 +314,7 @@ class Home extends BaseComponent {
             this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
             this.state.scrollTop = e.target.scrollTop;
-            if (!this.state.loading && betweenBottom < 50) {
+            if (!this.state.offLineLock && !this.state.loading && betweenBottom < 50) {
                 this.loadMoreAction();
             }
             if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
@@ -344,9 +349,16 @@ class Home extends BaseComponent {
         this.props.action_getRecommend(param, reqHeader(param), resolve, () => {
             this.setState({
                 offLine: true,
+                offLineLock: true,
                 loading: false
             });
+            setTimeout(() => {
+                this.setState({
+                    offLineLock: false
+                });
+            }, 3000);
         });
+
         this.setState({
             currentPage: currentPage,
             loading: true

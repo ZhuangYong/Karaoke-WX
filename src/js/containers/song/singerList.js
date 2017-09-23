@@ -5,7 +5,7 @@ import {getSingerCategoryAlbum} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {Avatar, List, ListItem, Paper, Popover, RefreshIndicator} from "material-ui";
-import RightArrowIcon from "material-ui/svg-icons/hardware/keyboard-arrow-right";
+import RightArrowIcon from "../../../img/common/icon_arror_right.png";
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import ArrowDownIcon from "material-ui/svg-icons/hardware/keyboard-arrow-down";
@@ -30,6 +30,19 @@ const style = {
         left: "none",
         transform: "none",
         marginLeft: -50,
+    },
+    loadingRotate: {
+        width: '.42rem',
+        height: '.42rem',
+        marginRight: '.2rem',
+        position: 'relative',
+        loadingCircle: {
+            stroke: '#FF9800',
+            strokeLinecap: 'round',
+            transition: 'all 850ms ease-in-out 0ms',
+            strokeDasharray: '80, 114',
+            strokeDashoffset: '-403.668'
+        }
     },
     hotFilter: {
         position: 'absolute',
@@ -74,7 +87,8 @@ class SingerList extends BaseComponent {
             scrollTop: scrollTop || 0,
             initialScrollTop: false,
             dataLoaded: false,
-            offLine: false
+            offLine: false,
+            offLineLock: false
         };
         this.onScroll = this.onScroll.bind(this);
         this.getHotKey = this.getHotKey.bind(this);
@@ -143,13 +157,19 @@ class SingerList extends BaseComponent {
             cacheData.scrollTop = 0;
             this.props.action_setSingerList(cacheData);
         }
+        window.lockShowNoWIfi = true;
+    }
+
+    componentWillUnmount() {
+        window.lockShowNoWIfi = false;
     }
 
     render() {
         const singerList = this.props.songs.getSingerAlbum;
         const {w, h} = this.props.common;
         const avatarSize = 42 * (w / 375);
-        const {keyWord} = this.state;
+        const {keyWord, lastPage, loading, offLine, currentPage, pageData, dataLoaded} = this.state;
+        const showNoWifi = (offLine && currentPage !== 0 && pageData.length === 0);
         let scrollTopStyle = {};
         if (!this.state.needScrollToTop) {
             scrollTopStyle = {
@@ -200,53 +220,52 @@ class SingerList extends BaseComponent {
                     </div>
 
                     {
-                        (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
+                        showNoWifi ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
 
                     {
-                        (this.state.dataLoaded && this.state.currentPage >= 1 && this.state.pageData.length === 0) ? <NoResult style={{position: 'absolute', top: '-1rem'}}/> : <div>
-                            <List className="single-list" style={{paddingTop: '2.4rem'}}>
-                                {this.state.pageData.map((singer) => (
-
-                                    <div key={singer.id} onClick={() => {
-                                        let {cacheData, scrollTop} = this.state;
-                                        cacheData.scrollTop = scrollTop;
-                                        this.props.action_setSingerList(cacheData);
-                                        linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
-                                    }}>
-                                        <span className="single-item">
-                                            <div>
+                        (dataLoaded && currentPage >= 1 && pageData.length === 0) ? <NoResult style={{position: 'absolute', top: '-1rem'}}/> : <div>
+                            <div className="single-list" style={{padding: '2.4rem 0px 8px'}}>
+                                <div>
+                                    {this.state.pageData.map((singer) => (
+                                        <div key={singer.id} onClick={() => {
+                                            let {cacheData, scrollTop} = this.state;
+                                            cacheData.scrollTop = scrollTop;
+                                            this.props.action_setSingerList(cacheData);
+                                            linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
+                                        }}>
+                                            <span className="single-item">
                                                 <div>
-                                                    <svg viewBox="0 0 24 24">
-                                                        <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
-                                                    </svg>
-                                                    <img size="35.84" src={singer.image}/>
+                                                    <i>
+                                                        <img src={RightArrowIcon}/>
+                                                    </i>
+                                                    <img className="avatar" size="35.84" src={singer.image}/>
                                                     <div style={{fontSize: '0.4rem'}}>
                                                         {singer.nameNorm}
-                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </span>
-                                    </div>
-                                ))}
-                            </List>
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                             <div className="loading-bottom">
-                                {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}>
-                                    <svg className="rotate" viewBox="0 0 40 40" style={{width: '.42rem', height: '.42rem', marginRight: '.2rem', position: 'relative'}}>
-                                        <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20"
-                                                style={{
-                                                    stroke: '#FF9800',
-                                                    strokeLinecap: 'round',
-                                                    transition: 'all 850ms ease-in-out 0ms',
-                                                    strokeDasharray: '80, 114',
-                                                    strokeDashoffset: '-403.668'
-                                                }}/>
+                                <div>
+                                    <svg className="rotate" viewBox="0 0 40 40" style={{opacity: loading ? 1 : 0, ...style.loadingRotate}}>
+                                        <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20" style={style.loadingRotate.loadingCircle}/>
                                     </svg>
-                                    <span>正在加载</span>
-                                </div>) : ""}
-
-                                <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
-                                <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
+                                    <span>
+                                        {
+                                            loading ? "正在加载" : ""
+                                        }
+                                        {
+                                            (!offLine && lastPage) ? "亲爱滴，已经到底了" : ""
+                                        }
+                                        {
+                                            (offLine && !showNoWifi && !loading) ? Const.STRING_NO_WIFI : ""
+                                        }
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     }
@@ -270,7 +289,7 @@ class SingerList extends BaseComponent {
             this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
             this.state.scrollTop = e.target.scrollTop;
-            if (!this.state.loading && betweenBottom < 50) {
+            if (!this.state.offLineLock && !this.state.loading && betweenBottom < 50) {
                 this.loadMoreAction();
             }
             if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
@@ -305,8 +324,14 @@ class SingerList extends BaseComponent {
             if (err.code === Const.CODE_OFF_LINE) {
                 this.setState({
                     offLine: true,
+                    offLineLock: true,
                     loading: false
                 });
+                setTimeout(() => {
+                    this.setState({
+                        offLineLock: false
+                    });
+                }, 2000);
             }
         });
         this.setState({

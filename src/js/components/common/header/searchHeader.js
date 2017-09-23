@@ -65,6 +65,7 @@ class SearchHeader extends BaseComponent {
         this.cleanKeyWord = this.cleanKeyWord.bind(this);
         this.handelResize = this.handelResize.bind(this);
         this.blurSearchInput = this.blurSearchInput.bind(this);
+        this.cacheKeyWord = this.cacheKeyWord.bind(this);
     }
 
     componentDidMount() {
@@ -72,6 +73,7 @@ class SearchHeader extends BaseComponent {
         this.props.action_getKeyWord(param, reqHeader(param));
         document.addEventListener("touchstart", this.handelInputBlur);
         window.addEventListener("resize", this.handelResize);
+        this.props.defaultKeyWord && this.cacheKeyWord(this.props.defaultKeyWord);
     }
 
     componentWillUnmount() {
@@ -119,7 +121,7 @@ class SearchHeader extends BaseComponent {
                 <span className="search-bar-panel">
                     <Input
                         ref="input"
-                        trim={true}
+                        trimStart={true}
                         className="key-word-input"
                         value={this.state.searchKey}
                         //autoFocus="autoFocus"
@@ -245,7 +247,10 @@ class SearchHeader extends BaseComponent {
     handelSearch() {
         const searchKey = this.state.searchKey;
         this.props.getSearchKey && this.props.getSearchKey(searchKey);
+        this.cacheKeyWord(searchKey);
+    }
 
+    cacheKeyWord(searchKey) {
         const searchHistoryStr = getCookie("searchHistory");
         let cookieSearchHistory = searchHistoryStr ? searchHistoryStr.split(",") : [];
         cookieSearchHistory = [encodeURIComponent(searchKey), ...cookieSearchHistory];

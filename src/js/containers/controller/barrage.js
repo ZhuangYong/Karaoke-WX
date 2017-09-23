@@ -19,6 +19,7 @@ import {chkDevice, dynaPush, reqHeader} from "../../utils/comUtils";
 import bindActionCreators from "redux/es/bindActionCreators";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import * as ReactDOM from "react-dom";
+import Const from "../../utils/const";
 
 const fastWords = [
     {value: "哇塞!唱得太好听了"},
@@ -184,9 +185,10 @@ class Barrage extends BaseComponent {
                 }}>
                     {
                         inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}} /> : <TextField
+                            className={"barrage-input"}
                             ref="input"
                             hintText={`说点儿什么...`}
-                            hintStyle={{top: 0, padding: 12}}
+                            hintStyle={{top: 0, padding: '.3rem .6rem'}}
                             textareaStyle={{width: '94%'}}
                             multiLine={true}
                             rows={10}
@@ -202,7 +204,7 @@ class Barrage extends BaseComponent {
                         style={{position: 'absolute'}}
                         open={this.state.barrageSendToast}
                         message={this.state.barrageToastMsg}
-                        autoHideDuration={500}
+                        autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}
                         onRequestClose={() => {
                             this.setState({
                                 barrageSendToast: false
@@ -213,8 +215,8 @@ class Barrage extends BaseComponent {
                 <Tabs
                     tabItemContainerStyle={{height: '1.2rem', backgroundColor: "#d7d7d7"}}
                     contentContainerStyle={{
-                        position: "absolute",
-                        bottom: '1.6rem',
+                        position: (isAndroid && this.state.inputIng) ? "" : "absolute",
+                        bottom: (isAndroid && this.state.inputIng) ? 0 : '1.6rem',
                         height: inputAreaHeight,
                         width: '100%',
                         overflow: "auto",
@@ -234,7 +236,7 @@ class Barrage extends BaseComponent {
                             </div>
                         }>
                         {
-                            (showTabContainer && this.getFastWord()) || <div/>
+                            this.getFastWord()
                         }
                     </Tab>
                     <Tab
@@ -255,11 +257,11 @@ class Barrage extends BaseComponent {
                             this.handelChangeEmotionPage(index);
                         }}>
                             {
-                                (showTabContainer && this.getEmotion()) || <div/>
+                                this.getEmotion()
                             }
                         </SwipeableViews>
                         {
-                            showTabContainer && this.getEmotionDots()
+                            this.getEmotionDots()
                         }
                     </Tab>
                 </Tabs>
@@ -478,9 +480,11 @@ class Barrage extends BaseComponent {
     }
 
     onBlur() {
-        this.setState({
-            inputIng: false
-        });
+        setTimeout(() => {
+            this.setState({
+                inputIng: false
+            });
+        }, 300);
     }
 
     handelResize() {

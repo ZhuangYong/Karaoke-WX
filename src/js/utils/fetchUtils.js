@@ -118,10 +118,12 @@ export function comFetch(dispatch, param, options = {
             param: param
         });
         if (options.url.indexOf("http") >= 0 && options.url.indexOf(sysConfig.apiDomain) >= 0) {
-            dispatch({
-                type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-                globAlert: Const.STRING_NO_WIFI
-            });
+            setTimeout(() => {
+                dispatch({
+                    type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
+                    globAlert: Const.STRING_NO_WIFI
+                });
+            }, 300);
         }
         err.code = Const.CODE_OFF_LINE;
         failCallback && failCallback(Const.STRING_NO_WIFI, err, rejectCode);

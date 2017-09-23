@@ -20,6 +20,14 @@ export default class NoWifi extends React.Component {
         super(props);
     }
 
+    componentDidMount() {
+        window.lockShowNoWIfi = true;
+    }
+
+    componentWillUnmount() {
+        window.lockShowNoWIfi = false;
+    }
+
     render() {
         const extStyle = this.props.style || {};
         return (

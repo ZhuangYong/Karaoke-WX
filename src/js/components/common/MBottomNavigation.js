@@ -90,13 +90,14 @@ class MBottomNavigation extends BaseComponent {
     }
 
     render() {
-        const indexIcon = this.state.selectedIndex === 0 ? navIndexOnIcon : navIndexIcon;
-        const meIcon = this.state.selectedIndex === 2 ? navMeOnIcon : navMeIcon;
+        const {selectedIndex} = this.state;
+        const indexIcon = selectedIndex === 0 ? navIndexOnIcon : navIndexIcon;
+        const meIcon = selectedIndex === 2 ? navMeOnIcon : navMeIcon;
         let labelColor = ["#999", "#999", "#999"];
-        labelColor[this.state.selectedIndex] = "#ff6832";
+        labelColor[selectedIndex] = "#ff6832";
         return (
             <BottomNavigation
-                selectedIndex={this.state.selectedIndex}
+                selectedIndex={selectedIndex}
                 style={style.nav}
             >
                 <BottomNavigationItem
@@ -107,7 +108,7 @@ class MBottomNavigation extends BaseComponent {
                             <img style={{height: ".667rem", width: '.62rem'}} src={indexIcon}/>
                         </div>
                     }
-                    onTouchTap={() => this.navSelect(0)}
+                    onTouchTap={() => selectedIndex !== 0 && this.navSelect(0)}
                 />
                 <BottomNavigationItem
                     style={{...style.nav.playController, maxWidth: '100%'}}
@@ -120,7 +121,7 @@ class MBottomNavigation extends BaseComponent {
                             <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerGifIcon : navControllerIcon}/>
                         </div>
                     }
-                    onTouchTap={() => this.navSelect(1)}
+                    onTouchTap={() => selectedIndex !== 1 && this.navSelect(1)}
                 />
                 <BottomNavigationItem
                     style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
@@ -130,7 +131,7 @@ class MBottomNavigation extends BaseComponent {
                             <img style={{height: ".667rem", width: ".667rem"}} src={meIcon}/>
                         </div>
                     }
-                    onTouchTap={() => this.navSelect(2)}
+                    onTouchTap={() => selectedIndex !== 2 && this.navSelect(2)}
                 />
             </BottomNavigation>
         );

@@ -30,7 +30,8 @@ class PlayAudio extends BaseComponent {
             currentTime: 0,
             wxTimer: -1,
             musicUrl: "",
-            imgUrl: ""
+            imgUrl: "",
+            autoPlayEd: false
         };
     }
 
@@ -44,10 +45,10 @@ class PlayAudio extends BaseComponent {
         const {isWeixin} = window.sysInfo;
         if (isWeixin) {
             const {data} = this.props.audio.audioInfo;
-            if (data && data.musicUrl) {
+            if (data && data.musicUrl && !this.state.autoPlayEd) {
                 window.wx && window.wx.ready(() => {
                     this.refs.audio.refs.audio.refs.audio.play();
-
+                    this.state.autoPlayEd = true;
                     wxShare({
                         title: `刚刚唱了一首《${data.nameNorm}》快点来听`,
                         desc: "分享自金麦客家庭卡拉OK",

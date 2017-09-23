@@ -69,6 +69,7 @@ class SongList extends BaseComponent {
             pageData: [],
             noData: false,
             loading: false,
+            offLineLock: false,
             currentPage: 0,
             lastPage: false,
             dataKey: dataKey,
@@ -85,6 +86,10 @@ class SongList extends BaseComponent {
         } else if (this.state.currentPage === 0) {
             this.nextPage();
         }
+    }
+
+    componentWillUnmount() {
+        window.lockShowNoWIfi = false;
     }
 
     componentDidUpdate(preProps) {
@@ -112,10 +117,11 @@ class SongList extends BaseComponent {
         if (this.props.keyword && preProps.keyword !== this.props.keyword) {
             this.refreshPage();
         }
+        window.lockShowNoWIfi = true;
     }
 
     render() {
-        const {noData} = this.state;
+        const {noData, offLine, loading, lastPage, currentPage, pageData} = this.state;
         const {singerId, catId, hotId, headImg, ...others} = this.props;
         const paddingTop = this.props.paddingTop ? this.props.paddingTop : '1.18rem';
         const paddingBottom = this.props.paddingBottom ? this.props.paddingBottom : 5;
@@ -131,16 +137,17 @@ class SongList extends BaseComponent {
                 <NoResult style={{position: 'absolute'}}/>
             );
         } else {
+            const showNoWifi = offLine && !loading && currentPage !== 0 && pageData.length === 0;
             return (
                 <div className='common-song-list'
                      style={{...style.commonSongList, paddingTop: paddingTop, paddingBottom: paddingBottom}}
                      onScroll={this.onScroll.bind(this)}>
                     <img src={NoNetworkImg} style={{display: 'none'}}/>
                     {
-                        (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
+                        showNoWifi ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
                     {
-                        !this.state.offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', minHeight: '6.08rem', maxHeight: '7rem'}} src={decoding(headImg)}/>
+                        !offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', minHeight: '6.08rem', maxHeight: '7rem'}} src={decoding(headImg)}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
 
@@ -155,19 +162,26 @@ class SongList extends BaseComponent {
                     }
 
                     <div className="loading-bottom">
-                        {!this.state.lastPage ? (<div style={{opacity: this.state.loading ? 1 : 0}}><RefreshIndicator
+                        <div><RefreshIndicator
                             size={30}
                             left={70}
                             top={0}
                             loadingColor="#FF9800"
                             status="loading"
-                            style={style.loadingBar}
+                            style={{...style.loadingBar, opacity: loading ? 1 : 0}}
                         />
-                            <span>正在加载</span>
-                        </div>) : ""}
-
-                        <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
-                        <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
+                            <span>
+                                {
+                                    loading ? "正在加载" : ""
+                                }
+                                {
+                                    (!offLine && lastPage) ? "亲爱滴，已经到底了" : ""
+                                }
+                                {
+                                    (offLine && !showNoWifi && !loading) ? Const.STRING_NO_WIFI : ""
+                                }
+                            </span>
+                        </div>
                     </div>
                 </div>
             );
@@ -226,8 +240,14 @@ class SongList extends BaseComponent {
             if (err.code === Const.CODE_OFF_LINE) {
                 this.setState({
                     offLine: true,
+                    offLineLock: true,
                     loading: false
                 });
+                setTimeout(() => {
+                    this.setState({
+                        offLineLock: false
+                    });
+                }, 2000);
             }
         });
     }
@@ -258,8 +278,14 @@ class SongList extends BaseComponent {
             if (err.code === Const.CODE_OFF_LINE) {
                 this.setState({
                     offLine: true,
+                    offLineLock: true,
                     loading: false
                 });
+                setTimeout(() => {
+                    this.setState({
+                        offLineLock: false
+                    });
+                }, 2000);
             }
         });
     }
@@ -272,7 +298,7 @@ class SongList extends BaseComponent {
         if (e.target.classList && e.target.classList.contains("common-song-list")) {
             this.state.scrollTarget = e.target;
             const betweenBottom = e.target.scrollHeight - (e.target.scrollTop + e.target.clientHeight);
-            if (!this.state.loading && betweenBottom < 50) {
+            if (!this.state.offLineLock && !this.state.loading && betweenBottom < 50) {
                 this.loadMoreAction();
             }
             if (e.target.scrollTop > Const.NEED_SCROLL_TOP_HEIGHT) {
