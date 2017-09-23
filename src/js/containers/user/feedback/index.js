@@ -12,6 +12,7 @@ import {feedbackSubmit, getFeedbackQuestionList, uploadImgWeiXin} from "../../..
 import {getEncryptHeader, reqHeader} from "../../../utils/comUtils";
 
 import {GridList, GridTile} from "material-ui/GridList";
+import Snackbar from "material-ui/Snackbar";
 import RaisedButton from 'material-ui/RaisedButton';
 import ClearIcon from "material-ui/svg-icons/content/clear";
 import InputBox from "../../../components/photoAlbum";
@@ -19,6 +20,7 @@ import SubmitSuccessIcon from "../../../../img/submit_success.png";
 import navUtils from "../../../utils/navUtils";
 import ButtonPage from "../../../components/common/ButtonPage";
 import {setGlobAlert} from "../../../actions/common/actions";
+import ActionTypes from "../../../actions/actionTypes";
 
 const styles = {
     sectionHeader: {
@@ -106,7 +108,9 @@ class Feedback extends BaseComponent {
                 content: "",
                 imgIds: null,
                 tel: null
-            }
+            },
+            showAlert: false,
+            globAlert: "toast"
         };
 
         this.addBtnClick = this.addBtnClick.bind(this);
@@ -174,8 +178,11 @@ class Feedback extends BaseComponent {
 
                     </section>
                     <section
-                        style={{backgroundColor: "#eee"}}
-                    >
+                        style={{
+                            position: "relative",
+                            overflow: "hidden",
+                            backgroundColor: "#eee"
+                        }}>
                         <header>
                             <div
                                 style={styles.sectionHeader}
@@ -189,20 +196,36 @@ class Feedback extends BaseComponent {
 
                                 if (content.length >= 200) {
                                     e.target.value = content.slice(0, 200);
-                                    this.props.action_setGlobAlert("字太多啦，不准写了");
+                                    this.setState({
+                                        showAlert: true,
+                                        globAlert: "字太多啦，不准写了"
+                                    });
                                 }
+
                                 submitParams.content = content.slice(0, 200);
                                 this.setState({
                                     submitParams: submitParams
                                 });
                             }}
-                        >
-                </textarea>
+                        />
                         <div>
                             <div style={styles.questionDescTip}>
                                 {this.state.submitParams.content.length <= 0 ? "至少10个字，最多200字，不然宝宝要生气!" : `${this.state.submitParams.content.length}/200`}
                             </div>
                         </div>
+                        <Snackbar
+                            open={this.state.showAlert}
+                            message={this.state.globAlert}
+                            autoHideDuration={2000}
+                            onRequestClose={() => {
+                                this.setState({
+                                    showAlert: false
+                                });
+                            }}
+                            style={{
+                                position: "absolute"
+                            }}
+                        />
                     </section>
                     <section
                         style={{backgroundColor: "#eee"}}
@@ -380,42 +403,44 @@ class Feedback extends BaseComponent {
 
     // 图片input onChange
     addBtnClick() {
-        const _this = this;
         const {isWeixin} = window.sysInfo;
         if (isWeixin) {
             window.wx && window.wx.chooseImage({
                 count: 1, // 默认9
                 sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
                 sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: function (res) {
+                success: (res) => {
                     const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                     localIds.map((item) => {
                         window.wx.uploadImage({
                             localId: item, // 需要上传的图片的本地ID，由chooseImage接口获得
                             isShowProgressTips: 1, // 默认为1，显示进度提示
-                            success: function (res) {
+                            success: (res) => {
                                 const params = {
                                     mediaId: res.serverId // 返回图片的服务器端ID
                                 };
-                                _this.props.uploadImgAction(params, reqHeader(params), (res) => {
+                                this.props.uploadImgAction(params, reqHeader(params), (res) => {
                                     const {data} = res;
                                     data[0].isShowBadge = true;
-                                    let imgList = _this.state.imgList;
+                                    let imgList = this.state.imgList;
                                     if (imgList.length >= 5 && imgList[imgList.length - 1].isShowAddBtn) {
                                         imgList.pop();
                                     }
 
-                                    _this.setState({
+                                    this.setState({
                                         imgList: [data[0], ...imgList]
                                     });
                                 });
                             }
                         });
                     });
+                },
+                fail: () => {
+                    this.props.action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
                 }
             });
         } else {
-            alert("请在微信客户端上传图片");
+            this.props.action_setGlobAlert("请在微信客户端上传图片");
         }
     }
 
