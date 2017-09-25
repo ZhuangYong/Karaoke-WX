@@ -34,7 +34,20 @@ const style = {
         left: "none",
         transform: "none",
         marginLeft: -50,
-    }
+    },
+    loadingRotate: {
+        width: '.42rem',
+        height: '.42rem',
+        marginRight: '.2rem',
+        position: 'relative',
+        loadingCircle: {
+            stroke: '#FF9800',
+            strokeLinecap: 'round',
+            transition: 'all 850ms ease-in-out 0ms',
+            strokeDasharray: '80, 114',
+            strokeDashoffset: '-403.668'
+        }
+    },
 };
 class SongList extends BaseComponent {
     constructor(props) {
@@ -162,14 +175,10 @@ class SongList extends BaseComponent {
                     }
 
                     <div className="loading-bottom">
-                        <div><RefreshIndicator
-                            size={30}
-                            left={70}
-                            top={0}
-                            loadingColor="#FF9800"
-                            status="loading"
-                            style={{...style.loadingBar, opacity: loading ? 1 : 0}}
-                        />
+                        <div>
+                            <svg className="rotate" viewBox="0 0 40 40" style={{opacity: loading ? 1 : 0, ...style.loadingRotate}}>
+                                <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20" style={style.loadingRotate.loadingCircle}/>
+                            </svg>
                             <span>
                                 {
                                     loading ? "正在加载" : ""

@@ -209,7 +209,7 @@ class SongController extends BaseComponent {
 
     render() {
         const {playList, historySongList} = this.state;
-        //const playListStr = JSON.stringify(playList || {});
+        // const playListStr = JSON.stringify(playList || {});
         const {w, h} = this.props.common;
         let tabContainerHeight = '10rem';
         const playingSong = this.state.playingSong;
@@ -231,7 +231,7 @@ class SongController extends BaseComponent {
         }
         return (
             <div>
-               {/* <div style={{position: 'absolute', width: "100%", height: 500, fontSize: 10, overflow: 'auto', zIndex: 5}}>
+                {/*<div style={{position: 'absolute', width: "100%", height: 500, fontSize: 10, overflow: 'auto', zIndex: 5}}>
                     {
                         playListStr
                     }
@@ -322,21 +322,24 @@ class SongController extends BaseComponent {
                                 </div>
 
                                 <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
-                                    <div style={{
-                                        margin: '0 .5rem',
-                                        display: 'flex',
-                                        justifyContent: 'center'
-                                    }}>
-                                        <div
-                                            style={style.extArea.btn}
-                                            onTouchTap={() => {
-                                                linkTo('controller/barrage', false, null);
-                                            }}
-                                        >
-                                            <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                            <p style={style.extArea.btn.label}>弹幕</p>
-                                        </div>
-                                    </div>
+                                    {
+                                        this.props.ottInfo.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div style={{
+                                            margin: '0 .5rem',
+                                            display: 'flex',
+                                            justifyContent: 'center'
+                                        }}>
+                                            <div style={style.extArea.btn}
+                                                 onTouchTap={() => {
+                                                     linkTo('controller/barrage', false, null);
+                                                 }}
+                                            >
+                                                <img src={BarrageIcon} style={style.extArea.btn.icon}/>
+                                                <p style={style.extArea.btn.label}>弹幕</p>
+                                            </div>
+
+                                        </div> : ""
+                                    }
+
                                     {
                                         this.showAudioEffect() ? <div style={{
                                             margin: '0 .5rem',
@@ -778,7 +781,18 @@ class SongController extends BaseComponent {
         this.setState({
             setTopSongIdIng: musicNo
         });
-        this.props.action_setSongTop(param, reqHeader(param), () => {
+        // this.props.action_setSongTop(param, reqHeader(param), () => {
+        //     setTimeout(() => {
+        //         this.setState({
+        //             offLine: false,
+        //             setTopSongIdIng: 0,
+        //             barrageSendToast: true,
+        //             barrageToastMsg: "置顶成功",
+        //             updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
+        //         });
+        //     }, 500);
+        // });
+        const success = () => {
             setTimeout(() => {
                 this.setState({
                     offLine: false,
@@ -788,6 +802,24 @@ class SongController extends BaseComponent {
                     updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
                 });
             }, 500);
+        };
+        const fail = (msg) => {
+            this.setState({
+                offLine: true
+            });
+        };
+
+        dynaPush({
+            ottInfo: this.props.ottInfo,
+            userInfo: this.props.userInfo,
+            param: param,
+            localNetIsWork: this.props.localNetIsWork,
+            action_pushLocal: this.props.action_pushLocal,
+            action_setLocalNet: this.props.action_setLocalNet,
+            action_push: this.props.action_push,
+            action_setGlobAlert: this.props.action_setGlobAlert,
+            success: success,
+            fail: fail
         });
     }
 
@@ -828,7 +860,19 @@ class SongController extends BaseComponent {
         this.setState({
             delChooseSongIdIng: delChooseSongIdIng
         });
-        this.props.action_setSongTop(param, reqHeader(param), () => {
+        // this.props.action_setSongTop(param, reqHeader(param), () => {
+        //     delChooseSongIdIng[musicNo] = false;
+        //     this.setState({
+        //         offLine: false,
+        //         barrageSendToast: true,
+        //         barrageToastMsg: "删除成功",
+        //         delChooseSongIdIng: delChooseSongIdIng,
+        //         playList: playList.filter((song) => {
+        //             return song.musicNo !== musicNo;
+        //         })
+        //     });
+        // });
+        const success = () => {
             delChooseSongIdIng[musicNo] = false;
             this.setState({
                 offLine: false,
@@ -839,6 +883,24 @@ class SongController extends BaseComponent {
                     return song.musicNo !== musicNo;
                 })
             });
+        };
+        const fail = (msg) => {
+            this.setState({
+                offLine: true
+            });
+        };
+
+        dynaPush({
+            ottInfo: this.props.ottInfo,
+            userInfo: this.props.userInfo,
+            param: param,
+            localNetIsWork: this.props.localNetIsWork,
+            action_pushLocal: this.props.action_pushLocal,
+            action_setLocalNet: this.props.action_setLocalNet,
+            action_push: this.props.action_push,
+            action_setGlobAlert: this.props.action_setGlobAlert,
+            success: success,
+            fail: fail
         });
     }
 

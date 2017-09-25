@@ -20,4 +20,6 @@ export default{
     DOWNLOAD_STATUS_DONE: 1,
     DOWNLOAD_STATUS_DOWN_FAILED: 2,
 
+    BARRAGE_MIN_OTT_VERSION: '1.1.3',
+
 };

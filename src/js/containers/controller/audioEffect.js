@@ -19,6 +19,7 @@ import ToneIconReduce from "../../../img/controller/tone_reduce.png";
 import BaseComponent from "../../components/common/BaseComponent";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
+import {CircularProgress} from "material-ui";
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -42,6 +43,9 @@ class AudioEffect extends BaseComponent {
     constructor(props) {
         super(props);
         super.title("音效控制");
+        this.state = {
+            controllerIng: {}
+        };
         this.sendEffect = this.sendEffect.bind(this);
     }
 
@@ -53,24 +57,46 @@ class AudioEffect extends BaseComponent {
                 <div className="top-area" style={revert ? {paddingTop: '.2rem'} : {}}>
                     <div className="big-circle">
                         <div className="left-choose">
-                            <LeftArrowIcon style={{
-                                position: 'absolute',
-                                right: '.9rem',
-                                top: '.9rem',
-                                transform: 'rotate(-45deg)'
-                            }} color="#f96d32" onClick={() => {
-                                this.sendEffect(AUDIO_EFFECT_MODE_ADD);
-                            }}/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_MODE_ADD] === true ? <CircularProgress
+                                    style={{
+                                        position: 'absolute',
+                                        right: '.9rem',
+                                        top: '.9rem',
+                                        transform: 'rotate(-45deg)'
+                                    }}
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <LeftArrowIcon style={{
+                                    position: 'absolute',
+                                    right: '.9rem',
+                                    top: '.9rem',
+                                    transform: 'rotate(-45deg)'
+                                }} color="#f96d32" onClick={() => {
+                                    this.sendEffect(AUDIO_EFFECT_MODE_ADD);
+                                }}/>
+                            }
                         </div>
                         <div className="right-choose">
-                            <RightArrowIcon style={{
-                                position: 'absolute',
-                                left: '.9rem',
-                                bottom: '.9rem',
-                                transform: 'rotate(-45deg)'
-                            }} color="#f96d32" onClick={() => {
-                                this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
-                            }}/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_MODE_REDUCE] === true ? <CircularProgress
+                                    style={{
+                                        position: 'absolute',
+                                        left: '.9rem',
+                                        bottom: '.9rem',
+                                        transform: 'rotate(-45deg)'
+                                    }}
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <RightArrowIcon style={{
+                                    position: 'absolute',
+                                    left: '.9rem',
+                                    bottom: '.9rem',
+                                    transform: 'rotate(-45deg)'
+                                }} color="#f96d32" onClick={() => {
+                                    this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
+                                }}/>
+                            }
                         </div>
                         <div className="inside-circle">
                             效果模式
@@ -81,25 +107,40 @@ class AudioEffect extends BaseComponent {
                 <div className="center-area" style={revert ? {paddingTop: '.2rem'} : {}}>
                     <div className="fun-button">
                         <div className="button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
+                            this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
                         }}>
-                            <img src={ToneIconReduce} style={{height: '.4rem'}}/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <img src={ToneIconReduce} style={{height: '.4rem'}}/>
+                            }
                         </div>
                         <p className="label">降调</p>
                     </div>
                     <div className="fun-button">
                         <div className="button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
+                            this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] !== true && this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
                         }}>
-                            <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
+                            }
                         </div>
                         <p className="label">平调</p>
                     </div>
                     <div className="fun-button">
                         <div className="button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_TONE_ADD);
+                            this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
                         }}>
-                            <img src={ToneIconAdd} style={{height: '.4rem'}}/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <img src={ToneIconAdd} style={{height: '.4rem'}}/>
+                            }
                         </div>
                         <p className="label">升调</p>
                     </div>
@@ -108,46 +149,75 @@ class AudioEffect extends BaseComponent {
                 <div className="bottom-area" style={revert ? {marginTop: '.2rem'} : {}}>
                     <div className="fun-button">
                         <div className="haf-top-button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);
+                            this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);
                         }}>
-                            <AddIcon color="#f96d32"/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <AddIcon color="#f96d32"/>
+                            }
                         </div>
                         <div className="haf-bottom-button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_MUSIC_REDUCE);
+                            this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_REDUCE);
                         }}>
-                            <ReduceIcon color="#f96d32"/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
+                            }
                         </div>
                         <p className="label">音乐</p>
                     </div>
                     <div className="fun-button">
                         <div className="haf-top-button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_PHONE_ADD);
+                            this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_ADD);
                         }}>
-                            <AddIcon color="#f96d32"/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <AddIcon color="#f96d32"/>
+                            }
                         </div>
                         <div className="haf-bottom-button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_PHONE_REDUCE);
+                            this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_REDUCE);
                         }}>
-                            <ReduceIcon color="#f96d32"/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
+                            }
                         </div>
                         <p className="label">话筒</p>
                     </div>
                     <div className="fun-button">
                         <div className="haf-top-button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_EFFECT_ADD);
+                            this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_ADD);
                         }}>
-                            <AddIcon color="#f96d32"/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <AddIcon color="#f96d32"/>
+                            }
                         </div>
                         <div className="haf-bottom-button" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_EFFECT_REDUCE);
+                            this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_REDUCE);
                         }}>
-                            <ReduceIcon color="#f96d32"/>
+                            {
+                                this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] === true ? <CircularProgress
+                                    size={20}
+                                    thickness={2}
+                                    color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
+                            }
                         </div>
                         <p className="label">效果</p>
                     </div>
                 </div>
-
-                <MBottomNavigation selectedIndex={0}/>
+                <MBottomNavigation selectedIndex={1}/>
             </div>
         );
     }
@@ -234,21 +304,34 @@ class AudioEffect extends BaseComponent {
                 }
             })
         };
+        let {controllerIng} = this.state;
+        controllerIng[type] = true;
+        this.setState({
+            controllerIng: controllerIng,
+        });
         const success = () => {
-            this.setState({
-                inputImage: "",
-                inputValue: "",
-                sendBarrageIng: false,
-                barrageSendToast: true,
-                barrageToastMsg: "发送成功"
-            });
+            setTimeout(() => {
+                controllerIng[type] = false;
+                this.setState({
+                    inputImage: "",
+                    inputValue: "",
+                    controllerIng: controllerIng,
+                    sendBarrageIng: false,
+                    barrageSendToast: true,
+                    barrageToastMsg: "发送成功"
+                });
+            }, 1500);
         };
         const fail = (msg) => {
-            this.setState({
-                sendBarrageIng: false,
-                barrageSendToast: true,
-                barrageToastMsg: msg
-            });
+            setTimeout(() => {
+                controllerIng[type] = false;
+                this.setState({
+                    sendBarrageIng: false,
+                    controllerIng: controllerIng,
+                    barrageSendToast: true,
+                    barrageToastMsg: msg
+                });
+            }, 1500);
         };
         dynaPush({
             ottInfo: this.props.ottInfo,

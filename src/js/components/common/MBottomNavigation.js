@@ -118,7 +118,7 @@ class MBottomNavigation extends BaseComponent {
                             <div style={style.nav.playController.circle.arc}/>
                             <div style={style.nav.playController.circle.maskLine}/>
                             <div style={style.nav.playController.circle.maskArc}/>
-                            <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerGifIcon : navControllerIcon}/>
+                            <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerIcon : navControllerIcon}/>
                         </div>
                     }
                     onTouchTap={() => selectedIndex !== 1 && this.navSelect(1)}

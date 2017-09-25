@@ -43,7 +43,7 @@ class RecordingGrid extends React.Component {
                         }}
                         onTouchTap={() => {
                             if (isIos) {
-                                location.href = `user/recordings/play/${tile.uid}`;
+                                location.href = `/user/recordings/play/${tile.uid}`;
                             } else {
                                 linkTo(`user/recordings/play/${tile.uid}`, false, null);
                             }
