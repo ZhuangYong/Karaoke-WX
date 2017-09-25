@@ -240,7 +240,7 @@ class SongController extends BaseComponent {
                 <SearchHeadFake grayTheme={"gray"}/>
                 <Tabs
                     inkBarStyle={{display: "none"}}
-                    tabItemContainerStyle={{top: 0, zIndex: 999, position: 'fixed', alignItems: 'center', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: ".08rem 10%"}}
+                    tabItemContainerStyle={{display: "-webkit-flex", top: 0, zIndex: 999, position: 'fixed', alignItems: 'center !important', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: ".1rem 10%"}}
                 >
                     <Tab
                         selected={this.state.tabIndex === 0}
@@ -323,7 +323,7 @@ class SongController extends BaseComponent {
 
                                 <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
                                     {
-                                        this.props.ottInfo.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div style={{
+                                        this.props.ottInfo && this.props.ottInfo.data.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div style={{
                                             margin: '0 .5rem',
                                             display: 'flex',
                                             justifyContent: 'center'

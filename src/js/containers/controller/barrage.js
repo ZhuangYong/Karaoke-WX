@@ -213,7 +213,7 @@ class Barrage extends BaseComponent {
                     />
                 </div>
                 <Tabs
-                    tabItemContainerStyle={{height: '1.2rem', backgroundColor: "#d7d7d7"}}
+                    tabItemContainerStyle={{display: "flex !important", height: '1.2rem', backgroundColor: "#d7d7d7"}}
                     contentContainerStyle={{
                         position: (isAndroid && this.state.inputIng) ? "" : "absolute",
                         bottom: (isAndroid && this.state.inputIng) ? 0 : '1.6rem',
