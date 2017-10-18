@@ -279,7 +279,7 @@ class SingerList extends BaseComponent {
                     </div>
                 }
 
-                <MBottomNavigation selectedIndex={0}/>
+                <MBottomNavigation selectedIndex={-1}/>
             </Paper>
         );
     }

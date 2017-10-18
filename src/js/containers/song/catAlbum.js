@@ -64,7 +64,7 @@ class CatAlbum extends BaseComponent {
                                         linHeadKey="songs/catId/"
                                     />
 
-                                    <MBottomNavigation selectedIndex={0}/>
+                                    <MBottomNavigation selectedIndex={-1}/>
                                 </Paper>
                             );
                         }

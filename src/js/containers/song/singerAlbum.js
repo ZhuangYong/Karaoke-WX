@@ -83,7 +83,7 @@ class SingerAlumb extends BaseComponent {
                         </GridTile>
                     ))}
                 </GridList>
-                <MBottomNavigation selectedIndex={0}/>
+                <MBottomNavigation selectedIndex={-1}/>
             </Paper>
         );
     }

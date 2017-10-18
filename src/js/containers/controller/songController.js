@@ -733,12 +733,14 @@ class SongController extends BaseComponent {
                 const musicName = song.musicName;
                 const musicNo = song.musicNo;
                 const vipStutas = song.vipStutas;
+                const fileMark = song.fileMark;
                 return {
                     "nameNorm": musicName,
                     "id": musicNo,
                     "image": musicIcon,
                     "charge": vipStutas,
                     "serialNo": musicNo,
+                    "fileMark": fileMark,
                     "actor": [
                         {
                             "actorNo": actorNo,

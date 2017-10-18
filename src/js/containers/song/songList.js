@@ -46,7 +46,7 @@ class SongList extends BaseComponent {
                         });
                     }}
                 />
-                <MBottomNavigation selectedIndex={0}/>
+                <MBottomNavigation selectedIndex={-1}/>
             </Paper>
         );
     }

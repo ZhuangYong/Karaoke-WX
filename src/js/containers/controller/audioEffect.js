@@ -217,7 +217,7 @@ class AudioEffect extends BaseComponent {
                         <p className="label">效果</p>
                     </div>
                 </div>
-                <MBottomNavigation selectedIndex={1}/>
+                <MBottomNavigation selectedIndex={-1}/>
             </div>
         );
     }

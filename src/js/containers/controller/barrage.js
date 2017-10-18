@@ -22,41 +22,52 @@ import * as ReactDOM from "react-dom";
 import Const from "../../utils/const";
 
 const fastWords = [
-    {value: "哇塞!唱得太好听了"},
-    {value: "偶像，请收下我的膝盖！"},
-    {value: "歌神！请给我签个名吧"},
-    {value: "我只是路过打酱油的~~"},
-    {value: "来来来，唱完这一首还有三首~"},
-    {value: "简直帅到无法形容"},
-    {value: "美女美女我爱你，就像老鼠爱大米"},
+    {value: "女神，唱得太好了，请收下我的飞吻！"},
+    {value: "秋名山上路人稀，常有麦霸较高低"},
+    {value: "好冷，能给点激情吗？"},
+    {value: "帅锅，我想做你的菜~~"},
+    {value: "妹子，可否邀你共唱一曲...嘿嘿嘿"},
+    {value: "女神女神我爱你，就像老鼠爱大米"},
+    {value: "简直帅到无法形容。"},
     {value: "来，让我们嗨唱到天亮"},
-    {value: "这音只应天上有,唱到迷人无处求"},
-    {value: "帅锅，来来，陪我再唱一曲"}
+    {value: "此音只应天上有，唱到迷人无处求。"},
+    {value: "666~~~"},
+    {value: "男神~唱得太好啦！我想和你一起唱"},
+    {value: "一白遮百丑，一首顶两首。"},
+    {value: "狮吼功重现江湖~快闪开"},
+    {value: "欧巴~欧巴 请收下我的膝盖"},
+    {value: "来来来，唱完这首还有三首。"},
+    {value: "我的王妃，我要霸占你的美！"},
+    {value: "女神再来一首，今天不醉不归"},
+    {value: "老司机，带带我，带我卖萌带我飞。"},
+    {value: "哇塞！唱得太好听了"},
+    {value: "有麦必抢，唱成歌王。"}
 ];
 const emotionIcons = [
-    {id: 1, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/9E29D511D9051A00.jpg"},
-    {id: 2, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/C3DA48D6BBEECF98.jpg"},
-    {id: 3, name: "表情名字", url: "http://image.jmake.cp57.ott.cibntv.net/fk/3C8D2171B0B5A2ED.jpg"},
-    {
-        id: 10,
-        name: "表情名字",
-        url: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=127721107,2495760160&fm=117&gp=0.jpg"
-    },
-    {
-        id: 11,
-        name: "表情名字",
-        url: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=53750650,2324233921&fm=26&gp=0.jpg"
-    },
-    {
-        id: 12,
-        name: "表情名字",
-        url: "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3166025927,1572735166&fm=117&gp=0.jpg"
-    },
-    {
-        id: 13,
-        name: "表情名字",
-        url: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1960126973,2266380470&fm=26&gp=0.jpg"
-    }
+    {id: 1, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/5ff4726f5eed439f119a39920af02f65.png"},
+    {id: 2, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/10.png"},
+    {id: 3, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/184aa5baa96efcb430ede9c4dd2f23c0.png"},
+    {id: 4, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/1314.png"},
+    /*{id: 5, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/3213.png"},*/
+    {id: 6, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/23123.png"},
+    {id: 7, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/31231.png"},
+    {id: 8, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/34234-342-.png"},
+    {id: 9, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/87931e5bdb.png"},
+    {id: 10, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/312321.png"},
+    {id: 11, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/324324.png"},
+    {id: 12, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/334344.png"},
+    {id: 13, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/3131231.png"},
+    {id: 14, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/123123131.png"},
+    {id: 15, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/WechatIMG6722.png"},
+    {id: 16, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/WechatIMG6724.png"},
+    {id: 17, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/WechatIMG6726.png"},
+    {id: 18, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/帅.png"},
+    {id: 19, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/喜欢.png"},
+    {id: 20, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/赞.png"},
+    {id: 21, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/组-1.png"},
+    {id: 22, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/组-2.png"},
+    {id: 23, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/组-3.png"},
+    {id: 24, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/组-4.png"}
 ];
 
 const style = {
@@ -280,7 +291,7 @@ class Barrage extends BaseComponent {
         const {w, h, r} = this.props.common;
         const inputAreaHeight = h * 0.7 - 1.6 * r - 1.2 * r;
         let emotionHeight = inputAreaHeight * 0.4;
-        const swipeLength = (emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1;
+        let swipeLength = emotionIcons.length % ROW_NUMBER === 0 ? (emotionIcons.length / ROW_NUMBER) : ((emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1);
         for (let i = 0; i < swipeLength; i++) {
             html.push(
                 <div key={"emotion_group_" + i} style={{display: "flex", flexWrap: "wrap", padding: "8px 4px"}}>
@@ -315,7 +326,7 @@ class Barrage extends BaseComponent {
         let html = [];
         let count = 0;
         const emotionPage = this.state.emotionPage;
-        const swipeLength = (emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1;
+        let swipeLength = emotionIcons.length % ROW_NUMBER === 0 ? (emotionIcons.length / ROW_NUMBER) : ((emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1);
         while (count < swipeLength) {
             html.push(
                 <i key={count} style={{...style.dots.dot, borderColor: emotionPage === count ? "#ff6833" : "#d7d7d7"}}/>

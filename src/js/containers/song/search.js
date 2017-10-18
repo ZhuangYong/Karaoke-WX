@@ -79,7 +79,7 @@ class Search extends BaseComponent {
                     }}
                 />
                 {
-                    ((!this.state.focus && isAndroid) || !isAndroid) ? <MBottomNavigation selectedIndex={0}/> : ""
+                    ((!this.state.focus && isAndroid) || !isAndroid) ? <MBottomNavigation selectedIndex={-1}/> : ""
                 }
 
             </Paper>
