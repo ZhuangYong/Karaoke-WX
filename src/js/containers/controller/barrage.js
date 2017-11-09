@@ -48,7 +48,6 @@ const emotionIcons = [
     {id: 2, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/10.png"},
     {id: 3, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/184aa5baa96efcb430ede9c4dd2f23c0.png"},
     {id: 4, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/1314.png"},
-    /*{id: 5, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/3213.png"},*/
     {id: 6, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/23123.png"},
     {id: 7, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/31231.png"},
     {id: 8, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/34234-342-.png"},
