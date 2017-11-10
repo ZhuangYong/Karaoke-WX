@@ -63,7 +63,41 @@ export default {
     "API_PHOTO_ALBUM_DELETE": "/api/photoAlbumDelete.json",
 
     // 获取我的订单列表
-    "API_GET_ORDER_FORM": "/api/getOrderForm.json",
+    "API_GET_ORDER_FORM": "/invoice/orderList",
+
+    // 删除订单
+    "API_GET_DELETE_ORDER": "/invoice/deleteOrder",
+
+    // 获取未开发票的订单
+    "API_GET_INVOICE_ORDER": "/invoice/invoiceOrder",
+
+    // 查开票历史
+    "API_GET_INVOICE_LIST": "/invoice/invoiceList",
+
+    /**
+     * 查询开票详情
+     * 输出参数：
+     * time：开票时间
+     * fplx：发票类型2增值税普通发票
+     * gfmc：发票抬头
+     * gfsh：发票税号
+     * status：1 申请开票 2 开票中 3 开票成功
+     * id：记录标识id
+     * totalAmount：发票金额
+     * url：发票下载地址，开票成功存在
+     */
+    "API_GET_INVOICE_DETAIL": "/invoice/invoiceDetail",
+
+    /**
+     * 提交电子发票开票信息
+     * 传入参数：
+     * ids:订单id，多个逗号隔开
+     * gflx: 发票抬头种类01企业、02机关事业单位、03个人、04其它
+     * gfmc: 发票抬头
+     * gfsh: 发票纳税人识别号
+     * gfsj: 开票人电话
+     */
+    "API_GET_INVOICE_SUBMIT": "/invoice/submitInvoice",
 
     // 获取歌曲榜单排行
     "API_QUERY_ALBUM": "/rank/album",
@@ -75,7 +109,12 @@ export default {
     "API_SET_SONG_TOP": "/music/msgPush",
     // 搜索
     "API_SEARCH": "/music/search",
-    // 已点列表
+
+    /**
+     * 已点列表
+     * 传入参数：type：songChoosed（默认可不传，返回已点歌曲列表）
+     * 传入参数：type：history（返回最近唱过歌曲列表）
+     */
     "API_CHOOSE_LIST": "/music/getRecordJson",
     // 热门搜索关键字，cms后台可定义
     "API_GET_HOT_WORD": "/music/searchKeyList",

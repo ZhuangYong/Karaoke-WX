@@ -47,6 +47,10 @@ import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
 import Suggestions from "../containers/forOldVersion/suggestions";
 import RedirectPay from "../containers/forOldVersion/pay";
+import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
+import InvoiceList from "../containers/user/orderForm/invoiceList";
+import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
+import InvoiceDetail from "../containers/user/orderForm/invoiceDetail";
 import sysConfig from "../utils/sysConfig";
 import Const from "../utils/const";
 
@@ -172,6 +176,26 @@ const SuggestionsContainer = () => (
 );
 const RedirectPayContainer = () => (
     <Bundle load={RedirectPay}>
+        {Component => <Component />}
+    </Bundle>
+);
+const InvoiceOrderContainer = () => (
+    <Bundle load={InvoiceOrder}>
+        {Component => <Component />}
+    </Bundle>
+);
+const InvoiceListContainer = () => (
+    <Bundle load={InvoiceList}>
+        {Component => <Component />}
+    </Bundle>
+);
+const InvoiceSubmitContainer = () => (
+    <Bundle load={InvoiceSubmit}>
+        {Component => <Component />}
+    </Bundle>
+);
+const InvoiceDetailContainer = () => (
+    <Bundle load={InvoiceDetail}>
         {Component => <Component />}
     </Bundle>
 );
@@ -304,6 +328,14 @@ class App extends React.Component {
                         {/*imgId: 预览图片id*/}
                         <Route path={`/user/photoAlbumPreview/:imgId`} exact component={PreviewContainer}/>
                         <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>
+                        <Route path={`/user/invoiceOrder`} exact component={InvoiceOrderContainer}/>
+                        <Route path={`/user/invoiceList`} exact component={InvoiceListContainer}/>
+                        {/*
+                        * ids: 待开票id
+                        * totalMoney: 代开票总金额
+                        */}
+                        <Route path={`/user/invoiceSubmit/:ids/:totalMoney`} component={InvoiceSubmitContainer}/>
+                        <Route path={`/user/InvoiceDetail/:id`} component={InvoiceDetailContainer}/>
                         {/*
                         *state: home/success(页面状态)
                         *deviceId: 绑定设备号

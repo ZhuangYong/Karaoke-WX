@@ -122,7 +122,7 @@ class UserIndex extends BaseComponent {
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30),
                                 color: "#fff"
-                            }}>{data.nickName}</div>
+                            }}>{data.nickName || "匿名"}</div>
                             {this.showVIPStatus(data)}
                         </div>
                     </header>
@@ -130,7 +130,7 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={2}>
+                        cols={3}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -159,6 +159,17 @@ class UserIndex extends BaseComponent {
                                 style={styles.headerImg}
                             />
                             <div style={styles.headerDesc}>意见反馈</div>
+                        </GridTile>
+
+                        <GridTile
+                            onTouchTap={() => {
+                                linkTo(`user/orderForm`, false, null);
+                            }}>
+                            <img
+                                src={FeedbackIcon}
+                                style={styles.headerImg}
+                            />
+                            <div style={styles.headerDesc}>我的订单</div>
                         </GridTile>
                     </GridList>
 

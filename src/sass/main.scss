@@ -249,6 +249,14 @@ input, textarea {
     }
 }
 
+.dialog-orderSubmit {
+    & > div > div > div > div {
+        &:nth-child(1) {
+            height: 2.4rem !important;
+        }
+    }
+}
+
 .show-alert {
     .home, .home-recommend, .home-rank, .common-song-list {
         overflow: hidden !important;

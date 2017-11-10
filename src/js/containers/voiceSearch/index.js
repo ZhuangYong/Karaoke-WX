@@ -17,18 +17,18 @@ import ActionTypes from "../../actions/actionTypes";
 
 const styles = {
     btn: {
-        // display: "flex",
-        // alignItems: "center",
-        // justifyContent: "center",
-        // background: `#ff6c00 url(${BtnIcon}) no-repeat center`,
-        // backgroundSize: "auto 35px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: `#ff6c00 url(${BtnIcon}) no-repeat center`,
+        backgroundSize: "auto 35px",
         position: "absolute",
         top: "120px",
         left: "50%",
         marginLeft: "-42.5px",
         width: "80px",
         height: "80px",
-        // borderRadius: "80px"
+        borderRadius: "80px"
     },
     headerDesc: {
         color: "#7e7e7e",
@@ -46,13 +46,13 @@ class VoiceSearch extends BaseComponent {
             // 页面状态 0(正常未开始录音)/1(录音中)/2(断网)/3(无法识别)
             pageState: 0,
             stopRecordTimer: null,
+            startX: null,
+            startY: null,
             btnDisabled: false
-            // startX: null,
-            // startY: null
         };
     }
 
-    /*componentDidMount() {
+    componentDidMount() {
         document.addEventListener("touchend", (e) => {
             if (!this.state.isRecordStart) return;
 
@@ -62,7 +62,7 @@ class VoiceSearch extends BaseComponent {
             });
             this.voiceRecognite(false);
         });
-    }*/
+    }
 
     componentWillUnmount() {
         if (this.state.isRecordStart) {
@@ -74,7 +74,7 @@ class VoiceSearch extends BaseComponent {
             clearTimeout(stopRecordTimer);
         }
 
-        // document.removeEventListener("touchend");
+        document.removeEventListener("touchend");
     }
 
 
@@ -91,15 +91,15 @@ class VoiceSearch extends BaseComponent {
                         left: 0,
                         overflow: "hidden"
                      }}
-                     // onTouchStart={(e) => {
-                     //     e.preventDefault();
-                     // }}
-                     // onTouchMove={(e) => {
-                     //     e.preventDefault();
-                     // }}
-                     // onTouchEnd={(e) => {
-                     //     e.preventDefault();
-                     // }}
+                     onTouchStart={(e) => {
+                         e.preventDefault();
+                     }}
+                     onTouchMove={(e) => {
+                         e.preventDefault();
+                     }}
+                     onTouchEnd={(e) => {
+                         e.preventDefault();
+                     }}
                 >
                     <header style={{
                         marginTop: "90px",
@@ -107,7 +107,7 @@ class VoiceSearch extends BaseComponent {
                         color: "#ff8226",
                         fontSize: "18px"
                     }}>{isRecordStart ? "点击停止" : "点击说话"}</header>
-                    <FloatingActionButton
+                   {/* <FloatingActionButton
                         backgroundColor="#ff6c00"
                         disabledColor="#ff6c00"
                         disabled={this.state.btnDisabled}
@@ -141,9 +141,9 @@ class VoiceSearch extends BaseComponent {
                             <div className="voiceSearchScaleLong">
                             </div>
                         </div>)}
-                    </FloatingActionButton>
+                    </FloatingActionButton>*/}
 
-                    {/*<div
+                    <div
                         style={styles.btn}
                         onTouchStart={(e) => {
                             e.preventDefault();
@@ -176,7 +176,7 @@ class VoiceSearch extends BaseComponent {
                         }}
                         onTouchEnd={(e) => {
                             e.preventDefault();
-                        }}/>*/}
+                        }}/>
 
                     {isRecordStart && (<div>
                         <div className="btnBfAnimationA" style={styles.btn}>
@@ -312,18 +312,20 @@ class VoiceSearch extends BaseComponent {
     stopRecord(times) {
         window.wx && window.wx.stopRecord({
             fail: () => {
-                if (times >= 3) return;
+
+                /*if (times >= 3) return;
                 let timer = 1000;
                 if (times > 0) timer = 2000;
                 setTimeout(() => {
                     // this.props.action_setGlobAlert(times.toString());
                     times++;
                     this.stopRecord(times);
-                }, timer);
-                // this.setState({
-                //     pageState: 0,
-                //     isRecordStart: false
-                // });
+                }, timer);*/
+
+                this.setState({
+                    pageState: 0,
+                    isRecordStart: false
+                });
             }
         });
     }
