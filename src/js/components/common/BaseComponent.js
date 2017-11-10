@@ -162,4 +162,23 @@ export default class BaseComponent extends Component {
         }
         return '正在获取用户信息';
     }
+
+    /**
+     * vip 时间剩余
+     * @param userInfoData
+     * @returns {*}
+     */
+    vipTime(userInfoData) {
+        const {status, data} = userInfoData || {};
+        if (typeof status !== 'undefined') {
+            const {vipStatus, expireTime} = data;
+            // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
+            if (vipStatus === 1) {
+                return expireTime - new Date().getTime();
+            } else {
+                return '0';
+            }
+        }
+        return '正在获取用户信息';
+    }
 }

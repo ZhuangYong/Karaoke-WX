@@ -3,8 +3,8 @@
  */
 
 import React from "react";
-import {BottomNavigation, BottomNavigationItem} from "material-ui";
-import {linkTo} from "../../utils/comUtils";
+import {BottomNavigation, BottomNavigationItem, Dialog, FlatButton} from "material-ui";
+import {getCookie, linkTo, setCookie} from "../../utils/comUtils";
 import PropTypes from "prop-types";
 import BaseComponent from "./BaseComponent";
 import {withRouter} from "react-router";
@@ -15,6 +15,7 @@ import navMeIcon from "../../../img/common/nav_me.png";
 import navMeOnIcon from "../../../img/common/nav_me_on.png";
 import navControllerGifIcon from "../../../img/common/nav_controll_gif.png";
 import navControllerIcon from "../../../img/common/nav_controll.png";
+import Const from "../../utils/const";
 
 const style = {
     nav: {
@@ -85,8 +86,10 @@ class MBottomNavigation extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
-            selectedIndex: this.props.selectedIndex
+            selectedIndex: this.props.selectedIndex,
+            showDialog: false
         };
+        this.validUserVipDialog = this.validUserVipDialog.bind(this);
     }
 
     render() {
@@ -96,44 +99,70 @@ class MBottomNavigation extends BaseComponent {
         let labelColor = ["#999", "#999", "#999"];
         labelColor[selectedIndex] = "#ff6832";
         return (
-            <BottomNavigation
-                selectedIndex={selectedIndex}
-                style={style.nav}
-            >
-                <BottomNavigationItem
-                    style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
-                    label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>主页</div>}
-                    icon={
-                        <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                            <img style={{height: ".667rem", width: '.62rem'}} src={indexIcon}/>
-                        </div>
-                    }
-                    onTouchTap={() => selectedIndex !== 0 && this.navSelect(0)}
-                />
-                <BottomNavigationItem
-                    style={{...style.nav.playController, maxWidth: '100%'}}
-                    label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>播控</div>}
-                    icon={
-                        <div style={style.nav.playController.circle}>
-                            <div style={style.nav.playController.circle.arc}/>
-                            <div style={style.nav.playController.circle.maskLine}/>
-                            <div style={style.nav.playController.circle.maskArc}/>
-                            <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerIcon : navControllerIcon}/>
-                        </div>
-                    }
-                    onTouchTap={() => selectedIndex !== 1 && this.navSelect(1)}
-                />
-                <BottomNavigationItem
-                    style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
-                    label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>我的</div>}
-                    icon={
-                        <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                            <img style={{height: ".667rem", width: ".667rem"}} src={meIcon}/>
-                        </div>
-                    }
-                    onTouchTap={() => selectedIndex !== 2 && this.navSelect(2)}
-                />
-            </BottomNavigation>
+            <div>
+                <BottomNavigation
+                    selectedIndex={selectedIndex}
+                    style={style.nav}
+                >
+                    <BottomNavigationItem
+                        style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
+                        label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>主页</div>}
+                        icon={
+                            <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <img style={{height: ".667rem", width: '.62rem'}} src={indexIcon}/>
+                            </div>
+                        }
+                        onTouchTap={() => selectedIndex !== 0 && this.navSelect(0)}
+                    />
+                    <BottomNavigationItem
+                        style={{...style.nav.playController, maxWidth: '100%'}}
+                        label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>播控</div>}
+                        icon={
+                            <div style={style.nav.playController.circle}>
+                                <div style={style.nav.playController.circle.arc}/>
+                                <div style={style.nav.playController.circle.maskLine}/>
+                                <div style={style.nav.playController.circle.maskArc}/>
+                                <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerIcon : navControllerIcon}/>
+                            </div>
+                        }
+                        onTouchTap={() => selectedIndex !== 1 && this.navSelect(1)}
+                    />
+                    <BottomNavigationItem
+                        style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
+                        label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>我的</div>}
+                        icon={
+                            <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <img style={{height: ".667rem", width: ".667rem"}} src={meIcon}/>
+                            </div>
+                        }
+                        onTouchTap={
+                            () => {
+                                this.validUserVipDialog(() => {
+                                    selectedIndex !== 2 && this.navSelect(2);
+                                });
+                                //selectedIndex !== 2 && this.navSelect(2);
+                            }
+                        }
+                    />
+                </BottomNavigation>
+
+                {
+                    <div>
+                        <Dialog
+                            className="dialog-panel"
+                            actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
+                            contentStyle={{textAlign: 'center'}}
+                            actions={this.state.actions}
+                            modal={false}
+                            open={this.state.showAlert}
+                            // onRequestClose={handleClose}
+                        >
+                            {this.state.alertStr}
+                        </Dialog>
+                    </div>
+                }
+
+            </div>
         );
     }
 
@@ -153,6 +182,63 @@ class MBottomNavigation extends BaseComponent {
                 break;
         }
     }
+
+    validUserVipDialog(callback) {
+        const vipAlert = JSON.parse(getCookie("vipAlert") || "{}");
+        if (vipAlert.lastShowAlertTime && new Date(vipAlert.lastShowAlertTime).getDay() === new Date().getDay()) {
+            callback && callback();
+            return "";
+        }
+        let leftBtnStr = '立即充值';
+        let rightBtnStr = '稍后充值';
+        const vipTime = super.vipTime(this.props.userInfoData);
+        if (typeof vipTime !== 'string') {
+            if (vipTime <= 0) {
+                this.state.alertStr = '您的vip已过期，将无法点歌，为确保您的K歌体验，快去充值吧。';
+            } else if (vipTime > 0 && vipTime < Const.VIP_ALERT_TIME) {
+                this.state.alertStr = '您的vip即将过期，为确保您的K歌体验，快去续费吧。';
+                leftBtnStr = '立即续费';
+                rightBtnStr = '稍后续费';
+            }
+        }
+        const handleClose = () => {
+            this.setState({
+                showAlert: false
+            });
+            setCookie("vipAlert", JSON.stringify({lastShowAlertTime: new Date()}));
+            callback && callback();
+        };
+        const handleSure = () => {
+            this.setState({
+                showAlert: false
+            });
+            setCookie("vipAlert", JSON.stringify({lastShowAlertTime: new Date()}));
+            const {isIos} = window.sysInfo;
+            if (isIos) {
+                // linkTo(`pay/home`, false, null);
+                location.href = '/pay/home';
+            } else {
+                linkTo(`pay/home`, false, null);
+            }
+        };
+        this.state.actions = [
+            <FlatButton
+                label={leftBtnStr}
+                className="sure-button"
+                primary={true}
+                onClick={handleSure}
+            />,
+            <FlatButton
+                label={rightBtnStr}
+                className="cancel-button"
+                primary={true}
+                onClick={handleClose}
+            />,
+        ];
+        this.setState({
+            showAlert: true
+        });
+    }
 }
 
 MBottomNavigation.propTypes = {
@@ -165,7 +251,8 @@ MBottomNavigation.defaultProps = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        common: state.app.common
+        common: state.app.common,
+        userInfoData: state.app.user.userInfo.userInfoData
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
