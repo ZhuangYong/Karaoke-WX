@@ -13,7 +13,7 @@ import {getInvoiceOrder} from "../../../actions/userActions";
 import {linkTo, reqHeader, toRem, accAdd, subtr} from "../../../utils/comUtils";
 import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
-import NoResult from "../../../components/common/NoResult";
+import NoOrdering from "../../../components/common/NoOrdering";
 import {SvgIcon} from "material-ui";
 import SucIcon from "material-ui/svg-icons/navigation/check";
 
@@ -94,7 +94,8 @@ class InvoiceOrder extends BaseComponent {
         let orderChosenTotalMoney = this.state.orderChosenTotalMoney;
         return (
             <section style={{
-                backgroundColor: "#d7d7d7"
+                backgroundColor: "#d7d7d7",
+                minHeight: document.documentElement.clientHeight || document.body.clientHeight
             }}>
                 <header style={{
                     width: "100%",
@@ -191,7 +192,7 @@ class InvoiceOrder extends BaseComponent {
                         height: toRem(110)
                     }} />
                 </div>) : (<div>
-                    {this.state.offLine ? (<NoWifi/>) : (<NoResult/>)}
+                    {this.state.offLine ? (<NoWifi style={{paddingTop: toRem(350)}} />) : (<NoOrdering style={{paddingTop: toRem(350)}} />)}
                 </div>)}
 
                 <footer style={{

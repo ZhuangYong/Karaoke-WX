@@ -87,7 +87,7 @@ class MBottomNavigation extends BaseComponent {
         super(props);
         this.state = {
             selectedIndex: this.props.selectedIndex,
-            showDialog: false
+            showAlert: false
         };
         this.validUserVipDialog = this.validUserVipDialog.bind(this);
     }

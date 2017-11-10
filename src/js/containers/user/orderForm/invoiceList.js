@@ -10,15 +10,10 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import {getInvoiceList, getInvoiceOrder} from "../../../actions/userActions";
 
-import AppBar from 'material-ui/AppBar';
-import Card from 'material-ui/Card';
-import {List, ListItem} from 'material-ui/List';
-import RaisedButton from 'material-ui/RaisedButton';
-
-import {linkTo, reqHeader, toRem, accAdd, subtr} from "../../../utils/comUtils";
+import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
-import NoResult from "../../../components/common/NoResult";
+import NoOrdering from "../../../components/common/NoOrdering";
 import {SvgIcon} from "material-ui";
 
 
@@ -119,7 +114,8 @@ class invoiceList extends BaseComponent {
         const orderList = this.state.orderList;
         return (
             <section style={{
-                backgroundColor: "#d7d7d7"
+                backgroundColor: "#d7d7d7",
+                minHeight: document.documentElement.clientHeight || document.body.clientHeight
             }}>
 
                 {orderList.length > 0 ? (<div>
@@ -168,7 +164,7 @@ class invoiceList extends BaseComponent {
                         <span>亲爱滴，已经到底了</span>
                     </div>
                 </div>) : (<div>
-                    {this.state.offLine ? (<NoWifi/>) : (<NoResult/>)}
+                    {this.state.offLine ? (<NoWifi style={{paddingTop: toRem(350)}} />) : (<NoOrdering style={{paddingTop: toRem(350)}} />)}
                 </div>)}
 
             </section>
@@ -186,8 +182,7 @@ class invoiceList extends BaseComponent {
         this.props.getInvoiceListAction(param, reqHeader(param), null, (msg, err) => {
             if (err.code === Const.CODE_OFF_LINE) {
                 this.setState({
-                    offLine: true,
-                    loading: false
+                    offLine: true
                 });
             }
         });

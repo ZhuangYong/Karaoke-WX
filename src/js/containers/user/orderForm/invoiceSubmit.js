@@ -9,10 +9,11 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 
 import RaisedButton from 'material-ui/RaisedButton';
-import {reqHeader, toRem} from "../../../utils/comUtils";
+import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import {submitInvoice} from "../../../actions/userActions";
 import FlatButton from "material-ui/FlatButton";
 import Dialog from "material-ui/Dialog";
+import {setGlobAlert} from "../../../actions/common/actions";
 
 let styles = {
     submitBtn: {
@@ -106,7 +107,7 @@ class InvoiceSubmit extends BaseComponent {
             />,
             <FlatButton
                 className="sure-button"
-                label="确认"
+                label="确认提交"
                 primary={true}
                 onClick={this.handleAction}
             />,
@@ -207,6 +208,18 @@ class InvoiceSubmit extends BaseComponent {
                         buttonStyle={styles.submitBtn}
                         labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
                         onClick={() => {
+                            if (submitParams.gfmc.length <= 0) {
+                                this.props.action_setGlobAlert("请输入发票抬头");
+                                return;
+                            }
+                            if (!(/^([A-Z\d]{15}|[A-Z\d]{18}|[A-Z\d]{20})$/).test(submitParams.gfsh)) {
+                                this.props.action_setGlobAlert("请输入正确的纳税人识别号");
+                                return;
+                            }
+                            if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(submitParams.gfsj))) {
+                                this.props.action_setGlobAlert("请输入正确的手机号");
+                                return;
+                            }
                             this.setState({openDialog: true});
                         }}
                     />
@@ -223,18 +236,17 @@ class InvoiceSubmit extends BaseComponent {
 
                     <ul style={{
                         listStyle: "none",
-                        padding: "0 5px",
+                        padding: 0,
                         margin: 0,
-                        fontSize: toRem(28),
                         color: "#999",
-                        lineHeight: toRem(40)
+                        lineHeight: toRem(45)
                     }}>
                         <li>抬头类型: <span style={{color: "#212121"}}>{submitParams.gflx === "03" ? "个人" : "公司"}</span></li>
                         <li>发票类型: <span style={{color: "#212121"}}>增值税普通发票</span></li>
                         <li>发票抬头: <span style={{color: "#212121"}}>{submitParams.gfmc}</span></li>
                         <li>纳税人识别号: <span style={{color: "#212121"}}>{submitParams.gfsh}</span></li>
                         <li>电话: <span style={{color: "#212121"}}>{submitParams.gfsj}</span></li>
-                        <li>*提交后请到开票历史中查看开票进度</li>
+                        <li style={{fontSize: `${toRem(14)} !important`}}>*提交后请到开票历史中查看开票进度</li>
                     </ul>
                 </Dialog>
             </div>
@@ -243,8 +255,15 @@ class InvoiceSubmit extends BaseComponent {
 
     handleAction() {
         const params = this.state.submitParams;
+        console.log(params);
         this.props.submitInvoiceAction(params, reqHeader(params), (res) => {
-            console.log(res);
+            const {status} = res;
+            if (parseInt(status, 10) === 1) {
+                this.setState({
+                    openDialog: false
+                });
+                linkTo(`user/invoiceSubmitSuccess`, false, null);
+            }
         });
     }
 
@@ -268,6 +287,7 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         submitInvoiceAction: bindActionCreators(submitInvoice, dispatch)
     };
 };

@@ -23,7 +23,7 @@ import Audio from "../containers/play/audio";
 import Bundle from "./Bundle";
 import ChooseList from "../containers/song/chooseList";
 import SongController from "../containers/controller/songController";
-import User from "../containers/user";
+import User from "../containers/user/index";
 import SingerAlbum from "../containers/song/singerAlbum";
 import SingerList from "../containers/song/singerList";
 import SongsList from "../containers/song/SongList";
@@ -50,6 +50,7 @@ import RedirectPay from "../containers/forOldVersion/pay";
 import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
 import InvoiceList from "../containers/user/orderForm/invoiceList";
 import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
+import InvoiceSubmitSuccess from "../containers/user/orderForm/invoiceSubmitSuccess";
 import InvoiceDetail from "../containers/user/orderForm/invoiceDetail";
 import sysConfig from "../utils/sysConfig";
 import Const from "../utils/const";
@@ -194,6 +195,11 @@ const InvoiceSubmitContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const InvoiceSubmitSuccessContainer = () => (
+    <Bundle load={InvoiceSubmitSuccess}>
+        {Component => <Component />}
+    </Bundle>
+);
 const InvoiceDetailContainer = () => (
     <Bundle load={InvoiceDetail}>
         {Component => <Component />}
@@ -335,6 +341,7 @@ class App extends React.Component {
                         * totalMoney: 代开票总金额
                         */}
                         <Route path={`/user/invoiceSubmit/:ids/:totalMoney`} component={InvoiceSubmitContainer}/>
+                        <Route path={`/user/invoiceSubmitSuccess`} component={InvoiceSubmitSuccessContainer}/>
                         <Route path={`/user/InvoiceDetail/:id`} component={InvoiceDetailContainer}/>
                         {/*
                         *state: home/success(页面状态)

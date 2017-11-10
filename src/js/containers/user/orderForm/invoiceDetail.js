@@ -11,6 +11,17 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import {reqHeader} from "../../../utils/comUtils";
 import {getInvoiceDetail} from "../../../actions/userActions";
 
+const style = {
+    orderings: {
+        height: "100%",
+        width: "100%",
+        zIndex: -1,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column"
+    }
+};
 
 class InvoiceDetail extends BaseComponent {
     constructor(props) {
@@ -30,8 +41,8 @@ class InvoiceDetail extends BaseComponent {
         const {url} = this.props.orderForm.invoiceDetailData || {url: ""};
 
         return (
-            <div>
-                <img src={url}/>
+            <div style={style.orderings}>
+                <img src={url} style={{maxWidth: "7rem"}} />
             </div>
         );
     }

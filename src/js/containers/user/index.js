@@ -130,7 +130,7 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={3}>
+                        cols={2}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -161,16 +161,16 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>意见反馈</div>
                         </GridTile>
 
-                        <GridTile
-                            onTouchTap={() => {
-                                linkTo(`user/orderForm`, false, null);
-                            }}>
-                            <img
-                                src={FeedbackIcon}
-                                style={styles.headerImg}
-                            />
-                            <div style={styles.headerDesc}>我的订单</div>
-                        </GridTile>
+                        {/*<GridTile*/}
+                            {/*onTouchTap={() => {*/}
+                                {/*linkTo(`user/orderForm`, false, null);*/}
+                            {/*}}>*/}
+                            {/*<img*/}
+                                {/*src={FeedbackIcon}*/}
+                                {/*style={styles.headerImg}*/}
+                            {/*/>*/}
+                            {/*<div style={styles.headerDesc}>我的订单</div>*/}
+                        {/*</GridTile>*/}
                     </GridList>
 
                 </section>

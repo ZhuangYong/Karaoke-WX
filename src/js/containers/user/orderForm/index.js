@@ -18,9 +18,9 @@ import Avatar from 'material-ui/Avatar';
 import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
-import NoResult from "../../../components/common/NoResult";
 import {SvgIcon} from "material-ui";
 import {setGlobAlert} from "../../../actions/common/actions";
+import NoOrdering from "../../../components/common/NoOrdering";
 
 
 const style = {
@@ -110,7 +110,8 @@ class OrderForm extends BaseComponent {
 
         return (
             <section style={{
-                backgroundColor: "#d7d7d7"
+                backgroundColor: "#d7d7d7",
+                minHeight: document.documentElement.clientHeight || document.body.clientHeight
             }}>
                 <header style={{
                     width: "100%",
@@ -220,7 +221,7 @@ class OrderForm extends BaseComponent {
                         确认删除订单吗？
                     </Dialog>
                 </div>) : (<div>
-                    {this.state.offLine ? (<NoWifi/>) : (<NoResult/>)}
+                    {this.state.offLine ? (<NoWifi style={{paddingTop: toRem(350)}} />) : (<NoOrdering style={{paddingTop: toRem(350)}} />)}
                 </div>)}
 
             </section>
