@@ -24,6 +24,7 @@ const style = {
         borderTop: "1px solid #efeeef",
         bottom: -1,
         zIndex: "5",
+        left: 0,
         playController: {
             position: "relative",
             paddingLeft: 0,
@@ -87,7 +88,7 @@ class MBottomNavigation extends BaseComponent {
         super(props);
         this.state = {
             selectedIndex: this.props.selectedIndex,
-            showDialog: false
+            showAlert: false
         };
         this.validUserVipDialog = this.validUserVipDialog.bind(this);
     }
@@ -199,6 +200,9 @@ class MBottomNavigation extends BaseComponent {
                 this.state.alertStr = '您的vip即将过期，为确保您的K歌体验，快去续费吧。';
                 leftBtnStr = '立即续费';
                 rightBtnStr = '稍后续费';
+            } else {
+                callback && callback();
+                return;
             }
         }
         const handleClose = () => {

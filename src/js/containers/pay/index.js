@@ -23,6 +23,10 @@ import FlatButton from "material-ui/FlatButton";
 import {setGlobAlert} from "../../actions/common/actions";
 import {getUserInfo} from "../../actions/userActions";
 import ActionTypes from "../../actions/actionTypes";
+import {Checkbox, ListItem, Subheader} from "material-ui";
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
+import ActionCheck from 'material-ui/svg-icons/action/check-circle';
+import Const from "../../utils/const";
 
 const styles = {
     itemBox: {
@@ -76,7 +80,8 @@ class Pay extends BaseComponent {
             isCheckboxChecked: true,
             payList: [],
             buttonPage: null,
-            openDialog: false
+            openDialog: false,
+            payType: ""
         };
 
         this.pay = this.pay.bind(this);
@@ -120,63 +125,97 @@ class Pay extends BaseComponent {
             <div>
                 {matchParams.state === "home" ? (<div>
                     <section>
-                        <header style={styles.itemBox}>
-                            <div style={styles.itemLeft}>VIP会员套餐</div>
-                        </header>
+                        {
+                            this.state.payType !== Const.PAY_TYPE_GONG_XIANG ? <header style={styles.itemBox}>
+                                <div style={styles.itemLeft}>VIP会员套餐</div>
+                            </header> : ""
+                        }
 
                         <ul style={{
                             padding: 0,
                             margin: 0,
                             listStyle: "none"
                         }}>
-                            {payList.map((tile) => (<li
-                                key={tile.productId}
-                                style={payListActiveItem.productId === tile.productId ? styles.itemBoxActive : styles.itemBox}
-                                onTouchTap={() => {
-                                    this.setState({
-                                        payListActiveItem: tile
-                                    });
-                                }}
-                            >
-                                <div style={styles.itemLeft}>{tile.productName}</div>
-                                <div style={styles.itemRight}>{tile.price}</div>
-                            </li>))}
+                            {
+                                this.state.payType === Const.PAY_TYPE_GONG_XIANG ? payList.map((item) => (
+                                    <ListItem
+                                        key={item.productId}
+                                        innerDivStyle={{paddingTop: '.7rem'}}
+                                        style={{height: '3.4rem', borderBottom: '.01rem solid gray', paddingBottom: '3.5rem'}}
+                                        primaryText={
+                                            <span style={{marginLeft: '2.4rem', marginTop: '.1rem', marginBottom: '.2rem', fontSize: '.48rem'}}>
+                                                <div style={{position: 'absolute', left: '.2rem', top: '1.4rem'}}>
+                                                    {
+                                                        payListActiveItem.productId === item.productId ? <ActionCheck color="#ff6832" className='payCircle'/> : <div style={{width: '.64rem', margin: '.067rem', height: '.64rem', border: '1px solid gray', borderRadius: '50%'}}/>
+                                                    }
+                                                </div>
+                                                {item.productName}
+                                            </span>
+                                        }
+                                        secondaryText={
+                                            <div style={{marginLeft: '2.4rem', marginTop: '.4rem', overflow: 'visible'}}>
+                                                <p style={{margin: '.5rem 0', color: 'red'}}>
+                                                    {item.description}
+                                                </p>
+
+                                                <p style={{margin: '.5rem 0', color: '#ff6832', fontSize: '.62rem'}}>
+                                                    ￥{item.price}
+                                                </p>
+                                            </div>
+                                        }
+                                        leftAvatar={
+                                            <div style={{height: '2.8rem', width: '2.8rem', left: '1.16rem', overflow: 'hidden'}}>
+                                                <img src={item.wxImg} style={{width: '100%'}}/>
+                                            </div>
+                                        }
+                                        onTouchTap={() => {
+                                            this.setState({
+                                                payListActiveItem: item
+                                            });
+                                        }}
+                                    />
+                                )) : payList.map((tile) => (<li
+                                    key={tile.productId}
+                                    style={payListActiveItem.productId === tile.productId ? styles.itemBoxActive : styles.itemBox}
+                                    onTouchTap={() => {
+                                        this.setState({
+                                            payListActiveItem: tile
+                                        });
+                                    }}
+                                >
+                                    <div style={styles.itemLeft}>{tile.productName}</div>
+                                    <div style={styles.itemRight}>{tile.price}</div>
+                                </li>))
+                            }
 
                         </ul>
 
-                        <div style={styles.itemLeft}>
-                            <input
-                                type="checkbox"
-                                id="payCheckBox"
-                                style={{display: "none"}}
-                                checked={isCheckboxChecked}
-                                onChange={() => {
-                                    this.setState({
-                                        isCheckboxChecked: !isCheckboxChecked
-                                    });
-                                }}
-                            />
-                            <label htmlFor="payCheckBox">
-                                <img
-                                    src={isCheckboxChecked ? CheckboxSelectedIcon : CheckboxIcon}
-                                    alt=""
-                                    style={{
-                                        position: "relative",
-                                        top: "2px",
-                                        marginRight: "5px",
-                                        width: "15px",
-                                        height: "15px"
-                                    }}
-                                />
-                                同意并阅读
-                            </label>
-                            <span
-                                style={{color: "#2522ff"}}
-                                onTouchTap={() => {
-                                    linkTo(`protocol`, false, null);
-                                }}
-                            >《金麦客支付协议》</span>
-                        </div>
+                        {
+                            this.state.payType === Const.PAY_TYPE_GONG_XIANG ? <Subheader inset={true} style={{paddingLeft: '1.067rem', marginBottom: '1rem', textAlign: 'left', fontSize: '.32rem', color: '#002222'}}>购买时长越多越优惠，马上支付开始欢唱吧！</Subheader> : ""
+                        }
+                        <ListItem
+                            primaryText={
+                                    <span style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                        <span>
+                                            {
+                                                isCheckboxChecked ? <ActionCheck color="#ff6832" className='payCircle'/> : <div style={{width: '.64rem', margin: '.067rem', height: '.64rem', border: '1px solid gray', borderRadius: '50%'}}/>
+                                            }
+                                        </span>
+
+                                        <a style={{color: isCheckboxChecked ? '#ff6832' : 'gray', fontSize: '.4rem', textDecoration: 'underline'}}>
+                                            同意 <font onTouchTap={() => {
+                                            linkTo(`protocol`, false, null);
+                                        }}>《金麦客支付协议》</font>
+                                        </a>
+                                    </span>
+
+                            }
+                            onTouchTap={() => {
+                            this.setState({
+                                isCheckboxChecked: !isCheckboxChecked
+                            });
+                        }}
+                        />
                     </section>
 
                     <ButtonPage
@@ -191,8 +230,8 @@ class Pay extends BaseComponent {
                             textAlign: "center",
                             color: "#252525",
                             fontSize: "14px"
-                        }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem.price}元</span></div>}
-                        disabled={!(isCheckboxChecked && payListActiveItem.productId !== null)}
+                        }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price}元</span></div>}
+                        disabled={!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null)}
                         raisedButtonStyles={{
                             bottom: 0
                         }}
@@ -329,8 +368,10 @@ class Pay extends BaseComponent {
         if (data)
             this.setState({
                 payListActiveItem: data[0],
-                payList: data
+                payList: data,
+                payType: data[0]['productType']
             });
+
     }
 
     // 识别页面状态

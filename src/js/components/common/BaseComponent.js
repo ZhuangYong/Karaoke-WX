@@ -53,7 +53,7 @@ export default class BaseComponent extends Component {
             return false;
         };
         if (typeof isBindDevice === 'string') {
-            actionSetGlobAlert && actionSetGlobAlert(isBindDevice);
+            actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return '正在获取用户信息';
         } else if (isBindDevice === false) {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
@@ -87,7 +87,7 @@ export default class BaseComponent extends Component {
     validUserBindDevice(userInfoData, actionSetGlobAlert) {
         const isBindDevice = this.isBindDevice(userInfoData);
         if (typeof isBindDevice === 'string') {
-            actionSetGlobAlert && actionSetGlobAlert(isBindDevice);
+            actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return isBindDevice;
         } else if (isBindDevice === false) {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
@@ -140,7 +140,13 @@ export default class BaseComponent extends Component {
             } else if (status === 1) {
                 const {isReDevice, bindExpireTime} = data;
                 //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
-                return isReDevice === 1;
+                if (isReDevice === 3) {
+                    return "设备绑定过期,请重新绑定";
+                } else if (isReDevice === 2) {
+                    return "未绑定设备";
+                } else {
+                    return true;
+                }
             } else {
                 return msg || '获取用户信息失败，请稍后重试！';
             }

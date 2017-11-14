@@ -563,3 +563,15 @@ export function isGetUserInfo() {
     const pathname = location.pathname.split("/");
     return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[3] === "play"));
 }
+
+
+export function formatTime(second) {
+    if (!second) return "00:00:00";
+    let h = '0' + parseInt(second / (60 * 60), 0);
+    let m = '0' + parseInt((second - h * 60 * 60) / 60, 0);
+    let s = '0' + second % 60;
+    h = h.substr(h.length - 2, h.length);
+    m = m.substr(m.length - 2, m.length);
+    s = s.substr(s.length - 2, s.length);
+    return h + ":" + m + ":" + s;
+}

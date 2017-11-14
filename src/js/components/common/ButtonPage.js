@@ -47,7 +47,7 @@ class ButtonPage extends React.Component {
 
             {!this.props.hideButton && (<RaisedButton
                 disabled={this.props.disabled}
-                backgroundColor="#ff8632"
+                backgroundColor="#ff6832"
                 disabledBackgroundColor="#ccc"
                 label={this.props.buttonLabel}
                 style={Object.assign({}, styles.submitBtn, this.props.raisedButtonStyles)}

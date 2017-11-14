@@ -12,7 +12,7 @@ import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import {
     chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo, wxShare,
-    wxAuthorizedUrl, isGetUserInfo
+    wxAuthorizedUrl, isGetUserInfo, formatTime
 } from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Route, Switch} from "react-router-dom";
@@ -49,6 +49,8 @@ import Suggestions from "../containers/forOldVersion/suggestions";
 import RedirectPay from "../containers/forOldVersion/pay";
 import sysConfig from "../utils/sysConfig";
 import Const from "../utils/const";
+import TimeIcon from "../../img/common/icon_time.png";
+import BaseComponent from "./common/BaseComponent";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -187,7 +189,41 @@ const RedirectPayContainer = () => (
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
 let firstConfigUrl = "";
-class App extends React.Component {
+const style = {
+    gxTimePanel: {
+        position: 'fixed',
+        backgroundColor: '#ff6832',
+        bottom: '4rem',
+        right: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        span: {
+            height: '1rem',
+            overflow: 'hidden',
+            width: '2.2rem',
+            textAlign: 'center',
+            paddingLeft: '.2rem',
+            color: 'white',
+            paddingTop: '.13rem',
+            p: {
+                margin: 0,
+                fontSize: '.32rem',
+                lineHeight: '.4rem'
+            }
+        },
+        img: {
+            height: '1rem',
+            position: 'absolute',
+            left: '-.5rem',
+            top: 0,
+            backgroundColor: '#ff6832',
+            padding: '.133rem',
+            borderRadius: '50%',
+        }
+    }
+};
+class App extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -208,6 +244,7 @@ class App extends React.Component {
         this.runCheckLocal = this.runCheckLocal.bind(this);
         this.updateUserInfo = this.updateUserInfo.bind(this);
         this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
+        this.gxTimer = this.gxTimer.bind(this);
     }
 
     componentWillMount() {
@@ -267,6 +304,10 @@ class App extends React.Component {
             }
         }
 
+        const {userInfoData} = this.props.userInfo;
+        if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('time')) {
+            this.gxTimer();
+        }
     }
 
     render() {
@@ -335,6 +376,42 @@ class App extends React.Component {
                         }}
                     />
                         {validUserStatusDialog}
+
+                        {
+                            typeof this.state.gxTime !== 'undefined' ? <div style={style.gxTimePanel}
+                                                                            onClick={() => {
+                                                                                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
+
+                                                                                if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+                                                                                    linkTo(`pay/deviceRegister`, false, null);
+                                                                                    return;
+                                                                                }
+                                                                                const {isIos} = window.sysInfo;
+                                                                                if (isIos) {
+                                                                                    // linkTo(`pay/home`, false, null);
+                                                                                    location.href = '/pay/home';
+                                                                                } else {
+                                                                                    linkTo(`pay/home`, false, null);
+                                                                                }
+                                                                            }}>
+                                <img src={TimeIcon} style={style.gxTimePanel.img}/>
+                                <span style={style.gxTimePanel.span}>
+                                    {
+                                        this.state.gxTime ? <font>
+                                            <p style={style.gxTimePanel.span.p}>
+                                                剩余时间
+                                            </p>
+                                            <p style={style.gxTimePanel.span.p}>
+                                                {formatTime(this.state.gxTime)}
+                                            </p>
+                                        </font> : <p style={{margin: 0, fontSize: '0.32rem', lineHeight: '0.8rem'}}>
+                                            立即开唱
+                                        </p>
+                                    }
+
+                                </span>
+                            </div> : ""
+                        }
                     </div>
                 </MuiThemeProvider>
             </div>
@@ -377,7 +454,7 @@ class App extends React.Component {
     }
 
     validUserStatusDialog() {
-        const alertData = this.props.alertData;
+        const {alertData, globAlert} = this.props;
         if (!alertData) return;
         const actionSetGlobAlert = this.props.action_setGlobAlert;
         let alertStr = "";
@@ -385,7 +462,7 @@ class App extends React.Component {
         let doAction;
         switch (alertData) {
             case ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE:
-                alertStr = '未绑定设备, 请绑定';
+                alertStr = globAlert || '未绑定设备, 请绑定';
                 //TODO BIND DEVICE
                 doAction = () => {
                     window.wx && window.wx.scanQRCode({
@@ -575,6 +652,24 @@ class App extends React.Component {
                 });
             }, 500);
         });
+    }
+
+    gxTimer() {
+        const {gxTimer} = this.state;
+        if (!gxTimer) {
+            if (typeof this.state.gxTime === 'undefined') this.state.gxTime = this.props.userInfo.userInfoData.data.time;
+            this.state.gxTimer = setInterval(() => {
+                if (this.state.gxTime <= 0) {
+                    window.gxTime = 0;
+                    return;
+                }
+                const gxTime = --this.state.gxTime;
+                this.setState({
+                    gxTime: gxTime
+                });
+                window.gxTime = gxTime;
+            }, 1000);
+        }
     }
 }
 

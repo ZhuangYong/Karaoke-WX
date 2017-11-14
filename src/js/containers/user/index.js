@@ -4,7 +4,7 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import {deleteRecording, getRecordsList, getUserInfo} from "../../actions/userActions";
-import {linkTo, reqHeader, timeToYmd, toRem} from "../../utils/comUtils";
+import {formatTime, linkTo, reqHeader, timeToYmd, toRem} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
@@ -17,6 +17,7 @@ import HeaderBgIcon from "../../../img/user_header_bg.png";
 import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
 import VIPPayContent from "../../../img/vip_pay_content.png";
+import PayIcon from "../../../img/common/icon_pay.png";
 import {setGlobAlert} from "../../actions/common/actions";
 
 import defaultAvatar from "../../../img/default_avatar.png";
@@ -35,6 +36,15 @@ const styles = {
         color: "#222",
         lineHeight: "normal",
         fontSize: toRem(24)
+    },
+    gxStatusPan: {
+        margin: 0,
+        float: 'left',
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '.2rem'
     }
 };
 
@@ -63,11 +73,18 @@ class UserIndex extends BaseComponent {
         };
 
         this.updateRecordsList = this.updateRecordsList.bind(this);
+        this.gxTimer = this.gxTimer.bind(this);
+        this.showGxStatus = this.showGxStatus.bind(this);
     }
 
     componentDidUpdate(preProps) {
         if (preProps.recordsList.recordsListStamp !== this.props.recordsList.recordsListStamp) {
             this.updateRecordsList();
+        }
+
+        const {userInfoData} = this.props.userInfo;
+        if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('time')) {
+            this.gxTimer();
         }
     }
 
@@ -79,6 +96,13 @@ class UserIndex extends BaseComponent {
                 currentPage: 1
             };
             this.props.getRecordsListAction(getRecordsListParams, reqHeader(getRecordsListParams));
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.state.gxTimer) {
+            clearInterval(this.state.gxTimer);
+            this.state.gxTimer = 0;
         }
     }
 
@@ -123,7 +147,9 @@ class UserIndex extends BaseComponent {
                                 fontSize: toRem(30),
                                 color: "#fff"
                             }}>{data.nickName}</div>
-                            {this.showVIPStatus(data)}
+                            {
+                                typeof data.time !== 'undefined' ? this.showGxStatus(data) : this.showVIPStatus(data)
+                            }
                         </div>
                     </header>
 
@@ -281,7 +307,7 @@ class UserIndex extends BaseComponent {
     showVIPStatus(data) {
         let vipStatus = data.vipStatus;
         const isReDevice = data.isReDevice;
-
+        if (!vipStatus) return;
         if (isReDevice !== 1) vipStatus = -1;
 
         let vipParams = {
@@ -362,8 +388,71 @@ class UserIndex extends BaseComponent {
         </div>);
     }
 
+    showGxStatus(data) {
+        let vipStatus = data.vipStatus;
+        return (<div
+            style={{
+                alignItems: "center",
+                color: "#ffcb63",
+                fontSize: '.32rem',
+                height: toRem(50),
+                backgroundColor: vipStatus === 0 ? "#373737" : "#1f100f",
+                borderRadius: toRem(10),
+                border: `${toRem(2)} solid ${vipStatus === 0 ? "#ababaa" : "#ffcb63"}`,
+                boxSizing: "initial"
+            }}
+            onTouchTap={() => {
+                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
+
+                if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+                    linkTo(`pay/deviceRegister`, false, null);
+                    return;
+                }
+                const {isIos} = window.sysInfo;
+                if (isIos) {
+                    // linkTo(`pay/home`, false, null);
+                    location.href = '/pay/home';
+                } else {
+                    linkTo(`pay/home`, false, null);
+                }
+            }}>
+            {
+                !window.gxTime ? <p style={styles.gxStatusPan}>
+                    立即开唱
+                </p> : <p style={styles.gxStatusPan}>
+                    剩余时间：<font>{formatTime(this.state.gxTime)}</font>
+                </p>
+            }
+
+            <img style={{
+                width: toRem(100),
+                height: toRem(50),
+                float: 'right'
+            }} src={PayIcon} />
+        </div>);
+    }
+
     randomDefaultImg() {
         return `../../../img/album/${parseInt(Math.random() * 3, 10) + 1}.png`;
+    }
+
+    gxTimer() {
+        const {gxTimer} = this.state;
+        if (!gxTimer) {
+            this.state.gxTimer = setInterval(() => {
+                if (window.gxTime <= 0) {
+                    if (typeof this.state.gxTime === 'undefined') {
+                        this.setState({
+                            gxTime: 0
+                        });
+                    }
+                    return;
+                }
+                this.setState({
+                    gxTime: window.gxTime
+                });
+            }, 1000);
+        }
     }
 }
 

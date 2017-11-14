@@ -22,6 +22,9 @@ export default{
 
     BARRAGE_MIN_OTT_VERSION: '1.1.3',
 
-    VIP_ALERT_TIME: 15 * 20 * 60 * 60 * 1000
+    VIP_ALERT_TIME: 15 * 20 * 60 * 60 * 1000,
+
+    // 支付类型： 共享
+    PAY_TYPE_GONG_XIANG: 'gongxiang'
 
 };
