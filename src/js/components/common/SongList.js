@@ -220,7 +220,7 @@ class SongList extends BaseComponent {
         const pageData = this.state.pageData;
         return pageData.map((song) => (
                 <SongItem
-                    key={song.id}
+                    key={song.id || song.serialNo}
                     song={song}
                     onPushSongSuccess={this.props.onPushSongSuccess}
                     onPushSongFail={this.props.onPushSongFail}

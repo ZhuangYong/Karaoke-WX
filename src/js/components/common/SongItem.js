@@ -36,7 +36,7 @@ class SongItem extends BaseComponent {
         return (
             <ListItem
                 className="song-item"
-                key={song.id}
+                key={song.id || song.serialNo}
                 primaryText={<div>
                     <div className="song-title"><font>{song.nameNorm}</font><i className="label-vip">{song.charge ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
                     </div>
@@ -49,7 +49,7 @@ class SongItem extends BaseComponent {
                     </div>
                 }
                 rightToggle={
-                    this.getBut(song.serialNo)
+                    this.getBut(song.id || song.serialNo)
                 }
             />
         );

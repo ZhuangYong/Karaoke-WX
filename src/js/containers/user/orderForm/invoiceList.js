@@ -57,6 +57,8 @@ const RightIcon = (props) => (<SvgIcon
 class invoiceList extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("开票历史");
+
         this.state = {
             orderForm: {},
             orderList: [],
@@ -155,7 +157,7 @@ class invoiceList extends BaseComponent {
                                     }}/>
                                 </span>
                             </li>
-                            <li>发票类型: <span style={{color: "#212121"}}>{item.name}</span></li>
+                            <li>发票类型: <span style={{color: "#212121"}}>增值税普通发票</span></li>
                             <li>发票金额: <span style={{color: "#212121"}}>&yen;{item.amount}</span></li>
                         </ul>
 

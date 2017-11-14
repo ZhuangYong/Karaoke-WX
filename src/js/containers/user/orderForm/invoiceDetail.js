@@ -26,7 +26,7 @@ const style = {
 class InvoiceDetail extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("开票");
+        super.title("开票详情");
     }
 
     componentDidMount() {

@@ -58,6 +58,8 @@ const RightCircleIcon = (props) => (<SvgIcon
 class OrderForm extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("我的订单");
+
         this.state = {
             orderListData: {},
             orderList: [],

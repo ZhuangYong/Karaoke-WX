@@ -228,11 +228,11 @@ class SingerList extends BaseComponent {
                             <div className="single-list" style={{padding: '2.4rem 0px 8px'}}>
                                 <div>
                                     {this.state.pageData.map((singer) => (
-                                        <div key={singer.id} onClick={() => {
+                                        <div key={singer.id || singer.serialNo} onClick={() => {
                                             let {cacheData, scrollTop} = this.state;
                                             cacheData.scrollTop = scrollTop;
                                             this.props.action_setSingerList(cacheData);
-                                            linkTo(`songs/singerId/${singer.id}/${singer.nameNorm}`, false, null);
+                                            linkTo(`songs/singerId/${singer.id || singer.serialNo}/${singer.nameNorm}`, false, null);
                                         }}>
                                             <span className="single-item">
                                                 <div>

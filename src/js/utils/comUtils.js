@@ -88,9 +88,10 @@ export function chkDevice() {
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
     // console.log(process.env);
 
-    if (process.env.NODE_ENV === "development") {
-        isWeixin = true;
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //     isWeixin = true;
+    // }
+
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,
@@ -305,8 +306,8 @@ export function getEncryptHeader(Oid) {
     return {
         appId: encrypt.encrypt('kalaebb34de801bb67fd'),
         appVersion: sysConfig.appVersion,
-        wxId: encrypt.encrypt(Oid.wxId),
-        deviceId: encrypt.encrypt(Oid.deviceId),
+        wxId: encrypt.encrypt(Oid.wxId || ""),
+        deviceId: encrypt.encrypt(Oid.deviceId || ""),
         mac: encrypt.encrypt('mac'),
         // deviceId: encrypt.encrypt("2f8ea06784194d56c19d96d4d75a1b6b"),
         // mac: encrypt.encrypt('28070d000119'),

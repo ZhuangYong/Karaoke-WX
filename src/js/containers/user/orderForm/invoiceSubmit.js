@@ -190,6 +190,8 @@ class InvoiceSubmit extends BaseComponent {
                     type="text"/>
                 </section>
 
+                <div style={{width: "100%", height: "80px"}} />
+
                 <section
                     style={{
                         position: "fixed",

@@ -59,6 +59,8 @@ const RightCircleIcon = (props) => (<SvgIcon
 class InvoiceOrder extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("开票");
+
         this.state = {
             orderForm: {},
             orderList: [],
@@ -140,6 +142,20 @@ class InvoiceOrder extends BaseComponent {
                             position: "relative",
                             backgroundColor: "#fff",
                             marginBottom: toRem(20)
+                        }}
+                        onTouchTap={() => {
+                            const ind = orderChosenIds.indexOf(item.id);
+                            if (ind < 0) {
+                                orderChosenIds.push(item.id);
+                                orderChosenTotalMoney = accAdd(orderChosenTotalMoney, item.payAmount);
+                            } else {
+                                orderChosenIds.splice(ind, 1);
+                                orderChosenTotalMoney = subtr(orderChosenTotalMoney, item.payAmount);
+                            }
+                            this.setState({
+                                orderChosenIds: orderChosenIds,
+                                orderChosenTotalMoney: orderChosenTotalMoney
+                            });
                         }}>
 
                         <header style={orderChosenIds.indexOf(item.id) >= 0 ? styles.selected : styles.deselect}>
@@ -160,20 +176,6 @@ class InvoiceOrder extends BaseComponent {
                                 fontSize: toRem(28),
                                 color: "#999",
                                 lineHeight: toRem(60)
-                            }}
-                            onTouchTap={() => {
-                                const ind = orderChosenIds.indexOf(item.id);
-                                if (ind < 0) {
-                                    orderChosenIds.push(item.id);
-                                    orderChosenTotalMoney = accAdd(orderChosenTotalMoney, item.payAmount);
-                                } else {
-                                    orderChosenIds.splice(ind, 1);
-                                    orderChosenTotalMoney = subtr(orderChosenTotalMoney, item.payAmount);
-                                }
-                                this.setState({
-                                    orderChosenIds: orderChosenIds,
-                                    orderChosenTotalMoney: orderChosenTotalMoney
-                                });
                             }}>
                             <li style={{
 
@@ -220,7 +222,6 @@ class InvoiceOrder extends BaseComponent {
                                     chosenItems.push(item.id);
 
                                     totalMoney = accAdd(item.payAmount, totalMoney);
-
                                 });
                             }
                             this.setState({
@@ -228,7 +229,8 @@ class InvoiceOrder extends BaseComponent {
                                 orderChosenTotalMoney: totalMoney
                             });
                         }}>
-                        <div style={orderChosenIds.length < orderList.length ? styles.deselect : styles.selected}>
+                        <div style={(orderChosenIds.length !== 0) && (orderChosenIds.length === orderList.length) ? styles.selected : styles.deselect}>
+
                             <SucIcon style={{
                                 position: "absolute",
                                 top: 0,
@@ -242,7 +244,7 @@ class InvoiceOrder extends BaseComponent {
                             lineHeight: toRem(110),
                             fontSize: toRem(34),
                             color: "#666"
-                        }}>已选（{orderChosenIds.length}）</span>
+                        }}>{orderList.length !== 0 && orderChosenIds.length > 0 ? "已选" : "全选"}（{orderChosenIds.length}）</span>
                     </header>
 
                     <div style={(() => {
