@@ -62,7 +62,7 @@ class SingerAlumb extends BaseComponent {
                     {listData.map((singer) => (
                         <GridTile
                         className="grade-tile img-not-loaded"
-                        key={singer.id}
+                        key={singer.id || singer.serialNo}
                         title=""
                         titleStyle={{
                         display: "flex",
@@ -74,7 +74,7 @@ class SingerAlumb extends BaseComponent {
                     }}
                         titleBackground="transparent"
                         onClick={() => {
-                            if (singer.name) linkTo(`singer/${singer.id}/${singer.name}`, false, null);
+                            if (singer.name) linkTo(`singer/${singer.id || singer.serialNo}/${singer.name}`, false, null);
                         }}
                         >
                         <div>

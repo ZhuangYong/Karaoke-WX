@@ -305,9 +305,11 @@ export function getEncryptHeader(Oid) {
     return {
         appId: encrypt.encrypt('kalaebb34de801bb67fd'),
         appVersion: sysConfig.appVersion,
-        wxId: encrypt.encrypt(Oid.wxId),
-        deviceId: encrypt.encrypt(Oid.deviceId),
+        wxId: encrypt.encrypt(Oid.wxId || ""),
+        deviceId: encrypt.encrypt(Oid.deviceId || ""),
         mac: encrypt.encrypt('mac'),
+        // deviceId: encrypt.encrypt("2f8ea06784194d56c19d96d4d75a1b6b"),
+        // mac: encrypt.encrypt('28070d000119'),
         terminalType: 'weixin',
         timeStamp: new Date().getTime().toString(),
         version: 'v1.0',
@@ -562,6 +564,42 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
 export function isGetUserInfo() {
     const pathname = location.pathname.split("/");
     return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[3] === "play"));
+}
+
+// 解决精度问题
+// 加法
+export function accAdd(arg1, arg2) {
+    let r1, r2, m;
+    try {
+        r1 = arg1.toString().split(".")[1].length;
+    } catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split(".")[1].length;
+    } catch (e) {
+        r2 = 0;
+    }
+    m = Math.pow(10, Math.max(r1, r2));
+    return (arg1 * m + arg2 * m) / m;
+}
+
+// 减法
+export function subtr(arg1, arg2) {
+    let r1, r2, m, n;
+    try {
+        r1 = arg1.toString().split(".")[1].length;
+    } catch (e) {
+        r1 = 0;
+    }
+    try {
+        r2 = arg2.toString().split(".")[1].length;
+    } catch (e) {
+        r2 = 0;
+    }
+    m = Math.pow(10, Math.max(r1, r2));
+    n = (r1 >= r2) ? r1 : r2;
+    return ((arg1 * m - arg2 * m) / m).toFixed(n);
 }
 
 

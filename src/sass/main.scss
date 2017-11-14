@@ -249,6 +249,20 @@ input, textarea {
     }
 }
 
+.dialog-orderSubmit {
+    & > div > div > div > div {
+        &:nth-child(1) {
+            height: auto !important;
+            & > ul > li {
+                font-size: .45rem !important;
+                &:last-child {
+                    font-size: .35rem !important;
+                }
+            }
+        }
+    }
+}
+
 .show-alert {
     .home, .home-recommend, .home-rank, .common-song-list {
         overflow: hidden !important;

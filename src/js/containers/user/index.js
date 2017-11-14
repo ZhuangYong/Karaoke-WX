@@ -13,6 +13,7 @@ import SvgIcon from 'material-ui/SvgIcon';
 
 import FeedbackIcon from "../../../img/to_feedback.png";
 import DeviceIcon from "../../../img/user_device.png";
+import MyOrderingsIcon from "../../../img/user_myOrder.png";
 import HeaderBgIcon from "../../../img/user_header_bg.png";
 import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
@@ -146,7 +147,7 @@ class UserIndex extends BaseComponent {
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30),
                                 color: "#fff"
-                            }}>{data.nickName}</div>
+                            }}>{data.nickName || "匿名"}</div>
                             {
                                 typeof data.time !== 'undefined' ? this.showGxStatus(data) : this.showVIPStatus(data)
                             }
@@ -156,7 +157,7 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={2}>
+                        cols={3}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -185,6 +186,17 @@ class UserIndex extends BaseComponent {
                                 style={styles.headerImg}
                             />
                             <div style={styles.headerDesc}>意见反馈</div>
+                        </GridTile>
+
+                        <GridTile
+                            onTouchTap={() => {
+                                linkTo(`user/orderForm`, false, null);
+                            }}>
+                            <img
+                                src={MyOrderingsIcon}
+                                style={{...styles.headerImg, width: "auto"}}
+                            />
+                            <div style={styles.headerDesc}>我的订单</div>
                         </GridTile>
                     </GridList>
 
