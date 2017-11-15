@@ -88,10 +88,9 @@ export function chkDevice() {
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
     // console.log(process.env);
 
-    // if (process.env.NODE_ENV === "development") {
-    //     isWeixin = true;
-    // }
-
+    if (process.env.NODE_ENV === "development") {
+        isWeixin = true;
+    }
     return {
         isWeixin: isWeixin,
         isAndroid: isAndroid,
@@ -601,4 +600,16 @@ export function subtr(arg1, arg2) {
     m = Math.pow(10, Math.max(r1, r2));
     n = (r1 >= r2) ? r1 : r2;
     return ((arg1 * m - arg2 * m) / m).toFixed(n);
+}
+
+
+export function formatTime(second) {
+    if (!second) return "00:00:00";
+    let h = '0' + parseInt(second / (60 * 60), 0);
+    let m = '0' + parseInt((second - h * 60 * 60) / 60, 0);
+    let s = '0' + second % 60;
+    h = h.substr(h.length - 2, h.length);
+    m = m.substr(m.length - 2, m.length);
+    s = s.substr(s.length - 2, s.length);
+    return h + ":" + m + ":" + s;
 }

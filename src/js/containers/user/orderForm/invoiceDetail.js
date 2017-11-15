@@ -8,8 +8,13 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 
-import {reqHeader} from "../../../utils/comUtils";
+import {reqHeader, toRem} from "../../../utils/comUtils";
 import {getInvoiceDetail} from "../../../actions/userActions";
+import $ from 'jquery';
+import {findDOMNode} from "react-dom";
+import cropper from 'cropper';
+import '../../../../css/cropper.css';
+import defaultImg from "../../../../img/login.png";
 
 const style = {
     orderings: {
@@ -23,10 +28,44 @@ const style = {
     }
 };
 
+const imgMax = {
+    screenW: document.documentElement.clientWidth || document.body.clientWidth,
+    screenH: document.documentElement.clientHeight || document.body.clientHeight,
+    scaleRate: 1
+};
+
+let options = {
+    autoCrop: false,
+    viewMode: 0,
+    background: false,
+    dragMode: 'move',
+    zoomable: true,
+    cropBoxResizable: false,
+    cropBoxMovable: false,
+    aspectRatio: 1 / 1,
+    minCropBoxWidth: imgMax.screenW * imgMax.scaleRate,
+    minCropBoxHeight: imgMax.screenW * imgMax.scaleRate,
+    minCanvasWidth: imgMax.screenW,
+    ready: function () {
+        $(this).cropper('scale', imgMax.scaleRate, imgMax.scaleRate);
+    }
+};
+
 class InvoiceDetail extends BaseComponent {
     constructor(props) {
         super(props);
         super.title("开票详情");
+
+        this.state = {
+           isShow: false
+        };
+    }
+
+    get preview() {
+        if (!this.refs)
+            return {};
+
+        return findDOMNode(this.refs.preview);
     }
 
     componentDidMount() {
@@ -41,8 +80,39 @@ class InvoiceDetail extends BaseComponent {
         const {url} = this.props.orderForm.invoiceDetailData || {url: ""};
 
         return (
-            <div style={style.orderings}>
-                <img src={url} style={{maxWidth: "7rem"}} />
+            <div style={{position: "relative"}}>
+                <img
+                    ref="preview"
+                    style={{
+                        paddingTop: toRem(25),
+                        paddingRight: toRem(20),
+                        paddingLeft: toRem(20),
+                        width: '100%'}}
+                    src={url}
+                    onClick={() => {
+                        this.setState({isShow: true});
+                        $(this.preview).cropper(options);
+                    }}
+                />
+
+                <div style={{
+                    display: this.state.isShow ? "block" : "none",
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    width: imgMax.screenW,
+                    height: imgMax.screenH,
+                    background: "#000"}}
+                    onClick={() => {
+                        this.setState({isShow: false});
+                    }}>
+                    <img
+                        ref="preview"
+                        style={{width: '100%'}}
+                        src={url}
+                    />
+                </div>
+
             </div>
         );
     }
