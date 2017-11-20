@@ -15,6 +15,7 @@ import {findDOMNode} from "react-dom";
 import cropper from 'cropper';
 import '../../../../css/cropper.css';
 import defaultImg from "../../../../img/login.png";
+import PDF from 'react-pdf-js';
 
 const style = {
     orderings: {
@@ -77,11 +78,16 @@ class InvoiceDetail extends BaseComponent {
     }
 
     render() {
-        const {url} = this.props.orderForm.invoiceDetailData || {url: ""};
+        const {data} = this.props.orderForm.invoiceDetailData || {data: {url: ""}};
+        const {url} = data;
 
         return (
             <div style={{position: "relative"}}>
-                <img
+                {
+                    url ? <PDF file={url} page={this.state.page} /> : ""
+                }
+
+                {/*<img
                     ref="preview"
                     style={{
                         paddingTop: toRem(25),
@@ -93,7 +99,7 @@ class InvoiceDetail extends BaseComponent {
                         this.setState({isShow: true});
                         $(this.preview).cropper(options);
                     }}
-                />
+                />*/}
 
                 <div style={{
                     display: this.state.isShow ? "block" : "none",

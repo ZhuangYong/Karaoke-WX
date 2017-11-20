@@ -23,7 +23,7 @@ import FlatButton from "material-ui/FlatButton";
 import {setGlobAlert} from "../../actions/common/actions";
 import {getUserInfo} from "../../actions/userActions";
 import ActionTypes from "../../actions/actionTypes";
-import {Checkbox, ListItem, Subheader} from "material-ui";
+import {Checkbox, CircularProgress, ListItem, RaisedButton, RefreshIndicator, Subheader} from "material-ui";
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import ActionCheck from 'material-ui/svg-icons/action/check-circle';
 import Const from "../../utils/const";
@@ -58,9 +58,32 @@ const styles = {
         lineHeight: "50px",
         fontSize: "16px",
         color: "#c48848"
+    },
+    submitButton: {
+        height: '50px',
+        position: 'fixed',
+        bottom: '1rem',
+        left: "50%",
+        marginLeft: "-120px",
+        width: "240px",
+        borderRadius: "50px",
+        overflow: "hidden",
+        label: {
+            fontSize: 18,
+            fontWeight: 500
+        }
+    },
+    payResult: {
+        title: {
+            textAlign: 'center', margin: '3rem 0 1rem 0'
+        },
+        subTitle: {
+            textAlign: 'center'
+        }
     }
 };
-
+const PAY_RESULT_SUCCESS = "PAY_RESULT_SUCCESS";
+const PAY_RESULT_FAIL = "PAY_RESULT_FAIL";
 class Pay extends BaseComponent {
     constructor(props) {
         super(props);
@@ -81,7 +104,8 @@ class Pay extends BaseComponent {
             payList: [],
             buttonPage: null,
             openDialog: false,
-            payType: ""
+            payType: "",
+            payResult: ""
         };
 
         this.pay = this.pay.bind(this);
@@ -99,13 +123,20 @@ class Pay extends BaseComponent {
 
     componentDidMount() {
         this.matchPages();
+        this.state.payResult = "";
     }
 
+    componentWillUnmount() {
+        this.state.payResult = "";
+    }
     render() {
         const payList = this.state.payList;
         const payListActiveItem = this.state.payListActiveItem;
         const isCheckboxChecked = this.state.isCheckboxChecked;
         const matchParams = this.state.matchParams;
+        const {isWeixin} = window.sysInfo;
+        const {weixinConfigFinish} = this.props;
+        const disableSubmitButton = isWeixin && !weixinConfigFinish;
         const actions = [
             <FlatButton
                 className="cancel-button"
@@ -123,79 +154,126 @@ class Pay extends BaseComponent {
 
         return (
             <div>
-                {matchParams.state === "home" ? (<div>
-                    <section>
+                {
+                    this.state.payResult ? <div>
                         {
-                            this.state.payType !== Const.PAY_TYPE_GONG_XIANG ? <header style={styles.itemBox}>
-                                <div style={styles.itemLeft}>VIP会员套餐</div>
-                            </header> : ""
-                        }
+                            this.state.payResult === PAY_RESULT_SUCCESS ? <div>
+                                <h2 style={styles.payResult.title}>恭喜你成功支付！</h2>
+                                <p style={styles.payResult.subTitle}>{payListActiveItem && payListActiveItem.productName}</p>
 
-                        <ul style={{
-                            padding: 0,
-                            margin: 0,
-                            listStyle: "none"
-                        }}>
-                            {
-                                this.state.payType === Const.PAY_TYPE_GONG_XIANG ? payList.map((item) => (
-                                    <ListItem
-                                        key={item.productId}
-                                        innerDivStyle={{paddingTop: '.7rem'}}
-                                        style={{height: '3.4rem', borderBottom: '.01rem solid gray', paddingBottom: '3.5rem'}}
-                                        primaryText={
-                                            <span style={{marginLeft: '2.4rem', marginTop: '.1rem', marginBottom: '.2rem', fontSize: '.48rem'}}>
-                                                <div style={{position: 'absolute', left: '.2rem', top: '1.4rem'}}>
+                                <RaisedButton
+                                    backgroundColor="#ff6832"
+                                    buttonStyle={styles.submitButton}
+                                    label="确认"
+                                    labelStyle={styles.submitButton.label}
+                                    labelColor="white"
+                                    onClick={() => {
+                                        if (matchParams.openid !== "") {
+                                            setTimeout(() => {
+                                                window.WeixinJSBridge && window.WeixinJSBridge.call('closeWindow');
+                                                window.AlipayJSBridge && window.AlipayJSBridge.call('closeWebview');
+                                            }, 100);
+                                        } else {
+                                            window.history.back();
+                                        }
+                                    }}/>
+                            </div> : <div>
+                                <h2 style={styles.payResult.title}>呜~支付失败！</h2>
+                                <p style={styles.payResult.subTitle}>不甘心，再试一次</p>
+
+                                <RaisedButton
+                                    backgroundColor="#ff6832"
+                                    buttonStyle={styles.submitButton}
+                                    label="确认"
+                                    labelStyle={styles.submitButton.label}
+                                    labelColor="white"
+                                    onClick={() => {
+                                        this.setState({
+                                            payResult: ""
+                                        });
+                                    }}/>
+                            </div>
+                        }
+                    </div> : <div>
+                        {matchParams.state === "home" ? (<div>
+                            <section>
+                                {
+                                    this.state.payType !== Const.PAY_TYPE_GONG_XIANG ? <header style={styles.itemBox}>
+                                        <div style={styles.itemLeft}>VIP会员套餐</div>
+                                    </header> : ""
+                                }
+
+                                <ul style={{
+                                    padding: 0,
+                                    margin: 0,
+                                    listStyle: "none"
+                                }}>
+                                    {
+                                        this.state.payType === Const.PAY_TYPE_GONG_XIANG ? payList.map((item) => (
+                                            <ListItem
+                                                key={item.productId}
+                                                innerDivStyle={{paddingTop: '.56rem', paddingLeft: '1.7rem'}}
+                                                style={{height: '3rem', borderBottom: '.01rem solid #d7d7d7', paddingBottom: '3.1rem'}}
+                                                primaryText={
+                                                    <span style={{marginLeft: '2.2rem', marginTop: '.1rem', marginBottom: '.2rem', fontSize: '.42rem'}}>
+                                                <div style={{position: 'absolute', left: '.2rem', top: '1.2rem'}}>
                                                     {
                                                         payListActiveItem.productId === item.productId ? <ActionCheck color="#ff6832" className='payCircle'/> : <div style={{width: '.64rem', margin: '.067rem', height: '.64rem', border: '1px solid gray', borderRadius: '50%'}}/>
                                                     }
                                                 </div>
-                                                {item.productName}
+                                                        {item.productName}
                                             </span>
-                                        }
-                                        secondaryText={
-                                            <div style={{marginLeft: '2.4rem', marginTop: '.4rem', overflow: 'visible'}}>
-                                                <p style={{margin: '.5rem 0', color: 'red'}}>
-                                                    {item.description}
-                                                </p>
+                                                }
+                                                secondaryText={
+                                                    <div style={{marginLeft: '2.2rem', marginTop: '.4rem', overflow: 'visible'}}>
+                                                        <p style={{margin: '.38rem 0', color: 'red', fontSize: '.32rem'}}>
+                                                            {
+                                                                item.discountType === Const.DISCOUNT_TYPE_TIME ? `赠送${item.discountValue}分钟` : ``
+                                                            }
+                                                            {
+                                                                item.discountType === Const.DISCOUNT_TYPE_MONEY ? `立减${item.discountValue}元` : ``
+                                                            }
+                                                            {(item.discountType !== Const.DISCOUNT_TYPE_TIME && item.discountType !== Const.DISCOUNT_TYPE_MONEY) && item.description}
+                                                        </p>
 
-                                                <p style={{margin: '.5rem 0', color: '#ff6832', fontSize: '.62rem'}}>
-                                                    ￥{item.price}
-                                                </p>
-                                            </div>
-                                        }
-                                        leftAvatar={
-                                            <div style={{height: '2.8rem', width: '2.8rem', left: '1.16rem', overflow: 'hidden'}}>
-                                                <img src={item.wxImg} style={{width: '100%'}}/>
-                                            </div>
-                                        }
-                                        onTouchTap={() => {
-                                            this.setState({
-                                                payListActiveItem: item
-                                            });
-                                        }}
-                                    />
-                                )) : payList.map((tile) => (<li
-                                    key={tile.productId}
-                                    style={payListActiveItem.productId === tile.productId ? styles.itemBoxActive : styles.itemBox}
-                                    onTouchTap={() => {
-                                        this.setState({
-                                            payListActiveItem: tile
-                                        });
-                                    }}
-                                >
-                                    <div style={styles.itemLeft}>{tile.productName}</div>
-                                    <div style={styles.itemRight}>{tile.price}</div>
-                                </li>))
-                            }
+                                                        <p style={{margin: '.38rem 0', color: '#ff6832', fontSize: '.52rem'}}>
+                                                            ￥{item.price} {(item.orgprice && item.discountType === Const.DISCOUNT_TYPE_MONEY) ? <font style={{textDecoration: 'line-through', color: 'gray'}}>{`￥${item.orgprice}`}</font> : ""}
+                                                        </p>
+                                                    </div>
+                                                }
+                                                leftAvatar={
+                                                    <div style={{height: '2.4rem', width: '2.4rem', left: '1.16rem', overflow: 'hidden'}}>
+                                                        <img src={item.wxImg} style={{width: '100%'}}/>
+                                                    </div>
+                                                }
+                                                onTouchTap={() => {
+                                                    this.setState({
+                                                        payListActiveItem: item
+                                                    });
+                                                }}
+                                            />
+                                        )) : payList.map((tile) => (<li
+                                            key={tile.productId}
+                                            style={payListActiveItem.productId === tile.productId ? styles.itemBoxActive : styles.itemBox}
+                                            onTouchTap={() => {
+                                                this.setState({
+                                                    payListActiveItem: tile
+                                                });
+                                            }}
+                                        >
+                                            <div style={styles.itemLeft}>{tile.productName}</div>
+                                            <div style={styles.itemRight}>{tile.price}</div>
+                                        </li>))
+                                    }
 
-                        </ul>
+                                </ul>
 
-                        {
-                            this.state.payType === Const.PAY_TYPE_GONG_XIANG ? <Subheader inset={true} style={{paddingLeft: '1.067rem', marginBottom: '1rem', textAlign: 'left', fontSize: '.32rem', color: '#002222'}}>购买时长越多越优惠，马上支付开始欢唱吧！</Subheader> : ""
-                        }
-                        <ListItem
-                            primaryText={
-                                    <span style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                {
+                                    this.state.payType === Const.PAY_TYPE_GONG_XIANG ? <Subheader inset={true} style={{paddingLeft: '1.067rem', marginBottom: '1rem', textAlign: 'left', fontSize: '.32rem', color: '#002222'}}>购买时长越多越优惠，马上支付开始欢唱吧！</Subheader> : ""
+                                }
+                                <ListItem
+                                    primaryText={
+                                        <span style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                         <span>
                                             {
                                                 isCheckboxChecked ? <ActionCheck color="#ff6832" className='payCircle'/> : <div style={{width: '.64rem', margin: '.067rem', height: '.64rem', border: '1px solid gray', borderRadius: '50%'}}/>
@@ -209,51 +287,57 @@ class Pay extends BaseComponent {
                                         </a>
                                     </span>
 
-                            }
-                            onTouchTap={() => {
-                            this.setState({
-                                isCheckboxChecked: !isCheckboxChecked
-                            });
-                        }}
-                        />
-                    </section>
+                                    }
+                                    onTouchTap={() => {
+                                        this.setState({
+                                            isCheckboxChecked: !isCheckboxChecked
+                                        });
+                                    }}
+                                />
+                            </section>
 
-                    <ButtonPage
-                        style={{
-                            position: "relative",
-                            paddingTop: "20px",
-                            height: "100px",
-                            clear: "both"
-                        }}
-                        headerDom={<div style={{
-                            marginBottom: "20px",
-                            textAlign: "center",
-                            color: "#252525",
-                            fontSize: "14px"
-                        }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price}元</span></div>}
-                        disabled={!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null)}
-                        raisedButtonStyles={{
-                            bottom: 0
-                        }}
-                        buttonLabel="确认支付"
-                        touchTap={this.pay}
-                    />
-                </div>) : this.state.buttonPage}
+                            <ButtonPage
+                                style={{
+                                    position: "relative",
+                                    height: "80px",
+                                    clear: "both"
+                                }}
+                                headerDom={<div style={{
+                                    textAlign: "center",
+                                    color: "#252525",
+                                    fontSize: "14px"
+                                }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price}元</span></div>}
+                                disabled={disableSubmitButton || (!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null))}
+                                icon={
+                                    disableSubmitButton ? <CircularProgress size={18} thickness={1} /> : ""
+                                }
+                                raisedButtonStyles={{
+                                    bottom: 0
+                                }}
+                                buttonLabel= "确认支付"
+                                touchTap={this.pay}
+                            />
+                        </div>) : this.state.buttonPage}
+                        <br/>
+                        <br/>
 
-                <div>
-                    <Dialog
-                        className="dialog-panel"
-                        actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
-                        contentStyle={{textAlign: 'center'}}
-                        actions={actions}
-                        modal={false}
-                        open={this.state.openDialog}
-                        onRequestClose={this.handleClose}
-                    >
-                        确定开通金麦客VIP体验权
-                    </Dialog>
-                </div>
+                        <div>
+                            <Dialog
+                                className="dialog-panel"
+                                actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
+                                contentStyle={{textAlign: 'center'}}
+                                actions={actions}
+                                modal={false}
+                                open={this.state.openDialog}
+                                onRequestClose={this.handleClose}
+                            >
+                                确定开通金麦客VIP体验权
+                            </Dialog>
+                        </div>
+                    </div>
+                }
             </div>
+
         );
     }
 
@@ -317,14 +401,30 @@ class Pay extends BaseComponent {
                 paySign: data.paySign, // 支付签名
                 success: (res) => {
                     // 支付成功后的回调函数
-                    actionSetGlobAlert("支付成功");
-                    if (matchParams.openid !== "") {
-                        setTimeout(() => {
-                            window.WeixinJSBridge.call('closeWindow');
-                        }, 500);
+                    if (this.state.payType === Const.PAY_TYPE_GONG_XIANG) {
+                        const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+                        const params = {
+                            url: `${location.origin}?uuid=${wxInfoSession.data.uuid}&userid=${wxInfoSession.data.userId}&deviceId=${wxInfoSession.data.deviceId}`
+                        };
+                        const wxInfo = {
+                            wxId: wxInfoSession.data.uuid || "",
+                            deviceId: wxInfoSession.data.deviceId || ""
+                        };
+                        getUserInfoAction(params, reqHeader(params, getEncryptHeader(wxInfo)));
+                        this.setState({
+                            payResult: PAY_RESULT_SUCCESS
+                        });
                     } else {
-                        getUserInfoAction({}, reqHeader({}));
-                        window.history.back();
+                        actionSetGlobAlert("支付成功");
+                        if (matchParams.openid !== "") {
+                            setTimeout(() => {
+                                window.WeixinJSBridge.call('closeWindow');
+                            }, 500);
+                        } else {
+                            getUserInfoAction({}, reqHeader({}));
+                            window.history.back();
+                        }
+
                     }
                 },
                 cancel: (res) => {
@@ -338,7 +438,13 @@ class Pay extends BaseComponent {
                     }
                 },
                 fail: (res) => {
-                    actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                    if (this.state.payType === Const.PAY_TYPE_GONG_XIANG) {
+                        this.setState({
+                            payResult: PAY_RESULT_FAIL
+                        });
+                    } else {
+                        actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                    }
                 }
             });
         });
@@ -365,7 +471,7 @@ class Pay extends BaseComponent {
     // 更新支付列表
     updatePayList() {
         const {data} = this.props.result.payListData || {data: []};
-        if (data)
+        if (data && data[0])
             this.setState({
                 payListActiveItem: data[0],
                 payList: data,
@@ -391,6 +497,7 @@ class Pay extends BaseComponent {
                 break;
             case "aliPaySuccess":
                 this.setState({
+                    payResult: this.state.payType === Const.PAY_TYPE_GONG_XIANG ? PAY_RESULT_SUCCESS : "",
                     buttonPage: <ButtonPage
                         src={PaySuccessIcon}
                         content="充值成功"
@@ -402,6 +509,7 @@ class Pay extends BaseComponent {
                 break;
             case "aliPayFailed":
                 this.setState({
+                    payResult: this.state.payType === Const.PAY_TYPE_GONG_XIANG ? PAY_RESULT_FAIL : "",
                     buttonPage: <ButtonPage
                         src={PayFailedIcon}
                         content="充值失败，请重新充值"
@@ -442,7 +550,8 @@ Pay.propTypes = {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
-        result: state.app.pay
+        result: state.app.pay,
+        weixinConfigFinish: state.app.common.weixinConfigFinish
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

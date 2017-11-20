@@ -82,15 +82,16 @@ export default class BaseComponent extends Component {
      * 验证用户是否是绑定了设备，若没有将返回false并做出相应的提示
      * @param userInfoData app.state.userInfo.userInfoData
      * @param actionSetGlobAlert actions/common/actions.js/setGlobAlert
+     * @param noAlert boolean
      * @returns {*}
      */
-    validUserBindDevice(userInfoData, actionSetGlobAlert) {
+    validUserBindDevice(userInfoData, actionSetGlobAlert, noAlert) {
         const isBindDevice = this.isBindDevice(userInfoData);
         if (typeof isBindDevice === 'string') {
-            actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
+            !noAlert && actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return isBindDevice;
         } else if (isBindDevice === false) {
-            actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
+            !noAlert && actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return false;
         } else if (isBindDevice === true) {
             return true;

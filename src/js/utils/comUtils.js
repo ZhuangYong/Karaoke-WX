@@ -524,6 +524,12 @@ export function dynaPush(funcParam = {
         action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
         return;
     }
+    if (typeof window.gxTime !== 'undefined') {
+        if (window.gxTime === 0) {
+            action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
+            return;
+        }
+    }
     const renderPushResult = (res) => {
         const {status, data} = res;
         const pushMsg = JSON.parse(data.msg || "{}");

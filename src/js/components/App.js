@@ -15,206 +15,15 @@ import {
     wxAuthorizedUrl, isGetUserInfo, formatTime
 } from "../utils/comUtils";
 import {withRouter} from "react-router";
-import {Route, Switch} from "react-router-dom";
-import NotFound from "../components/common/notfound";
-import Home from "../containers/home";
-import Login from "../containers/login";
-import Audio from "../containers/play/audio";
-import Bundle from "./Bundle";
-import ChooseList from "../containers/song/chooseList";
-import SongController from "../containers/controller/songController";
-import User from "../containers/user/index";
-import SingerAlbum from "../containers/song/singerAlbum";
-import SingerList from "../containers/song/singerList";
-import SongsList from "../containers/song/SongList";
-
-import CatAlbum from "../containers/song/catAlbum";
-
-import Search from "../containers/song/search";
-
-import AudioEffect from "../containers/controller/audioEffect";
-import Barrage from "../containers/controller/barrage";
-import Recordings from '../containers/user/recordings';
-import PhotoAlbum from '../containers/user/photoAlbum';
-import Preview from '../containers/user/photoAlbum/preview';
-import OrderForm from "../containers/user/orderForm/index";
-import Feedback from "../containers/user/feedback/index";
-import VoiceSearch from "../containers/voiceSearch";
-import Pay from "../containers/Pay";
-import Protocol from "../containers/Pay/Protocol";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
-import Suggestions from "../containers/forOldVersion/suggestions";
-import RedirectPay from "../containers/forOldVersion/pay";
-import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
-import InvoiceList from "../containers/user/orderForm/invoiceList";
-import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
-import InvoiceSubmitSuccess from "../containers/user/orderForm/invoiceSubmitSuccess";
-import InvoiceDetail from "../containers/user/orderForm/invoiceDetail";
 import sysConfig from "../utils/sysConfig";
 import Const from "../utils/const";
 import TimeIcon from "../../img/common/icon_time.png";
 import BaseComponent from "./common/BaseComponent";
 
-const LoginContainer = () => (
-    <Bundle load={Login}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const HomeContainer = () => (
-    <Bundle load={Home}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const AudioContainer = () => (
-    <Bundle load={Audio}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const ChooseListContainer = () => (
-    <Bundle load={ChooseList}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const SongControllerContainer = () => (
-    <Bundle load={SongController}>
-        {Component => <Component />}
-    </Bundle>
-);
-const UserContainer = () => (
-    <Bundle load={User}>
-        {Component => <Component />}
-    </Bundle>
-);
-const SearchContainer = () => (
-    <Bundle load={Search}>
-        {Component => <Component />}
-    </Bundle>
-);
-const SingerAlbumContainer = () => (
-    <Bundle load={SingerAlbum}>
-        {Component => <Component />}
-    </Bundle>
-);
-const SingerListContainer = () => (
-    <Bundle load={SingerList}>
-        {Component => <Component />}
-    </Bundle>
-);
-const CatAlbumContainer = () => (
-    <Bundle load={CatAlbum}>
-        {Component => <Component />}
-    </Bundle>
-);
-const SongsListContainer = () => (
-    <Bundle load={SongsList}>
-        {Component => <Component />}
-    </Bundle>
-);
-const RecordingsContainer = () => (
-    <Bundle load={Recordings}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const PhotoAlbumContainer = () => (
-    <Bundle load={PhotoAlbum}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const PreviewContainer = () => (
-    <Bundle load={Preview}>
-        {Component => <Component />}
-    </Bundle>
-);
-const AudioEffectContainer = () => (
-    <Bundle load={AudioEffect}>
-        {Component => <Component />}
-    </Bundle>
-);
-const BarrageContainer = () => (
-    <Bundle load={Barrage}>
-        {Component => <Component />}
-    </Bundle>
-);
-const OrderFormContainer = () => (
-    <Bundle load={OrderForm}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const FeedbackContainer = () => (
-    <Bundle load={Feedback}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const VoiceSearchContainer = () => (
-    <Bundle load={VoiceSearch}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const PayContainer = () => (
-    <Bundle load={Pay}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-const ProtocolContainer = () => (
-    <Bundle load={Protocol}>
-        {Component => <Component />}
-    </Bundle>
-);
-const SuggestionsContainer = () => (
-    <Bundle load={Suggestions}>
-        {Component => <Component />}
-    </Bundle>
-);
-const RedirectPayContainer = () => (
-    <Bundle load={RedirectPay}>
-        {Component => <Component />}
-    </Bundle>
-);
-const InvoiceOrderContainer = () => (
-    <Bundle load={InvoiceOrder}>
-        {Component => <Component />}
-    </Bundle>
-);
-const InvoiceListContainer = () => (
-    <Bundle load={InvoiceList}>
-        {Component => <Component />}
-    </Bundle>
-);
-const InvoiceSubmitContainer = () => (
-    <Bundle load={InvoiceSubmit}>
-        {Component => <Component />}
-    </Bundle>
-);
-const InvoiceSubmitSuccessContainer = () => (
-    <Bundle load={InvoiceSubmitSuccess}>
-        {Component => <Component />}
-    </Bundle>
-);
-const InvoiceDetailContainer = () => (
-    <Bundle load={InvoiceDetail}>
-        {Component => <Component />}
-    </Bundle>
-);
-
-/*const dynamicLoadFun = (container) => {
-    return () => (
-        <Bundle load={container}>
-            {Component => <Component/>}
-        </Bundle>
-    );
-};*/
+import Routers from '../router';
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
@@ -228,6 +37,7 @@ const style = {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 12,
         span: {
             height: '1rem',
             overflow: 'hidden',
@@ -253,6 +63,7 @@ const style = {
         }
     }
 };
+
 class App extends BaseComponent {
     constructor(props) {
         super(props);
@@ -275,13 +86,18 @@ class App extends BaseComponent {
         this.updateUserInfo = this.updateUserInfo.bind(this);
         this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
         this.gxTimer = this.gxTimer.bind(this);
+        this.configWxPath = this.configWxPath.bind(this);
     }
 
     componentWillMount() {
     }
 
     componentDidMount() {
-        if (isGetUserInfo()) this.updateUserInfo();
+        if (isGetUserInfo()) {
+            this.updateUserInfo();
+        } else {
+            window.noUserInfo = true;
+        }
         this.runCheckLocal();
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
@@ -291,7 +107,7 @@ class App extends BaseComponent {
         if (isIos) {
             this.configWeiXin();
         }
-
+        this.configWxPath();
         window.wx && window.wx.ready(() => {
             wxShare({
                 title: `金麦客微信点歌`,
@@ -311,6 +127,10 @@ class App extends BaseComponent {
     }
 
     componentDidUpdate(prevProps) {
+        if (window.noUserInfo === true) {
+            this.updateUserInfo();
+            window.noUserInfo = false;
+        }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
             linkTo("pay/deviceRegister", false, "");
@@ -324,20 +144,18 @@ class App extends BaseComponent {
                 window.sessionStorage.setItem("wxInfo", JSON.stringify(this.props.userInfo.userInfoData));
                 this.props.action_getOttStatus({}, reqHeader({}));
             }
-        }
 
-        let {isWeixin, isIos} = window.sysInfo;
-        if (isWeixin && !isIos) {
-            if (!wxConfigPaths[this.props.history.location.pathname]) {
-                this.configWeiXin();
-                wxConfigPaths[this.props.history.location.pathname] = true;
+            const {userInfoData} = this.props.userInfo;
+            if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('time')) {
+                if (this.state.gxTimer) {
+                    clearInterval(this.state.gxTimer);
+                    this.state.gxTimer = 0;
+                }
+                this.gxTimer();
             }
         }
 
-        const {userInfoData} = this.props.userInfo;
-        if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('time')) {
-            this.gxTimer();
-        }
+        this.configWxPath();
     }
 
     render() {
@@ -353,59 +171,7 @@ class App extends BaseComponent {
             <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
                     <div className={`${this.state.showDialog ? "show-alert" : ""}`}>
-                    <Switch>
-                        <Route path={`/`} exact component={HomeContainer}/>
-                        <Route path={`/home`} component={HomeContainer}/>
-                        {/*
-                        *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
-                        * openid: 用户微信openId
-                        * pollingId: OTT轮询id
-                        * deviceId: OTT设备id
-                        */}
-                        <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
-                        <Route path={`/pay`} component={PayContainer}/>
-                        <Route path={`/protocol`} component={ProtocolContainer}/>
-                        <Route path={`/controller/`} exact component={SongControllerContainer}/>
-                        <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>
-                        <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
-                        <Route path={`/user`} exact component={UserContainer}/>
-                        <Route path={`/user/recordings`} exact component={RecordingsContainer}/>
-                        <Route path={`/user/recordings/play/:uid`} component={AudioContainer}/>
-                        <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
-                        {/*imgId: 预览图片id*/}
-                        <Route path={`/user/photoAlbumPreview/:imgId`} exact component={PreviewContainer}/>
-                        <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>
-                        <Route path={`/user/invoiceOrder`} exact component={InvoiceOrderContainer}/>
-                        <Route path={`/user/invoiceList`} exact component={InvoiceListContainer}/>
-                        {/*
-                        * ids: 待开票id
-                        * totalMoney: 代开票总金额
-                        */}
-                        <Route path={`/user/invoiceSubmit/:ids/:totalMoney`} component={InvoiceSubmitContainer}/>
-                        <Route path={`/user/invoiceSubmitSuccess`} component={InvoiceSubmitSuccessContainer}/>
-                        <Route path={`/user/InvoiceDetail/:id`} component={InvoiceDetailContainer}/>
-                        {/*
-                        *state: home/success(页面状态)
-                        *deviceId: 绑定设备号
-                        * */}
-                        <Route path={`/user/feedback/:state/:deviceId?`} exact component={FeedbackContainer}/>
-                        <Route path={`/suggestions/suggestions.html`} exact component={SuggestionsContainer}/>
-                        {/*
-                        *state: home/success/failed/invalid(页面状态)
-                        *uuid: 扫码登录参数/用户微信unionId
-                        * userId: 服务器给用户的id
-                        * deviceId: 设备id
-                        */}
-                        <Route path={`/login/:state/:uuid?/:userId?/:deviceId?`} component={LoginContainer}/>
-                        <Route path={`/song/chooselist`} exact component={ChooseListContainer}/>
-                        <Route path={`/song/search/:keyword?`} exact component={SearchContainer}/>
-                        <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>
-                        <Route path={`/singer/:id/:title`} exact component={SingerListContainer}/>
-                        <Route path={`/catAlbum`} exact component={CatAlbumContainer}/>
-                        <Route path={`/songs/:type/:id/:title?/:headImg?`} exact component={SongsListContainer}/>
-                        <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>
-                        <Route path="*" component={NotFound}/>
-                    </Switch>
+                    <Routers/>
                     <Snackbar
                         open={showAlert}
                         message={this.props.globAlert}
@@ -417,7 +183,7 @@ class App extends BaseComponent {
                         {validUserStatusDialog}
 
                         {
-                            typeof this.state.gxTime !== 'undefined' ? <div style={style.gxTimePanel}
+                            (location.pathname !== "/pay" && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
                                                                             onClick={() => {
                                                                                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
@@ -567,6 +333,19 @@ class App extends BaseComponent {
                     linkTo("pay/home", false, "");
                 };
                 break;
+            case ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE:
+                alertStr = <div>
+                    <p style={{fontWeight: 'bold'}}>
+                        欢唱结束
+                    </p>
+                    <p>
+                        没唱爽，继续嗨！
+                    </p>
+                </div>;
+                doAction = () => {
+                    linkTo("pay/home", false, "");
+                };
+                break;
             case ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE:
                 showAlert = false;
                 setTimeout(() => {
@@ -635,7 +414,16 @@ class App extends BaseComponent {
                 window.sessionStorage.removeItem("wxInfo");
                 wxInfoSession = {};
             }
-            if (typeof wxInfoSession.status === "undefined" || !!wxInfo.wxId) {
+            if (wxInfoSession.data && wxInfoSession.data.hasOwnProperty('time')) {
+                const params = {
+                    url: `${location.origin}?uuid=${wxInfoSession.data.uuid}&userid=${wxInfoSession.data.userId}&deviceId=${wxInfoSession.data.deviceId}`
+                };
+                wxInfo = {
+                    wxId: wxInfoSession.data.uuid || "",
+                    deviceId: wxInfoSession.data.deviceId || ""
+                };
+                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
+            } else if (typeof wxInfoSession.status === "undefined" || !!wxInfo.wxId) {
                 const params = {
                     url: window.location.href.split("#")[0]
                 };
@@ -695,11 +483,32 @@ class App extends BaseComponent {
 
     gxTimer() {
         const {gxTimer} = this.state;
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
         if (!gxTimer) {
-            if (typeof this.state.gxTime === 'undefined') this.state.gxTime = this.props.userInfo.userInfoData.data.time;
+            const time = this.state.gxTime = this.props.userInfo.userInfoData.data.time;
+            if (time) {
+                window.localStorage.setItem("gxAlert", '{}');
+                window.gxAlertDone = false;
+            } else {
+                const defaultGxAlert = JSON.parse(window.localStorage.getItem("gxAlert") || "{}");
+                window.gxAlertDone = defaultGxAlert.done;
+            }
             this.state.gxTimer = setInterval(() => {
                 if (this.state.gxTime <= 0) {
                     window.gxTime = 0;
+                    if (!window.gxAlertDone) {
+                        let gxAlert = JSON.parse(window.localStorage.getItem("gxAlert") || "{}");
+                        if (!gxAlert.done) {
+                            const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
+                            if (isBindDevice) {
+                                actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
+                                window.localStorage.setItem("gxAlert", '{"done": true}');
+                            }
+                            window.gxAlertDone = true;
+                            clearInterval(this.state.gxTimer);
+                            this.state.gxTimer = 0;
+                        }
+                    }
                     return;
                 }
                 const gxTime = --this.state.gxTime;
@@ -707,7 +516,21 @@ class App extends BaseComponent {
                     gxTime: gxTime
                 });
                 window.gxTime = gxTime;
+                if (window.gxAlertDone) {
+                    window.localStorage.setItem("gxAlert", '{}');
+                    window.gxAlertDone = false;
+                }
             }, 1000);
+        }
+    }
+
+    configWxPath() {
+        const {isWeixin, isIos} = window.sysInfo;
+        if (isWeixin && !isIos) {
+            if (!wxConfigPaths[this.props.history.location.pathname]) {
+                this.configWeiXin();
+                wxConfigPaths[this.props.history.location.pathname] = true;
+            }
         }
     }
 }

@@ -499,7 +499,9 @@ module.exports = {
         // 要求或禁止模板字符串中的嵌入表达式周围空格的使用
         "template-curly-spacing": 1,
         // 强制在 yield* 表达式中 * 周围使用空格
-        "yield-star-spacing": 2
+        "yield-star-spacing": 2,
+
+        "import/no-webpack-loader-syntax": "off"
     },
     globals: {    // 声明在代码中自定义的全局变量
         'CONFIG': true,

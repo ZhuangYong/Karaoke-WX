@@ -3,6 +3,7 @@
  */
 import React from "react";
 import RaisedButton from 'material-ui/RaisedButton';
+import {FontIcon} from "material-ui";
 
 const styles = {
     submitBtn: {
@@ -46,6 +47,7 @@ class ButtonPage extends React.Component {
             </header>
 
             {!this.props.hideButton && (<RaisedButton
+                icon={this.props.icon}
                 disabled={this.props.disabled}
                 backgroundColor="#ff6832"
                 disabledBackgroundColor="#ccc"

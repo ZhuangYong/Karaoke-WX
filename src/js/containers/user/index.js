@@ -115,6 +115,9 @@ class UserIndex extends BaseComponent {
         const actionSetGlobAlert = this.props.action_setGlobAlert;
         const recordsList = this.state.recordsListData;
         const recordsListTotalCounts = this.state.recordsListTotalCounts;
+        let bindDeviceStatus = parseInt(data.isReDevice, 10);
+        if (bindDeviceStatus === 3) bindDeviceStatus = "绑定过期";
+        if (bindDeviceStatus === 2) bindDeviceStatus = "未绑定";
         return (
             <div>
                 <section>
@@ -157,7 +160,7 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={3}>
+                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -171,7 +174,7 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>
                                 <p style={{margin: "0"}}>绑定设备</p>
                                 <p style={{margin: `${toRem(10)} 0 0`, fontSize: toRem(20), color: "#999"}}>
-                                    {parseInt(data.isReDevice, 10) === 1 ? "已绑定" + data.deviceId.replace(data.deviceId.slice(4, data.deviceId.length - 4), "***") : '未绑定'}
+                                    {parseInt(data.isReDevice, 10) === 1 ? "已绑定" + data.deviceId.replace(data.deviceId.slice(4, data.deviceId.length - 4), "***") : bindDeviceStatus}
                                 </p>
                             </div>
                         </GridTile>
@@ -188,16 +191,19 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>意见反馈</div>
                         </GridTile>
 
-                        <GridTile
-                            onTouchTap={() => {
-                                linkTo(`user/orderForm`, false, null);
-                            }}>
-                            <img
-                                src={MyOrderingsIcon}
-                                style={{...styles.headerImg, width: "auto"}}
-                            />
-                            <div style={styles.headerDesc}>我的订单</div>
-                        </GridTile>
+                        {
+                            (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div></div> : <GridTile
+                                onTouchTap={() => {
+                                    linkTo(`user/orderForm`, false, null);
+                                }}>
+                                <img
+                                    src={MyOrderingsIcon}
+                                    style={{...styles.headerImg, width: "auto"}}
+                                />
+                                <div style={styles.headerDesc}>我的订单</div>
+                            </GridTile>
+                        }
+
                     </GridList>
 
                 </section>
@@ -432,7 +438,7 @@ class UserIndex extends BaseComponent {
                 !window.gxTime ? <p style={styles.gxStatusPan}>
                     立即开唱
                 </p> : <p style={styles.gxStatusPan}>
-                    剩余时间：<font>{formatTime(this.state.gxTime)}</font>
+                    剩余时间：<font>{formatTime(this.state.gxTime || window.gxTime)}</font>
                 </p>
             }
 

@@ -25,6 +25,11 @@ export default{
     VIP_ALERT_TIME: 15 * 20 * 60 * 60 * 1000,
 
     // 支付类型： 共享
-    PAY_TYPE_GONG_XIANG: 'gongxiang'
+    PAY_TYPE_GONG_XIANG: 'gongxiang',
+
+    // 赠送时间
+    DISCOUNT_TYPE_TIME: '2',
+    // 赠送金额
+    DISCOUNT_TYPE_MONEY: '1',
 
 };
