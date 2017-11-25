@@ -206,28 +206,28 @@ class Home extends BaseComponent {
                             titleStyle={{fontSize: '.453rem', paddingTop: '.22rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
                             title="精选推荐"/>
                         <div className="home-recommend" style={{width: "100%", overflowX: "visible", overflowY: "hidden", position: "absolute"}}>
-                                {getAlbumRecommendData.data.result.map((recommend) => (
-                                    <GridTile
-                                        key={recommend.id}
-                                        title=""
-                                        style={{display: "table-cell", padding: "0 .067rem"}}
-                                        titleStyle={{
-                                            textAlign: "center",
-                                            marginRight: "16px",
-                                            marginTop: "20%",
-                                            color: "black"
-                                        }}
-                                        titleBackground="transparent"
-                                        onClick={() => {
-                                            recommend.name && linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encoding(recommend.wxPic || recommend.imgurl)}`, false, null);
-                                        }}
-                                    >
-                                        <div style={style.tile}>
-                                                <img className="img-not-loaded" src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
-                                            <div style={style.itemTitle}>{recommend.name}</div>
-                                        </div>
-                                    </GridTile>
-                                ))}
+                            {getAlbumRecommendData.data.result.map((recommend) => (
+                                <GridTile
+                                    key={recommend.id}
+                                    title=""
+                                    style={{display: "table-cell", padding: "0 .067rem"}}
+                                    titleStyle={{
+                                        textAlign: "center",
+                                        marginRight: "16px",
+                                        marginTop: "20%",
+                                        color: "black"
+                                    }}
+                                    titleBackground="transparent"
+                                    onClick={() => {
+                                        recommend.name && linkTo(`songs/recommendId/${recommend.id}/${recommend.name}/${encodeURIComponent(encoding(recommend.wxPic || recommend.imgurl))}`, false, null);
+                                    }}
+                                >
+                                    <div style={style.tile}>
+                                        <img className="img-not-loaded" src={recommend.wxPic || recommend.imgurl} style={style.tileImg}/>
+                                        <div style={style.itemTitle}>{recommend.name}</div>
+                                    </div>
+                                </GridTile>
+                            ))}
                         </div>
                     </Paper>
 
@@ -248,7 +248,8 @@ class Home extends BaseComponent {
                                     style={{display: "table-cell", padding: "0 .067rem"}}
                                     titleBackground="transparent"
                                     onClick={() => {
-                                        rank.name && linkTo(`songs/hotId/${rank.id}/${rank.name}/${encoding(rank.wxPic || rank.imgurl)}`, false, null);
+
+                                        rank.name && linkTo(`songs/hotId/${rank.id}/${rank.name}/${encodeURIComponent(encoding(rank.wxPic || rank.imgurl))}`, false, null);
                                     }}
                                 >
                                     <div style={style.tile}>
@@ -305,6 +306,7 @@ class Home extends BaseComponent {
                     }}
                 />
 
+                {/*置顶操作*/}
                 {
                     <div className="scroll-to-top-button" style={scrollTopStyle} onTouchTap={() => {
                         this.scrollTo(0);

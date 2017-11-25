@@ -49,29 +49,30 @@ const style = {
         }
     },
 };
+
 class SongList extends BaseComponent {
     constructor(props) {
         super(props);
         let queryFun = null;
         let dataKey = "";
         let stamp = "";
-        if (this.props.singerId) {
+        if (this.props.singerId) {// 歌星列表
             dataKey = "getActorsAlbum";
             stamp = "getActorsAlbumStamp";
             queryFun = this.props.action_getActorsAlbum;
-        } else if (this.props.catId) {
+        } else if (this.props.catId) {// 分类歌曲列表
             dataKey = "getCatSongList";
             stamp = "getCatSongListStamp";
             queryFun = this.props.action_getCatSongList;
-        } else if (this.props.hotId) {
+        } else if (this.props.hotId) {// 排行歌曲列表
             dataKey = "getRankAlbum";
             stamp = "getRankAlbumStamp";
             queryFun = this.props.action_getRankAlbum;
-        } else if (this.props.recommendId) {
+        } else if (this.props.recommendId) {// 推荐歌曲列表
             dataKey = "getAlbumRecommendSongList";
             stamp = "getAlbumRecommendSongListStamp";
             queryFun = this.props.action_getAlbumRecommendSongList;
-        } else if (this.props.search) {
+        } else if (this.props.search) {// 搜索结果列表
             dataKey = "searchResult";
             stamp = "searchResultStamp";
             queryFun = this.props.action_searchResult;
@@ -160,7 +161,7 @@ class SongList extends BaseComponent {
                         showNoWifi ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
                     {
-                        !offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', minHeight: '6.08rem', maxHeight: '7rem'}} src={decoding(headImg)}/>
+                        !offLine && headImg && <img className="img-not-loaded" style={{top: 44, width: '100%', minHeight: '6.08rem', maxHeight: '7rem'}} src={decoding(decodeURIComponent(headImg))}/>
                     }
                     <List className="song-list">{this.getContent()}</List>
 
