@@ -15,6 +15,7 @@ import FlatButton from "material-ui/FlatButton";
 import Dialog from "material-ui/Dialog";
 import {setGlobAlert} from "../../../actions/common/actions";
 
+// 样式表
 let styles = {
     submitBtn: {
         display: "block",
@@ -70,7 +71,11 @@ class InvoiceSubmit extends BaseComponent {
         super.title("开票");
 
         this.state = {
+
+            // 总金额数，从url参数中获取
             totalMoney: this.props.match.params.totalMoney.replace("-", "."),
+
+            // 对话框状态
             openDialog: false,
 
             /**
@@ -81,13 +86,15 @@ class InvoiceSubmit extends BaseComponent {
              * gfmc: 发票抬头
              * gfsh: 发票纳税人识别号
              * gfsj: 开票人电话
+             * gfyx: 开票人邮箱
              */
             submitParams: {
                 ids: this.props.match.params.ids.replace("-", ","),
                 gflx: "01",
                 gfmc: "",
                 gfsh: "",
-                gfsj: ""
+                gfsj: "",
+                gfyx: ""
             }
         };
 
@@ -131,29 +138,29 @@ class InvoiceSubmit extends BaseComponent {
                     <header>*发票抬头</header>
                     <div>
                         <span style={submitParams.gflx === "01" ? styles.tabActive : styles.tab}
-                        onClick={() => {
-                            submitParams.gflx = "01";
-                            this.setState({
-                                submitParams: submitParams
-                            });
-                        }}>公司</span>
+                              onClick={() => {
+                                  submitParams.gflx = "01";
+                                  this.setState({
+                                      submitParams: submitParams
+                                  });
+                              }}>公司</span>
                         <span style={submitParams.gflx === "03" ? styles.tabActive : styles.tab}
-                        onClick={() => {
-                            submitParams.gflx = "03";
-                            this.setState({
-                                submitParams: submitParams
-                            });
-                        }}>个人</span>
+                              onClick={() => {
+                                  submitParams.gflx = "03";
+                                  this.setState({
+                                      submitParams: submitParams
+                                  });
+                              }}>个人</span>
                     </div>
                     <input style={styles.input}
-                    onChange={(e) => {
-                       submitParams.gfmc = e.target.value;
-                        this.setState({
-                            submitParams: submitParams
-                        });
-                    }}
-                    placeholder="请输入发票抬头"
-                    type="text"/>
+                           onChange={(e) => {
+                               submitParams.gfmc = e.target.value;
+                               this.setState({
+                                   submitParams: submitParams
+                               });
+                           }}
+                           placeholder="请输入发票抬头"
+                           type="text"/>
                 </section>
 
                 <section style={Object.assign({}, styles.singleItem, {
@@ -162,14 +169,14 @@ class InvoiceSubmit extends BaseComponent {
                 })}>
                     <header>*纳税人识别号</header>
                     <input style={styles.input}
-                    onChange={(e) => {
-                       submitParams.gfsh = e.target.value;
-                       this.setState({
-                           submitParams: submitParams
-                       });
-                    }}
-                    placeholder="请输入纳税人识别号"
-                    type="text"/>
+                           onChange={(e) => {
+                               submitParams.gfsh = e.target.value;
+                               this.setState({
+                                   submitParams: submitParams
+                               });
+                           }}
+                           placeholder="请输入纳税人识别号"
+                           type="text"/>
                 </section>
 
                 <section style={styles.singleItem}>
@@ -180,14 +187,27 @@ class InvoiceSubmit extends BaseComponent {
                 <section style={styles.singleItem}>
                     <span>*收票人手机: </span>
                     <input style={styles.input}
-                    onChange={(e) => {
-                        submitParams.gfsj = e.target.value;
-                        this.setState({
-                           submitParams: submitParams
-                        });
-                    }}
-                    placeholder="请输入收票手机号码"
-                    type="text"/>
+                           onChange={(e) => {
+                               submitParams.gfsj = e.target.value;
+                               this.setState({
+                                   submitParams: submitParams
+                               });
+                           }}
+                           placeholder="请输入收票手机号码"
+                           type="text"/>
+                </section>
+
+                <section style={styles.singleItem}>
+                    <span>*收票人邮箱: </span>
+                    <input style={styles.input}
+                           onChange={(e) => {
+                               submitParams.gfyx = e.target.value;
+                               this.setState({
+                                   submitParams: submitParams
+                               });
+                           }}
+                           placeholder="请输入收票人邮箱"
+                           type="text"/>
                 </section>
 
                 <div style={{width: "100%", height: "80px"}} />
@@ -210,18 +230,27 @@ class InvoiceSubmit extends BaseComponent {
                         buttonStyle={styles.submitBtn}
                         labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
                         onClick={() => {
+
                             if (submitParams.gfmc.length <= 0) {
                                 this.props.action_setGlobAlert("请输入发票抬头");
                                 return;
                             }
+
                             if (!(/^([A-Z\d]{15}|[A-Z\d]{18}|[A-Z\d]{20})$/).test(submitParams.gfsh)) {
                                 this.props.action_setGlobAlert("请输入正确的纳税人识别号");
                                 return;
                             }
+
                             if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(submitParams.gfsj))) {
                                 this.props.action_setGlobAlert("请输入正确的手机号");
                                 return;
                             }
+
+                            if (!(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(submitParams.gfyx))) {
+                                this.props.action_setGlobAlert("请输入正确的邮箱");
+                                return;
+                            }
+
                             this.setState({openDialog: true});
                         }}
                     />
@@ -248,7 +277,8 @@ class InvoiceSubmit extends BaseComponent {
                         <li>发票抬头: <span style={{color: "#212121"}}>{submitParams.gfmc}</span></li>
                         <li>纳税人识别号: <span style={{color: "#212121"}}>{submitParams.gfsh}</span></li>
                         <li>电话: <span style={{color: "#212121"}}>{submitParams.gfsj}</span></li>
-                        <li style={{fontSize: `${toRem(14)} !important`}}>*提交后请到开票历史中查看开票进度</li>
+                        <li>邮箱: <span style={{color: "#212121"}}>{submitParams.gfyx}</span></li>
+                        <li style={{fontSize: `${toRem(14)} !important`}}>*确认提交后电子发票将会发送到您的邮箱，开票进度可在开票历史中查看。</li>
                     </ul>
                 </Dialog>
             </div>
@@ -259,12 +289,18 @@ class InvoiceSubmit extends BaseComponent {
         const params = this.state.submitParams;
         console.log(params);
         this.props.submitInvoiceAction(params, reqHeader(params), (res) => {
+
             const {status} = res;
             if (parseInt(status, 10) === 1) {
                 this.setState({
                     openDialog: false
                 });
                 linkTo(`user/invoiceSubmitSuccess`, false, null);
+            } else {
+                this.setState({
+                    openDialog: false
+                });
+                this.props.action_setGlobAlert("网络开小差咯");
             }
         });
     }

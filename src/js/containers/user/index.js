@@ -322,10 +322,15 @@ class UserIndex extends BaseComponent {
         });
     }
 
+    /**
+     * 返回vip状态的dom结构
+     * @param data: userInfo数据
+     * @returns {XML}: 返回虚拟daom
+     */
     showVIPStatus(data) {
         let vipStatus = data.vipStatus;
         const isReDevice = data.isReDevice;
-        if (!vipStatus) return;
+        if (typeof vipStatus === "undefined") return;
         if (isReDevice !== 1) vipStatus = -1;
 
         let vipParams = {
@@ -353,6 +358,7 @@ class UserIndex extends BaseComponent {
                 }}>{text}</div>);
             }
         };
+
         switch (vipStatus) {
             case -1:
                 vipParams.content = vipParams._content();
@@ -367,6 +373,7 @@ class UserIndex extends BaseComponent {
                 vipParams.content = vipParams._content();
                 break;
         }
+
         return (<div
             style={{
                 display: "flex",
@@ -406,6 +413,11 @@ class UserIndex extends BaseComponent {
         </div>);
     }
 
+    /**
+     *
+     * @param data
+     * @returns {XML}
+     */
     showGxStatus(data) {
         let vipStatus = data.vipStatus;
         return (<div

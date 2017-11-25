@@ -15,7 +15,7 @@ import FlatButton from 'material-ui/FlatButton';
 import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 
-import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
+import {getEncryptHeader, linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
 import {SvgIcon} from "material-ui";
@@ -66,7 +66,9 @@ class OrderForm extends BaseComponent {
             offLine: false,
             currentPage: 0,
             pageSize: 999,
-            deleteOrderId: null,
+
+            // 待删除订单对象
+            deleteOrder: null,
             openDialog: false
         };
 
@@ -203,7 +205,7 @@ class OrderForm extends BaseComponent {
                                 onClick={() => {
                                     this.setState({
                                         openDialog: true,
-                                        deleteOrderId: item.id
+                                        deleteOrder: item
                                     });
                                 }}>删除订单</div>
                         </footer>
@@ -230,10 +232,12 @@ class OrderForm extends BaseComponent {
         );
     }
 
+    // 对话框确认时调用
     handleAction() {
-        this.deleteOrder(this.state.deleteOrderId);
+        this.deleteOrder(this.state.deleteOrder.id, this.state.deleteOrder.deviceId);
     }
 
+    // 关闭对话框时调用
     handleClose() {
         this.setState({openDialog: false});
     }
@@ -256,13 +260,20 @@ class OrderForm extends BaseComponent {
         });
     }
 
-    // 删除订单
-    deleteOrder(id) {
+    /**
+     * 删除订单
+     * @param id: 订单id
+     * @param deviceId: 订单对应设备号
+     */
+    deleteOrder(id, deviceId) {
+
+        const header = getEncryptHeader({deviceId: deviceId});
+
         const deleteOrderParam = {
             id: id
         };
 
-        this.props.deleteOrderAction(deleteOrderParam, reqHeader(deleteOrderParam), (res) => {
+        this.props.deleteOrderAction(deleteOrderParam, reqHeader(deleteOrderParam, header), (res) => {
             const {status} = res;
             if (parseInt(status, 10) === 1) {
                 let orderList = this.state.orderList.filter((item) => {
