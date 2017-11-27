@@ -101,6 +101,7 @@ class App extends BaseComponent {
         this.runCheckLocal();
         this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
+        window.addEventListener('focus', () => {this.updateUserInfo();});
         this.props.action_updateScreen();
 
         const {isIos} = window.sysInfo;
@@ -487,7 +488,7 @@ class App extends BaseComponent {
         if (!gxTimer) {
             const time = this.state.gxTime = this.props.userInfo.userInfoData.data.time;
             if (time) {
-                window.localStorage.setItem("gxAlert", '{}');
+                window.localStorage.setItem("gxAlert", '{"done": false}');
                 window.gxAlertDone = false;
             } else {
                 const defaultGxAlert = JSON.parse(window.localStorage.getItem("gxAlert") || "{}");
@@ -501,7 +502,7 @@ class App extends BaseComponent {
                         if (!gxAlert.done) {
                             const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
                             if (isBindDevice) {
-                                actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
+                                actionSetGlobAlert  && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
                                 window.localStorage.setItem("gxAlert", '{"done": true}');
                             }
                             window.gxAlertDone = true;
@@ -517,7 +518,7 @@ class App extends BaseComponent {
                 });
                 window.gxTime = gxTime;
                 if (window.gxAlertDone) {
-                    window.localStorage.setItem("gxAlert", '{}');
+                    window.localStorage.setItem("gxAlert", '{"done": false}');
                     window.gxAlertDone = false;
                 }
             }, 1000);

@@ -92,7 +92,8 @@ class Pay extends BaseComponent {
             state: getQueryString("state") || "",
             pollingId: getQueryString("pollingId") || "",
             deviceId: getQueryString("deviceId") || "",
-            openid: getQueryString("openid") || ""
+            openid: getQueryString("openid") || "",
+            defaultChooseProductId: getQueryString("productId") || ""
         };
         this.state = {
             matchParams: matchParams,
@@ -402,15 +403,17 @@ class Pay extends BaseComponent {
                 success: (res) => {
                     // 支付成功后的回调函数
                     if (this.state.payType === Const.PAY_TYPE_GONG_XIANG) {
-                        const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
-                        const params = {
-                            url: `${location.origin}?uuid=${wxInfoSession.data.uuid}&userid=${wxInfoSession.data.userId}&deviceId=${wxInfoSession.data.deviceId}`
-                        };
-                        const wxInfo = {
-                            wxId: wxInfoSession.data.uuid || "",
-                            deviceId: wxInfoSession.data.deviceId || ""
-                        };
-                        getUserInfoAction(params, reqHeader(params, getEncryptHeader(wxInfo)));
+                        if (matchParams.openid === "") {
+                            const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+                            const params = {
+                                url: `${location.origin}?uuid=${wxInfoSession.data.uuid}&userid=${wxInfoSession.data.userId}&deviceId=${wxInfoSession.data.deviceId}`
+                            };
+                            const wxInfo = {
+                                wxId: wxInfoSession.data.uuid || "",
+                                deviceId: wxInfoSession.data.deviceId || ""
+                            };
+                            getUserInfoAction(params, reqHeader(params, getEncryptHeader(wxInfo)));
+                        }
                         this.setState({
                             payResult: PAY_RESULT_SUCCESS
                         });
@@ -471,13 +474,20 @@ class Pay extends BaseComponent {
     // 更新支付列表
     updatePayList() {
         const {data} = this.props.result.payListData || {data: []};
-        if (data && data[0])
+        const {defaultChooseProductId} = this.state;
+        if (data && data[0]) {
+            let defaultActiveItem = data[0];
+            if (defaultChooseProductId) {
+                defaultActiveItem = data.find(item => {
+                    return item.productId === defaultChooseProductId;
+                }) || defaultActiveItem;
+            }
             this.setState({
-                payListActiveItem: data[0],
+                payListActiveItem: defaultActiveItem,
                 payList: data,
                 payType: data[0]['productType']
             });
-
+        }
     }
 
     // 识别页面状态

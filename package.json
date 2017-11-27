@@ -33,7 +33,6 @@
     "react-scrollbar": "^0.5.1",
     "react-swipeable-views": "^0.12.5",
     "react-tap-event-plugin": "^2.0.1",
-    "react-viewer-mobile": "^0.1.3",
     "recompose": "^0.24.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
@@ -131,7 +130,7 @@
   },
   "scripts": {
     "dev": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --history-api-fallback",
-    "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
+    "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxfix.j-make.com.cn --history-api-fallback",
     "dev:f4": "npm run copy:dev && cross-env NODE_ENV=f4 webpack-dev-server --env=dev.f4 --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
     "build:test": "npm run copy:dev && cross-env NODE_ENV=development webpack --config ./src/config/webpack.config.js --env=test",
     "build:f4": "npm run copy:dev && cross-env NODE_ENV=f4 webpack --config ./src/config/webpack.config.js --env=test",
