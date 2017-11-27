@@ -59,7 +59,7 @@ class GradeList extends BaseComponent {
                             }}
                             titleBackground="transparent"
                             onClick={() => {
-                                if (item[labelKey]) linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encoding(item[imgKey])}`, false, null);
+                                if (item[labelKey]) linkTo(`${linkHead}${item[idKey]}/${item[labelKey]}/${encodeURIComponent(encoding(item[imgKey]))}`, false, null);
                             }}
                         >
                             <div style={{height: '83%'}} className="img-not-loaded">
