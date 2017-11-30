@@ -110,7 +110,7 @@ class InvoiceOrder extends BaseComponent {
                         lineHeight: toRem(110),
                         color: "#212121",
                         fontSize: toRem(36)
-                    }}>订票开单</div>
+                    }}>订单开票</div>
                     <div style={{
                         float: "right",
                         marginRight: toRem(20)

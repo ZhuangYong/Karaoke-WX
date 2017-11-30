@@ -106,7 +106,7 @@ class VoiceSearch extends BaseComponent {
                         textAlign: "center",
                         color: "#ff8226",
                         fontSize: "18px"
-                    }}>{isRecordStart ? "点击停止" : "点击说话"}</header>
+                    }}>{isRecordStart ? "放开停止" : "长按说话"}</header>
                    {/* <FloatingActionButton
                         backgroundColor="#ff6c00"
                         disabledColor="#ff6c00"

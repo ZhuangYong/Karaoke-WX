@@ -202,9 +202,15 @@ class MBottomNavigation extends BaseComponent {
                 rightBtnStr = '稍后续费';
             } else {
                 callback && callback();
-                return;
+                return "";
             }
+        } else if (vipTime === '0') {
+            this.state.alertStr = '您的vip已过期，将无法点歌，为确保您的K歌体验，快去充值吧。';
+        } else {
+            callback && callback();
+            return "";
         }
+
         const handleClose = () => {
             this.setState({
                 showAlert: false

@@ -76,20 +76,18 @@ class InvoiceDetail extends BaseComponent {
                     />
                 </div>}
 
-                <a href="#">
-                    <img
-                        style={{
-                            paddingTop: toRem(25),
-                            paddingRight: toRem(20),
-                            paddingLeft: toRem(20),
-                            width: '100%'}}
-                        src={imgurl}
-                        onClick={() => {
-                            this.setState({
-                                visible: true
-                            });
-                        }}/>
-                </a>
+                <img
+                    style={{
+                        paddingTop: toRem(25),
+                        paddingRight: toRem(20),
+                        paddingLeft: toRem(20),
+                        width: '100%'}}
+                    src={imgurl}
+                    onClick={() => {
+                        this.setState({
+                            visible: true
+                        });
+                    }}/>
             </div>
         );
     }

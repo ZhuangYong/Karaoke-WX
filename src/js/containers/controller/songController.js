@@ -128,6 +128,7 @@ const style = {
     }
 };
 const UPDATE_CHOOSE_SONG_TIME_COUNT = 5;
+const UPDATE_HISTORY_SONG_TIME_COUNT = 60 * 3;
 const PLAY_CONTROLLER_RE_SING = 5;
 const PLAY_CONTROLLER_ORIGINAL_ACCOMPANY = 6;
 const PLAY_CONTROLLER_PAUSE_PLAY = 7;
@@ -146,6 +147,7 @@ class SongController extends BaseComponent {
             setTopSongIdIng: 0,
             delChooseSongIdIng: {},
             updateChooseSongsCount: 0,
+            updateHistorySongCount: 0,
             emptyChooseSongs: false,
             barrageSendToast: '',
             barrageToastMsg: '',
@@ -524,6 +526,12 @@ class SongController extends BaseComponent {
         const updateChooseSongsInterval = this.state.updateChooseSongsInterval;
         if (!updateChooseSongsInterval) {
             this.state.updateChooseSongsInterval = setInterval(() => {
+                if (!this.state.offLine && this.state.updateChooseSongsCount >= UPDATE_HISTORY_SONG_TIME_COUNT) {
+                    this.updateHistorySongList();
+                    this.state.updateHistorySongCount = 0;
+                } else {
+                    this.state.updateHistorySongCount += 1;
+                }
                 if (!this.state.offLine && this.state.updateChooseSongsCount >= UPDATE_CHOOSE_SONG_TIME_COUNT && this.state.tabIndex === 1) {
                     this.updateChooseSongList();
                     this.state.updateChooseSongsCount = 0;
@@ -887,6 +895,7 @@ class SongController extends BaseComponent {
             });
         };
         const fail = (msg) => {
+            delChooseSongIdIng[musicNo] = false;
             this.setState({
                 offLine: true
             });

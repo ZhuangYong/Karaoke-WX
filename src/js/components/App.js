@@ -128,9 +128,11 @@ class App extends BaseComponent {
     }
 
     componentDidUpdate(prevProps) {
-        if (window.noUserInfo === true) {
-            this.updateUserInfo();
-            window.noUserInfo = false;
+        if (isGetUserInfo()) {
+            if (window.noUserInfo === true) {
+                this.updateUserInfo();
+                window.noUserInfo = false;
+            }
         }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
@@ -153,6 +155,7 @@ class App extends BaseComponent {
                     this.state.gxTimer = 0;
                 }
                 this.gxTimer();
+                this.gxUpdateUserInfoTimer();
             }
         }
 
@@ -502,7 +505,7 @@ class App extends BaseComponent {
                         if (!gxAlert.done) {
                             const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
                             if (isBindDevice) {
-                                actionSetGlobAlert  && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
+                                actionSetGlobAlert && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
                                 window.localStorage.setItem("gxAlert", '{"done": true}');
                             }
                             window.gxAlertDone = true;
@@ -523,6 +526,15 @@ class App extends BaseComponent {
                 }
             }, 1000);
         }
+    }
+
+    gxUpdateUserInfoTimer() {
+        if (!this.state.gxUpdateUserInfoTimer) {
+            this.state.gxUpdateUserInfoTimer = setInterval(() => {
+                this.updateUserInfo();
+            }, 1000 * 10);
+        }
+
     }
 
     configWxPath() {

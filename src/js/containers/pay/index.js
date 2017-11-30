@@ -310,7 +310,7 @@ class Pay extends BaseComponent {
                                 }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price}元</span></div>}
                                 disabled={disableSubmitButton || (!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null))}
                                 icon={
-                                    disableSubmitButton ? <CircularProgress size={18} thickness={1} /> : ""
+                                    disableSubmitButton ? <CircularProgress size={18} thickness={1} /> : null
                                 }
                                 raisedButtonStyles={{
                                     bottom: 0
@@ -478,9 +478,14 @@ class Pay extends BaseComponent {
         if (data && data[0]) {
             let defaultActiveItem = data[0];
             if (defaultChooseProductId) {
-                defaultActiveItem = data.find(item => {
+                defaultActiveItem = data.filter(item => {
                     return item.productId === defaultChooseProductId;
-                }) || defaultActiveItem;
+                })[0] || defaultActiveItem;
+            } else {
+                defaultActiveItem = data.filter(item => {
+                    // isRecommend 1 是推荐的产品 0 不是推荐的产品
+                    return item.isRecommend === 1;
+                })[0] || defaultActiveItem;
             }
             this.setState({
                 payListActiveItem: defaultActiveItem,
