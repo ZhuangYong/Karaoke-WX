@@ -16,7 +16,7 @@ export default {
 
     /**
      * 获取用户信息
-     * 参数如下：
+     * 返回参数如下：
      * bindExpireTime: 绑定过期时间戳
      * channel: 渠道号
      * createTime: "2017-06-02 13:19:51"
