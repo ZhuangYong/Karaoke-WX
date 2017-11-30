@@ -27,7 +27,7 @@ import SongController from "../containers/controller/songController";
 import VoiceSearch from "../containers/voiceSearch";
 
 import Pay from "../containers/pay";
-import Protocol from "../containers/pay/Protocol";
+import Protocol from "../containers/pay/protocol";
 import RedirectPay from "../containers/forOldVersion/pay";
 
 import Suggestions from "../containers/forOldVersion/suggestions";
