@@ -15,7 +15,7 @@ import Audio from "../containers/play/audio";
 
 import Search from "../containers/song/search";
 import CatAlbum from "../containers/song/catAlbum";
-import SongsList from "../containers/song/SongList";
+import SongsList from "../containers/song/songList";
 import ChooseList from "../containers/song/chooseList";
 import SingerList from "../containers/song/singerList";
 import SingerAlbum from "../containers/song/singerAlbum";
@@ -26,8 +26,8 @@ import SongController from "../containers/controller/songController";
 
 import VoiceSearch from "../containers/voiceSearch";
 
-import Pay from "../containers/Pay";
-import Protocol from "../containers/Pay/Protocol";
+import Pay from "../containers/pay";
+import Protocol from "../containers/pay/Protocol";
 import RedirectPay from "../containers/forOldVersion/pay";
 
 import Suggestions from "../containers/forOldVersion/suggestions";
