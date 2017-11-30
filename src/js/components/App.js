@@ -502,7 +502,7 @@ class App extends BaseComponent {
                         if (!gxAlert.done) {
                             const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
                             if (isBindDevice) {
-                                actionSetGlobAlert  && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
+                                actionSetGlobAlert && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
                                 window.localStorage.setItem("gxAlert", '{"done": true}');
                             }
                             window.gxAlertDone = true;
