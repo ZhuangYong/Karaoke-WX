@@ -23,7 +23,7 @@ import {setGlobAlert} from "../../actions/common/actions";
 
 import defaultAvatar from "../../../img/default_avatar.png";
 import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
-import MallImg from "../../../img/mall/home.png";
+import MallImg from "../../../img/mall/me.png";
 
 const styles = {
     headerImg: {
