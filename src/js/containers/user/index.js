@@ -8,7 +8,7 @@ import {formatTime, linkTo, reqHeader, timeToYmd, toRem} from "../../utils/comUt
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
-import {Avatar, GridList, GridTile, FlatButton} from "material-ui";
+import {Avatar, GridList, GridTile, FlatButton, Paper} from "material-ui";
 import SvgIcon from 'material-ui/SvgIcon';
 
 import FeedbackIcon from "../../../img/to_feedback.png";
@@ -23,6 +23,7 @@ import {setGlobAlert} from "../../actions/common/actions";
 
 import defaultAvatar from "../../../img/default_avatar.png";
 import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
+import MallImg from "../../../img/mall/home.png";
 
 const styles = {
     headerImg: {
@@ -194,7 +195,7 @@ class UserIndex extends BaseComponent {
                         {
                             (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div></div> : <GridTile
                                 onTouchTap={() => {
-                                    linkTo(`user/orderForm`, false, null);
+                                    linkTo(`user/myOrder`, false, null);
                                 }}>
                                 <img
                                     src={MyOrderingsIcon}
@@ -255,7 +256,7 @@ class UserIndex extends BaseComponent {
                     </header>
 
                     <RecordingGrid
-                        data={recordsList}
+                        data={(recordsList && recordsList.length) ? recordsList.filter((i, index) => index < 3) : []}
                         operateClick={(uid) => {
                             this.setState({
                                 deleteRecordingUid: uid,
@@ -263,6 +264,14 @@ class UserIndex extends BaseComponent {
                             });
                         }}
                     />
+
+                     <Paper
+                         zDepth={0}
+                         style={{margin: '.3rem .267rem 0 .267rem'}}
+                     >
+                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = 'https://jmake.huo.so/shop/index'}/>
+                     </Paper>
+
                 </section>)}
 
                 <MBottomNavigation selectedIndex={2}/>
