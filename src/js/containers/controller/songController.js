@@ -968,7 +968,8 @@ class SongController extends BaseComponent {
     showAudioEffect() {
         const {data} = this.props.userInfo.userInfoData || {data: {}};
         // 国光老板卡，显示音控台
-        return (data.channel === 'gg_laobanka' && data.isReDevice === 1);
+        // 新加一个版卡支持音效
+        return ((data.channel === 'gg_laobanka' || data.channel === 'gg_f886_ahfy') && data.isReDevice === 1);
     }
 
 }
