@@ -25,6 +25,7 @@ module.exports = Merge(CommonConfig, {
             }
         })
     ]
+
     /*,
     devServer: {
         port: 80,
