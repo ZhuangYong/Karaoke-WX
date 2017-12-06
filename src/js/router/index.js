@@ -43,6 +43,7 @@ import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
 import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
 import InvoiceDetail from "../containers/user/orderForm/invoiceDetail";
 import InvoiceSubmitSuccess from "../containers/user/orderForm/invoiceSubmitSuccess";
+import myOrder from "../containers/user/orderForm/myOrder";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -194,6 +195,11 @@ const InvoiceDetailContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const myOrderContainer = () => (
+    <Bundle load={myOrder}>
+        {Component => <Component />}
+    </Bundle>
+);
 
 export default class router extends React.Component {
     render() {
@@ -219,6 +225,7 @@ export default class router extends React.Component {
                 <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
                 {/*imgId: 预览图片id*/}
                 <Route path={`/user/photoAlbumPreview/:imgId`} exact component={PreviewContainer}/>
+                <Route path={`/user/myOrder`} exact component={myOrderContainer}/>
                 <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>
                 <Route path={`/user/invoiceOrder`} exact component={InvoiceOrderContainer}/>
                 <Route path={`/user/invoiceList`} exact component={InvoiceListContainer}/>
