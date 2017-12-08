@@ -21,7 +21,7 @@ import MBottomNavigation from "../../components/common/MBottomNavigation";
 import SongItem from "../../components/common/SongItem";
 import Const from "../../utils/const";
 import MallImg from "../../../img/mall/home.png";
-
+import sysConfig from "../../utils/sysConfig";
 const style = {
     home: {
         paddingTop: "1.2rem",
@@ -266,7 +266,7 @@ class Home extends BaseComponent {
                          zDepth={0}
                          style={{margin: '.3rem .267rem 0 .267rem'}}
                      >
-                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = 'https://jmake.huo.so/shop/index'}/>
+                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
                      </Paper>
 
                     <Paper

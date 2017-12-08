@@ -10,5 +10,7 @@ module.exports = {
     // apiDomain: 'http://120.27.250.32:9080',
     // apiDomain: 'http://192.168.1.9:8080',
     contextPath : "/",
+    mallIndex: 'https://jmake.haitai.tv/haitai-weisite/shop/index',
+    mallOrder: 'https://jmake.haitai.tv/haitai-weisite/shop/order_list',
     appId: "wx4688d2b7b85451aa"
 };

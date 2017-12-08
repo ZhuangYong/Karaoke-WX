@@ -6,6 +6,7 @@ import {Paper} from "material-ui";
 import {linkTo} from "../../../utils/comUtils";
 import withRouter from "react-router-dom/es/withRouter";
 import {connect} from "react-redux";
+import sysConfig from "../../utils/sysConfig";
 
 class myOrder extends BaseComponent {
     constructor(props) {
@@ -22,7 +23,7 @@ class myOrder extends BaseComponent {
                  <img src={VipImg} style={{width: '100%', marginBottom: '.2rem'}} onClick={() => {
                      linkTo(`user/orderForm`, false, null);
                  }}/>
-                 <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = 'https://jmake.huo.so/shop/order_list'}/>
+                 <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallOrder}/>
              </Paper>
         );
     }

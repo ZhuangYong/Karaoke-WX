@@ -24,6 +24,7 @@ import {setGlobAlert} from "../../actions/common/actions";
 import defaultAvatar from "../../../img/default_avatar.png";
 import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
 import MallImg from "../../../img/mall/me.png";
+import sysConfig from "../../utils/sysConfig";
 
 const styles = {
     headerImg: {
@@ -269,7 +270,7 @@ class UserIndex extends BaseComponent {
                          zDepth={0}
                          style={{margin: '.3rem .267rem 0 .267rem'}}
                      >
-                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = 'https://jmake.huo.so/shop/index'}/>
+                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
                      </Paper>
 
                 </section>)}
