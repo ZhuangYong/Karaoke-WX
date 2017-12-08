@@ -6,7 +6,7 @@ import {Paper} from "material-ui";
 import {linkTo} from "../../../utils/comUtils";
 import withRouter from "react-router-dom/es/withRouter";
 import {connect} from "react-redux";
-import sysConfig from "../../utils/sysConfig";
+import sysConfig from "../../../utils/sysConfig";
 
 class myOrder extends BaseComponent {
     constructor(props) {
