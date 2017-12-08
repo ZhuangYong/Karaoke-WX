@@ -472,6 +472,8 @@ class App extends BaseComponent {
     }
 
     configWeiXin() {
+        const paths = location.pathname.split('/').filter(p => !!p);
+        if (paths && paths.length>1 && paths[0] === 'pay') return;
         let param = {url: location.href.split('#')[0]};
         this.props.action_getUserConfig(param, reqHeader(param), (json) => {
             const {data} = json;
