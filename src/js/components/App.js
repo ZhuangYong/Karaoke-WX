@@ -187,7 +187,7 @@ class App extends BaseComponent {
                         {validUserStatusDialog}
 
                         {
-                            (location.pathname !== "/pay" && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
+                            (location.pathname !== "/pay" && location.pathname !== "/user" && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
                                                                             onClick={() => {
                                                                                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
