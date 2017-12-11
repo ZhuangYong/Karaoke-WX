@@ -211,7 +211,9 @@ class UserIndex extends BaseComponent {
 
                 </section>
 
-                {!(data.channel === "nst_yinba") && (<section>
+                {!(data.channel === "nst_yinba") && (<section style={{
+                    paddingBottom: " 85px"
+                }}>
                     <header style={{
                         width: "100%",
                         height: "55px",
@@ -265,14 +267,14 @@ class UserIndex extends BaseComponent {
                         }}
                     />
 
-                </section>)}
+                     {/*<Paper
+                         zDepth={0}
+                         style={{margin: '.3rem .267rem 0 .267rem'}}
+                     >
+                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
+                     </Paper>*/}
 
-               {/* <Paper
-                     zDepth={0}
-                     style={{margin: '.3rem .267rem 2rem .267rem'}}
-                 >
-                     <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
-                 </Paper>*/}
+                </section>)}
 
                 <MBottomNavigation selectedIndex={2}/>
 
