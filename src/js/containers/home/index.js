@@ -262,12 +262,12 @@ class Home extends BaseComponent {
                         </div>
                     </Paper>
 
-                     <Paper
+                     {/*<Paper
                     zDepth={0}
                     style={{margin: '.3rem .267rem 0 .267rem'}}
-                >
+                    >
                          <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
-                     </Paper>
+                     </Paper>*/}
 
                     <Paper
                         zDepth={0}
