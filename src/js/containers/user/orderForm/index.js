@@ -129,7 +129,7 @@ class OrderForm extends BaseComponent {
                         color: "#212121",
                         fontSize: toRem(36)
                     }}>全部订单</div>
-                    {/*<div style={{
+                    <div style={{
                         float: "right",
                         marginRight: toRem(20)
                     }}
@@ -150,7 +150,7 @@ class OrderForm extends BaseComponent {
                             width: toRem(30),
                             height: toRem(30)
                         }}/>
-                    </div>*/}
+                    </div>
                 </header>
 
                 {orderList.length > 0 ? (<div>
