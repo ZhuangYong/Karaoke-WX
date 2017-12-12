@@ -9,6 +9,6 @@ module.exports = {
     apiDomain: 'http://portal.j-make.cn',
     contextPath : "/",
     mallIndex: 'https://jmake.huo.so/shop/index',
-    mallOrder: 'https://jmake.haitai.tv/haitai-weisite/shop/order_list',
+    mallOrder: 'https://jmake.huo.so/shop/order_list',
     appId: "wxb948b0bc6e5db6da"
 };
