@@ -20,6 +20,7 @@ import BaseComponent from "../../components/common/BaseComponent";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {CircularProgress} from "material-ui";
+import intl from 'react-intl-universal';
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -42,7 +43,7 @@ class AudioEffect extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("音效控制");
+        super.title(intl.get("title.sound.control"));
         this.state = {
             controllerIng: {}
         };
@@ -99,7 +100,7 @@ class AudioEffect extends BaseComponent {
                             }
                         </div>
                         <div className="inside-circle">
-                            效果模式
+                            {intl.get("effect.mode")}
                         </div>
                     </div>
                 </div>
@@ -116,7 +117,7 @@ class AudioEffect extends BaseComponent {
                                     color="#ff6832"/> : <img src={ToneIconReduce} style={{height: '.4rem'}}/>
                             }
                         </div>
-                        <p className="label">降调</p>
+                        <p className="label">{intl.get("effect.falling")}</p>
                     </div>
                     <div className="fun-button">
                         <div className="button" onClick={() => {
@@ -129,7 +130,7 @@ class AudioEffect extends BaseComponent {
                                     color="#ff6832"/> : <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
                             }
                         </div>
-                        <p className="label">平调</p>
+                        <p className="label">{intl.get("effect.stable")}</p>
                     </div>
                     <div className="fun-button">
                         <div className="button" onClick={() => {
@@ -142,7 +143,7 @@ class AudioEffect extends BaseComponent {
                                     color="#ff6832"/> : <img src={ToneIconAdd} style={{height: '.4rem'}}/>
                             }
                         </div>
-                        <p className="label">升调</p>
+                        <p className="label">{intl.get("effect.rising")}</p>
                     </div>
                 </div>
 
@@ -168,7 +169,7 @@ class AudioEffect extends BaseComponent {
                                     color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
                             }
                         </div>
-                        <p className="label">音乐</p>
+                        <p className="label">{intl.get("effect.music")}</p>
                     </div>
                     <div className="fun-button">
                         <div className="haf-top-button" onClick={() => {
@@ -191,7 +192,7 @@ class AudioEffect extends BaseComponent {
                                     color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
                             }
                         </div>
-                        <p className="label">话筒</p>
+                        <p className="label">{intl.get("effect.microphone")}</p>
                     </div>
                     <div className="fun-button">
                         <div className="haf-top-button" onClick={() => {
@@ -214,7 +215,7 @@ class AudioEffect extends BaseComponent {
                                     color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
                             }
                         </div>
-                        <p className="label">效果</p>
+                        <p className="label">{intl.get("effect.effect")}</p>
                     </div>
                 </div>
                 <MBottomNavigation selectedIndex={-1}/>
@@ -318,7 +319,7 @@ class AudioEffect extends BaseComponent {
                     controllerIng: controllerIng,
                     sendBarrageIng: false,
                     barrageSendToast: true,
-                    barrageToastMsg: "发送成功"
+                    barrageToastMsg: intl.get("msg.send.success")
                 });
             }, 1500);
         };

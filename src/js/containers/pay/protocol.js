@@ -5,11 +5,12 @@ import React from "react";
 import BaseComponent from "../../components/common/BaseComponent";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
+import intl from 'react-intl-universal';
 
 class Protocol extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("支付协议");
+        super.title(intl.get("title.payment"));
     }
 
     componentDidMount() {
@@ -325,7 +326,7 @@ class Protocol extends BaseComponent {
 
     render() {
         return (
-            <div ref="protocol">支付协议</div>
+            <div ref="protocol">{intl.get("title.payment")}</div>
         );
     }
 }

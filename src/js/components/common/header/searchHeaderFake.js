@@ -9,6 +9,7 @@ import VoiceIcon from "../../../../img/common/icon_voice.png";
 import SearchIcon from "../../../../img/common/icon_search.png";
 import VoiceIconGray from "../../../../img/common/icon_voice_gray.png";
 import SearchIconGray from "../../../../img/common/icon_search_gray.png";
+import intl from 'react-intl-universal';
 
 class SearchHeaderFake extends BaseComponent {
     constructor(props) {
@@ -36,7 +37,7 @@ class SearchHeaderFake extends BaseComponent {
                         hintText={
                             <div>
                                 <img className="search" src={searchIcon}/>
-                                <font>请输入你要找的歌曲或歌星</font>
+                                <font>{intl.get("search.placeholder")}</font>
                                 <img onTouchTap={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();

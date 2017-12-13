@@ -23,6 +23,7 @@ async function copydev() {
         copyFile('src/favicon.ico', 'build/favicon.ico'),
         copyFile('src/tile.png', 'build/tile.png'),
         copyFile('src/tile-wide.png', 'build/tile-wide.png'),
+        copyDir('locales', 'build/locales'),
         // copyDir('testapi', 'build'),
     ]);
 

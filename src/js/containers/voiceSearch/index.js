@@ -14,6 +14,7 @@ import "../../../sass/voiceSearch.scss";
 import {linkTo, stripScript} from "../../utils/comUtils";
 import {setGlobAlert} from "../../actions/common/actions";
 import ActionTypes from "../../actions/actionTypes";
+import intl from "react-intl-universal";
 
 const styles = {
     btn: {
@@ -149,7 +150,7 @@ class VoiceSearch extends BaseComponent {
                             e.preventDefault();
                             const {isWeixin} = window.sysInfo;
                             if (!isWeixin) {
-                                this.props.action_setGlobAlert("请在微信客户端操作");
+                                this.props.action_setGlobAlert(intl.get("msg.operate.in.we.chat"));
                                 return;
                             }
                             const touch = e.targetTouches[0];

@@ -16,13 +16,14 @@ import BaseComponent from "../../components/common/BaseComponent";
 import SlidePng1 from "../../../img/album/1.png";
 import SlidePng2 from "../../../img/album/2.png";
 import SlidePng3 from "../../../img/album/3.png";
+import intl from 'react-intl-universal';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 class PlayAudio extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("录音分享");
+        super.title(intl.get("title.audio.share"));
         this.state = {
             audio: {},
             params: this.props.match.params,
@@ -50,8 +51,8 @@ class PlayAudio extends BaseComponent {
                     this.refs.audio.refs.audio.refs.audio.play();
                     this.state.autoPlayEd = true;
                     wxShare({
-                        title: `刚刚唱了一首《${data.nameNorm}》快点来听`,
-                        desc: "分享自金麦客家庭卡拉OK",
+                        title: intl.get("audio.share.title", {name: data.nameNorm}),
+                        desc: intl.get("audio.share.from"),
                         // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.href),
                         link: location.href,
                         imgUrl: imgUrl === "" ? data.image : imgUrl,
@@ -68,8 +69,8 @@ class PlayAudio extends BaseComponent {
             window.wx && window.wx.ready(() => {
 
                 wxShare({
-                    title: `金麦客微信点歌`,
-                    desc: "分享自金麦客家庭卡拉OK",
+                    title: intl.get("audio.we.chat.song"),
+                    desc: intl.get("audio.share.from"),
                     link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
                     imgUrl: "http://wx.j-make.cn/img/logo.png",
                     dataUrl: null
@@ -91,7 +92,7 @@ class PlayAudio extends BaseComponent {
             topPanelStyle.marginTop = ".4rem";
         }
 
-        super.title((nameNorm || "录音分享") + "-金麦客，把专业卡拉OK带回家");
+        super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
         return (
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
@@ -106,11 +107,11 @@ class PlayAudio extends BaseComponent {
                     <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
                 </p>
                 <Subheader style={{paddingRight: 16, textAlign: "center", fontSize: '.4rem', lineHeight: '.6rem'}}>
-                    <font style={{fontSize: '.4rem'}}>{`一首好听的《${nameNorm || "..."}》，快去分享吧`}</font>
+                    <font style={{fontSize: '.4rem'}}>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</font>
                     <p style={{fontSize: '.32rem', height: '.4rem', margin: 0}}>&nbsp;{`${musicTime || "..."}`}&nbsp;</p>
                 </Subheader>
                 <Subheader style={{paddingRight: 16, textAlign: "center", fontSize: '.4rem', lineHeight: '.6rem', bottom: '.8rem'}}>
-                    <p style={{color: '#ff6832', fontSize: '.32rem'}}>来自金麦客专业家庭卡拉OK</p>
+                    <p style={{color: '#ff6832', fontSize: '.32rem'}}>{intl.get("msg.from.j.make")}</p>
                 </Subheader>
 
                 <img src={image} style={{display: "none"}} onError={() => {

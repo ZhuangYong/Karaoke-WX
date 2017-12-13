@@ -48,6 +48,13 @@ let common = function (state = initialState, action = {}) {
             return Object.assign({}, state, {
                 commonInfo: action.commonInfo
             });
+        case ActionTypes.COMMON.COMMON_GET_LOCAL_DATA:
+            return fetchProcess(state, action, {
+                data: "language",
+                stamp: "languageStamp",
+                msg: "languageMsg",
+                loading: "loading"
+            });
         default:
             return state;
     }

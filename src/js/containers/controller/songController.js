@@ -13,6 +13,7 @@ import ReloadIcon from "material-ui/svg-icons/action/autorenew";
 import NextIcon from "material-ui/svg-icons/av/skip-next";
 import SongItem from "../../components/common/SongItem";
 import BarrageIcon from "../../../img/common/icon_barrage.png";
+import EffectIcon from "../../../img/common/icon_effect.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import PlayStopIcon from "../../../img/controller/play_stop.png";
 import YuanBanIcon from "../../../img/controller/yuan_ban.png";
@@ -27,6 +28,7 @@ import NoWifi from "../../components/common/NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
 import ActionTypes from "../../actions/actionTypes";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
+import intl from 'react-intl-universal';
 
 const style = {
     controllerPan: {
@@ -79,7 +81,7 @@ const style = {
             width: '2.2rem',
             height: '1.2rem',
             icon: {
-                height: "20px",
+                width: ".5rem",
                 marginRight: '.1rem'
             },
             label: {
@@ -138,7 +140,7 @@ class SongController extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("播控");
+        super.title(intl.get("title.controller"));
         this.state = {
             playList: [],
             historySongList: [],
@@ -252,7 +254,7 @@ class SongController extends BaseComponent {
                         buttonStyle={{...style.tabs.leftTab, backgroundColor: backgroundColor[0], color: fontColor[0]}}
                         label={
                             <div style={{fontSize: '.4rem'}}>
-                                播放控制
+                                {intl.get("controller.tab.play.controller")}
                             </div>
                         }>
 
@@ -273,7 +275,7 @@ class SongController extends BaseComponent {
                                             />
                                         }
                                     </div>
-                                    <p style={style.controllerBtn.label}>重唱</p>
+                                    <p style={style.controllerBtn.label}>{intl.get("controller.restart")}</p>
                                 </div>
 
                                 <div style={style.controllerBtn}>
@@ -289,7 +291,7 @@ class SongController extends BaseComponent {
                                             )
                                         }
                                     </div>
-                                    <p style={style.controllerBtn.label}>播/停</p>
+                                    <p style={style.controllerBtn.label}>{intl.get("controller.play.pause")}</p>
                                 </div>
 
                                 <div style={style.controllerBtn}>
@@ -305,7 +307,7 @@ class SongController extends BaseComponent {
                                             )
                                         }
                                     </div>
-                                    <p style={style.controllerBtn.label}>原/伴</p>
+                                    <p style={style.controllerBtn.label}>{intl.get("controller.orig.inst")}</p>
                                 </div>
 
                                 <div style={{...style.controllerBtn}}>
@@ -320,7 +322,7 @@ class SongController extends BaseComponent {
                                                 color="white"/> : <NextIcon color="white" style={{width: '1.5rem', height: '1.5rem'}}/>
                                         }
                                     </div>
-                                    <p style={style.controllerBtn.label}>切歌</p>
+                                    <p style={style.controllerBtn.label}>{intl.get("controller.next.song")}</p>
                                 </div>
 
                                 <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
@@ -335,8 +337,8 @@ class SongController extends BaseComponent {
                                                      linkTo('controller/barrage', false, null);
                                                  }}
                                             >
-                                                <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                                <p style={style.extArea.btn.label}>弹幕</p>
+                                                <img src={BarrageIcon} style={{...style.extArea.btn.icon, width: '.6rem'}}/>
+                                                <p style={style.extArea.btn.label}>{intl.get("barrage")}</p>
                                             </div>
 
                                         </div> : ""
@@ -354,8 +356,8 @@ class SongController extends BaseComponent {
                                                     linkTo('controller/effect', false, null);
                                                 }}
                                             >
-                                                <img src={BarrageIcon} style={style.extArea.btn.icon}/>
-                                                <p style={style.extArea.btn.label}>音效</p>
+                                                <img src={EffectIcon} style={style.extArea.btn.icon}/>
+                                                <p style={style.extArea.btn.label}>{intl.get("controller.sound.effect")}</p>
                                             </div>
                                         </div> : ""
                                     }
@@ -377,7 +379,7 @@ class SongController extends BaseComponent {
                         }}
                         label={
                             <div style={{fontSize: '.4rem'}}>
-                            已点歌曲
+                                {intl.get("controller.tab.selected.list")}
                             </div>
                         }>
 
@@ -400,7 +402,7 @@ class SongController extends BaseComponent {
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
                         label={
                             <div style={{fontSize: '.4rem'}}>
-                                最近唱过
+                                {intl.get("controller.tab.history")}
                             </div>
                         }>
 
@@ -605,14 +607,14 @@ class SongController extends BaseComponent {
             return (
                 <div style={style.chooseList.deleteButton.delIng}>
                     <CircularProgress size={16} thickness={1}
-                                      style={{marginRight: 3}}/> 刪除中
+                                      style={{marginRight: 3}}/> {intl.get("msg.deleting")}
                 </div>
             );
         } else if (this.state.setTopSongIdIng === song.musicNo) {
             return (
                 <div style={style.chooseList.deleteButton.delIng}>
                     <CircularProgress size={16} thickness={1}
-                                      style={{marginRight: 3}}/> 置顶中
+                                      style={{marginRight: 3}}/> {intl.get("msg.set.top.ing")}
                 </div>
             );
         } else if (this.state.setTopSongIdIng) {
@@ -648,16 +650,16 @@ class SongController extends BaseComponent {
         let downloadStatusStr = "";
         switch (downloadStatus) {
             case Const.DOWNLOAD_STATUS_NOT_DOWN:
-                downloadStatusStr = "等待下载";
+                downloadStatusStr = intl.get("msg.waiting.download");
                 break;
             case Const.DOWNLOAD_STATUS_DONE:
                 // downloadStatusStr = "下载完成";
                 break;
             case Const.DOWNLOAD_STATUS_DOWNING:
-                downloadStatusStr = "正在下载…";
+                downloadStatusStr = intl.get("msg.downloading");
                 break;
             case Const.DOWNLOAD_STATUS_DOWN_FAILED:
-                downloadStatusStr = "下载失败";
+                downloadStatusStr = intl.get("msg.download.fail");
                 break;
             default:
                 break;
@@ -808,7 +810,7 @@ class SongController extends BaseComponent {
                     offLine: false,
                     setTopSongIdIng: 0,
                     barrageSendToast: true,
-                    barrageToastMsg: "置顶成功",
+                    barrageToastMsg: intl.get("msg.in.top.success"),
                     updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
                 });
             }, 500);
@@ -852,7 +854,7 @@ class SongController extends BaseComponent {
         this.setState({
             offLine: false,
             barrageSendToast: true,
-            barrageToastMsg: nameNorm + " 点歌成功",
+            barrageToastMsg: nameNorm + " " + intl.get("song.add.success"),
             updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
         });
 
@@ -887,7 +889,7 @@ class SongController extends BaseComponent {
             this.setState({
                 offLine: false,
                 barrageSendToast: true,
-                barrageToastMsg: "删除成功",
+                barrageToastMsg: intl.get("msg.delete.success"),
                 delChooseSongIdIng: delChooseSongIdIng,
                 playList: playList.filter((song) => {
                     return song.musicNo !== musicNo;

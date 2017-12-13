@@ -105,7 +105,7 @@ export function comFetch(dispatch, param, options = {
             param: param
         });
     }
-    fetchOption.headers['content-type'] = "application/x-www-form-urlencoded; charset=UTF-8";
+    if (fetchOption.headers) fetchOption.headers['content-type'] = "application/x-www-form-urlencoded; charset=UTF-8";
     // 发起请求
     const rejectCode = Math.random();
     const rejectFun = (err) => {
@@ -144,7 +144,7 @@ export function comFetch(dispatch, param, options = {
         return response.json();
     }).then(function (json) {
         const {status, msg} = json;
-        if (status === 0) throw Error(msg);
+        if (status === 0 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) throw Error(msg);
         try {
             dispatch({
                 type: options.action,

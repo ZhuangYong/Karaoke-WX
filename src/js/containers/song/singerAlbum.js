@@ -25,7 +25,7 @@ class SingerAlumb extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("歌星");
+        super.title(intl.get("title.artists"));
         this.state = {};
     }
 

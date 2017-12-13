@@ -128,5 +128,7 @@ export default {
 
     "API_GET_OTT_DEVICE_STATUS": "/deviceNet/qryStatus",
 
-    "API_LOCAL_TEST_PUSH": "/localserver/status"
+    "API_LOCAL_TEST_PUSH": "/localserver/status",
+
+    "API_GET_LOCAL_LANGUAGE": "/locales/"
 };
