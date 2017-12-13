@@ -15,12 +15,14 @@ import Scroller from "silk-scroller";
 import VoiceIcon from "../../../../img/common/icon_voice.png";
 import SearchIcon from "../../../../img/common/icon_search.png";
 import CleanIcon from "material-ui/svg-icons/navigation/cancel";
+import intl from 'react-intl-universal';
 
+const language = getCookie("language");
 const style = {
     searchButton: {
         position: 'absolute',
         right: '.3rem',
-        fontSize: '.5rem',
+        fontSize: language === 'zh-CN' ? '.5rem' : '.3rem',
         top: 0,
         display: 'flex',
         height: '1.2rem',
@@ -93,7 +95,7 @@ class SearchHeader extends BaseComponent {
                     return (
                         <div className="search-button"
                              onClick={this.handelBlur}>
-                            <p style={style.searchButton}>取消</p>
+                            <p style={style.searchButton}>{intl.get("button.cancel")}</p>
                         </div>
                     );
                 } else {
@@ -104,7 +106,7 @@ class SearchHeader extends BaseComponent {
                 return (
                     <div className="search-button"
                          onClick={this.handelSearch}>
-                        <p style={style.searchButton}>搜索</p>
+                        <p style={style.searchButton}>{intl.get("button.search")}</p>
                     </div>
                 );
             }
@@ -128,7 +130,7 @@ class SearchHeader extends BaseComponent {
                         hintText={
                             <div>
                                 <img className="search" src={SearchIcon}/>
-                                <font>请输入你要找的歌曲或歌星</font>
+                                <font>{intl.get("search.placeholder")}</font>
                                 <img onClick={() => {
                                     linkTo("voiceSearch", false, "");
                                 }} className="voice" src={VoiceIcon}/>
@@ -150,7 +152,7 @@ class SearchHeader extends BaseComponent {
                     >
                         <div className="search-words">
                             <Subheader>
-                                <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">热门搜索</font>
+                                <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">{intl.get("search.hot")}</font>
                             </Subheader>
                             <div className="hot-words">
                                 {hotKeyWords && hotKeyWords.data.list.map((word) => (
@@ -166,9 +168,9 @@ class SearchHeader extends BaseComponent {
                                 this.state.searchHistory && (
                                     <div className="history-words-title">
                                         <Subheader style={{position: "relative"}}>
-                                            <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">最近搜索</font>
+                                            <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">{intl.get("search.recently")}</font>
                                             <div style={{top: "0", right: "5%", position: "absolute"}}
-                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}><font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#ff6832">清除搜索记录</font>
+                                                 onTouchTap={this.handelCleanSearchHistory.bind(this)}><font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#ff6832">{intl.get("search.clean")}</font>
                                             </div>
                                         </Subheader>
                                     </div>

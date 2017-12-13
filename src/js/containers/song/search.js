@@ -10,6 +10,7 @@ import SongList from "../../components/common/SongList";
 import Const from "../../utils/const";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {chkDevice} from "../../utils/comUtils";
+import intl from 'react-intl-universal';
 
 const style = {
     searchWord: {
@@ -25,7 +26,7 @@ class Search extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("搜索");
+        super.title(intl.get("title.search"));
         this.state = {
             keyword: "",
             barrageSendToast: false,
@@ -55,12 +56,11 @@ class Search extends BaseComponent {
                 <SearchHeader handelBlur={this.handelBlur} handelFocus={this.handelFocus} defaultKeyWord={keyword} getSearchKey={this.search} inputIng={!keyword}/>
                 {this.state.keyword ? <Paper style={{height: '1.2rem', position: "fixed", top: '1.2rem', width: "100%", zIndex: 1}}>
                     <Subheader style={{height: '1.2rem', display: 'flex', alignItems: 'center'}}>
-                        “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font style={style.searchWord}>的搜索结果</font>
+                        “{<font style={style.searchWord}>{this.state.keyword}</font> }” <font style={style.searchWord}>{intl.get("search.result")}</font>
                     </Subheader>
                 </Paper> : ""}
                 <div>
                     <SongList
-                        ref="SongList"
                         onPushSongSuccess={this.onPushSongSuccess}
                         onPushSongFail={this.onPushSongFail}
                         paddingTop="2.4rem"
@@ -100,7 +100,7 @@ class Search extends BaseComponent {
         const {nameNorm} = song;
         this.setState({
             barrageSendToast: true,
-            barrageToastMsg: nameNorm + " 点歌成功"
+            barrageToastMsg: nameNorm + " " + intl.get("song.add.success")
         });
     }
 

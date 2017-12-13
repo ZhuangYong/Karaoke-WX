@@ -27,6 +27,7 @@ import {Checkbox, CircularProgress, ListItem, RaisedButton, RefreshIndicator, Su
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import ActionCheck from 'material-ui/svg-icons/action/check-circle';
 import Const from "../../utils/const";
+import intl from 'react-intl-universal';
 
 const styles = {
     itemBox: {
@@ -87,7 +88,7 @@ const PAY_RESULT_FAIL = "PAY_RESULT_FAIL";
 class Pay extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("支付");
+        super.title(intl.get("title.pay"));
         const matchParams = {
             state: getQueryString("state") || "",
             pollingId: getQueryString("pollingId") || "",
@@ -141,13 +142,13 @@ class Pay extends BaseComponent {
         const actions = [
             <FlatButton
                 className="cancel-button"
-                label="以后再说"
+                label={intl.get("msg.not.now")}
                 primary={true}
                 onClick={this.handleClose}
             />,
             <FlatButton
                 className="sure-button"
-                label="立即开通"
+                label={intl.get("msg.join.immediately")}
                 primary={true}
                 onClick={this.handleAction}
             />,
@@ -159,13 +160,13 @@ class Pay extends BaseComponent {
                     this.state.payResult ? <div>
                         {
                             this.state.payResult === PAY_RESULT_SUCCESS ? <div>
-                                <h2 style={styles.payResult.title}>恭喜你成功支付！</h2>
+                                <h2 style={styles.payResult.title}>{intl.get("msg.congratulations.pay.success")}</h2>
                                 <p style={styles.payResult.subTitle}>{payListActiveItem && payListActiveItem.productName}</p>
 
                                 <RaisedButton
                                     backgroundColor="#ff6832"
                                     buttonStyle={styles.submitButton}
-                                    label="确认"
+                                    label={intl.get("button.make.sure")}
                                     labelStyle={styles.submitButton.label}
                                     labelColor="white"
                                     onClick={() => {
@@ -179,13 +180,13 @@ class Pay extends BaseComponent {
                                         }
                                     }}/>
                             </div> : <div>
-                                <h2 style={styles.payResult.title}>呜~支付失败！</h2>
-                                <p style={styles.payResult.subTitle}>不甘心，再试一次</p>
+                                <h2 style={styles.payResult.title}>{intl.get("msg.woo.pay.fail")}</h2>
+                                <p style={styles.payResult.subTitle}>{intl.get("Unwilling, try again")}</p>
 
                                 <RaisedButton
                                     backgroundColor="#ff6832"
                                     buttonStyle={styles.submitButton}
-                                    label="确认"
+                                    label={intl.get("button.sure")}
                                     labelStyle={styles.submitButton.label}
                                     labelColor="white"
                                     onClick={() => {
@@ -200,7 +201,7 @@ class Pay extends BaseComponent {
                             <section>
                                 {
                                     this.state.payType !== Const.PAY_TYPE_GONG_XIANG ? <header style={styles.itemBox}>
-                                        <div style={styles.itemLeft}>VIP会员套餐</div>
+                                        <div style={styles.itemLeft}>{intl.get("pay.vip.package")}</div>
                                     </header> : ""
                                 }
 
@@ -229,10 +230,10 @@ class Pay extends BaseComponent {
                                                     <div style={{marginLeft: '2.2rem', marginTop: '.4rem', overflow: 'visible'}}>
                                                         <p style={{margin: '.38rem 0', color: 'red', fontSize: '.32rem'}}>
                                                             {
-                                                                item.discountType === Const.DISCOUNT_TYPE_TIME ? `赠送${item.discountValue}分钟` : ``
+                                                                item.discountType === Const.DISCOUNT_TYPE_TIME ? intl.get("pay.handsel.time", {minute: item.discountValue}) : ``
                                                             }
                                                             {
-                                                                item.discountType === Const.DISCOUNT_TYPE_MONEY ? `立减${item.discountValue}元` : ``
+                                                                item.discountType === Const.DISCOUNT_TYPE_MONEY ? intl.get("pay.discount.money", {discount: item.discountValue}) : ``
                                                             }
                                                             {(item.discountType !== Const.DISCOUNT_TYPE_TIME && item.discountType !== Const.DISCOUNT_TYPE_MONEY) && item.description}
                                                         </p>
@@ -270,7 +271,7 @@ class Pay extends BaseComponent {
                                 </ul>
 
                                 {
-                                    this.state.payType === Const.PAY_TYPE_GONG_XIANG ? <Subheader inset={true} style={{paddingLeft: '1.067rem', marginBottom: '1rem', textAlign: 'left', fontSize: '.32rem', color: '#002222'}}>购买时长越多越优惠，马上支付开始欢唱吧！</Subheader> : ""
+                                    this.state.payType === Const.PAY_TYPE_GONG_XIANG ? <Subheader inset={true} style={{paddingLeft: '1.067rem', marginBottom: '1rem', textAlign: 'left', fontSize: '.32rem', color: '#002222'}}>{intl.get("pay.more.pay.more.discount.pay.and.sing")}</Subheader> : ""
                                 }
                                 <ListItem
                                     primaryText={
@@ -282,9 +283,9 @@ class Pay extends BaseComponent {
                                         </span>
 
                                         <a style={{color: isCheckboxChecked ? '#ff6832' : 'gray', fontSize: '.4rem', textDecoration: 'underline'}}>
-                                            同意 <font onTouchTap={() => {
+                                            {intl.get("pay.agree")} <font onTouchTap={() => {
                                             linkTo(`protocol`, false, null);
-                                        }}>《金麦客支付协议》</font>
+                                        }}>{intl.get("pay.payment.agreement")}</font>
                                         </a>
                                     </span>
 
@@ -307,7 +308,7 @@ class Pay extends BaseComponent {
                                     textAlign: "center",
                                     color: "#252525",
                                     fontSize: "14px"
-                                }}>支付金额: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price}元</span></div>}
+                                }}>{intl.get("pay.payment.amount")}: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price} {intl.get("pay.yuan")}</span></div>}
                                 disabled={disableSubmitButton || (!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null))}
                                 icon={
                                     disableSubmitButton ? <CircularProgress size={18} thickness={1} /> : null
@@ -315,7 +316,7 @@ class Pay extends BaseComponent {
                                 raisedButtonStyles={{
                                     bottom: 0
                                 }}
-                                buttonLabel= "确认支付"
+                                buttonLabel= {intl.get("button.sure.pay")}
                                 touchTap={this.pay}
                             />
                         </div>) : this.state.buttonPage}
@@ -332,7 +333,7 @@ class Pay extends BaseComponent {
                                 open={this.state.openDialog}
                                 onRequestClose={this.handleClose}
                             >
-                                确定开通金麦客VIP体验权
+                                {intl.get("msg.sure.join.vip")}
                             </Dialog>
                         </div>
                     </div>
@@ -350,11 +351,11 @@ class Pay extends BaseComponent {
         this.props.deviceRegisterAction(params, reqHeader(params), (res) => {
             const {status} = res;
             if (status === 1) {
-                actionSetGlobAlert("成功开通");
+                actionSetGlobAlert(intl.get("msg.join.success"));
 
                 getUserInfoAction({}, reqHeader({}));
             } else {
-                actionSetGlobAlert("开通失败");
+                actionSetGlobAlert(intl.get("msg.join.fail"));
             }
             window.history.back();
         });
@@ -418,7 +419,7 @@ class Pay extends BaseComponent {
                             payResult: PAY_RESULT_SUCCESS
                         });
                     } else {
-                        actionSetGlobAlert("支付成功");
+                        actionSetGlobAlert(intl.get("msg.pay.success"));
                         if (matchParams.openid !== "") {
                             setTimeout(() => {
                                 window.WeixinJSBridge.call('closeWindow');
@@ -431,7 +432,7 @@ class Pay extends BaseComponent {
                     }
                 },
                 cancel: (res) => {
-                    actionSetGlobAlert("取消支付");
+                    actionSetGlobAlert(intl.get("msg.pay.cancel"));
                     if (matchParams.openid !== "") {
                         setTimeout(() => {
                             window.WeixinJSBridge.call('closeWindow');
@@ -515,8 +516,8 @@ class Pay extends BaseComponent {
                     payResult: this.state.payType === Const.PAY_TYPE_GONG_XIANG ? PAY_RESULT_SUCCESS : "",
                     buttonPage: <ButtonPage
                         src={PaySuccessIcon}
-                        content="充值成功"
-                        buttonLabel="关闭"
+                        content={intl.get("msg.recharge.success")}
+                        buttonLabel={intl.get("button.close")}
                         touchTap={() => {
                             window.AlipayJSBridge.call('closeWebview');
                         }}/>
@@ -527,8 +528,8 @@ class Pay extends BaseComponent {
                     payResult: this.state.payType === Const.PAY_TYPE_GONG_XIANG ? PAY_RESULT_FAIL : "",
                     buttonPage: <ButtonPage
                         src={PayFailedIcon}
-                        content="充值失败，请重新充值"
-                        buttonLabel="关闭"
+                        content={intl.get("msg.recharge.fail.recharge")}
+                        buttonLabel={intl.get("button.close")}
                         touchTap={() => {
                             window.AlipayJSBridge.call('closeWebview');
                         }}/>
@@ -539,9 +540,9 @@ class Pay extends BaseComponent {
                     buttonPage: <ButtonPage
                         src={DeviceRegisterIcon}
                         imgStyle={{width: "162.5px"}}
-                        content="恭喜你获得金麦客VIP体验资格哟！"
+                        content={intl.get("msg.congratulations.vip.experience")}
                         contentStyle={{color: "#c48848"}}
-                        buttonLabel="马上体验"
+                        buttonLabel={intl.get("msg.experience.now")}
                         touchTap={() => {
                             this.setState({openDialog: true});
                         }}/>

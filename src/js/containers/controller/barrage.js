@@ -11,7 +11,6 @@ import barrageImg from "../../../img/barrage/barrage.png";
 import barrageOnImg from "../../../img/barrage/barrage_on.png";
 import emotionImg from "../../../img/barrage/emotion.png";
 import emotionOnImg from "../../../img/barrage/emotion_on.png";
-import Input from "../../components/common/Input";
 import {push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import {chkDevice, dynaPush, reqHeader} from "../../utils/comUtils";
@@ -20,29 +19,12 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import * as ReactDOM from "react-dom";
 import Const from "../../utils/const";
+import intl from 'react-intl-universal';
 
-const fastWords = [
-    {value: "女神，唱得太好了，请收下我的飞吻！"},
-    {value: "秋名山上路人稀，常有麦霸较高低"},
-    {value: "好冷，能给点激情吗？"},
-    {value: "帅锅，我想做你的菜~~"},
-    {value: "妹子，可否邀你共唱一曲...嘿嘿嘿"},
-    {value: "女神女神我爱你，就像老鼠爱大米"},
-    {value: "简直帅到无法形容。"},
-    {value: "来，让我们嗨唱到天亮"},
-    {value: "此音只应天上有，唱到迷人无处求。"},
-    {value: "666~~~"},
-    {value: "男神~唱得太好啦！我想和你一起唱"},
-    {value: "一白遮百丑，一首顶两首。"},
-    {value: "狮吼功重现江湖~快闪开"},
-    {value: "欧巴~欧巴 请收下我的膝盖"},
-    {value: "来来来，唱完这首还有三首。"},
-    {value: "我的王妃，我要霸占你的美！"},
-    {value: "女神再来一首，今天不醉不归"},
-    {value: "老司机，带带我，带我卖萌带我飞。"},
-    {value: "哇塞！唱得太好听了"},
-    {value: "有麦必抢，唱成歌王。"}
-];
+let fastWords = [];
+for (let i = 1; i < 21; i++) {
+    fastWords.push({value: intl.get("barrage." + i)});
+}
 const emotionIcons = [
     {id: 1, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/5ff4726f5eed439f119a39920af02f65.png"},
     {id: 2, name: "表情名字", url: "http://file.jmake.cp57.ott.cibntv.net/pic/10.png"},
@@ -139,7 +121,7 @@ class Barrage extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("弹幕");
+        super.title(intl.get("title.barrage"));
         this.state = {
             tabIndex: 0,
             inputIng: false,
@@ -148,7 +130,7 @@ class Barrage extends BaseComponent {
             inputImage: "",
             sendBarrageIng: false,
             barrageSendToast: false,
-            barrageToastMsg: "发送成功"
+            barrageToastMsg: intl.get("msg.send.success")
         };
         this.onBlur = this.onBlur.bind(this);
         this.onFocus = this.onFocus.bind(this);
@@ -197,7 +179,7 @@ class Barrage extends BaseComponent {
                         inputImage ? <img src={inputImage} alt="" style={{height: "90%", maxWidth: "100%"}} /> : <TextField
                             className={"barrage-input"}
                             ref="input"
-                            hintText={`说点儿什么...`}
+                            hintText={intl.get("barrage.say.something")}
                             hintStyle={{top: 0, padding: '.3rem .6rem'}}
                             textareaStyle={{width: '94%'}}
                             multiLine={true}
@@ -242,7 +224,7 @@ class Barrage extends BaseComponent {
                                 ...style.tabs.tab.label,
                                 color: this.state.tabIndex === 0 ? "white" : "#9a9a9a"
                             }}>
-                                <img src={tabIcon[0]} style={style.tabs.tab.label.img}/>快速弹幕
+                                <img src={tabIcon[0]} style={style.tabs.tab.label.img}/>{intl.get("barrage.quick")}
                             </div>
                         }>
                         {
@@ -260,7 +242,7 @@ class Barrage extends BaseComponent {
                                 color: this.state.tabIndex === 1 ? "white" : "#9a9a9a"
                             }}>
                                 <img src={tabIcon[1]}
-                                     style={style.tabs.tab.label.img}/>表情
+                                     style={style.tabs.tab.label.img}/>{intl.get("barrage.sticker")}
                             </div>
                         }>
                         <SwipeableViews onChangeIndex={(index) => {
@@ -353,18 +335,18 @@ class Barrage extends BaseComponent {
             if (sendBarrageIng) {
                 return <div style={style.bottomPanel.submitButtonOn}>
                     <CircularProgress size={20} thickness={1} color={"white"} style={{right: 6}}/>
-                    <font>发送中</font>
+                    <font>{intl.get("sending")}</font>
                 </div>;
             } else {
                 return <div style={style.bottomPanel.submitButtonOn} onClick={() => {
                     this.sendBarrage();
                 }}>
-                    发送
+                    {intl.get("button.send")}
                 </div>;
             }
         } else {
             return <div style={style.bottomPanel.submitButton}>
-                发送
+                {intl.get("button.send")}
             </div>;
         }
     }
@@ -427,7 +409,7 @@ class Barrage extends BaseComponent {
                     inputValue: "",
                     sendBarrageIng: false
                 });
-                this.props.action_setGlobAlert("发送成功", "");
+                this.props.action_setGlobAlert(intl.get("msg.send.success"), "");
             };
             const fail = (msg) => {
                 this.setState({
@@ -472,7 +454,7 @@ class Barrage extends BaseComponent {
         if (value.length >= 50) {
             this.setState({
                 barrageSendToast: true,
-                barrageToastMsg: "最多只能输入50个字符"
+                barrageToastMsg: intl.get("msg.not.more.than", {number: 50})
             });
             value = value.substr(0, 50);
         }

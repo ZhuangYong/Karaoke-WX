@@ -4,6 +4,7 @@ import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {bindDevice, getUserConfig, getUserInfo} from "../actions/userActions";
 import {
+    getLocalesData,
     getUserInfoFromSession, setCommonInfo, setGlobAlert, setLocalNet, setWeixinConfigFinished,
     updateScreen
 } from "../actions/common/actions";
@@ -12,7 +13,7 @@ import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import {
     chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo, wxShare,
-    wxAuthorizedUrl, isGetUserInfo, formatTime
+    wxAuthorizedUrl, isGetUserInfo, formatTime, setCookie
 } from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
@@ -22,12 +23,47 @@ import sysConfig from "../utils/sysConfig";
 import Const from "../utils/const";
 import TimeIcon from "../../img/common/icon_time.png";
 import BaseComponent from "./common/BaseComponent";
-
+import intl from 'react-intl-universal';
+import _ from "lodash";
 import Routers from '../router';
+import {cryptoFetch} from "../utils/fetchUtils";
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
-let firstConfigUrl = "";
+const SUPPOER_LOCALES = [
+    {
+        name: "English",
+        value: "en-US"
+    },
+    {
+        name: "简体中文",
+        value: "zh-CN"
+    },
+    {
+        name: "繁體中文",
+        value: "zh-TW"
+    },
+    {
+        name: "繁體中文",
+        value: "zh-HK"
+    },
+    {
+        name: "English",
+        value: "EN"
+    },
+    {
+        name: "简体中文",
+        value: "CN"
+    },
+    {
+        name: "繁體中文",
+        value: "HK"
+    },
+    {
+        name: "繁體中文",
+        value: "TW"
+    },
+];
 const style = {
     gxTimePanel: {
         position: 'fixed',
@@ -87,12 +123,14 @@ class App extends BaseComponent {
         this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
         this.gxTimer = this.gxTimer.bind(this);
         this.configWxPath = this.configWxPath.bind(this);
+        this.loadLocales = this.loadLocales.bind(this);
     }
 
     componentWillMount() {
     }
 
     componentDidMount() {
+        this.loadLocales();
         if (isGetUserInfo()) {
             this.updateUserInfo();
         } else {
@@ -548,6 +586,28 @@ class App extends BaseComponent {
             }
         }
     }
+
+    loadLocales() {
+        let currentLocale = intl.determineLocale({
+            urlLocaleKey: "language",
+            cookieLocaleKey: "language"
+        });
+        if (!_.find(SUPPOER_LOCALES, { value: currentLocale })) {
+            currentLocale = "zh-CN";
+        }
+        currentLocale && setCookie("language", currentLocale, 365);
+        this.props.action_getLocalesData(currentLocale, res => {
+            this.setState({ initDone: true });
+            return intl.init({
+                currentLocale,
+                locales: {
+                    [currentLocale]: res
+                }
+            });
+        }, err => {
+            this.setState({ initDone: true });
+        });
+    }
 }
 
 // 映射state到props
@@ -574,7 +634,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
         action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch),
         action_bindDevice: bindActionCreators(bindDevice, dispatch),
-        action_setCommonInfo: bindActionCreators(setCommonInfo, dispatch)
+        action_setCommonInfo: bindActionCreators(setCommonInfo, dispatch),
+        action_getLocalesData: bindActionCreators(getLocalesData, dispatch)
     };
 };
 

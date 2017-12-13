@@ -22,6 +22,8 @@ import SongItem from "../../components/common/SongItem";
 import Const from "../../utils/const";
 import MallImg from "../../../img/mall/home.png";
 import sysConfig from "../../utils/sysConfig";
+import intl from 'react-intl-universal';
+
 const style = {
     home: {
         paddingTop: "1.2rem",
@@ -115,7 +117,7 @@ const defaultGetRankingData = defaultGetAlbumRecommendData;
 class Home extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("主页");
+        super.title(intl.get("title.home"));
         this.state = {
             defaultBack: '/',
             showMsg: false,
@@ -181,19 +183,19 @@ class Home extends BaseComponent {
                                 linkTo("catAlbum", false, null);
                             }}>
                                 <img src={IconCate} style={style.topNav.img}/>
-                                <p style={style.topNav.label}>分类</p>
+                                <p style={style.topNav.label}>{intl.get("index.category")}</p>
                             </span>
                             <span style={style.topNav.item} onClick={() => {
                                 linkTo("singer/album", false, null);
                             }}>
                                 <img src={IconSinger} style={style.topNav.img}/>
-                                <p style={style.topNav.label}>歌星</p>
+                                <p style={style.topNav.label}>{intl.get("index.artists")}</p>
                             </span>
                             <span style={style.topNav.item} onClick={() => {
-                                linkTo(`songs/hotId/48/热歌/`, false, null);
+                                linkTo(`songs/hotId/48/${intl.get("index.trending")}/`, false, null);
                             }}>
                                 <img src={IconHotSong} style={style.topNav.img}/>
-                                <p style={style.topNav.label}>热歌</p>
+                                <p style={style.topNav.label}>{intl.get("index.trending")}</p>
                             </span>
                         </div>
                     </Paper>
@@ -205,7 +207,7 @@ class Home extends BaseComponent {
                         <CardTitle
                             style={{padding: "0 8px", height: '1.467rem'}}
                             titleStyle={{fontSize: '.453rem', paddingTop: '.22rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
-                            title="精选推荐"/>
+                            title={intl.get("index.recommend")}/>
                         <div className="home-recommend" style={{width: "100%", overflowX: "visible", overflowY: "hidden", position: "absolute"}}>
                             {getAlbumRecommendData.data.result.map((recommend) => (
                                 <GridTile
@@ -239,7 +241,7 @@ class Home extends BaseComponent {
                         <CardTitle
                             style={{padding: "0 8px", height: '1.467rem'}}
                             titleStyle={{fontSize: '.453rem', paddingTop: '.22rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
-                            title="经典排行"
+                            title={intl.get("index.rank")}
                         />
                         <div className="home-rank" style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
                             {getRankingData.data.result.map((rank) => (
@@ -276,7 +278,7 @@ class Home extends BaseComponent {
                         <CardTitle
                             style={{padding: "0 8px"}}
                             titleStyle={{fontSize: '.453rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
-                            title="个性化推荐"
+                            title={intl.get("index.personalize.recommend")}
                         />
                         <List className="song-list">
                             {this.getRecommendSongsContent()}
@@ -285,15 +287,15 @@ class Home extends BaseComponent {
 
                         <div className="loading-bottom">
                             <div>
-                                <svg className="rotate" viewBox="0 0 40 40" style={{opacity: loading ? 1 : 0, ...style.loadingRotate}}>
+                                <svg className="rotate" viewBox="0 0 40 40" style={{display: loading ? "" : "none", ...style.loadingRotate}}>
                                     <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20" style={style.loadingRotate.loadingCircle}/>
                                 </svg>
                                 <span>
                                     {
-                                        loading ? "正在加载" : ""
+                                        loading ? intl.get("song.loading") : ""
                                     }
                                     {
-                                        (!offLine && lastPage) ? "亲爱滴，已经到底了" : ""
+                                        (!offLine && lastPage) ? intl.get("song.list.end") : ""
                                     }
                                     {
                                         (offLine && !loading) ? Const.STRING_NO_WIFI : ""
@@ -403,7 +405,7 @@ class Home extends BaseComponent {
         const {nameNorm} = song;
         this.setState({
             barrageSendToast: true,
-            barrageToastMsg: nameNorm + " 点歌成功"
+            barrageToastMsg: nameNorm + " " + intl.get("song.add.success")
         });
     }
 

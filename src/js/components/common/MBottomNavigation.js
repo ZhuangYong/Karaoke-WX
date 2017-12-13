@@ -13,9 +13,9 @@ import navIndexIcon from "../../../img/common/nav_index.png";
 import navIndexOnIcon from "../../../img/common/nav_index_on.png";
 import navMeIcon from "../../../img/common/nav_me.png";
 import navMeOnIcon from "../../../img/common/nav_me_on.png";
-import navControllerGifIcon from "../../../img/common/nav_controll_gif.png";
 import navControllerIcon from "../../../img/common/nav_controll.png";
 import Const from "../../utils/const";
+import intl from 'react-intl-universal';
 
 const style = {
     nav: {
@@ -107,7 +107,7 @@ class MBottomNavigation extends BaseComponent {
                 >
                     <BottomNavigationItem
                         style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
-                        label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>主页</div>}
+                        label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>{intl.get("nav.index")}</div>}
                         icon={
                             <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <img style={{height: ".667rem", width: '.62rem'}} src={indexIcon}/>
@@ -117,7 +117,7 @@ class MBottomNavigation extends BaseComponent {
                     />
                     <BottomNavigationItem
                         style={{...style.nav.playController, maxWidth: '100%'}}
-                        label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>播控</div>}
+                        label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>{intl.get("nav.controller")}</div>}
                         icon={
                             <div style={style.nav.playController.circle}>
                                 <div style={style.nav.playController.circle.arc}/>
@@ -130,7 +130,7 @@ class MBottomNavigation extends BaseComponent {
                     />
                     <BottomNavigationItem
                         style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
-                        label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>我的</div>}
+                        label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>{intl.get("nav.my")}</div>}
                         icon={
                             <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <img style={{height: ".667rem", width: ".667rem"}} src={meIcon}/>

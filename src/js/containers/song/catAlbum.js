@@ -12,6 +12,7 @@ import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
 import GradeList from "../../components/common/GradeList";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
+import intl from 'react-intl-universal';
 
 const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
 const defaultData = [
@@ -31,7 +32,7 @@ class CatAlbum extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("分类");
+        super.title(intl.get("title.categories"));
         this.state = {};
     }
 
@@ -45,7 +46,7 @@ class CatAlbum extends BaseComponent {
     }
 
     render() {
-        const getCatAlbum = this.props.songs.getCatAlbum || {data: {result: [{name: "主题", data: defaultData}]}};
+        const getCatAlbum = this.props.songs.getCatAlbum || {data: {result: [{name: intl.get("topic"), data: defaultData}]}};
         return (
             <Paper zDepth={0} style={{paddingTop: '1.2rem'}}>
                 <SearchHeadFake/>
@@ -53,7 +54,7 @@ class CatAlbum extends BaseComponent {
                     getCatAlbum.data.result.map((cats) => {
                         const name = cats.name;
                         const catArr = cats.data;
-                        if (name === "主题") {
+                        if (name === intl.get("topic")) {
                             return (
                                 <Paper key={name} zDepth={0} style={{paddingBottom: 66}}>
                                     <GradeList

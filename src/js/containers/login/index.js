@@ -11,11 +11,13 @@ import {OTTLogin} from "../../actions/userActions";
 import {reqHeader} from "../../utils/comUtils";
 import ButtonPage from "../../components/common/ButtonPage";
 import {setGlobAlert} from "../../actions/common/actions";
+import intl from 'react-intl-universal';
+
 
 class Login extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("登录");
+        super.title(intl.get("title.login"));
         this.state = {
             matchParams: this.props.match.params
         };
@@ -37,13 +39,13 @@ class Login extends BaseComponent {
             disabled={typeof this.state.matchParams.uuid === "undefined"}
             content={this.matchPages()}
             imgStyle={{width: "180px"}}
-            buttonLabel="确认登录"
+            buttonLabel={intl.get("login.sure.login")}
             hideButton={this.state.matchParams.state !== "home"}
             touchTap={() => {
 
                 const {isWeixin} = window.sysInfo;
                 if (!isWeixin) {
-                    this.props.action_setGlobAlert("请在微信客户端操作");
+                    this.props.action_setGlobAlert(intl.get("msg.operate.in.we.chat"));
                     return;
                 }
 
@@ -71,16 +73,16 @@ class Login extends BaseComponent {
         let text = "";
         switch (params.state) {
             case "home":
-                text = "微信授权金麦客登录确认";
+                text = intl.get("msg.we.chat.authorization.j-make.login.confirmation");
                 break;
             case "success":
-                text = "恭喜您，登录成功";
+                text = intl.get("msg.congratulations.login.successfully");
                 break;
             case "failed":
-                text = "您的登录出现了问题";
+                text = intl.get("msg.login.error");
                 break;
             case "invalid":
-                text = "扫描二维码已失效";
+                text = intl.get("msg.scan.qr.code.expired");
                 break;
             default:
                 navUtils.replace("/*");

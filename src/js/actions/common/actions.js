@@ -1,11 +1,37 @@
 import ActionTypes from '../actionTypes';
 import apiUrl from "../apiUrl";
 import {comFetch} from "../../utils/fetchUtils";
+import sysConfig from "../../utils/sysConfig";
 
 export function updateScreen() {
     return {
         type: ActionTypes.COMMON.COMMON_UPDATE_SCREEN,
         info: 'update screen w, h'
+    };
+}
+
+export function getLocalesData(language, callback, failBack) {
+    switch (language) {
+        case 'EN':
+            language = 'en-US';
+            break;
+        case 'TW':
+        case 'HK':
+            language = 'zh-TW';
+            break;
+        case 'CN':
+            language = 'zh-CN';
+            break;
+        default:
+            break;
+    }
+    const url = apiUrl.API_GET_LOCAL_LANGUAGE + language + ".json";
+    return (dispatch) => {
+        comFetch(dispatch, {}, {
+            url: url,
+            type: "get",
+            action: ActionTypes.COMMON.COMMON_GET_LOCAL_DATA
+        }, callback, failBack);
     };
 }
 
