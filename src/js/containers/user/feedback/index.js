@@ -21,6 +21,7 @@ import navUtils from "../../../utils/navUtils";
 import ButtonPage from "../../../components/common/ButtonPage";
 import {setGlobAlert} from "../../../actions/common/actions";
 import ActionTypes from "../../../actions/actionTypes";
+import intl from 'react-intl-universal';
 
 const styles = {
     sectionHeader: {
@@ -97,7 +98,7 @@ const addBtn = {
 class Feedback extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("意见反馈");
+        super.title(intl.get("title.feedback"));
 
         this.state = {
             matchParams: this.props.match.params,
@@ -152,7 +153,7 @@ class Feedback extends BaseComponent {
                         <header>
                             <div
                                 style={styles.sectionHeader}
-                            >问题类型</div>
+                            >{intl.get("feedback.problem.type")}</div>
                         </header>
 
                         <GridList

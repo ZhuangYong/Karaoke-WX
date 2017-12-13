@@ -13,6 +13,7 @@
     "title.categories": "Categories",
     "title.search": "Search",
     "title.artists": "Artists",
+    "title.feedback": "Feedback",
     "button.sure": "OK",
     "button.cancel": "Cancel",
     "button.search": "Search",
@@ -63,6 +64,7 @@
     "controller.tab.play.controller": "play control",
     "controller.tab.selected.list": "Selected List",
     "controller.tab.history": "History",
+    "feedback.problem.type": "Problem type",
     "barrage": "Barrage",
     "barrage.quick": "Quick barrage",
     "barrage.sticker": "Sticker",
@@ -90,6 +92,7 @@
 
     "sending": "Sending",
     "topic": "Topic",
+    "hot": "Hot",
 
     "msg.deleting": "deleting",
     "msg.delete.success": "Delete success",

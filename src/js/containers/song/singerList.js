@@ -16,6 +16,7 @@ import {setSingerList} from "../../actions/common/actions";
 import NoResult from "../../components/common/NoResult";
 import NoWifi from "../../components/common/NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
+import intl from 'react-intl-universal';
 
 const style = {
     commonSingerList: {
@@ -193,7 +194,7 @@ class SingerList extends BaseComponent {
                             justifyContent: 'center',
                             alignItems: 'center'}} onTouchTap={this.handleHotPanel}>
                             {
-                                keyWord || "热门"
+                                keyWord || intl.get("hot")
                             }
 
                             <div style={style.hotFilter.icon}>
@@ -256,10 +257,10 @@ class SingerList extends BaseComponent {
                                     </svg>
                                     <span>
                                         {
-                                            loading ? "正在加载" : ""
+                                            loading ? intl.get("song.loading") : ""
                                         }
                                         {
-                                            (!offLine && lastPage) ? "亲爱滴，已经到底了" : ""
+                                            (!offLine && lastPage) ? intl.get("song.list.end") : ""
                                         }
                                         {
                                             (offLine && !showNoWifi && !loading) ? Const.STRING_NO_WIFI : ""
@@ -363,12 +364,12 @@ class SingerList extends BaseComponent {
         const {keyWord} = this.state;
         let keyStr = [];
         keyStr.push(
-            keyWord === '' ? <p className="active" key={'热门'}>
-                {<font style={{fontSize: '.4rem'}}>热门</font>}
+            keyWord === '' ? <p className="active" key={intl.get("hot")}>
+                {<font style={{fontSize: '.4rem'}}>{intl.get("hot")}</font>}
             </p> : <p onClick={() => {
                 this.chooseKey('');
-            }} key={'热门'}>
-                {<font style={{fontSize: '.4rem'}}>热门</font>}
+            }} key={intl.get("hot")}>
+                {<font style={{fontSize: '.4rem'}}>{intl.get("hot")}</font>}
             </p>
         );
         for (let key of keys) {

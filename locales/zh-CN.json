@@ -13,6 +13,7 @@
     "title.categories": "分类",
     "title.search": "搜索",
     "title.artists": "歌星",
+    "title.feedback": "意见反馈",
     "button.sure": "确定",
     "button.cancel": "取消",
     "button.search": "搜索",
@@ -63,6 +64,7 @@
     "controller.tab.play.controller": "播放控制",
     "controller.tab.selected.list": "已点歌曲",
     "controller.tab.history": "最近唱过",
+    "feedback.problem.type": "问题类型",
     "barrage": "弹幕",
     "barrage.quick": "快速弹幕",
     "barrage.sticker": "表情",
@@ -90,6 +92,7 @@
 
     "sending": "发送中",
     "topic": "主题",
+    "hot": "热门",
 
     "msg.deleting": "刪除中",
     "msg.delete.success": "删除成功",

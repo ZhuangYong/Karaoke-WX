@@ -7,6 +7,7 @@ import {Paper, Snackbar} from "material-ui";
 import DSongList from "../../components/common/SongList";
 import Const from "../../utils/const";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
+import intl from 'react-intl-universal';
 
 
 class SongList extends BaseComponent {
@@ -55,7 +56,7 @@ class SongList extends BaseComponent {
         const {nameNorm} = song;
         this.setState({
             barrageSendToast: true,
-            barrageToastMsg: nameNorm + " 点歌成功"
+            barrageToastMsg: nameNorm + " " + intl.get("song.add.success")
         });
     }
 
