@@ -54,7 +54,7 @@ class CatAlbum extends BaseComponent {
                     getCatAlbum.data.result.map((cats) => {
                         const name = cats.name;
                         const catArr = cats.data;
-                        if (name === intl.get("topic")) {
+                        if (name === intl.get("topic") || name === "主题") {
                             return (
                                 <Paper key={name} zDepth={0} style={{paddingBottom: 66}}>
                                     <GradeList
