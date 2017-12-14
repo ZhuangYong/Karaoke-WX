@@ -617,6 +617,7 @@ const mapStateToProps = (state, ownProps) => {
         globAlert: state.app.common.globAlert,
         alertData: state.app.common.alertData,
         commonInfo: state.app.common.commonInfo,
+        language: state.app.common.language,
         localNetIsWork: state.app.common.localNetIsWork,
         ottInfo: state.app.device.ottInfo,
         audioInfo: state.app.audio.audioInfo
