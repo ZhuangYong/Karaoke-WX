@@ -137,7 +137,7 @@ class App extends BaseComponent {
             window.noUserInfo = true;
         }
         this.runCheckLocal();
-        this.removeAppLoading();
+        //this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
         window.addEventListener('focus', () => {this.updateUserInfo();});
         this.props.action_updateScreen();
@@ -210,7 +210,7 @@ class App extends BaseComponent {
         }
         const validUserStatusDialog = this.validUserStatusDialog();
         return (
-            <div>
+            this.state.initDone ? <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
                     <div className={`${this.state.showDialog ? "show-alert" : ""}`}>
                     <Routers/>
@@ -261,7 +261,7 @@ class App extends BaseComponent {
                         }
                     </div>
                 </MuiThemeProvider>
-            </div>
+            </div> : <div/>
         );
     }
 
@@ -597,14 +597,16 @@ class App extends BaseComponent {
         }
         currentLocale && setCookie("language", currentLocale);
         this.props.action_getLocalesData(currentLocale, res => {
-            this.setState({ initDone: true });
-            return intl.init({
+            intl.init({
                 currentLocale,
                 locales: {
                     [currentLocale]: res
                 }
             });
+            this.removeAppLoading();
+            this.setState({ initDone: true });
         }, err => {
+            this.removeAppLoading();
             this.setState({ initDone: true });
         });
     }
