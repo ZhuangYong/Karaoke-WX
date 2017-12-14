@@ -7,6 +7,7 @@ import navUtils from "../../utils/navUtils";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import ActionTypes from "../../actions/actionTypes";
+import intl from "react-intl-universal";
 
 export default class BaseComponent extends Component {
 
@@ -54,7 +55,7 @@ export default class BaseComponent extends Component {
         };
         if (typeof isBindDevice === 'string') {
             actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
-            return '正在获取用户信息';
+            return intl.get("getting.user.info");
         } else if (isBindDevice === false) {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return false;
@@ -125,7 +126,7 @@ export default class BaseComponent extends Component {
             // 是否可以免费激活1（可以）0（不可以）
             return isFreeActivation === 1;
         }
-        return '正在获取用户信息';
+        return intl.get("getting.user.info");
     }
 
     /**
@@ -137,22 +138,22 @@ export default class BaseComponent extends Component {
         const {status, msg, data} = userInfoData || {};
         if (typeof status !== 'undefined') {
             if (status === -100) {
-                return '请使用微信操作';
+                return intl.get("user.we.chat.operate");
             } else if (status === 1) {
                 const {isReDevice, bindExpireTime} = data;
                 //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
                 if (isReDevice === 3) {
-                    return "设备绑定过期,请重新绑定";
+                    return intl.get("bind.expired.re.bind");
                 } else if (isReDevice === 2) {
-                    return "未绑定设备";
+                    return intl.get("unbind.device");
                 } else {
                     return true;
                 }
             } else {
-                return msg || '获取用户信息失败，请稍后重试！';
+                return msg || intl.get("get.user.info.fail.try.again");
             }
         }
-        return '正在获取用户信息';
+        return intl.get("getting.user.info");
     }
 
     /**
@@ -167,7 +168,7 @@ export default class BaseComponent extends Component {
             // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
             return vipStatus === 1 && new Date().getTime() < expireTime ;
         }
-        return '正在获取用户信息';
+        return intl.get("getting.user.info");
     }
 
     /**
@@ -186,6 +187,6 @@ export default class BaseComponent extends Component {
                 return '0';
             }
         }
-        return '正在获取用户信息';
+        return intl.get("getting.user.info");
     }
 }

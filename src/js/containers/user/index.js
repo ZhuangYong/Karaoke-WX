@@ -25,6 +25,7 @@ import defaultAvatar from "../../../img/default_avatar.png";
 import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
 import MallImg from "../../../img/mall/me.png";
 import sysConfig from "../../utils/sysConfig";
+import intl from 'react-intl-universal';
 
 const styles = {
     headerImg: {
@@ -65,7 +66,7 @@ class UserIndex extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("我的");
+        super.title(intl.get("title.my"));
 
         this.state = {
             userInfoData: {},
@@ -118,8 +119,8 @@ class UserIndex extends BaseComponent {
         const recordsList = this.state.recordsListData;
         const recordsListTotalCounts = this.state.recordsListTotalCounts;
         let bindDeviceStatus = parseInt(data.isReDevice, 10);
-        if (bindDeviceStatus === 3) bindDeviceStatus = "绑定过期";
-        if (bindDeviceStatus === 2) bindDeviceStatus = "未绑定";
+        if (bindDeviceStatus === 3) bindDeviceStatus = intl.get("device.bind.expired");
+        if (bindDeviceStatus === 2) bindDeviceStatus = intl.get("device.disconnected");
         return (
             <div>
                 <section>
@@ -152,7 +153,7 @@ class UserIndex extends BaseComponent {
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30),
                                 color: "#fff"
-                            }}>{data.nickName || "匿名"}</div>
+                            }}>{data.nickName || intl.get("device.anonymous")}</div>
                             {
                                 typeof data.time !== 'undefined' ? this.showGxStatus(data) : this.showVIPStatus(data)
                             }
@@ -167,16 +168,16 @@ class UserIndex extends BaseComponent {
                         <GridTile
                             onTouchTap={() => {
                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
-                                actionSetGlobAlert("已绑定，开始点歌吧");
+                                actionSetGlobAlert(intl.get("device.connected.add.song"));
                             }}>
                             <img
                                 src={DeviceIcon}
                                 style={styles.headerImg}
                             />
                             <div style={styles.headerDesc}>
-                                <p style={{margin: "0"}}>绑定设备</p>
+                                <p style={{margin: "0"}}>{intl.get("device.connect")}</p>
                                 <p style={{margin: `${toRem(10)} 0 0`, fontSize: toRem(20), color: "#999"}}>
-                                    {parseInt(data.isReDevice, 10) === 1 ? "已绑定" + data.deviceId.replace(data.deviceId.slice(4, data.deviceId.length - 4), "***") : bindDeviceStatus}
+                                    {parseInt(data.isReDevice, 10) === 1 ? intl.get("device.connected") + data.deviceId.replace(data.deviceId.slice(4, data.deviceId.length - 4), "***") : bindDeviceStatus}
                                 </p>
                             </div>
                         </GridTile>
@@ -190,7 +191,7 @@ class UserIndex extends BaseComponent {
                                 src={FeedbackIcon}
                                 style={styles.headerImg}
                             />
-                            <div style={styles.headerDesc}>意见反馈</div>
+                            <div style={styles.headerDesc}>{intl.get("title.feedback")}</div>
                         </GridTile>
 
                         {
@@ -203,7 +204,7 @@ class UserIndex extends BaseComponent {
                                     src={MyOrderingsIcon}
                                     style={{...styles.headerImg, width: "auto"}}
                                 />
-                                <div style={styles.headerDesc}>我的订单</div>
+                                <div style={styles.headerDesc}>{intl.get("title.my.order")}</div>
                             </GridTile>
                         }
 
@@ -211,9 +212,7 @@ class UserIndex extends BaseComponent {
 
                 </section>
 
-                {!(data.channel === "nst_yinba") && (<section style={{
-                    paddingBottom: " 85px"
-                }}>
+                {!(data.channel === "nst_yinba") && (<section>
                     <header style={{
                         width: "100%",
                         height: "55px",
@@ -226,7 +225,7 @@ class UserIndex extends BaseComponent {
                             color: "#222",
                             fontSize: toRem(34),
                             fontWeight: "bold"
-                        }}>我的录音</div>
+                        }}>{intl.get("title.my.record")}</div>
                         <div style={{
                             float: "right",
                             marginRight: toRem(20)
@@ -235,7 +234,7 @@ class UserIndex extends BaseComponent {
                                  if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
 
                                  if (recordsListTotalCounts < 1) {
-                                     actionSetGlobAlert("暂无录音");
+                                     actionSetGlobAlert(intl.get("audio.empty"));
                                      return;
                                  }
                                  linkTo(`user/recordings`, false, null);
@@ -244,7 +243,7 @@ class UserIndex extends BaseComponent {
                                 lineHeight: toRem(110),
                                 color: "#999",
                                 fontSize: toRem(24)
-                            }}>共{recordsListTotalCounts}首</span>
+                            }}>{intl.get("audio.total", {number: recordsListTotalCounts})}</span>
 
                             <RightCircleIcon style={{
                                 position: "relative",
@@ -258,7 +257,7 @@ class UserIndex extends BaseComponent {
                     </header>
 
                     <RecordingGrid
-                        data={(recordsList && recordsList.length) ? recordsList.filter((i, index) => index < 9) : []}
+                        data={(recordsList && recordsList.length) ? recordsList.filter((i, index) => index < 3) : []}
                         operateClick={(uid) => {
                             this.setState({
                                 deleteRecordingUid: uid,
@@ -267,14 +266,14 @@ class UserIndex extends BaseComponent {
                         }}
                     />
 
-                     {/*<Paper
-                         zDepth={0}
-                         style={{margin: '.3rem .267rem 0 .267rem'}}
-                     >
-                         <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
-                     </Paper>*/}
-
                 </section>)}
+
+                <Paper
+                    zDepth={0}
+                    style={{margin: '.3rem .267rem 2.2rem .267rem'}}
+                >
+                    <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
+                </Paper>
 
                 <MBottomNavigation selectedIndex={2}/>
 
@@ -314,7 +313,7 @@ class UserIndex extends BaseComponent {
                                     });
                                 });
                             }}
-                        >删除</button>
+                        >{intl.get("button.delete")}</button>
                     ]}
                 />
             </div>
@@ -375,10 +374,10 @@ class UserIndex extends BaseComponent {
                 vipParams.content = vipParams._content();
                 break;
             case 0:
-                vipParams.content = vipParams._content("VIP已过期");
+                vipParams.content = vipParams._content(intl.get("vip.expired"));
                 break;
             case 1:
-                vipParams.content = vipParams._content(timeToYmd(data.expireTime, ".") + "到期");
+                vipParams.content = vipParams._content(timeToYmd(data.expireTime, ".") + intl.get("expired"));
                 break;
             default:
                 vipParams.content = vipParams._content();
@@ -459,9 +458,9 @@ class UserIndex extends BaseComponent {
             }}>
             {
                 !window.gxTime ? <p style={styles.gxStatusPan}>
-                    立即开唱
+                    {intl.get("song.sing.now")}
                 </p> : <p style={styles.gxStatusPan}>
-                    剩余时间：<font>{formatTime(this.state.gxTime || window.gxTime)}</font>
+                    {intl.get("song.rest.time")}：<font>{formatTime(this.state.gxTime || window.gxTime)}</font>
                 </p>
             }
 

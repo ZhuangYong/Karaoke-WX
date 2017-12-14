@@ -149,8 +149,8 @@ class App extends BaseComponent {
         this.configWxPath();
         window.wx && window.wx.ready(() => {
             wxShare({
-                title: `金麦客微信点歌`,
-                desc: "分享自金麦客家庭卡拉OK",
+                title: intl.get("index.we.chat.song"),
+                desc: intl.get("audio.share.from"),
                 link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
                 imgUrl: "http://wx.j-make.cn/img/logo.png",
                 dataUrl: null
@@ -246,13 +246,13 @@ class App extends BaseComponent {
                                     {
                                         this.state.gxTime ? <font>
                                             <p style={style.gxTimePanel.span.p}>
-                                                剩余时间
+                                                {intl.get("song.rest.time")}
                                             </p>
                                             <p style={style.gxTimePanel.span.p}>
                                                 {formatTime(this.state.gxTime)}
                                             </p>
                                         </font> : <p style={{margin: 0, fontSize: '0.32rem', lineHeight: '0.8rem'}}>
-                                            立即开唱
+                                                {intl.get("song.sing.now")}
                                         </p>
                                     }
 
@@ -309,7 +309,7 @@ class App extends BaseComponent {
         let doAction;
         switch (alertData) {
             case ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE:
-                alertStr = globAlert || '未绑定设备, 请绑定';
+                alertStr = globAlert || intl.get("device.not.bind.do.bind");
                 //TODO BIND DEVICE
                 doAction = () => {
                     window.wx && window.wx.scanQRCode({
@@ -319,7 +319,7 @@ class App extends BaseComponent {
                             let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
 
                             if (result.indexOf("/q/") <= 0) {
-                                actionSetGlobAlert && actionSetGlobAlert("无效二维码", "");
+                                actionSetGlobAlert && actionSetGlobAlert(intl.get("msg.invalid.qr.code"), "");
                                 return;
                             }
 
@@ -341,10 +341,10 @@ class App extends BaseComponent {
                                             window.location.reload(true);
                                         }
                                     });
-                                    actionSetGlobAlert("绑定成功", "");
+                                    actionSetGlobAlert(intl.get("msg.bind.success"), "");
 
                                 } else {
-                                    actionSetGlobAlert("绑定失败", "");
+                                    actionSetGlobAlert(intl.get("msg.bind.fail"), "");
                                 }
                             });
                         },
@@ -361,7 +361,7 @@ class App extends BaseComponent {
                 //linkTo("", false, "");
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL:
-                alertStr = '该操作需要授权';
+                alertStr = intl.get("msg.operate.need.auth");
                 //TODO ACTIVE
                 //linkTo("", false, "");
                 doAction = () => {
@@ -369,7 +369,7 @@ class App extends BaseComponent {
                 };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
-                alertStr = '充值成为VIP';
+                alertStr = intl.get("msg.recharge.as.vip");
                 //TODO VIP
                 doAction = () => {
                     linkTo("pay/home", false, "");
@@ -378,10 +378,10 @@ class App extends BaseComponent {
             case ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE:
                 alertStr = <div>
                     <p style={{fontWeight: 'bold'}}>
-                        欢唱结束
+                        {intl.get("msg.song.time.end")}
                     </p>
                     <p>
-                        没唱爽，继续嗨！
+                        {intl.get("msg.song.continue")}
                     </p>
                 </div>;
                 doAction = () => {
@@ -391,7 +391,7 @@ class App extends BaseComponent {
             case ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE:
                 showAlert = false;
                 setTimeout(() => {
-                    this.props.action_setGlobAlert("设备不在线", "");
+                    this.props.action_setGlobAlert(intl.get("msg.device.not.online"), "");
                 }, 100);
                 break;
             default:
@@ -411,13 +411,13 @@ class App extends BaseComponent {
         };
         const actions = [
             <FlatButton
-                label="取消"
+                label={intl.get("button.cancel")}
                 className="cancel-button"
                 primary={true}
                 onClick={handleClose}
             />,
             <FlatButton
-                label="确定"
+                label={intl.get("button.sure")}
                 className="sure-button"
                 primary={true}
                 onClick={handleSure}
@@ -595,7 +595,7 @@ class App extends BaseComponent {
         if (!_.find(SUPPOER_LOCALES, { value: currentLocale })) {
             currentLocale = "zh-CN";
         }
-        currentLocale && setCookie("language", currentLocale, 365);
+        currentLocale && setCookie("language", currentLocale);
         this.props.action_getLocalesData(currentLocale, res => {
             this.setState({ initDone: true });
             return intl.init({

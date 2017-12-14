@@ -191,22 +191,22 @@ class MBottomNavigation extends BaseComponent {
             callback && callback();
             return "";
         }
-        let leftBtnStr = '立即充值';
-        let rightBtnStr = '稍后充值';
+        let leftBtnStr = intl.get("vip.recharge.immediately");
+        let rightBtnStr = intl.get("vip.recharge.later");
         const vipTime = super.vipTime(this.props.userInfoData);
         if (typeof vipTime !== 'string') {
             if (vipTime <= 0) {
-                this.state.alertStr = '您的vip已过期，将无法点歌，为确保您的K歌体验，快去充值吧。';
+                this.state.alertStr = intl.get("vip.has.expired.go.recharge");
             } else if (vipTime > 0 && vipTime < Const.VIP_ALERT_TIME) {
-                this.state.alertStr = '您的vip即将过期，为确保您的K歌体验，快去续费吧。';
-                leftBtnStr = '立即续费';
-                rightBtnStr = '稍后续费';
+                this.state.alertStr = intl.get("vip.will.expired.go.recharge");
+                leftBtnStr = intl.get("vip.renew.now");
+                rightBtnStr = intl.get("vip.renew.later");
             } else {
                 callback && callback();
                 return "";
             }
         } else if (vipTime === '0') {
-            this.state.alertStr = '您的vip已过期，将无法点歌，为确保您的K歌体验，快去充值吧。';
+            this.state.alertStr = intl.get("vip.has.expired.go.recharge");
         } else {
             callback && callback();
             return "";

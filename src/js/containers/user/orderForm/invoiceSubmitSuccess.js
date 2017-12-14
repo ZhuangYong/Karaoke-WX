@@ -8,12 +8,13 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import ButtonPage from "../../../components/common/ButtonPage";
 import SubmitSuccessIcon from "../../../../img/submit_success.png";
+import intl from 'react-intl-universal';
 
 
 class InvoiceSubmitSuccess extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("开票");
+        super.title(intl.get("title.invoice"));
 
     }
 
@@ -28,15 +29,15 @@ class InvoiceSubmitSuccess extends BaseComponent {
                             textAlign: "center",
                             color: "#ff8632",
                             fontSize: "16px"
-                        }}>提交成功</p>
+                        }}>{intl.get("feedback.submit.success")}</p>
                         <p style={{
                             textAlign: "center",
                             color: "#807f7e",
                             fontSize: "14px"
-                        }}>我们将会在第一时间处理您的开票信息！</p>
+                        }}>{intl.get("invoice.we.will.handel.first.time")}</p>
                     </div>}
                     imgStyle={{width: "100px"}}
-                    buttonLabel="关闭"
+                    buttonLabel={intl.get("button.close")}
                     touchTap={this.closePage}
                 />
             </div>

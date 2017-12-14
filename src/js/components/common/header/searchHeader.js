@@ -5,7 +5,7 @@ import "../../../../sass/common/searchHeader.scss";
 import {Chip, List, ListItem, Subheader} from "material-ui";
 import {getHotWords} from "../../../actions/searchActons";
 import DelIcon from "material-ui/svg-icons/content/clear";
-import {getCookie, linkTo, reqHeader, setCookie} from "../../../utils/comUtils";
+import {getCookie, isLongWordLanguage, linkTo, reqHeader, setCookie} from "../../../utils/comUtils";
 import {withRouter} from "react-router-dom";
 import Input from "../Input";
 import BaseComponent from "../BaseComponent";
@@ -17,12 +17,12 @@ import SearchIcon from "../../../../img/common/icon_search.png";
 import CleanIcon from "material-ui/svg-icons/navigation/cancel";
 import intl from 'react-intl-universal';
 
-const language = getCookie("language");
+const longLan = isLongWordLanguage();
 const style = {
     searchButton: {
         position: 'absolute',
         right: '.3rem',
-        fontSize: language === 'zh-CN' ? '.5rem' : '.3rem',
+        fontSize: longLan ? '.3rem' : '.5rem',
         top: 0,
         display: 'flex',
         height: '1.2rem',

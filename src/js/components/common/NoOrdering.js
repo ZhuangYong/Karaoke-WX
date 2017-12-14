@@ -3,6 +3,7 @@
  */
 import React from "react";
 import NoOrderingImg from "../../../img/common/bg_no_ordering.png";
+import intl from "react-intl-universal";
 
 const style = {
     noResult: {
@@ -25,7 +26,7 @@ export default class NoOrdering extends React.Component {
         return (
             <div style={{...style.noResult, ...extStyle}}>
                 <img src={NoOrderingImg} style={{maxWidth: "7rem"}}/>
-                <p style={{color: "#7e7e7e", margin: 0, fontSize: '.4rem'}}>{this.props.message || '还没有订单哟'}</p>
+                <p style={{color: "#7e7e7e", margin: 0, fontSize: '.4rem'}}>{this.props.message || intl.get("no.order")}</p>
             </div>
         );
     }

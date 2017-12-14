@@ -14,6 +14,7 @@ import {submitInvoice} from "../../../actions/userActions";
 import FlatButton from "material-ui/FlatButton";
 import Dialog from "material-ui/Dialog";
 import {setGlobAlert} from "../../../actions/common/actions";
+import intl from 'react-intl-universal';
 
 // 样式表
 let styles = {
@@ -68,7 +69,7 @@ let styles = {
 class InvoiceSubmit extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("开票");
+        super.title(intl.get("title.invoice"));
 
         this.state = {
 
@@ -108,13 +109,13 @@ class InvoiceSubmit extends BaseComponent {
         const actions = [
             <FlatButton
                 className="cancel-button"
-                label="取消"
+                label={intl.get("button.cancel")}
                 primary={true}
                 onClick={this.handleClose}
             />,
             <FlatButton
                 className="sure-button"
-                label="确认提交"
+                label={intl.get("button.sure.submit")}
                 primary={true}
                 onClick={this.handleAction}
             />,
@@ -128,14 +129,14 @@ class InvoiceSubmit extends BaseComponent {
             }}>
 
                 <section style={styles.singleItem}>
-                    <span>发票类型: </span>
-                    <span style={{color: "#222"}}>增值税普通发票</span>
+                    <span>{intl.get("invoice.type")}: </span>
+                    <span style={{color: "#222"}}>{intl.get("invoice.vat")}</span>
                 </section>
 
                 <section style={Object.assign({}, styles.singleItem, {
                     borderTop: "1px solid #d7d7d7"
                 })}>
-                    <header>*发票抬头</header>
+                    <header>*{intl.get("invoice.title")}</header>
                     <div>
                         <span style={submitParams.gflx === "01" ? styles.tabActive : styles.tab}
                               onClick={() => {
@@ -143,14 +144,14 @@ class InvoiceSubmit extends BaseComponent {
                                   this.setState({
                                       submitParams: submitParams
                                   });
-                              }}>公司</span>
+                              }}>{intl.get("invoice.co")}</span>
                         <span style={submitParams.gflx === "03" ? styles.tabActive : styles.tab}
                               onClick={() => {
                                   submitParams.gflx = "03";
                                   this.setState({
                                       submitParams: submitParams
                                   });
-                              }}>个人</span>
+                              }}>{intl.get("invoice.personal")}</span>
                     </div>
                     <input style={styles.input}
                            onChange={(e) => {
@@ -232,22 +233,22 @@ class InvoiceSubmit extends BaseComponent {
                         onClick={() => {
 
                             if (submitParams.gfmc.length <= 0) {
-                                this.props.action_setGlobAlert("请输入发票抬头");
+                                this.props.action_setGlobAlert(intl.get("msg.input.invoice.title"));
                                 return;
                             }
 
                             if (!(/^([A-Z\d]{15}|[A-Z\d]{18}|[A-Z\d]{20})$/).test(submitParams.gfsh)) {
-                                this.props.action_setGlobAlert("请输入正确的纳税人识别号");
+                                this.props.action_setGlobAlert(intl.get("msg.input.correct.taxpayer.identification.number"));
                                 return;
                             }
 
                             if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(submitParams.gfsj))) {
-                                this.props.action_setGlobAlert("请输入正确的手机号");
+                                this.props.action_setGlobAlert(intl.get("msg.input.correct.phone.number"));
                                 return;
                             }
 
                             if (!(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(submitParams.gfyx))) {
-                                this.props.action_setGlobAlert("请输入正确的邮箱");
+                                this.props.action_setGlobAlert(intl.get("msg.input.correct.email"));
                                 return;
                             }
 
@@ -272,13 +273,13 @@ class InvoiceSubmit extends BaseComponent {
                         color: "#999",
                         lineHeight: toRem(45)
                     }}>
-                        <li>抬头类型: <span style={{color: "#212121"}}>{submitParams.gflx === "03" ? "个人" : "公司"}</span></li>
-                        <li>发票类型: <span style={{color: "#212121"}}>增值税普通发票</span></li>
-                        <li>发票抬头: <span style={{color: "#212121"}}>{submitParams.gfmc}</span></li>
-                        <li>纳税人识别号: <span style={{color: "#212121"}}>{submitParams.gfsh}</span></li>
-                        <li>电话: <span style={{color: "#212121"}}>{submitParams.gfsj}</span></li>
-                        <li>邮箱: <span style={{color: "#212121"}}>{submitParams.gfyx}</span></li>
-                        <li style={{fontSize: `${toRem(14)} !important`}}>*确认提交后电子发票将会发送到您的邮箱，开票进度可在开票历史中查看。</li>
+                        <li>{intl.get("invoice.title.type")}: <span style={{color: "#212121"}}>{submitParams.gflx === "03" ? "个人" : "公司"}</span></li>
+                        <li>{intl.get("invoice.type")}: <span style={{color: "#212121"}}>{intl.get("invoice.vat")}</span></li>
+                        <li>{intl.get("invoice.title")}: <span style={{color: "#212121"}}>{submitParams.gfmc}</span></li>
+                        <li>{intl.get("invoice.taxpayer.identification.number")}: <span style={{color: "#212121"}}>{submitParams.gfsh}</span></li>
+                        <li>{intl.get("phone")}: <span style={{color: "#212121"}}>{submitParams.gfsj}</span></li>
+                        <li>{intl.get("email")}: <span style={{color: "#212121"}}>{submitParams.gfyx}</span></li>
+                        <li style={{fontSize: `${toRem(14)} !important`}}>*{intl.get("msg.after.submit.can.show.in.history")}</li>
                     </ul>
                 </Dialog>
             </div>
@@ -300,7 +301,7 @@ class InvoiceSubmit extends BaseComponent {
                 this.setState({
                     openDialog: false
                 });
-                this.props.action_setGlobAlert("网络开小差咯");
+                this.props.action_setGlobAlert(intl.get("msg.network.die"));
             }
         });
     }

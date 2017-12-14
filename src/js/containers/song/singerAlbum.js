@@ -4,12 +4,11 @@ import {withRouter} from "react-router-dom";
 import {getSingerCategoryAlbum} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
-import {GridList, GridTile, List, ListItem, Paper} from "material-ui";
+import {GridList, GridTile, Paper} from "material-ui";
 import {bindActionCreators} from "redux";
 import {linkTo, reqHeader} from "../../utils/comUtils";
-import BlankImg from "../../../img/common/blank.png";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
-import GradeList from "../../components/common/GradeList";
+import intl from 'react-intl-universal';
 
 const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
 const defaultData = [

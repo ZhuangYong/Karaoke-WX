@@ -313,7 +313,8 @@ export function getEncryptHeader(Oid) {
         terminalType: 'weixin',
         timeStamp: new Date().getTime().toString(),
         version: 'v1.0',
-        channel: 'official'
+        channel: 'official',
+        language: getLanguageCookie()
     };
 }
 
@@ -618,4 +619,26 @@ export function formatTime(second) {
     m = m.substr(m.length - 2, m.length);
     s = s.substr(s.length - 2, s.length);
     return h + ":" + m + ":" + s;
+}
+
+export function isLongWordLanguage() {
+    return ['TW', 'HK', 'CN', 'zh-TW', 'zh-CN', 'zh-HK'].indexOf(getCookie("language")) < 0;
+}
+export function getLanguageCookie() {
+    let lan = getCookie("language");
+    switch (lan) {
+        case 'zh-TW':
+        case 'zh-HK':
+            lan = 'HK';
+            break;
+        case 'zh-CN':
+            lan = 'CN';
+            break;
+        case 'en-US':
+            lan = 'EN';
+            break;
+        default:
+            break;
+    }
+    return lan;
 }

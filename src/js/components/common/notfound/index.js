@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from "react-intl-universal";
 
 //
 class NotFound extends React.Component {
@@ -10,7 +11,7 @@ class NotFound extends React.Component {
 		return (
 			<div style={{textAlign: 'center'}}>
                 <p style={{color: 'gray', fontSize: '4rem', fontWeight: 'bold'}}>404</p>
-				<font color="gray">你要的页面可能在路上！</font>
+				<font color="gray">{intl.get("page.not.fund")}</font>
 			</div>
 		);
 	}

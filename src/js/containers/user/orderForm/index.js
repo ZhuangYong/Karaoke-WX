@@ -21,7 +21,7 @@ import NoWifi from "../../../components/common/NoWifi";
 import {SvgIcon} from "material-ui";
 import {setGlobAlert} from "../../../actions/common/actions";
 import NoOrdering from "../../../components/common/NoOrdering";
-
+import intl from 'react-intl-universal';
 
 const style = {
     orderings: {
@@ -58,7 +58,7 @@ const RightCircleIcon = (props) => (<SvgIcon
 class OrderForm extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("VIP充值订单");
+        super.title(intl.get("VIP recharge orders"));
 
         this.state = {
             orderListData: {},
@@ -100,13 +100,13 @@ class OrderForm extends BaseComponent {
         const actions = [
             <FlatButton
                 className="cancel-button"
-                label="取消"
+                label={intl.get("button.cancel")}
                 primary={true}
                 onClick={this.handleClose}
             />,
             <FlatButton
                 className="sure-button"
-                label="确认"
+                label={intl.get("button.make.sure")}
                 primary={true}
                 onClick={this.handleAction}
             />,
@@ -128,7 +128,7 @@ class OrderForm extends BaseComponent {
                         lineHeight: toRem(110),
                         color: "#212121",
                         fontSize: toRem(36)
-                    }}>全部订单</div>
+                    }}>{intl.get("order.all")}</div>
                     {/*<div style={{
                         float: "right",
                         marginRight: toRem(20)
@@ -181,9 +181,9 @@ class OrderForm extends BaseComponent {
                             <li style={{
 
                             }}>{item.orderTime}</li>
-                            <li>设备号: <span style={{color: "#212121"}}>{item.deviceId}</span></li>
-                            <li>支付金额: <span style={{color: "#212121"}}>&yen;{item.payAmount}</span></li>
-                            <li>支付套餐: <span style={{color: "#212121"}}>{item.productName}</span></li>
+                            <li>{intl.get("order.device.no")}: <span style={{color: "#212121"}}>{item.deviceId}</span></li>
+                            <li>{intl.get("order.payment.amount")}: <span style={{color: "#212121"}}>&yen;{item.payAmount}</span></li>
+                            <li>{intl.get("order.payment.package")}: <span style={{color: "#212121"}}>{item.productName}</span></li>
                         </ul>
                         <footer style={{
                             height: toRem(92),
@@ -207,11 +207,11 @@ class OrderForm extends BaseComponent {
                                         openDialog: true,
                                         deleteOrder: item
                                     });
-                                }}>删除订单</div>
+                                }}>{intl.get("order.delete.order")}</div>
                         </footer>
                     </section>))}
                     <div style={style.loading}>
-                        <span>亲爱滴，已经到底了</span>
+                        <span>{intl.get("song.list.end")}</span>
                     </div>
 
                     <Dialog
@@ -222,7 +222,7 @@ class OrderForm extends BaseComponent {
                         modal={false}
                         open={this.state.openDialog}
                         onRequestClose={this.handleClose}>
-                        确认删除订单吗？
+                        {intl.get("order.sure.or.not.delete.order")}
                     </Dialog>
                 </div>) : (<div>
                     {this.state.offLine ? (<NoWifi style={{paddingTop: toRem(350)}} />) : (<NoOrdering style={{paddingTop: toRem(350)}} />)}
@@ -283,12 +283,12 @@ class OrderForm extends BaseComponent {
                     orderList: orderList,
                     openDialog: false
                 });
-                this.props.action_setGlobAlert("删除成功");
+                this.props.action_setGlobAlert(intl.get("msg.delete.success"));
             } else {
                 this.setState({
                     openDialog: false
                 });
-                this.props.action_setGlobAlert("删除失败");
+                this.props.action_setGlobAlert(intl.get("msg.delete.fail"));
             }
         });
     }

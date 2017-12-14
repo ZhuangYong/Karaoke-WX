@@ -15,6 +15,7 @@ import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
 import NoOrdering from "../../../components/common/NoOrdering";
 import {SvgIcon} from "material-ui";
+import intl from 'react-intl-universal';
 
 
 const styles = {
@@ -57,7 +58,7 @@ const RightIcon = (props) => (<SvgIcon
 class invoiceList extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("开票历史");
+        super.title(intl.get("title.invoice.history"));
 
         this.state = {
             orderForm: {},
@@ -148,7 +149,7 @@ class invoiceList extends BaseComponent {
                                     color: parseInt(item.status, 10) === 3 ? "#fd6934" : "#999",
                                     float: "right"
                                 }}>
-                                    <span>{item.status === 3 ? "已开票" : "待出票"}</span>
+                                    <span>{item.status === 3 ? intl.get("invoice.done") : intl.get("invoice.waiting")}</span>
                                     <RightIcon style={{
                                         marginLeft: toRem(10),
                                         width: toRem(16.5),
@@ -157,13 +158,13 @@ class invoiceList extends BaseComponent {
                                     }}/>
                                 </span>
                             </li>
-                            <li>发票类型: <span style={{color: "#212121"}}>增值税普通发票</span></li>
-                            <li>发票金额: <span style={{color: "#212121"}}>&yen;{item.amount}</span></li>
+                            <li>{intl.get("invoice.type")}: <span style={{color: "#212121"}}>{intl.get("invoice.vat")}</span></li>
+                            <li>{intl.get("invoice.amount")}: <span style={{color: "#212121"}}>&yen;{item.amount}</span></li>
                         </ul>
 
                     </section>))}
                     <div style={styles.loading}>
-                        <span>亲爱滴，已经到底了</span>
+                        <span>{intl.get("song.list.end")}</span>
                     </div>
                 </div>) : (<div>
                     {this.state.offLine ? (<NoWifi style={{paddingTop: toRem(350)}} />) : (<NoOrdering style={{paddingTop: toRem(350)}} />)}

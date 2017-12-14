@@ -21,6 +21,7 @@ import RefreshIndicator from "material-ui/RefreshIndicator";
 
 import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import Const from "../../../utils/const";
+import intl from 'react-intl-universal';
 
 
 const style = {
@@ -94,10 +95,10 @@ class OrderForm extends BaseComponent {
                 style={style.orderings}
                 onScroll={this.onScroll.bind(this)}>
                 <AppBar
-                    title="全部订单"
+                    title={intl.get("order.all")}
                     showMenuIconButton={false}
                     iconElementRight={<FlatButton
-                        label="电子发票"
+                        label={intl.get("order.electronic.invoice")}
                         onTouchTap={() => {
                             linkTo(`user/invoiceOrder`, false, null);
                         }}
@@ -123,23 +124,23 @@ class OrderForm extends BaseComponent {
                     <List>
                         <ListItem
                             disabled={true}
-                            primaryText={`设备号: ${item.deviceId}`}
+                            primaryText={`${intl.get("order.device.no")}: ${item.deviceId}`}
                         />
                         <ListItem
                             disabled={true}
-                            primaryText={`支付金额: ${item.payAmount} 元`}
+                            primaryText={`${intl.get("order.payment.amount")}: ${item.payAmount} 元`}
                         />
                         <ListItem
                             disabled={true}
-                            primaryText={`支付时间: ${item.orderTime}`}
+                            primaryText={`${intl.get("pay.payment.time")}: ${item.orderTime}`}
                         />
                         <ListItem
                             disabled={true}
-                            primaryText={`支付套餐: ${item.productName}`}
+                            primaryText={`${intl.get("order.payment.package")}: ${item.productName}`}
                         />
                         <div onClick={() => {
                             this.deleteOrder(item.id);
-                        }}>删除</div>
+                        }}>{intl.get("button.delete")}</div>
                     </List>
 
                 </Card>))}
@@ -153,10 +154,10 @@ class OrderForm extends BaseComponent {
                         status="loading"
                         style={style.loadingBar}
                     />
-                        <span>正在加载</span>
+                        <span>{intl.get("song.loading")}</span>
                     </div>) : ""}
 
-                    <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
+                    <span>{this.state.lastPage ? intl.get("song.list.end") : ""}</span>
                     <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && orderList.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
                 </div>
             </Paper>

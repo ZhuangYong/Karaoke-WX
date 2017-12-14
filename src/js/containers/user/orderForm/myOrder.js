@@ -7,11 +7,12 @@ import {linkTo} from "../../../utils/comUtils";
 import withRouter from "react-router-dom/es/withRouter";
 import {connect} from "react-redux";
 import sysConfig from "../../../utils/sysConfig";
+import intl from 'react-intl-universal';
 
 class myOrder extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("我的订单");
+        super.title(intl.get("title.my.order"));
     }
 
     render() {

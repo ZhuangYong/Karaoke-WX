@@ -15,6 +15,7 @@ import ClearIcon from "material-ui/svg-icons/content/clear";
 // 图片预览插件，因为没有添加读取package中css的loader，所以对应css暂时放在src\css下
 import Viewer from 'react-viewer-mobile';
 import '../../../../css/reactViewer.css';
+import intl from 'react-intl-universal';
 
 const styles = {
     close: {
@@ -31,7 +32,7 @@ const styles = {
 class InvoiceDetail extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("开票详情");
+        super.title(intl.get("title.invoice.detail"));
 
         this.state = {
             visible: false,

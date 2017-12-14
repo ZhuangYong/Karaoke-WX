@@ -40,7 +40,7 @@ const styles = {
 class VoiceSearch extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("语音搜索");
+        super.title(intl.get("title.voice.search"));
 
         this.state = {
             isRecordStart: false,
@@ -107,7 +107,7 @@ class VoiceSearch extends BaseComponent {
                         textAlign: "center",
                         color: "#ff8226",
                         fontSize: "18px"
-                    }}>{isRecordStart ? "放开停止" : "长按说话"}</header>
+                    }}>{isRecordStart ? intl.get("release.will.stop") : intl.get("press.and.say")}</header>
                    {/* <FloatingActionButton
                         backgroundColor="#ff6c00"
                         disabledColor="#ff6c00"
@@ -203,24 +203,24 @@ class VoiceSearch extends BaseComponent {
 
         switch (pageState) {
             case 0:
-                content.title = "你可以这样说";
-                content.textA = "三生三世";
+                content.title = intl.get("search.say.like");
+                content.textA = intl.get("search.sample");
                 content.textB = "";
                 break;
             case 1:
-                content.title = "正在听......";
-                content.textA = "贴近手机话筒说话";
-                content.textB = "保证声音更清晰哟";
+                content.title = intl.get("search.listening");
+                content.textA = intl.get("search.close.microphone.speak");
+                content.textB = intl.get("search.make.sure.sound.clear");
                 break;
             case 2:
-                content.title = "网络开小差咯";
-                content.textA = "检查一下网络吧";
+                content.title = intl.get("search.network.die");
+                content.textA = intl.get("search.check.network");
                 content.textB = "";
                 break;
             case 3:
-                content.title = "无法识别";
-                content.textA = "再说清楚一点";
-                content.textB = "才能帮你找到歌曲哟";
+                content.title = intl.get("search.unrecognized");
+                content.textA = intl.get("search.be.clear");
+                content.textB = intl.get("search.to.help.you.find.song");
                 break;
             default:
                 break;

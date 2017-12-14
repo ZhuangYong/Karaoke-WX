@@ -18,6 +18,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
 import NoResult from "../../../components/common/NoResult";
+import intl from 'react-intl-universal';
 
 const style = {
     recordings: {
@@ -47,7 +48,7 @@ const style = {
 class Records extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("我的录音");
+        super.title(intl.get("title.my.record"));
 
         this.state = {
             recordingList: [],
@@ -119,10 +120,10 @@ class Records extends BaseComponent {
                                 status="loading"
                                 style={style.loadingBar}
                             />
-                                <span>正在加载</span>
+                                <span>{intl.get("song.loading")}</span>
                             </div>) : ""}
 
-                            <span>{this.state.lastPage ? "亲爱滴，已经到底了" : ""}</span>
+                            <span>{this.state.lastPage ? intl.get("song.list.end") : ""}</span>
                             <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && recordingList.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
                         </div>
 
@@ -163,7 +164,7 @@ class Records extends BaseComponent {
                                             }
                                         });
                                     }}
-                                >删除</button>
+                                >{intl.get("button.delete")}</button>
                             ]}
                         />
                     </div>)

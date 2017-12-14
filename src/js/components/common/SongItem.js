@@ -16,6 +16,7 @@ import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import SucIcon from "material-ui/svg-icons/navigation/check";
 import FailIcon from "material-ui/svg-icons/navigation/close";
 import Const from "../../utils/const";
+import intl from "react-intl-universal";
 // import sysConfig from "../../utils/sysConfig";
 
 class SongItem extends BaseComponent {
@@ -79,7 +80,7 @@ class SongItem extends BaseComponent {
             this.setState({
                 pushIng: this.state.pushIng
             });
-            this.props.action_setGlobAlert("点歌失败！");
+            this.props.action_setGlobAlert(intl.get("song.add.fail"));
             //onPushSongFail && onPushSongFail(msg);
         };
         dynaPush({
@@ -148,7 +149,7 @@ class SongItem extends BaseComponent {
             );
         } else {
             return (
-                <div className="choose-button" onClick={this.pushSong}>点歌</div>
+                <div className="choose-button" onClick={this.pushSong}>{intl.get("add.song")}</div>
             );
         }
     }

@@ -191,7 +191,7 @@ class Feedback extends BaseComponent {
                         </header>
                         <textarea
                             style={styles.questionDesc}
-                            placeholder="亲爱的麦粉，把你遇到的问题或建议写下来吧......"
+                            placeholder={intl.get("feedback.write.down.your.suggest")}
                             onChange={(e) => {
                                 let content = e.target.value;
 
@@ -199,7 +199,7 @@ class Feedback extends BaseComponent {
                                     e.target.value = content.slice(0, 200);
                                     this.setState({
                                         showAlert: true,
-                                        globAlert: "字太多啦，不准写了"
+                                        globAlert: intl.get("feedback.too.much.word")
                                     });
                                 }
 
@@ -211,7 +211,7 @@ class Feedback extends BaseComponent {
                         />
                         <div>
                             <div style={styles.questionDescTip}>
-                                {this.state.submitParams.content.length <= 0 ? "至少10个字，最多200字，不然宝宝要生气!" : `${this.state.submitParams.content.length}/200`}
+                                {this.state.submitParams.content.length <= 0 ? intl.get("feedback.word.waring") : `${this.state.submitParams.content.length}/200`}
                             </div>
                         </div>
                         <Snackbar
@@ -234,8 +234,8 @@ class Feedback extends BaseComponent {
                         <header>
                     <span
                         style={styles.sectionHeader}
-                    >上传照片</span>
-                            <span style={{marginLeft: "5px", fontSize: "12px", color: "#808080"}}>最多5张</span>
+                    >{intl.get("feedback.upload.photo")}</span>
+                            <span style={{marginLeft: "5px", fontSize: "12px", color: "#808080"}}>{intl.get("feedback.most.photo", {number: 5})}</span>
                         </header>
 
                         <InputBox
@@ -271,14 +271,14 @@ class Feedback extends BaseComponent {
                         <header>
                             <div
                                 style={styles.sectionHeader}
-                            >联系方式</div>
+                            >{intl.get("feedback.contact")}</div>
                         </header>
                         <div
                             style={{paddingLeft: "10px", paddingRight: "10px"}}
                         >
                             <input
                                 type="text"
-                                placeholder="手机、QQ或邮箱"
+                                placeholder={intl.get("feedback.mobile.QQ.mail")}
                                 style={{width: "100%", height: "50px", backgroundColor: "#fff", border: "none", fontSize: "18px", textIndent: "10px", borderRadius: "4px"}}
                                 maxLength={30}
                                 onChange={(e) => {
@@ -297,7 +297,7 @@ class Feedback extends BaseComponent {
                             backgroundColor="#ff8632"
                             disabledBackgroundColor="#ccc"
                             disabled={this.state.submitParams.questionIds === null || this.state.submitParams.content.length < 10}
-                            label="提交"
+                            label={intl.get("button.submit")}
                             style={styles.submitBtn}
                             buttonStyle={styles.submitBtn}
                             labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
@@ -311,15 +311,15 @@ class Feedback extends BaseComponent {
                             textAlign: "center",
                             color: "#ff8632",
                             fontSize: "16px"
-                        }}>提交成功</p>
+                        }}>{intl.get("feedback.submit.success")}</p>
                         <p style={{
                             textAlign: "center",
                             color: "#807f7e",
                             fontSize: "14px"
-                        }}>我们将会在第一时间处理，感谢您的反馈！</p>
+                        }}>{intl.get("feedback.thanks.feedback")}</p>
                     </div>}
                     imgStyle={{width: "100px"}}
-                    buttonLabel="关闭"
+                    buttonLabel={intl.get("button.close")}
                     touchTap={this.closePage}
                 />)}
             </div>
@@ -361,13 +361,13 @@ class Feedback extends BaseComponent {
         const submitParams = this.state.submitParams;
 
         if (submitParams.questionIds === null) {
-            actionGlobAlert("至少选择一个问题类型");
+            actionGlobAlert(intl.get("feedback.least.one.question"));
             return;
         }
 
         submitParams.content = submitParams.content.trim();
         if (submitParams.content.length <= 0) {
-            actionGlobAlert("认真点！还差几个字");
+            actionGlobAlert(intl.get("feedback.word.least"));
             return;
         }
 
@@ -397,7 +397,7 @@ class Feedback extends BaseComponent {
             if (status === 1) {
                 navUtils.replace(`/user/feedback/success/${matchParams.deviceId}`);
             } else {
-                actionGlobAlert("网络开小差咯");
+                actionGlobAlert(intl.get("msg.network.die"));
             }
         });
     }
@@ -441,7 +441,7 @@ class Feedback extends BaseComponent {
                 }
             });
         } else {
-            this.props.action_setGlobAlert("请在微信客户端上传图片");
+            this.props.action_setGlobAlert(intl.get("msg.upload.in.we.chat.waring"));
         }
     }
 

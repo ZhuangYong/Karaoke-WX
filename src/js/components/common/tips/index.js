@@ -1,4 +1,5 @@
 import React from 'react';
+import intl from "react-intl-universal";
 
 // 通用弹框提示组件, 可以传入的属性有：
 // show 是否显示
@@ -12,9 +13,9 @@ class Tips extends React.Component {
 		super(props);
 	}
 	render () {
-		var tipsBtns = [];
-		var okText = this.props.okText || '确定';
-		var cancelText = this.props.cancelText || '取消';
+		let tipsBtns = [];
+		const okText = this.props.okText || intl.get("button.sure");
+		const cancelText = this.props.cancelText || intl.get("button.cancel");
 
 		if (this.props.ok) {
 			tipsBtns.push(

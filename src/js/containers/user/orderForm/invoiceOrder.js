@@ -16,7 +16,7 @@ import NoWifi from "../../../components/common/NoWifi";
 import NoOrdering from "../../../components/common/NoOrdering";
 import {SvgIcon} from "material-ui";
 import SucIcon from "material-ui/svg-icons/navigation/check";
-
+import intl from 'react-intl-universal';
 
 const styles = {
     loading: {
@@ -59,7 +59,7 @@ const RightCircleIcon = (props) => (<SvgIcon
 class InvoiceOrder extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("开票");
+        super.title(intl.get("title.invoice"));
 
         this.state = {
             orderForm: {},
@@ -110,7 +110,7 @@ class InvoiceOrder extends BaseComponent {
                         lineHeight: toRem(110),
                         color: "#212121",
                         fontSize: toRem(36)
-                    }}>订单开票</div>
+                    }}>{intl.get("invoice.order")}</div>
                     <div style={{
                         float: "right",
                         marginRight: toRem(20)
@@ -122,7 +122,7 @@ class InvoiceOrder extends BaseComponent {
                                 lineHeight: toRem(110),
                                 color: "#fd6a31",
                                 fontSize: toRem(24)
-                            }}>开票历史</span>
+                            }}>{intl.get("title.invoice.history")}</span>
 
                         <RightCircleIcon style={{
                             position: "relative",
@@ -180,14 +180,14 @@ class InvoiceOrder extends BaseComponent {
                             <li style={{
 
                             }}>{item.orderTime}</li>
-                            <li>设备号: <span style={{color: "#212121"}}>{item.deviceId}</span></li>
-                            <li>支付金额: <span style={{color: "#212121"}}>&yen;{item.payAmount}</span></li>
-                            <li>支付套餐: <span style={{color: "#212121"}}>{item.productName}</span></li>
+                            <li>{intl.get("order.device.no")}: <span style={{color: "#212121"}}>{item.deviceId}</span></li>
+                            <li>{intl.get("order.payment.amount")}: <span style={{color: "#212121"}}>&yen;{item.payAmount}</span></li>
+                            <li>{intl.get("order.payment.package")}: <span style={{color: "#212121"}}>{item.productName}</span></li>
                         </ul>
 
                     </section>))}
                     <div style={styles.loading}>
-                        <span>亲爱滴，已经到底了</span>
+                        <span>{intl.get("song.list.end")}</span>
                     </div>
                     <div style={{
                         width: "100%",
@@ -266,7 +266,7 @@ class InvoiceOrder extends BaseComponent {
                     onClick={() => {
                         if (orderChosenIds.length <= 0) return;
                         linkTo(`user/invoiceSubmit/${orderChosenIds.join("-")}/${orderChosenTotalMoney.toString().replace(".", "-")}`, false, null);
-                    }}>去开票</div>
+                    }}>{intl.get("invoice.go")}</div>
 
                     <div style={{
                         float: "right",
@@ -275,7 +275,7 @@ class InvoiceOrder extends BaseComponent {
                         fontSize: toRem(34),
                         lineHeight: toRem(110),
                         color: "#666"
-                    }}>合计: &yen;{orderChosenTotalMoney}</div>
+                    }}>{intl.get("total")}: &yen;{orderChosenTotalMoney}</div>
 
                 </footer>
 

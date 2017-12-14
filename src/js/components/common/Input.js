@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField';
 import React from "react";
 import PropTypes from "prop-types";
 import {getRandomString} from "../../utils/comUtils";
+import intl from 'react-intl-universal';
 
 const style = {
     position: 'absolute',
@@ -66,12 +67,12 @@ export default class Input extends React.Component {
         if (typeof value === "string") {
             if (minLength) {
                 if (value.length < minLength) {
-                    errorText = "长度不能小于" + minLength;
+                    errorText = intl.get("input.not.less.than") + minLength;
                 }
             }
             if (maxLength) {
                 if (value.length > maxLength) {
-                    errorText = "长度不能大于" + maxLength;
+                    errorText = intl.get("input.not.more.than") + maxLength;
                 }
             }
         }

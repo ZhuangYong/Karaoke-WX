@@ -19,6 +19,7 @@ import NoResult from "./NoResult";
 import NoWifi from "./NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
 import {atob as decoding} from "Base64";
+import intl from "react-intl-universal";
 
 const style = {
     commonSongList: {
@@ -182,10 +183,10 @@ class SongList extends BaseComponent {
                             </svg>
                             <span>
                                 {
-                                    loading ? "正在加载" : ""
+                                    loading ? intl.get("song.loading") : ""
                                 }
                                 {
-                                    (!offLine && lastPage) ? "亲爱滴，已经到底了" : ""
+                                    (!offLine && lastPage) ? intl.get("song.list.end") : ""
                                 }
                                 {
                                     (offLine && !showNoWifi && !loading) ? Const.STRING_NO_WIFI : ""

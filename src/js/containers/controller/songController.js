@@ -3,7 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 
-import {dynaPush, linkTo, reqHeader} from "../../utils/comUtils";
+import {dynaPush, isLongWordLanguage, linkTo, reqHeader} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {getChooseList, getHistorySongList, push, pushLocal, setSongTop} from "../../actions/audioActons";
@@ -30,6 +30,7 @@ import ActionTypes from "../../actions/actionTypes";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import intl from 'react-intl-universal';
 
+const longLan = isLongWordLanguage();
 const style = {
     controllerPan: {
         position: 'absolute',
@@ -86,7 +87,7 @@ const style = {
             },
             label: {
                 margin: 0,
-                fontSize: '.45rem',
+                fontSize: longLan ? '.3rem' : '.45rem',
                 color: "#ff6832"
             }
         }
@@ -253,7 +254,7 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.leftTab, backgroundColor: backgroundColor[0], color: fontColor[0]}}
                         label={
-                            <div style={{fontSize: '.4rem'}}>
+                            <div style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.play.controller")}
                             </div>
                         }>
@@ -378,7 +379,7 @@ class SongController extends BaseComponent {
                             this.handelChangeTab(1);
                         }}
                         label={
-                            <div style={{fontSize: '.4rem'}}>
+                            <div style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.selected.list")}
                             </div>
                         }>
@@ -401,7 +402,7 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
                         label={
-                            <div style={{fontSize: '.4rem'}}>
+                            <div style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.history")}
                             </div>
                         }>

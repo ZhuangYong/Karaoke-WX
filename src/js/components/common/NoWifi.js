@@ -3,6 +3,7 @@
  */
 import React from "react";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
+import intl from "react-intl-universal";
 
 const style = {
     noResult: {
@@ -33,7 +34,7 @@ export default class NoWifi extends React.Component {
         return (
             <div style={{...style.noResult, ...extStyle}}>
                 <img src={NoNetworkImg} style={{maxWidth: "7rem"}}/>
-                <p style={{color: "#7e7e7e", margin: 0, fontSize: '.4rem'}}>网络已被带走</p>
+                <p style={{color: "#7e7e7e", margin: 0, fontSize: '.4rem'}}>{intl.get("wifi.take.away")}</p>
             </div>
         );
     }
