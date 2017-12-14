@@ -588,8 +588,8 @@ class App extends BaseComponent {
     }
 
     loadLocales() {
-        let currentLocale = intl.determineLocale({
-            urlLocaleKey: "language",
+        let languageFromUrl = getQueryString("language");
+        let currentLocale = languageFromUrl || intl.determineLocale({
             cookieLocaleKey: "language"
         });
         if (!_.find(SUPPOER_LOCALES, { value: currentLocale })) {
