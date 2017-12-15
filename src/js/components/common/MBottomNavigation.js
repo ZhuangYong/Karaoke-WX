@@ -106,7 +106,7 @@ class MBottomNavigation extends BaseComponent {
                     style={style.nav}
                 >
                     <BottomNavigationItem
-                        style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
+                        style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%', width: '40%'}}
                         label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>{intl.get("nav.index")}</div>}
                         icon={
                             <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
@@ -116,7 +116,7 @@ class MBottomNavigation extends BaseComponent {
                         onTouchTap={() => selectedIndex !== 0 && this.navSelect(0)}
                     />
                     <BottomNavigationItem
-                        style={{...style.nav.playController, maxWidth: '100%'}}
+                        style={{...style.nav.playController, maxWidth: '100%', width: '20%'}}
                         label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>{intl.get("nav.controller")}</div>}
                         icon={
                             <div style={style.nav.playController.circle}>
@@ -129,7 +129,7 @@ class MBottomNavigation extends BaseComponent {
                         onTouchTap={() => selectedIndex !== 1 && this.navSelect(1)}
                     />
                     <BottomNavigationItem
-                        style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%'}}
+                        style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%', width: '40%'}}
                         label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>{intl.get("nav.my")}</div>}
                         icon={
                             <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
