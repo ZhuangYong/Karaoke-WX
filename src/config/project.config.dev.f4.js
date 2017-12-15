@@ -4,9 +4,13 @@
 
 /*测试环境配置*/
 module.exports = {
-    appVersion: '1.1.1',// 版本号
+    appVersion: '1.1.1', // 版本号
     environment: 'f4',
     apiDomain: 'http://120.27.250.32:9080',
-    contextPath : "/",
+    contextPath: "/",
+    // mallIndex: 'https://jmake.haitai.tv/haitai-weisite/shop/index',
+    // mallOrder: 'https://jmake.haitai.tv/haitai-weisite/shop/order_list',
+    mallIndex: 'https://jmake.huo.so/shop/index',
+    mallOrder: 'https://jmake.huo.so/shop/order_list',
     appId: "wx4688d2b7b85451aa"
 };
