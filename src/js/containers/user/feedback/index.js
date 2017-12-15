@@ -359,7 +359,11 @@ class Feedback extends BaseComponent {
 
         const actionGlobAlert = this.props.action_setGlobAlert;
         const submitParams = this.state.submitParams;
-
+        const {isWeixin} = window.sysInfo;
+        if (!isWeixin) {
+            actionGlobAlert(intl.get("user.we.chat.operate"));
+            return;
+        }
         if (submitParams.questionIds === null) {
             actionGlobAlert(intl.get("feedback.least.one.question"));
             return;
