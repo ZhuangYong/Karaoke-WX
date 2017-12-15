@@ -15,7 +15,7 @@ module.exports = Merge(CommonConfig, {
         path: PATH_BUILD,
         filename: 'js/[name].js',
         publicPath: '/',
-        chunkFilename: "js/[id].bundle.js",
+        chunkFilename: "js/[id][hash].bundle.js",
         sourceMapFilename: '[name].map'
     },
     plugins: [
