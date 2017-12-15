@@ -131,7 +131,8 @@ class Audio extends React.Component {
         const audio = this.state.audio;
         if (!audio.duration || audio.paused) return;
         this.setState({
-            percent: audio.currentTime / audio.duration
+            percent: audio.currentTime / audio.duration,
+            paused: audio.paused
         });
     }
 
