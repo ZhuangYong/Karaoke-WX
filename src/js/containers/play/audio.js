@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/playAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import {reqHeader, wxAuthorizedUrl, wxShare} from "../../utils/comUtils";
+import { getQueryString, reqHeader, wxAuthorizedUrl, wxShare } from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
@@ -37,7 +37,8 @@ class PlayAudio extends BaseComponent {
     }
 
     componentWillMount() {
-        const params = this.state.params;
+        const params = {...this.state.params, openid: getQueryString('openid')};
+        console.log(params);
         this.props.actions.getShareAudio(params, reqHeader(params));
     }
 
