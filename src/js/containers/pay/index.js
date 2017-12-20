@@ -23,11 +23,13 @@ import FlatButton from "material-ui/FlatButton";
 import {setGlobAlert} from "../../actions/common/actions";
 import {getUserInfo} from "../../actions/userActions";
 import ActionTypes from "../../actions/actionTypes";
-import {Checkbox, CircularProgress, ListItem, RaisedButton, RefreshIndicator, Subheader} from "material-ui";
+import {Checkbox, CircularProgress, ListItem, Paper, RaisedButton, RefreshIndicator, Subheader} from "material-ui";
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import ActionCheck from 'material-ui/svg-icons/action/check-circle';
 import Const from "../../utils/const";
 import intl from 'react-intl-universal';
+import MallImg from "../../../img/mall/me.png";
+import sysConfig from "../../utils/sysConfig";
 
 const styles = {
     itemBox: {
@@ -162,7 +164,12 @@ class Pay extends BaseComponent {
                             this.state.payResult === PAY_RESULT_SUCCESS ? <div>
                                 <h2 style={styles.payResult.title}>{intl.get("msg.congratulations.pay.success")}</h2>
                                 <p style={styles.payResult.subTitle}>{payListActiveItem && payListActiveItem.productName}</p>
-
+                                <Paper
+                                    zDepth={0}
+                                    style={{position: 'fixed', bottom: '2rem', marginBottom: '2rem', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
+                                >
+                                    <img src={MallImg} style={{maxWidth: 320}} onClick={f => location.href = sysConfig.mallIndex}/>
+                                </Paper>
                                 <RaisedButton
                                     backgroundColor="#ff6832"
                                     buttonStyle={styles.submitButton}

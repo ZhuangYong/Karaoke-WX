@@ -30,6 +30,7 @@ import ActionTypes from "../../actions/actionTypes";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import intl from 'react-intl-universal';
 import MallImg from "../../../img/mall/me.png";
+import sysConfig from "../../utils/sysConfig";
 
 const longLan = isLongWordLanguage();
 const style = {
