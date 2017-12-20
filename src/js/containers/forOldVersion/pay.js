@@ -18,7 +18,6 @@ class Pay extends BaseComponent {
             this.props.history.replace("/" + link);
         }
     }
-
     render() {
         return (
             <div>
