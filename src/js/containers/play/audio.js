@@ -13,6 +13,7 @@ import {autoPlay} from 'react-swipeable-views-utils';
 import PropTypes from "prop-types";
 import {Subheader} from "material-ui";
 import BaseComponent from "../../components/common/BaseComponent";
+import SlidePngMall1 from "../../../img/mall/video.png";
 import SlidePng1 from "../../../img/album/1.png";
 import SlidePng2 from "../../../img/album/2.png";
 import SlidePng3 from "../../../img/album/3.png";
@@ -97,6 +98,7 @@ class PlayAudio extends BaseComponent {
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
                     <AutoPlaySwipeAbleViews className="swipe-panel" style={swipePanelStyle}>
+                        <div className="img-div" onClick={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
                         <div className="img-div"><img src={SlidePng1}/></div>
                         <div className="img-div"><img src={SlidePng2}/></div>
                         <div className="img-div"><img src={SlidePng3}/></div>
