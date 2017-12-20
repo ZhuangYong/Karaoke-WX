@@ -129,7 +129,7 @@ class OrderForm extends BaseComponent {
                         color: "#212121",
                         fontSize: toRem(36)
                     }}>{intl.get("order.all")}</div>
-                    {/*<div style={{
+                    <div style={{
                         float: "right",
                         marginRight: toRem(20)
                     }}
@@ -140,7 +140,7 @@ class OrderForm extends BaseComponent {
                                 lineHeight: toRem(110),
                                 color: "#fd6a31",
                                 fontSize: toRem(24)
-                            }}>我要开票</span>
+                            }}>{intl.get("invoice.i.go")}</span>
 
                         <RightCircleIcon style={{
                             position: "relative",
@@ -150,7 +150,7 @@ class OrderForm extends BaseComponent {
                             width: toRem(30),
                             height: toRem(30)
                         }}/>
-                    </div>*/}
+                    </div>
                 </header>
 
                 {orderList.length > 0 ? (<div>
