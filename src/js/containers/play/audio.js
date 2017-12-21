@@ -103,7 +103,7 @@ class PlayAudio extends BaseComponent {
         return (
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
-                        <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', height: '2rem', width: '2rem', marginBottom: '4rem', ...swipePanelStyle}}>
+                        <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
                             <div className="img-div" onTouchTap={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
                             <div className="img-div"><img src={SlidePng1}/></div>
                             <div className="img-div"><img src={SlidePng2}/></div>
