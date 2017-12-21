@@ -78,7 +78,7 @@ class ReactAudio extends React.Component {
     }
 }
 ReactAudio.defaultProps = {
-    autoplay: false,
+    autoplay: true,
     preload: true,
     source: "",
     loop: false,

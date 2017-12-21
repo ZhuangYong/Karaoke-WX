@@ -13,7 +13,7 @@ class Audio extends React.Component {
         super(props);
         this.state = {
             audio: {},
-            paused: false,
+            paused: true,
             source: this.props.source,
             percent: 0,
             currentTime: 0,
