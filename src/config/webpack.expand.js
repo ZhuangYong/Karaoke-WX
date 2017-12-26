@@ -21,7 +21,7 @@ module.exports = Merge(CommonConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                'NODE_ENV': JSON.stringify('f4')
+                'NODE_ENV': JSON.stringify('expand')
             }
         })
     ]

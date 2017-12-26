@@ -14,3 +14,4 @@ module.exports = {
     mallOrder: 'https://jmake.huo.so/shop/order_list',
     appId: "wx4688d2b7b85451aa"
 };
+

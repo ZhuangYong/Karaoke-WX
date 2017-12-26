@@ -219,7 +219,7 @@ class UserIndex extends BaseComponent {
                                     src={MyAlbumIcon}
                                     style={{...styles.headerImg, width: "auto"}}
                                 />
-                                <div style={styles.headerDesc}>{intl.get("title.my.photoAlbum")}</div>
+                                <div style={styles.headerDesc}>我的相册</div>
                             </GridTile>
                         }
 

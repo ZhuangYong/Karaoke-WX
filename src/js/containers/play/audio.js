@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/playAudio.scss";
 import * as audioActions from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import { getQueryString, reqHeader, wxAuthorizedUrl, wxShare } from '../../utils/comUtils';
+import { getQueryString, reqHeader, toRem, wxAuthorizedUrl, wxShare } from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
@@ -32,7 +32,8 @@ class PlayAudio extends BaseComponent {
             wxTimer: -1,
             musicUrl: "",
             imgUrl: "",
-            autoPlayEd: false
+            autoPlayEd: false,
+            isEdit: false
         };
     }
 
@@ -94,8 +95,29 @@ class PlayAudio extends BaseComponent {
         }
 
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
+
+        const isEdit = this.state.isEdit;
+
         return (
             <div className="audio-play">
+                <div style={{
+                        position: 'relative',
+                        float: 'right',
+                        marginRight: toRem(20)
+                    }}
+                    onClick={() => {
+                        this.setState({
+                            isEdit: !isEdit
+                        });
+                    }}>
+
+                    <span style={{
+                        lineHeight: toRem(110),
+                        color: "#ff6832",
+                        fontSize: toRem(24)
+                    }}>{isEdit ? '取消' : '编辑'}</span>
+                </div>
+
                 <div className="top-panel" style={topPanelStyle}>
                     <AutoPlaySwipeAbleViews className="swipe-panel" style={swipePanelStyle}>
                         <div className="img-div"><img src={SlidePng1}/></div>

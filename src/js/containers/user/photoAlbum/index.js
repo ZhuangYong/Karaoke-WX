@@ -128,7 +128,7 @@ class PhotoAlbum extends BaseComponent {
                     stopInput={!(totalCount < albumMaxNum)}
                     isShowAddBtn={!isDeletePage}
                     addBtnTouchTap={() => {
-                        !(totalCount < albumMaxNum) && this.props.action_setGlobAlert(`最多上传${albumMaxNum}张哦`);
+                        !(totalCount < albumMaxNum) && this.props.action_setGlobAlert(`最多只能添加${albumMaxNum}张照片哦`);
                     }}
                     badgeStyle={{
                         width: 0,

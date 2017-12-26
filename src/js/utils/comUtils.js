@@ -88,7 +88,8 @@ export function chkDevice() {
     let isIos = (ua.indexOf('iphone') !== -1) || (ua.indexOf('ipad') !== -1);
     // console.log(process.env);
 
-    if (process.env.NODE_ENV === "development") {
+    const env = process.env.NODE_ENV;
+    if (env === "development" || env === "expand") {
         isWeixin = true;
     }
     return {
