@@ -5,24 +5,26 @@ import React from 'react';
 import {findDOMNode} from "react-dom";
 import {GridList} from "material-ui/GridList";
 import Badge from 'material-ui/Badge';
+import PropTypes from "prop-types";
 
-import defaultImg from "../../../img/common/tile_default.jpg";
 import SvgIcon from 'material-ui/SvgIcon';
+import { toRem } from '../../utils/comUtils';
 
-const style = {
+const blankImg = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg==';
+const styles = {
     tile: {
         display: "block",
-        margin: "0 auto",
+        margin: `${toRem(25)} auto 0`,
         padding: 0,
-        width: "72px",
-        height: "70px",
+        width: toRem(220),
+        height: toRem(220),
         boxSizing: "border-box"
     },
     tileImg: {
         display: "block",
         margin: "auto",
-        width: "100%",
-        height: "100%"
+        width: '100%',
+        height: '100%'
     }
 };
 
@@ -48,131 +50,149 @@ class InputBox extends React.Component {
 
         return findDOMNode(this.refs.addImgInp);
     }
+    get addBtn() {
+        if (!this.refs)
+            return {};
 
-    componentDidMount () {
+        return findDOMNode(this.refs.addBtn);
+    }
+
+    componentDidUpdate () {
+        const {isShowAddBtn} = this.props;
+        if (this.addBtn && this.addBtn.parentNode) {
+            this.addBtn.parentNode.hidden = !isShowAddBtn;
+        }
     }
 
     /**
      * props
-     * cellHeight: 宫格高度
      * cols: 宫格列数
+     * stopInput: 是否阻止input事件
      * data: { 数据
      *  id: 图片id
      *  isShowBadge: 是否显示右上角角标
      *  imgUrl: 图片地址
-     *  isShowAddBtn: 是否显示添加图片按钮
      * }
      * badgeBackgroundColor: 角标背景色
      * badgeContent: 角标内容
      * imgTouchTap: 图片点击事件
      * inputChange: input onChange事件
-     * addBtn: { 添加按钮
-     *  isLoadImg: 是否允许上传图片
-     *  disabledTip: 禁止上传图片提示语
-     * }
      * addBtnTouchTap: 添加按钮点击事件
      * style: GridList样式
      * itemStyle: item样式
      * badgeStyle: Badge样式
+     * isShowSelectBorder: 是否显示选中时图片边框
      * @returns {XML}
      */
 
     render () {
+        const {isShowSelectBorder, cols, style, data, itemStyle, badgeBackgroundColor, badgeStyle, badgeContent, imgStyle, imgTouchTap} = this.props;
+
         return (
             <GridList
-                cellHeight={"auto"}
-                cols={this.props.cols}
+                cellHeight={'auto'}
+                cols={cols || 2}
+                padding={0}
                 style={Object.assign({}, {
                     margin: 0,
-                    padding: "0 10px",
-                    boxSizing: "border-box"
-                }, this.props.style)}
-            >
-                {this.props.data.map((item) => (
-                    <Badge
-                        key={item.id}
-                        data-id={item.id}
-                        style={Object.assign({}, style.tile, this.props.itemStyle)}
-                        badgeStyle={Object.assign({}, {
+                    padding: `0 ${toRem(20)}`,
+                    boxSizing: "border-box"}, style || {})}>
+
+                <div ref="addBtn" style={Object.assign({}, {
+                        ...styles.tile,
+                        backgroundColor: "#fff",
+                        border: "1px solid #ccc"
+                    }, itemStyle || {})}
+                    onClick={() => {
+                        this.addBtnTouchTap();
+                    }}>
+
+                    <AddIcon style={{
+                        position: "relative",
+                        top: "20%",
+                        left: "20%",
+                        width: "60%",
+                        height: "60%",
+                        color: "#ccc"
+                    }}/>
+
+                    <input
+                        ref="addImgInp"
+                        type="file"
+                        accept="image/*"
+                        style={{display: "none"}}
+                        onChange={this.listenInputChange}/>
+
+                </div>
+
+                {data && data.map((item) => (<Badge
+                    key={item.id}
+                    data-id={item.id}
+                    style={Object.assign({}, styles.tile, itemStyle || {})}
+                    badgeStyle={Object.assign({}, {
                             display: item.isShowBadge ? "block" : "none",
                             position: "absolute",
-                            backgroundColor: this.props.badgeBackgroundColor || "#a4c639",
-                        }, this.props.badgeStyle)}
-                        badgeContent={this.props.badgeContent}
-                    >
-                        {!item.isShowAddBtn ? (<img
-                            src={item.imgUrl}
-                            style={style.tileImg}
-                            onError={function (e) {
-                                e.target.src = defaultImg;
-                            }}
-                            onTouchTap={() => {
-                                if (this.props.imgTouchTap) {
-                                    this.props.imgTouchTap(item);
-                                }
-                            }}
-                        />) : (<div
-                            style={Object.assign({}, style.tileImg, {
-                                backgroundColor: "#fff",
-                                border: "1px solid #ccc"
-                            })}
-                            onClick={() => {
-                                this.addBtnTouchTap();
-                            }}>
-                            <AddIcon style={{
-                                position: "relative",
-                                top: "20%",
-                                left: "20%",
-                                width: "60%",
-                                height: "60%",
-                                color: "#ccc"
-                            }}/>
-                            <input
-                                ref="addImgInp"
-                                type="file"
-                                accept="image/*"
-                                style={{display: "none"}}
-                                onChange={this.listenInputChange}
-                            />
-                        </div>)}
-                    </Badge>
-                ))}
+                            backgroundColor: badgeBackgroundColor || "#a4c639"
+                        },
+                        badgeStyle || {}
+                    )}
+                    badgeContent={badgeContent}>
+
+                    <img
+                        className="img-not-loaded"
+                        src={item.imgUrl || blankImg}
+                        style={Object.assign({}, {
+                            ...styles.tileImg,
+                            border: (isShowSelectBorder && item.isShowBadge) ? `${toRem(8)} solid #ff6832` : 'none'
+                        }, imgStyle || {})}
+                        onError={function (e) {
+                            e.target.src = blankImg;
+                        }}
+                        onClick={() => {
+                            imgTouchTap && imgTouchTap(item);
+                        }}/>
+
+                </Badge>))}
+
             </GridList>
 
         );
     }
 
-    // 添加按钮点击事件
+    /**
+     * 添加按钮点击事件
+     */
     addBtnTouchTap() {
-        const addBtnTouchTap = this.props.addBtnTouchTap;
-        if (addBtnTouchTap) {
-            addBtnTouchTap();
-            return;
-        }
-        const addBtn = this.props.addBtn;
-        if (addBtn || addBtn.isLoadImg === true) {
-            return this.addImgInp.click();
-        }
-        return alert(addBtn.disabledTip || '不能再添加图片咯');
+        this.props.addBtnTouchTap && this.props.addBtnTouchTap();
+
+        !this.props.stopInput && this.addImgInp.click();
     }
 
+    /**
+     * 监听input[file] onChange事件
+     */
     listenInputChange() {
 
-        let _this = this;
-
-        let file = this.addImgInp.files[0];
-        if (file) {
-            let reader = new FileReader();
-            reader.onload = function() {
-                //处理 android 4.1 兼容问题
-                let base64 = reader.result.split(',')[1];
-                let dataUrl = 'data:image/png;base64,' + base64;
-
-                _this.props.inputChange(dataUrl);
-            };
-            reader.readAsDataURL(file);
-        }
+        const file = this.addImgInp.files[0];
+        if (file && this.props.inputChange)
+            this.props.inputChange(file);
     }
 }
+
+InputBox.propTypes = {
+    cols: PropTypes.number,
+    stopInput: PropTypes.bool,
+    data: PropTypes.array,
+    isShowAddBtn: PropTypes.bool,
+    style: PropTypes.object,
+    itemStyle: PropTypes.object,
+    badgeStyle: PropTypes.object,
+    badgeBackgroundColor: PropTypes.string,
+    badgeContent: PropTypes.object,
+    imgTouchTap: PropTypes.func,
+    inputChange: PropTypes.func,
+    addBtnTouchTap: PropTypes.func,
+    isShowSelectBorder: PropTypes.bool
+};
 
 export default InputBox;

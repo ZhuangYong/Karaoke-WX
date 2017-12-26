@@ -5,6 +5,7 @@ import ActionTypes from "../../../actions/actionTypes";
 import {fetchProcess} from "../../../utils/fetchUtils";
 
 let initState = {
+    OSSTokenData: {},
     photoAlbumListStamp: 0,
     photoAlbumUploadStamp: 0
 };
@@ -17,18 +18,21 @@ export default (state = initState, action = {}) => {
                 stamp: "photoAlbumListStamp",
                 loading: "photoAlbumListLoading"
             });
-        case ActionTypes.USER.API_PHOTO_ALBUM_UPLOAD:
-            return fetchProcess(state, action, {
-                data: "photoAlbumUpload",
-                msg: "photoAlbumUploadMsg",
-                stamp: "photoAlbumUploadStamp",
-                loading: "photoAlbumUploadLoading"
-            });
         case ActionTypes.USER.API_PHOTO_ALBUM_DELETE:
             return fetchProcess(state, action, {
                 data: "photoAlbumDelete",
                 msg: "photoAlbumDeleteMsg",
                 loading: "photoAlbumDeleteLoading"
+            });
+        case ActionTypes.USER.API_OSS_TOKEN:
+            return fetchProcess(state, action, {
+                data: "OSSTokenData",
+                msg: "OSSTokenMsg"
+            });
+        case ActionTypes.USER.API_OSS_UPLOAD_ALBUM:
+            return fetchProcess(state, action, {
+                data: "OSSUploadData",
+                msg: "OSSUploadMsg"
             });
         default:
             return state;

@@ -8,6 +8,19 @@ import ActionTypes from "./actionTypes";
 import sysConfig from "../utils/sysConfig";
 
 // ott登录
+export function OSSAccessToken(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_OSS_TOKEN;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_OSS_TOKEN
+        }, callback);
+    };
+}
+
+// ott登录
 export function OTTLogin(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_OTT_LOGIN;
     return (dispatch) => {
@@ -78,12 +91,12 @@ export function deleteRecording(data, headers, callback) {
 // 获取我的相册列表
 export function getPhotoAlbumList(data, headers) {
 
-    const url = apiUrl.API_PHOTO_ALBUM_LIST;
+    const url = sysConfig.apiDomain + apiUrl.API_PHOTO_ALBUM_LIST;
 
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
-            type: "get",
+            type: "post",
             headers: headers,
             action: ActionTypes.USER.API_GET_PHOTO_ALBUM_LIST
         }, null);
@@ -93,14 +106,14 @@ export function getPhotoAlbumList(data, headers) {
 // 我的相册上传图片
 export function uploadImg(data, headers, callback) {
 
-    const url = apiUrl.API_PHOTO_ALBUM_UPLOAD;
+    const url = sysConfig.apiDomain + apiUrl.API_OSS_UPLOAD_ALBUM;
 
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
-            type: "get",
+            type: "post",
             headers: headers,
-            action: ActionTypes.USER.API_PHOTO_ALBUM_UPLOAD
+            action: ActionTypes.USER.API_OSS_UPLOAD_ALBUM
         }, callback);
     };
 }
@@ -108,12 +121,12 @@ export function uploadImg(data, headers, callback) {
 // 删除图片
 export function deleteImg(data, headers, callback) {
 
-    const url = apiUrl.API_PHOTO_ALBUM_DELETE;
+    const url = sysConfig.apiDomain + apiUrl.API_PHOTO_ALBUM_DELETE;
 
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
-            type: "get",
+            type: "post",
             headers: headers,
             action: ActionTypes.USER.API_PHOTO_ALBUM_DELETE
         }, callback);

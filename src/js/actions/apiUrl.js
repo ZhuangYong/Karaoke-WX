@@ -55,12 +55,15 @@ export default {
     // 意见反馈提交
     "API_GET_FEEDBACK_SUBMIT": "/feedback/feedbackSubmit",
 
+    // STS server
+    "API_OSS_TOKEN": "/ossToken/accessToken",
+    // 相册上传
+    "API_OSS_UPLOAD_ALBUM": "/ossToken/ossUploadAlbum",
+
     // 查询我的相册列表
-    "API_PHOTO_ALBUM_LIST": "/api/getPhotoAlbum.json",
-    // 上传我的相册图片
-    "API_PHOTO_ALBUM_UPLOAD": "/api/photoAlbumUpload.json",
+    "API_PHOTO_ALBUM_LIST": "/user/qryWxUserAlbum",
     // 删除我的相册图片
-    "API_PHOTO_ALBUM_DELETE": "/api/photoAlbumDelete.json",
+    "API_PHOTO_ALBUM_DELETE": "/user/deleteAlbum",
 
     // 获取我的订单列表
     "API_GET_ORDER_FORM": "/invoice/orderList",

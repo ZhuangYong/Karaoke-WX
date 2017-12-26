@@ -19,16 +19,18 @@ const COMMON = {
 
 //user relative
 const USER = {
+    // STS server
+    API_OSS_TOKEN: "API_OSS_TOKEN",
     // OTT登录
     API_OTT_LOGIN: "API_OTT_LOGIN",
 
     // 获取用户信息
     API_GET_USER_INFO: "API_GET_USER_INFO",
 
+    // 相册上传
+    API_OSS_UPLOAD_ALBUM: "API_OSS_UPLOAD_ALBUM",
     // 查询我的相册列表
     API_GET_PHOTO_ALBUM_LIST: "API_GET_PHOTO_ALBUM_LIST",
-    // 上传我的相册图片
-    API_PHOTO_ALBUM_UPLOAD: "API_PHOTO_ALBUM_UPLOAD",
     // 删除我的相册图片
     API_PHOTO_ALBUM_DELETE: "API_PHOTO_ALBUM_DELETE",
 

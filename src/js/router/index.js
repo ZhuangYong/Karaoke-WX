@@ -35,9 +35,9 @@ import Suggestions from "../containers/forOldVersion/suggestions";
 import User from "../containers/user/index";
 import Recordings from '../containers/user/recordings';
 import PhotoAlbum from '../containers/user/photoAlbum';
+import PhotoAlbumCrop from '../containers/user/photoAlbum/crop';
 import Feedback from "../containers/user/feedback/index";
 import OrderForm from "../containers/user/orderForm/index";
-import Preview from '../containers/user/photoAlbum/preview';
 import InvoiceList from "../containers/user/orderForm/invoiceList";
 import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
 import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
@@ -116,11 +116,12 @@ const PhotoAlbumContainer = () => (
     </Bundle>
 );
 
-const PreviewContainer = () => (
-    <Bundle load={Preview}>
+const PhotoAlbumCropContainer = () => (
+    <Bundle load={PhotoAlbumCrop}>
         {Component => <Component />}
     </Bundle>
 );
+
 const AudioEffectContainer = () => (
     <Bundle load={AudioEffect}>
         {Component => <Component />}
@@ -223,8 +224,7 @@ export default class router extends React.Component {
                 <Route path={`/user/recordings`} exact component={RecordingsContainer}/>
                 <Route path={`/user/recordings/play/:uid`} component={AudioContainer}/>
                 <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
-                {/*imgId: 预览图片id*/}
-                <Route path={`/user/photoAlbumPreview/:imgId`} exact component={PreviewContainer}/>
+                <Route path={`/user/crop/:dataUrl`} exact component={PhotoAlbumCropContainer}/>
                 <Route path={`/user/myOrder`} exact component={myOrderContainer}/>
                 <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>
                 <Route path={`/user/invoiceOrder`} exact component={InvoiceOrderContainer}/>

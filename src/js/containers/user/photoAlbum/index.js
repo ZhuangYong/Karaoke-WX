@@ -6,341 +6,328 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import {getPhotoAlbumList, uploadImg, deleteImg} from "../../../actions/userActions";
-import {linkTo, reqHeader} from "../../../utils/comUtils";
+import { getPhotoAlbumList, uploadImg, deleteImg } from '../../../actions/userActions';
+import { linkTo, reqHeader, toRem } from '../../../utils/comUtils';
 import BaseComponent from "../../../components/common/BaseComponent";
-import {findDOMNode} from "react-dom";
-import $ from 'jquery';
-import cropper from 'cropper';
-
-import '../../../../css/cropper.css';
-import AppBar from 'material-ui/AppBar';
-import Paper from 'material-ui/Paper';
-import RaisedButton from 'material-ui/RaisedButton';
 import DoneIcon from "material-ui/svg-icons/action/done";
 
+import WxImageViewer from 'react-wx-images-viewer';
+
 import InputBox from "../../../components/photoAlbum";
-
-
-const addBtn = {
-    isShowAddBtn: true,
-    id: "addBtn"
-};
-
-const imgMax = {
-    size: 600 * 1024,
-    width: 650,
-    height: 650,
-    screenW: document.documentElement.clientWidth || document.body.clientWidth,
-    screenH: document.documentElement.clientHeight || document.body.clientHeight,
-    scaleRate: 0.8
-};
-
-let options = {
-    autoCrop: false,
-    viewMode: 0,
-    // background: false,
-    dragMode: 'move',
-    zoomable: true,
-    cropBoxResizable: false,
-    cropBoxMovable: false,
-    aspectRatio: 1 / 1,
-    minCropBoxWidth: imgMax.screenW * imgMax.scaleRate,
-    minCropBoxHeight: imgMax.screenW * imgMax.scaleRate,
-    minCanvasWidth: imgMax.screenW,
-    ready: function () {
-        $(this).cropper('scale', imgMax.scaleRate, imgMax.scaleRate);
-        $(this).cropper('crop');
-    }
-};
-
+import intl from 'react-intl-universal';
+import ButtonHeader from '../../../components/common/header/ButtonHeader';
+import { setGlobAlert } from '../../../actions/common/actions';
+import SubmitLoading from '../../../components/common/SubmitLoading';
 
 class PhotoAlbum extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title('我的相册');
 
         this.state = {
             data: [],
-            isSelectAll: true,
+            selectItemIds: [],
             isDeletePage: false,
-            isPhotoAlbumListPage: true,
-            cropPageImgUrl: null
+            deleteLoading: false,
+            visible: false,
+            viewerInd: 0,
+            totalCount: 0,
+            albumMaxNum: 0
         };
 
-        this.uploadImg = this.uploadImg.bind(this);
         this.updateList = this.updateList.bind(this);
-        this.updateAfterUploadImg = this.updateAfterUploadImg.bind(this);
         this.inputChange = this.inputChange.bind(this);
-    }
-
-    get cropPageImgDom() {
-        if (!this.refs)
-            return {};
-
-        return findDOMNode(this.refs.cropPageImgDom);
+        this.imgTouch = this.imgTouch.bind(this);
+        this.close = this.close.bind(this);
     }
 
     componentDidUpdate(preProps) {
         if (preProps.result.photoAlbumListStamp !== this.props.result.photoAlbumListStamp) {
             this.updateList();
         }
-        if (preProps.result.photoAlbumUploadStamp !== this.props.result.photoAlbumUploadStamp) {
-            this.updateAfterUploadImg();
-        }
     }
 
     componentDidMount() {
-        const params = {};
-        this.props.getPhotoAlbumListActions(params, reqHeader(params));
+
+        this.refreshAlbum();
     }
 
     render() {
         const dataList = this.state.data;
+        const totalCount = this.state.totalCount;
+        const albumMaxNum = this.state.albumMaxNum;
+        const selectItemIds = this.state.selectItemIds;
+        const isDeletePage = this.state.isDeletePage;
+
+        // 相册列表编辑页面判断是否全选状态
+        const isSelectAll = this.state.selectItemIds.length > 0 && this.state.selectItemIds.length === this.state.data.length;
+
+        // InputBox组件所需数据
+        const imgList = (() => {
+            let imgList = [];
+            dataList.map(item => {
+                let imgObj = {};
+                imgObj.id = item.id;
+                imgObj.imgUrl = item.thumbnail;
+                imgObj.isShowBadge = selectItemIds.indexOf(item.id) >= 0;
+                imgList.push(imgObj);
+            });
+
+            return imgList;
+        })();
+
+        // Viewer组件所需数据
+        const imgUrlList = (() => {
+            let imgUrlList = [];
+            dataList.map(item => {
+                imgUrlList.push(item.thumbnail);
+            });
+
+            return imgUrlList;
+        })();
 
         return (
-            <Paper zDepth={1} style={{backgroundColor: "#eee"}}>
-                {this.state.isPhotoAlbumListPage ? (
-                    <div style={{paddingTop: "66px", paddingBottom: "66px"}}>
-                        <AppBar
-                            style={{position: 'fixed', top: 0, left: 0}}
-                            title="我的相册"
-                            showMenuIconButton={false}
-                            iconElementRight={
-                                <RaisedButton
-                                    backgroundColor="#a4c639"
-                                    disabledBackgroundColor="#a4c630"
-                                    disabled={!(dataList.length > 1)}
-                                    onTouchTap={() => {
-                                        const isDeletePage = this.state.isDeletePage;
-                                        if (!isDeletePage) {
-                                            dataList.shift();
-                                        } else {
-                                            dataList.unshift(addBtn);
+            <section style={{
+                paddingTop: toRem(110),
+                paddingBottom: toRem(130)
+            }}>
+                <header>
+                    <ButtonHeader
+                        style={{
+                            position: 'fixed',
+                            top: 0,
+                            zIndex: 10
+                        }}
+                        isLoading={true}
+                        isShowLeftButton={false}
+                        title="我的相册"
 
-                                        }
-                                        this.setState({
-                                            isSelectAll: true,
-                                            isDeletePage: !isDeletePage,
-                                            data: dataList.filter((item) => {
-                                                item.isShowBadge = false;
-                                                return item;
-                                            })
-                                        });
-                                    }}
-                                >{this.state.isDeletePage ? '取消' : '编辑'}</RaisedButton>
-                            }
-                        />
+                        rightButtonClick={() => {
 
-                        <InputBox
-                            cols={3}
-                            badgeContent={<DoneIcon color="#fff"/>}
-                            data={dataList}
-                            inputChange={this.inputChange}
-                            imgTouchTap={(target) => {
-                                if (this.state.isDeletePage) {
-                                    const newDataList = dataList.filter((item) => {
-                                        if (item.id === target.id) {
-                                            item.isShowBadge = !item.isShowBadge;
-                                            return item;
-                                        }
-                                        return item;
-                                    });
-                                    this.setState({
-                                        data: newDataList
-                                    });
-                                } else {
-                                    linkTo(`user/photoAlbumPreview/${target.id}`, false, null);
-                                }
-                            }}
-                        />
-
-                    </div>
-                ) : (
-                    <div>
-                        <div
-                            style={{width: imgMax.screenW, height: imgMax.screenH}}
-                        >
-                            <img
-                                ref="cropPageImgDom"
-                                style={{width: '100%', height: 'auto'}}
-                                src={this.state.cropPageImgUrl}
-                            />
-                        </div>
-
-                        <AppBar
-                            style={{position: 'fixed', bottom: 0, left: 0}}
-                            iconElementLeft={<RaisedButton
-                                backgroundColor="#a4c639"
-                                label="取消"
-                                onTouchTap={(e) => {
-                                    e.preventDefault();
-                                    this.setState({
-                                        isPhotoAlbumListPage: true
-                                    });
-                                    $(this.cropPageImgDom).cropper('destroy');
-                                }}
-                            />}
-                            iconElementRight={<RaisedButton
-                                backgroundColor="#a4c639"
-                                label="截图"
-                                onTouchTap={(e) => {
-                                    e.preventDefault();
-                                    this.uploadImg(this.cropPageImgDom);
-                                }}
-                            />}
-                        />
-                    </div>
-                )}
-                {this.state.isDeletePage && (<AppBar
-                    style={{position: 'fixed', bottom: 0, left: 0}}
-                    iconElementLeft={<RaisedButton
-                        backgroundColor="#a4c639"
-                        onTouchTap={() => {
                             this.setState({
-                                isSelectAll: !this.state.isSelectAll,
-                                data: dataList.filter((item) => {
-                                    item.isShowBadge = this.state.isSelectAll;
-                                    return item;
-                                })
+                                isDeletePage: !isDeletePage,
+                                selectItemIds: []
                             });
                         }}
-                    >{this.state.isSelectAll ? "全部选择" : "全部不选"}</RaisedButton>}
-                    iconElementRight={<RaisedButton
-                        backgroundColor="#a4c639"
-                        disabledBackgroundColor="#a4c630"
-                        label="删除"
-                        disabled={dataList.filter((item) => {
-                            if (item.isShowBadge) {
-                                return item;
-                            }
-                        }).length <= 0}
-                        onTouchTap={() => {
-                            this.deleteImg();
+                        rightButtonDisabled={!(totalCount > 0)}
+                        rightButtonLabel={isDeletePage ? '取消' : '编辑'}
+                    />
+                    <div style={{
+                        position: 'fixed',
+                        top: '0',
+                        left: toRem(170),
+                        color: "#ff6832",
+                        fontSize: toRem(24),
+                        lineHeight: toRem(110),
+                        zIndex: 11
+                    }}>({totalCount}/{albumMaxNum})</div>
+                </header>
+
+                <InputBox
+                    cols={3}
+                    stopInput={!(totalCount < albumMaxNum)}
+                    isShowAddBtn={!isDeletePage}
+                    addBtnTouchTap={() => {
+                        !(totalCount < albumMaxNum) && this.props.action_setGlobAlert(`最多上传${albumMaxNum}张哦`);
+                    }}
+                    badgeStyle={{
+                        width: 0,
+                        height: 0,
+                        borderRadius: 0,
+                        backgroundColor: 'none',
+                        borderTop: `${toRem(100)} solid #ff6832`,
+                        borderLeft: `${toRem(100)} solid transparent`
+                    }}
+                    badgeContent={<DoneIcon
+                        color="#fff"
+                        style={{
+                            position: 'absolute',
+                            top: `-${toRem(92)}`,
+                            right: toRem(8)
+                        }} />}
+                    isShowSelectBorder={true}
+                    data={imgList}
+                    inputChange={this.inputChange}
+                    imgTouchTap={this.imgTouch} />
+
+                {isDeletePage && <footer>
+                    <ButtonHeader
+                        isLoading={true}
+                        style={{
+                            position: 'fixed',
+                            bottom: 0,
+                            border: 'none',
+                            borderTop: "2px solid #d7d7d7"
                         }}
-                    />}
-                />)}
-            </Paper>
+                        isShowLeftButton={true}
+                        leftButtonClick={() => {
+
+                            const newSelectItemIds = isSelectAll ? [] : (() => {
+                                let ids = [];
+                                dataList.map(data => {
+                                    ids.push(data.id);
+                                });
+                                return ids;
+                            })();
+
+                            this.setState({
+                                selectItemIds: newSelectItemIds
+                            });
+                        }}
+                        leftButtonLabel={!isSelectAll ? "全部选择" : "全部不选"}
+
+                        rightButtonClick={() => {
+                            this.deleteImgGetter(selectItemIds);
+                        }}
+                        rightButtonDisabled={selectItemIds.length <= 0}
+                        rightButtonLabel='删除'
+                    />
+                </footer>}
+
+                {this.state.visible && <WxImageViewer
+                    maxZoomNum={1}
+                    onClose={this.close}
+                    urls={imgUrlList}
+                    index={this.state.viewerInd}/>}
+
+
+                <SubmitLoading hide={!this.state.deleteLoading} />
+
+            </section>
         );
     }
 
-    updateAfterUploadImg() {
-        const preStateData = this.state.data;
-        const {data} = this.props.result.photoAlbumUpload || {data: {}};
-        data.isShowBadge = false;
-        const addBtn = preStateData.shift();
+    /**
+     * 预览组件关闭
+     */
+    close() {
         this.setState({
-           data: [addBtn, data, ...preStateData]
+            visible: false
         });
     }
 
-    updateList() {
-        const {data} = this.props.result.photoAlbumList || {data: []};
-        data.unshift(addBtn);
-        this.setState({
-            data: data.filter((item) => {
-                item.isShowBadge = false;
-                return item;
-            })
-        });
-    }
+    /**
+     * 图片点击事件
+     * @param target 被点击图片对象
+     */
+    imgTouch(target) {
 
-    deleteImg() {
-        let dataList = this.state.data;
+        const dataList = this.state.data;
+        const selectItemIds = this.state.selectItemIds;
         const isDeletePage = this.state.isDeletePage;
-        if (!isDeletePage) {
-            dataList.shift();
-        } else {
-            dataList.unshift(addBtn);
+        const targetId = target.id;
 
-        }
-        this.setState({
-            isSelectAll: false,
-            isDeletePage: false,
-            data: dataList.filter((item) => {
-                if (item.isShowBadge) {
-                    console.log(item);
-                    return null;
-                }
-                return item;
-            })
-        });
-    }
+        if (isDeletePage) {
 
-    uploadImg(img) {
-        console.log('clickSaveImg');
-        let imgCanvas = $(img).cropper('getCroppedCanvas', {
-            width: imgMax.width,
-            height: imgMax.height,
-            fillColor: '#000',
-            imageSmoothingEnabled: false,
-            imageSmoothingQuality: 'high'
-        });
+            const selectItemIdIdn = selectItemIds.indexOf(targetId);
+            if (selectItemIdIdn >= 0) {
+                selectItemIds.splice(selectItemIdIdn, 1);
+            } else {
+                selectItemIds.push(dataList.filter(data => {
+                    return data.id === targetId;
+                })[0].id);
+            }
 
-        let imgBase64 = imgCanvas.toDataURL('image/jpeg', 1);
-
-        const params = this.dataURLtoBlob(imgBase64);
-        console.log(params);
-        this.props.uploadImgActions(params, reqHeader(params), () => {
             this.setState({
-                isPhotoAlbumListPage: true
+                selectItemIds: selectItemIds
             });
-            $(img).cropper('destroy');
-        });
 
-        /*$(img).cropper('destroy');
-        this.setState({
-            cropPageImgUrl: imgBase64
-        });*/
+        } else {
 
-        /*imgCanvas.toBlob(blob => {
-            console.log(blob);
-            alert('blob');
+            let viewerInd = this.state.viewerInd;
 
-            const param = blob;
-            this.props.uploadImgActions(param, reqHeader(param), () => {
-                this.setState({
-                    isPhotoAlbumListPage: true
-                });
+            dataList.forEach((val, ind) => {
+                viewerInd = val.id === targetId ? ind : viewerInd;
             });
-            $(img).cropper('destroy');
 
-        });*/
-    }
-
-    cropImg(img) {
-        $(img).cropper(options);
-    }
-
-    //**dataURL to blob**
-    dataURLtoBlob(dataUrl) {
-        let arr = dataUrl.split(','),
-            mime = arr[0].match(/:(.*?);/)[1],
-            bStr = atob(arr[1]),
-            n = bStr.length,
-            u8arr = new Uint8Array(n);
-        while (n--) {
-            u8arr[n] = bStr.charCodeAt(n);
+            this.setState({
+                visible: true,
+                viewerInd: viewerInd
+            });
         }
-        return new Blob([u8arr], { type: mime });
     }
 
-    inputChange(dataUrl) {
-        let _this = this;
-        //加载图片获取图片真实宽度和高度
-        let image = new Image();
-        image.onload = function() {
-            let width = image.width;
-            let height = image.height;
-            console.log(width + '---' + height);
+    /**
+     * 获取相册列表
+     */
+    refreshAlbum() {
+        const params = {};
+        this.props.getPhotoAlbumListActions(params, reqHeader(params));
+    }
 
-            _this.setState({
-                isPhotoAlbumListPage: false,
-                cropPageImgUrl: dataUrl
-            });
+    /**
+     * 用于当页面state更新时，更新页面数据
+     */
+    updateList() {
+        const {data} = this.props.result.photoAlbumList;
+        const {result, totalCount, albumMaxNum} = data;
+        this.setState({
+            albumMaxNum: albumMaxNum,
+            totalCount: totalCount,
+            data: result
+        });
+    }
 
-            _this.cropImg(_this.cropPageImgDom);
+    /**
+     * 删除图片
+     * @param ids 删除图片id[]
+     */
+    deleteImgGetter(ids) {
+        this.setState({
+            deleteLoading: true
+        });
+        let dataList = this.state.data;
+        const globAlert = this.props.action_setGlobAlert;
+
+        const params = {
+            uid: ids.join(',')
         };
-        image.src = dataUrl;
+        this.props.deleteImgActions(params, reqHeader(params), res => {
+            const {status} = res;
+
+            if (parseInt(status, 10) === 1) {
+                const newDataList = dataList.filter(item => {
+                    return ids.indexOf(item.id) < 0;
+                });
+
+                this.setState({
+                    data: newDataList,
+                    totalCount: newDataList.length,
+                    selectItemIds: [],
+                    deleteLoading: false,
+                    isDeletePage: newDataList.length > 0
+                });
+
+                globAlert(intl.get("msg.delete.success"));
+            } else {
+
+                globAlert(intl.get("msg.delete.fail"));
+                this.setState({
+                    deleteLoading: false
+                });
+            }
+        });
+    }
+
+    /**
+     * 监听添加图片时的input[file] onchange事件
+     * @param file 图片文件file[0]
+     */
+    inputChange(file) {
+        // console.log(file);
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            //处理 android 4.1 兼容问题
+            const base64 = reader.result.split(',')[1];
+            const dataUrl = 'data:image/png;base64,' + base64;
+            const sessionKey = 'uploadImageDataUrl';
+
+            window.sessionStorage.setItem(sessionKey, dataUrl);
+
+            linkTo(`user/crop/${sessionKey}`, false, null);
+        };
+        reader.readAsDataURL(file);
     }
 
 }
@@ -363,7 +350,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getPhotoAlbumListActions: bindActionCreators(getPhotoAlbumList, dispatch),
         uploadImgActions: bindActionCreators(uploadImg, dispatch),
-        deleteImgActions: bindActionCreators(deleteImg, dispatch)
+        deleteImgActions: bindActionCreators(deleteImg, dispatch),
+        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 

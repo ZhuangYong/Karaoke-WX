@@ -8,8 +8,11 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
-import {feedbackSubmit, getFeedbackQuestionList, uploadImgWeiXin} from "../../../actions/userActions";
-import {getEncryptHeader, reqHeader} from "../../../utils/comUtils";
+import {
+    deleteImg, feedbackSubmit, getFeedbackQuestionList, OSSAccessToken,
+    uploadImg
+} from '../../../actions/userActions';
+import { getEncryptHeader, getWxinfoFromSession, reqHeader, toRem } from '../../../utils/comUtils';
 
 import {GridList, GridTile} from "material-ui/GridList";
 import Snackbar from "material-ui/Snackbar";
@@ -22,6 +25,9 @@ import ButtonPage from "../../../components/common/ButtonPage";
 import {setGlobAlert} from "../../../actions/common/actions";
 import ActionTypes from "../../../actions/actionTypes";
 import intl from 'react-intl-universal';
+import OSS from "../../../../css/aliyun-oss-sdk-4.4.4.min";
+import UUID from "short-uuid";
+import SubmitLoading from '../../../components/common/SubmitLoading';
 
 const styles = {
     sectionHeader: {
@@ -89,11 +95,6 @@ const styles = {
     }
 };
 
-const addBtn = {
-    isShowAddBtn: true,
-    id: "addBtn"
-};
-
 
 class Feedback extends BaseComponent {
     constructor(props) {
@@ -103,7 +104,7 @@ class Feedback extends BaseComponent {
         this.state = {
             matchParams: this.props.match.params,
             questionList: [],
-            imgList: [addBtn],
+            imgList: [],
             submitParams: {
                 questionIds: null,
                 content: "",
@@ -111,32 +112,66 @@ class Feedback extends BaseComponent {
                 tel: null
             },
             showAlert: false,
-            globAlert: "toast"
+            globAlert: "toast",
+            client: null,
+            deleteLoading: false,
+            uploadImgLoading: false
         };
 
-        this.addBtnClick = this.addBtnClick.bind(this);
         this.submit = this.submit.bind(this);
         this.closePage = this.closePage.bind(this);
+        this.inputChange = this.inputChange.bind(this);
+        this.uploadImgGetter = this.uploadImgGetter.bind(this);
+        this.deleteImgGetter = this.deleteImgGetter.bind(this);
     }
 
     componentDidUpdate(preProps) {
 
+        /**
+         * 页面内容处理
+         */
         const matchParams = this.props.match.params;
         if (preProps.match.params.state !== matchParams.state) {
             this.setState({
                 matchParams: matchParams
             });
         }
+
+        /**
+         * 生成OSS实例对象
+         */
+        const {data} = this.props.result.OSSTokenData;
+        if (typeof data !== 'undefined' && data !== {} && this.state.client === null) {
+
+            this.state.client = new OSS.Wrapper({
+                accessKeyId: data.accessKeyId,
+                accessKeySecret: data.accessKeySecret,
+                stsToken: data.securityToken,
+                endpoint: data.endpoint,
+                bucket: data.bucketName
+            });
+        }
     }
 
     componentDidMount() {
+
+        /**
+         * 获取问题类型列表
+         * @type {{}}
+         */
         const questionListParams = {};
         this.props.getFeedbackQuestionListAction(questionListParams, reqHeader(questionListParams));
+
+        /**
+         * 获取OSS对象参数
+         */
+        this.props.OSSTokenActions({}, reqHeader({}));
     }
 
     render() {
         const {data} = this.props.questionList.questionListData || {data: {}};
         const {result} = data || {};
+        const imgList = this.state.imgList;
         const questionList = result || [];
         let submitParams = this.state.submitParams;
 
@@ -240,29 +275,34 @@ class Feedback extends BaseComponent {
 
                         <InputBox
                             cols={5}
+                            isShowAddBtn={imgList.length < 5}
+                            itemStyle={{
+                                margin: 0,
+                                padding: `0 ${toRem(5)}`,
+                                width: toRem(140),
+                                height: toRem(140)
+                            }}
                             badgeBackgroundColor="#ce0000"
-                            itemStyle={{padding: "3px"}}
                             badgeContent={<ClearIcon
-                                style={{width: "20px", height: "20px"}}
+                                style={{
+                                    width: "20px",
+                                    height: "20px"
+                                }}
                                 color="#fff"
                                 onClick={(e) => {
                                     const deleteId = e.target.parentNode.parentNode.dataset.id;
-                                    let imgList = this.state.imgList.filter((tile) => {
-                                        if (parseInt(tile.id, 10) !== parseInt(deleteId, 10)) {
-                                            return tile;
-                                        }
-                                    });
-                                    if (imgList.length >= 4 && imgList[imgList.length - 1].isShowBadge) {
-                                        imgList.push(addBtn);
-                                    }
-                                    this.setState({
-                                        imgList: imgList
-                                    });
+
+                                    this.deleteImgGetter(deleteId);
                                 }}
                             />}
-                            badgeStyle={{width: "20px", height: "20px"}}
-                            data={this.state.imgList}
-                            addBtnTouchTap={this.addBtnClick}
+                            badgeStyle={{
+                                top: `-${toRem(5)}`,
+                                right: `-${toRem(2)}`,
+                                width: "20px",
+                                height: "20px"
+                            }}
+                            data={imgList}
+                            inputChange={this.inputChange}
                         />
                     </section>
                     <section
@@ -322,6 +362,8 @@ class Feedback extends BaseComponent {
                     buttonLabel={intl.get("button.close")}
                     touchTap={this.closePage}
                 />)}
+
+                <SubmitLoading hide={!(this.state.uploadImgLoading || this.state.deleteLoading)} />
             </div>
         );
     }
@@ -376,10 +418,8 @@ class Feedback extends BaseComponent {
         }
 
         let imgListIds = [];
-        this.state.imgList.forEach((tile, ind) => {
-            if (!tile.isShowAddBtn) {
-                imgListIds.push(tile.id);
-            }
+        this.state.imgList.map(tile => {
+            imgListIds.push(tile.id);
         });
 
         submitParams.imgIds = imgListIds.join(',');
@@ -406,71 +446,162 @@ class Feedback extends BaseComponent {
         });
     }
 
-    // 图片input onChange
-    addBtnClick() {
-        const {isWeixin} = window.sysInfo;
-        if (isWeixin) {
-            window.wx && window.wx.chooseImage({
-                count: 1, // 默认9
-                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
-                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
-                success: (res) => {
-                    const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                    localIds.map((item) => {
-                        window.wx.uploadImage({
-                            localId: item, // 需要上传的图片的本地ID，由chooseImage接口获得
-                            isShowProgressTips: 1, // 默认为1，显示进度提示
-                            success: (res) => {
-                                const params = {
-                                    mediaId: res.serverId // 返回图片的服务器端ID
-                                };
-                                this.props.uploadImgAction(params, reqHeader(params), (res) => {
-                                    const {data} = res;
-                                    data[0].isShowBadge = true;
-                                    let imgList = this.state.imgList;
-                                    if (imgList.length >= 5 && imgList[imgList.length - 1].isShowAddBtn) {
-                                        imgList.pop();
-                                    }
 
-                                    this.setState({
-                                        imgList: [data[0], ...imgList]
-                                    });
-                                });
-                            }
-                        });
-                    });
-                },
-                fail: () => {
-                    this.props.action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
-                }
+    /**
+     * 删除图片
+     * @param id 删除图片id[]
+     */
+    deleteImgGetter(id) {
+
+        this.setState({
+            deleteLoading: true
+        });
+        const globAlert = this.props.action_setGlobAlert;
+
+        const params = {
+            uid: id
+        };
+        this.props.deleteImgActions(params, reqHeader(params), res => {
+            const {status} = res;
+
+            if (parseInt(status, 10) === 1) {
+
+                let imgList = this.state.imgList.filter(tile => {
+                    if (parseInt(tile.id, 10) !== parseInt(id, 10))
+                        return tile;
+                });
+
+                this.setState({
+                    imgList: imgList,
+                    deleteLoading: false
+                });
+
+                globAlert(intl.get("msg.delete.success"));
+            } else {
+
+                globAlert(intl.get("msg.delete.fail"));
+                this.setState({
+                    deleteLoading: false
+                });
+            }
+        });
+    }
+
+    /**
+     * 监听添加图片时的input[file] onchange事件
+     * @param file 图片文件file[0]
+     */
+    inputChange(file) {
+        // console.log(file);
+        this.setState({
+           uploadImgLoading: true
+        });
+
+        const globAlert = this.props.action_setGlobAlert;
+        const name = 'feedback/' + UUID().new() + '.' + file.type.split('/')[1];
+
+        console.log(name);
+
+        this.uploadImgGetter(file, name).then(res => {
+
+            const {msg, id, url} = res;
+
+            let imgList = this.state.imgList;
+            const imgObj = {
+                id: id,
+                imgUrl: url,
+                isShowBadge: true
+            };
+
+            this.setState({
+                uploadImgLoading: false,
+                imgList: [...imgList, imgObj]
             });
-        } else {
-            this.props.action_setGlobAlert(intl.get("msg.upload.in.we.chat.waring"));
-        }
+
+            globAlert(msg);
+        }).catch(err => {
+
+            this.setState({
+                uploadImgLoading: false
+            });
+
+            globAlert(err.msg);
+        });
+    }
+
+    /**
+     * 上传图片到OSS，然后发文件路径传给服务器
+     * @param file 图片文件 required file/Buffer/String
+     * @param name 图片名字 string
+     */
+    uploadImgGetter(file, name) {
+        // console.log(file);
+
+        return new Promise((resolve, reject) => {
+            const userInfo = getWxinfoFromSession();
+            let result = {};
+            if (userInfo.status === 1) {
+                const {data} = userInfo;
+
+                const storeAs = data.uuid + '/' + name;
+
+                this.state.client.multipartUpload(storeAs, file).then(result => {
+                    console.log(result);
+                    const param = {
+                        key: result.name
+                    };
+
+                    this.props.uploadImgActions(param, reqHeader(param), res => {
+                        console.log("======上传成功========");
+                        const {status, data} = res;
+                        if (parseInt(status, 10) === 1) {
+
+                            result = {...data, msg: "上传成功"};
+                            resolve(result);
+                        } else {
+
+                            result = {msg: "上传服务器失败"};
+                            reject(result);
+                        }
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    result = {msg: "上传OSS失败"};
+                    reject(result);
+                });
+
+            } else {
+                result = {msg: intl.get("get.user.info.fail.try.again")};
+                reject(result);
+            }
+        });
+
     }
 
 }
 
 Feedback.defaultProps = {
     questionList: {},
-    uploadImgData: {}
+    result: {}
 };
 
 Feedback.propTypes = {
     questionList: PropTypes.object,
-    uploadImgData: PropTypes.object
+    result: PropTypes.object
 };
 
 const mapStateToProps = (state, ownPorps) => {
     return {
         questionList: state.app.user.feedback,
-        uploadImgData: state.app.user.uploadImg
+        result: state.app.user.photoAlbum
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        OSSTokenActions: bindActionCreators(OSSAccessToken, dispatch),
         getFeedbackQuestionListAction: bindActionCreators(getFeedbackQuestionList, dispatch),
-        uploadImgAction: bindActionCreators(uploadImgWeiXin, dispatch),
+        uploadImgActions: bindActionCreators(uploadImg, dispatch),
+        deleteImgActions: bindActionCreators(deleteImg, dispatch),
         feedbackSubmitAction: bindActionCreators(feedbackSubmit, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };

@@ -14,6 +14,7 @@ import SvgIcon from 'material-ui/SvgIcon';
 import FeedbackIcon from "../../../img/to_feedback.png";
 import DeviceIcon from "../../../img/user_device.png";
 import MyOrderingsIcon from "../../../img/user_myOrder.png";
+import MyAlbumIcon from "../../../img/user_album.png";
 import HeaderBgIcon from "../../../img/user_header_bg.png";
 import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
@@ -163,7 +164,7 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>
+                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 4}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -195,7 +196,7 @@ class UserIndex extends BaseComponent {
                         </GridTile>
 
                         {
-                            (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div></div> : <GridTile
+                            (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div /> : <GridTile
                                 onTouchTap={() => {
                                     linkTo(`user/orderForm`, false, null);
                                     // linkTo(`user/myOrder`, false, null);
@@ -205,6 +206,20 @@ class UserIndex extends BaseComponent {
                                     style={{...styles.headerImg, width: "auto"}}
                                 />
                                 <div style={styles.headerDesc}>{intl.get("title.my.order")}</div>
+                            </GridTile>
+                        }
+
+                        {
+                            (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div /> : <GridTile
+                                onTouchTap={() => {
+                                    linkTo(`user/photoAlbum`, false, null);
+                                    // linkTo(`user/myOrder`, false, null);
+                                }}>
+                                <img
+                                    src={MyAlbumIcon}
+                                    style={{...styles.headerImg, width: "auto"}}
+                                />
+                                <div style={styles.headerDesc}>{intl.get("title.my.photoAlbum")}</div>
                             </GridTile>
                         }
 
