@@ -5,7 +5,7 @@
 /*测试环境配置*/
 module.exports = {
     appVersion: '1.1.1', // 版本号
-    environment: 'f4',
+    environment: 'expand',
     apiDomain: 'http://120.27.250.32:9080',
     contextPath: "/",
     // mallIndex: 'https://jmake.haitai.tv/haitai-weisite/shop/index',
