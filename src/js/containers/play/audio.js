@@ -38,7 +38,7 @@ class PlayAudio extends BaseComponent {
 
     componentWillMount() {
         const params = {...this.state.params, openid: getQueryString('openid')};
-        // console.log(params);
+        console.log(params);
         this.props.actions.getShareAudio(params, reqHeader(params));
     }
 
