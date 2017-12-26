@@ -226,8 +226,10 @@ class Crop extends BaseComponent {
                 const storeAs = data.uuid + '/' + name;
 
                 this.state.client.put(storeAs, file).then(result => {
+
                     console.log(result);
                     const param = {
+                        type: 1,
                         key: result.name
                     };
 

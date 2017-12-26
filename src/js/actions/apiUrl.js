@@ -57,7 +57,12 @@ export default {
 
     // STS server
     "API_OSS_TOKEN": "/ossToken/accessToken",
-    // 相册上传
+
+    /**
+     * 相册上传
+     * @param type 1: 相册图片 2: 反馈图片
+     * @param key 上传OSS时图片的storeAs
+     */
     "API_OSS_UPLOAD_ALBUM": "/ossToken/ossUploadAlbum",
 
     // 查询我的相册列表

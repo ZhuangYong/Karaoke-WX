@@ -548,6 +548,7 @@ class Feedback extends BaseComponent {
                 this.state.client.multipartUpload(storeAs, file).then(result => {
                     console.log(result);
                     const param = {
+                        type: 2,
                         key: result.name
                     };
 
