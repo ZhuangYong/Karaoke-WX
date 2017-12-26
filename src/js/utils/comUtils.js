@@ -499,15 +499,15 @@ export function dynaPush(funcParam = {
     userInfo: {},
     param: {},
     localNetIsWork: false,
-    actionPushLocal: f => f,
-    actionSetLocalNet: f => f,
-    actionPush: f => f,
-    actionSetGlobAlert: f => f,
+    action_pushLocal: f => f,
+    action_setLocalNet: f => f,
+    action_push: f => f,
+    action_setGlobAlert: f => f,
     success: f => f,
     fail: f => f
 
 }) {
-    const {ottInfo, userInfo, param, localNetIsWork, actionPushLocal, actionSetLocalNet, actionPush, actionSetGlobAlert, success, fail} = funcParam;
+    const {ottInfo, userInfo, param, localNetIsWork, action_pushLocal, action_setLocalNet, action_push, action_setGlobAlert, success, fail} = funcParam;
     const {data} = ottInfo || {};
     const {userInfoData} = userInfo || {};
     const {deviceIp, devicePort, networkType, systemTime, timeStamp} = data || {};
@@ -523,12 +523,12 @@ export function dynaPush(funcParam = {
         return false;
     };
     if (!ottIsOnLine()) {
-        actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+        action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
         return;
     }
     if (typeof window.gxTime !== 'undefined') {
         if (window.gxTime === 0) {
-            actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
+            action_setGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
             return;
         }
     }
@@ -542,15 +542,15 @@ export function dynaPush(funcParam = {
         }
     };
     if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
-        actionPushLocal(localPri, localParam, localHeader, success, (msg, err, rejectCode) => {
+        action_pushLocal(localPri, localParam, localHeader, success, (msg, err, rejectCode) => {
             if (!window.handelErrs) window.handelErrs = {};
             if (window.handelErrs[rejectCode]) return;
-            actionSetLocalNet(false);
-            actionPush(param, header, renderPushResult, fail);
+            action_setLocalNet(false);
+            action_push(param, header, renderPushResult, fail);
             window.handelErrs[rejectCode] = true;
         });
     } else {
-        actionPush(param, header, renderPushResult, fail);
+        action_push(param, header, renderPushResult, fail);
     }
 }
 
