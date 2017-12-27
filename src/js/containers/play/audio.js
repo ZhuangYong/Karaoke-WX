@@ -13,6 +13,7 @@ import {autoPlay} from 'react-swipeable-views-utils';
 import PropTypes from "prop-types";
 import {Subheader} from "material-ui";
 import BaseComponent from "../../components/common/BaseComponent";
+import SlidePngMall1 from "../../../img/mall/video.png";
 import SlidePng1 from "../../../img/album/1.png";
 import SlidePng2 from "../../../img/album/2.png";
 import SlidePng3 from "../../../img/album/3.png";
@@ -45,9 +46,9 @@ class PlayAudio extends BaseComponent {
     componentDidUpdate() {
         const imgUrl = this.state.imgUrl;
         const {isWeixin} = window.sysInfo;
-        if (isWeixin) {
-            const {data} = this.props.audio.audioInfo;
-            if (data && data.musicUrl && !this.state.autoPlayEd) {
+        const {data} = this.props.audio.audioInfo;
+        if (data && data.musicUrl && !this.state.autoPlayEd) {
+            if (isWeixin) {
                 window.wx && window.wx.ready(() => {
                     this.refs.audio.refs.audio.refs.audio.play();
                     this.state.autoPlayEd = true;
@@ -59,6 +60,11 @@ class PlayAudio extends BaseComponent {
                         imgUrl: imgUrl === "" ? data.image : imgUrl,
                         dataUrl: data.musicUrl
                     });
+                });
+            } else {
+                this.refs.audio.refs.audio.refs.audio.play();
+                this.setState({
+                    autoPlayEd: true
                 });
             }
         }
@@ -81,6 +87,7 @@ class PlayAudio extends BaseComponent {
     }
 
     render() {
+        this.refs.audio && console.log(window.audio = this.refs.audio.refs.audio.refs.audio);
         const {w, h} = this.props.common;
         const {status, data, msg} = this.props.audio.audioInfo;
         const {image, musicUrl, musicTime, nameNorm} = data || {};
@@ -97,11 +104,12 @@ class PlayAudio extends BaseComponent {
         return (
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
-                    <AutoPlaySwipeAbleViews className="swipe-panel" style={swipePanelStyle}>
-                        <div className="img-div"><img src={SlidePng1}/></div>
-                        <div className="img-div"><img src={SlidePng2}/></div>
-                        <div className="img-div"><img src={SlidePng3}/></div>
-                    </AutoPlaySwipeAbleViews>
+                        <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
+                            <div className="img-div" onTouchTap={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
+                            <div className="img-div"><img src={SlidePng1}/></div>
+                            <div className="img-div"><img src={SlidePng2}/></div>
+                            <div className="img-div"><img src={SlidePng3}/></div>
+                        </AutoPlaySwipeAbleViews>
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>
                 <p className="song-label">

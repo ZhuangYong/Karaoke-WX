@@ -29,6 +29,8 @@ import NoNetworkImg from "../../../img/common/bg_no_network.png";
 import ActionTypes from "../../actions/actionTypes";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import intl from 'react-intl-universal';
+import MallImg from "../../../img/mall/me.png";
+import sysConfig from "../../utils/sysConfig";
 
 const longLan = isLongWordLanguage();
 const style = {
@@ -42,10 +44,10 @@ const style = {
     },
     controllerBtn: {
         width: "50%",
-        height: "3.4rem",
+        height: "3.2rem",
         maxHeight: 170,
         textAlign: "center",
-        marginTop: ".4rem",
+        marginTop: "0",
         display: 'flex',
         justifyContent: 'center',
         flexDirection: 'column',
@@ -223,16 +225,16 @@ class SongController extends BaseComponent {
         backgroundColor[this.state.tabIndex] = "white";
         fontColor[this.state.tabIndex] = "#ff6832";
         let extAreaMarginTop = (h / w) < 1.4 ? "0" : ".6rem";
-        let controllerButtonsMarginTop = (h / w) < 1.4 ? "2.4rem" : "2.8rem";
+        let controllerButtonsMarginTop = (h / w) < 1.4 ? "2.5rem" : "2.6rem";
         if (w >= 768 && h > w) {
             controllerButtonsMarginTop = '3.6rem';
-            extAreaMarginTop = '.6rem';
+            extAreaMarginTop = '.1rem';
         }
         if (h < w) {
-            tabContainerHeight = '8rem';
+            tabContainerHeight = '6rem';
         }
         if (h < w && h < 768) {
-            extAreaMarginTop = '-.6rem';
+            extAreaMarginTop = '-.1rem';
         }
         return (
             <div>
@@ -364,6 +366,14 @@ class SongController extends BaseComponent {
                                     }
 
                                 </Paper>
+
+                                <Paper
+                                    zDepth={0}
+                                    style={{margin: '.3rem .267rem 2.2rem .267rem'}}
+                                >
+                                    <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
+                                </Paper>
+
                             </div> : <div/>
                         }
 

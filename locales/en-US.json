@@ -97,6 +97,7 @@
     "invoice.type": "Invoice type",
     "invoice.amount": "Invoice amount",
     "invoice.go": "Go invoice",
+    "invoice.i.go": "Go invoice",
     "invoice.co": "Company",
     "invoice.personal": "Personal",
     "invoice.title.type": "Title type",
