@@ -107,7 +107,7 @@ class PlayAudio extends BaseComponent {
 
         return (
             <div className="audio-play">
-                <div style={{
+                {/*<div style={{
                         position: 'relative',
                         float: 'right',
                         marginRight: toRem(20)
@@ -123,7 +123,7 @@ class PlayAudio extends BaseComponent {
                         color: "#ff6832",
                         fontSize: toRem(24)
                     }}>{isEdit ? '取消' : '编辑'}</span>
-                </div>
+                </div>*/}
 
                 <div className="top-panel" style={topPanelStyle}>
                         <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
