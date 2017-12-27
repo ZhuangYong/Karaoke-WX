@@ -97,6 +97,7 @@
     "invoice.type": "发票类型",
     "invoice.amount": "发票金额",
     "invoice.go": "去开票",
+    "invoice.i.go": "我要开票",
     "invoice.co": "公司",
     "invoice.personal": "个人",
     "invoice.title.type": "抬头类型",
