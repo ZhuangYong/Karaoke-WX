@@ -10,5 +10,5 @@ module.exports = {
     contextPath: "/",
     mallIndex: 'https://jmake.huo.so/shop/index',
     mallOrder: 'https://jmake.huo.so/shop/order_list',
-    appId: "wxb948b0bc6e5db6da"
+    appId: "wxe5ee6cace76c2abf"
 };
