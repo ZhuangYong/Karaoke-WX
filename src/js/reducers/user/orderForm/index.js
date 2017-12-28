@@ -8,7 +8,8 @@ import {fetchProcess} from "../../../../js/utils/fetchUtils";
 const initState = {
     orderFormStamp: 0,
     invoiceListStamp: 0,
-    invoiceOrderStamp: 0
+    invoiceOrderStamp: 0,
+    invoiceOrderForDetailStamp: 0
 };
 
 export default (state = initState, action) => {
@@ -46,6 +47,13 @@ export default (state = initState, action) => {
                 data: "invoiceDetailData",
                 msg: "invoiceDetailMsg",
                 loading: "invoiceDetailLoading"
+            });
+        case ActionTypes.USER.API_GET_INVOICE_DETAIL_ORDER:
+            return fetchProcess(state, action, {
+                data: "invoiceOrderForDetailData",
+                msg: "invoiceOrderForDetailMsg",
+                loading: "invoiceOrderForDetailLoading",
+                stamp: "invoiceOrderForDetailStamp"
             });
         case ActionTypes.USER.API_GET_INVOICE_SUBMIT:
             return fetchProcess(state, action, {
