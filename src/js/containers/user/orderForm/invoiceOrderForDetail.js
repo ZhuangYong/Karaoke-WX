@@ -26,7 +26,7 @@ class InvoiceOrderForDetail extends BaseOrderList {
                 {name: '', content: (item) => {
                     return parseTime(item.orderTime);
                 }},
-                {name: '订单号：', key: 'orderNo'},
+                {name: intl.get("order.no") + '：', key: 'orderNo'},
                 // {name: intl.get("order.device.no") + "：", key: 'deviceId'},
                 {name: intl.get("order.payment.amount") + "：", content: (item) => {
                     return '￥' + item.payAmount;

@@ -48,7 +48,7 @@ class InvoiceOrder extends BaseOrderList {
             dataKey: 'invoiceOrder',
             itemRules: [
                 {name: '', key: 'orderTime'},
-                {name: '订单号：', key: 'orderNo'},
+                {name: intl.get("order.no") + '：', key: 'orderNo'},
                 {name: intl.get("order.device.no") + "：", key: 'deviceId'},
                 {name: intl.get("order.payment.amount") + "：", content: (item) => {
                     return '￥' + item.payAmount;

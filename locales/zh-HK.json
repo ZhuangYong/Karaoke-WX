@@ -85,6 +85,7 @@
     "order.choose.all": "全選",
     "order.choose.ed": "已選",
     "order.all": "全部訂單",
+    "order.no": "訂單號",
     "order.device.no": "設備號",
     "order.payment.amount": "支付金額",
     "order.payment.package": "支付套餐",
@@ -105,6 +106,8 @@
     "invoice.title.type": "擡頭類型",
     "invoice.receipt.phone": "收票人手機",
     "invoice.receipt.email": "收票人郵箱",
+    "invoice.show.detail": "查看電子發票",
+    "invoice.include.number.order": "包含{number}個訂單",
     "invoice.taxpayer.identification.number": "納稅人識別號",
     "invoice.we.will.handel.first.time": "我們將會在第壹時間處理您的開票信息！",
 
