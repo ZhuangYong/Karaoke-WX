@@ -178,7 +178,7 @@ class InvoiceOrder extends BaseOrderList {
                 float: "right",
                 marginRight: "10px",
                 height: "100%",
-                fontSize: toRem(34),
+                fontSize: longLan ? toRem(24) : toRem(34),
                 lineHeight: toRem(110),
                 color: "#666"
             }}>{intl.get("total")}: &yen;{orderChosenTotalMoney}</div>
