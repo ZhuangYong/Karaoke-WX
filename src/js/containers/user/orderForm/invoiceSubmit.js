@@ -152,7 +152,7 @@ class InvoiceSubmit extends BaseComponent {
                         <span style={submitParams.gflx === "03" ? styles.tabActive : styles.tab}
                               onClick={() => {
                                   submitParams.gflx = "03";
-                                  submitParams.gfmc = "个人";
+                                  submitParams.gfmc = intl.get("invoice.personal");
                                   this.setState({
                                       submitParams: submitParams
                                   });
