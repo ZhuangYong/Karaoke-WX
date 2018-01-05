@@ -42,6 +42,8 @@ import InvoiceList from "../containers/user/orderForm/invoiceList";
 import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
 import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
 import InvoiceDetail from "../containers/user/orderForm/invoiceDetail";
+import InvoiceImage from "../containers/user/orderForm/invoiceImage";
+import InvoiceOrderForDetail from "../containers/user/orderForm/invoiceOrderForDetail";
 import InvoiceSubmitSuccess from "../containers/user/orderForm/invoiceSubmitSuccess";
 import myOrder from "../containers/user/orderForm/myOrder";
 
@@ -195,6 +197,16 @@ const InvoiceDetailContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const InvoiceImageContainer = () => (
+    <Bundle load={InvoiceImage}>
+        {Component => <Component />}
+    </Bundle>
+);
+const InvoiceOrderForDetailContainer = () => (
+    <Bundle load={InvoiceOrderForDetail}>
+        {Component => <Component />}
+    </Bundle>
+);
 const myOrderContainer = () => (
     <Bundle load={myOrder}>
         {Component => <Component />}
@@ -236,6 +248,8 @@ export default class router extends React.Component {
                 <Route path={`/user/invoiceSubmit/:ids/:totalMoney`} component={InvoiceSubmitContainer}/>
                 <Route path={`/user/invoiceSubmitSuccess`} component={InvoiceSubmitSuccessContainer}/>
                 <Route path={`/user/InvoiceDetail/:id`} component={InvoiceDetailContainer}/>
+                <Route path={`/user/InvoiceImage/:url`} component={InvoiceImageContainer}/>
+                <Route path={`/user/InvoiceOrderForDetail/:id`} component={InvoiceOrderForDetailContainer}/>
                 {/*
                         *state: home/success(页面状态)
                         *deviceId: 绑定设备号

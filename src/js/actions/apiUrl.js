@@ -89,6 +89,12 @@ export default {
     "API_GET_INVOICE_DETAIL": "/invoice/invoiceDetail",
 
     /**
+     * 查询当前发票所包含订单列表
+     * id
+     */
+    "API_GET_INVOICE_DETAIL_ORDER": "/invoice/listInvoiceOrder",
+
+    /**
      * 提交电子发票开票信息
      * 传入参数：
      * ids:订单id，多个逗号隔开

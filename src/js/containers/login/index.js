@@ -5,7 +5,7 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 
-import LoginIcon from "../../../img/login.png";
+import LoginIcon from "../../../img/logo.png";
 import navUtils from "../../utils/navUtils";
 import {OTTLogin} from "../../actions/userActions";
 import {reqHeader} from "../../utils/comUtils";
@@ -38,7 +38,7 @@ class Login extends BaseComponent {
             src={LoginIcon}
             disabled={typeof this.state.matchParams.uuid === "undefined"}
             content={this.matchPages()}
-            imgStyle={{width: "180px"}}
+            imgStyle={{width: "100px"}}
             buttonLabel={intl.get("login.sure.login")}
             hideButton={this.state.matchParams.state !== "home"}
             touchTap={() => {

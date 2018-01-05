@@ -195,6 +195,21 @@ export function getInvoiceDetail(data, headers, callback) {
     };
 }
 
+// 查询发票包含订单列表
+export function getInvoiceOrderForDetail(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_GET_INVOICE_DETAIL_ORDER;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_GET_INVOICE_DETAIL_ORDER
+        }, callback);
+    };
+}
+
 // 提交电子发票开票信息
 export function submitInvoice(data, headers, callback) {
 
