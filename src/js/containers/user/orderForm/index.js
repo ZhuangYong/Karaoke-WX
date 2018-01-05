@@ -26,7 +26,7 @@ class OrderForm extends BaseOrderList {
             deleteItem: null,
             itemRules: [
                 {name: '', key: 'orderTime'},
-                {name: intl.get("order.no"), key: 'orderNo'},
+                {name: intl.get("order.no") + '：', key: 'orderNo'},
                 {name: intl.get("order.device.no") + "：", key: 'deviceId'},
                 {name: intl.get("order.payment.amount") + "：", content: (item) => {
                     return '￥' + item.payAmount;
