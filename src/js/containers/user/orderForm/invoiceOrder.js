@@ -11,7 +11,7 @@ import { getInvoiceOrder } from '../../../actions/userActions';
 import BaseOrderList from '../../../components/common/BaseOrderList';
 import intl from 'react-intl-universal';
 import SucIcon from "material-ui/svg-icons/navigation/check";
-import { accAdd, linkTo, subtr, toRem } from '../../../utils/comUtils';
+import {accAdd, isLongWordLanguage, linkTo, subtr, toRem} from '../../../utils/comUtils';
 
 const styles = {
     deselect: {
@@ -35,6 +35,7 @@ const styles = {
         borderRadius: "20px"
     }
 };
+const longLan = isLongWordLanguage();
 
 class InvoiceOrder extends BaseOrderList {
     constructor(props) {
@@ -146,7 +147,8 @@ class InvoiceOrder extends BaseOrderList {
                 <span style={{
                     marginLeft: "40px",
                     lineHeight: toRem(110),
-                    fontSize: toRem(34),
+
+                    fontSize: longLan ? toRem(24) : toRem(34),
                     color: "#666"
                 }}>{orderList.length !== 0 && orderChosenIds.length > 0 ? intl.get("order.choose.ed") : intl.get("order.choose.all")}（{orderChosenIds.length}）</span>
             </header>

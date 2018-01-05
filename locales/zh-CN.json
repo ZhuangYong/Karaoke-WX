@@ -85,6 +85,7 @@
     "order.choose.all": "全选",
     "order.choose.ed": "已选",
     "order.all": "全部订单",
+    "order.include": "所含订单",
     "order.no": "订单号",
     "order.device.no": "设备号",
     "order.payment.amount": "支付金额",
@@ -112,6 +113,7 @@
     "invoice.we.will.handel.first.time": "我们将会在第一时间处理您的开票信息！",
 
     "feedback.problem.type": "问题类型",
+    "feedback.problem.desc": "问题描述",
     "feedback.write.down.your.suggest": "亲爱的麦粉，把你遇到的问题或建议写下来吧......",
     "feedback.too.much.word": "字太多啦，不准写了",
     "feedback.word.waring": "至少10个字，最多200字，不然宝宝要生气！",

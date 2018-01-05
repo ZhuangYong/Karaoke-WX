@@ -16,7 +16,7 @@ import Const from "../../../utils/const";
 class InvoiceOrderForDetail extends BaseOrderList {
     constructor(props) {
         super(props);
-        super.title("所含订单");
+        super.title(intl.get("order.include"));
 
         this.state = {
             ...this.defaultState,

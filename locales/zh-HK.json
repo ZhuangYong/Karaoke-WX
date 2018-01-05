@@ -85,6 +85,7 @@
     "order.choose.all": "全選",
     "order.choose.ed": "已選",
     "order.all": "全部訂單",
+    "order.include": "所含訂單",
     "order.no": "訂單號",
     "order.device.no": "設備號",
     "order.payment.amount": "支付金額",
@@ -112,6 +113,7 @@
     "invoice.we.will.handel.first.time": "我們將會在第壹時間處理您的開票信息！",
 
     "feedback.problem.type": "問題類型",
+    "feedback.problem.desc": "問題描述",
     "feedback.write.down.your.suggest": "親愛的麥粉，把妳遇到的問題或建議寫下來吧......",
     "feedback.too.much.word": "字太多啦，不準寫了",
     "feedback.word.waring": "至少10個字，最多200字，不然寶寶要生氣！",
