@@ -158,7 +158,7 @@ class InvoiceOrder extends BaseOrderList {
                     float: "right",
                     width: toRem(250),
                     height: "100%",
-                    fontSize: toRem(34),
+                    fontSize: longLan ? toRem(24) : toRem(34),
                     lineHeight: toRem(110),
                     textAlign: "center",
                     backgroundColor: "#ff6832",
