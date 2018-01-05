@@ -5,53 +5,63 @@ import React from "react";
 import {toRem} from "../../utils/comUtils";
 import {GridList, GridTile} from "material-ui/GridList";
 
+const styles = {
+    btn: {
+        width: "100%",
+        height: toRem(100),
+        lineHeight: toRem(100),
+        fontSize: toRem(36),
+        color: 'rgb(34, 34, 34)',
+        borderTop: "1px solid #ddd",
+        backgroundColor: "#fff",
+        textAlign: 'center'
+    }
+};
+
 class BottomDrawer extends React.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
-        const actions = this.props.actions;
-        let btns = [];
-        actions.forEach((item, ind) => {
-            btns.push(<div
-                key={ind}
-                style={{width: "100%", height: toRem(152), display: "flex", justifyContent: "center", alignItems: "center"}}>
-                {item}
-            </div>);
-        });
-        return (<div>
-            {this.props.open && (<section style={{
-                position: "fixed",
-                bottom: 0,
-                left: 0,
-                width: "100%",
-                height: toRem(152),
-                borderTop: "1px solid #ddd",
-                backgroundColor: "#fff",
-                zIndex: 6
-            }}>
-                <GridList
-                    cellHeight={"auto"}
-                    cols={actions.length}
-                    padding={0}>
 
-                    {btns}
-                </GridList>
-                <div
-                    onClick={this.props.onRequestChange}
-                    style={{
-                        position: "fixed",
-                        top: 0,
-                        right: 0,
-                        bottom: toRem(152),
-                        left: 0,
-                        backgroundColor: "rgba(0, 0, 0, .3)",
-                        zIndex: 3
-                    }}>
-                </div>
-            </section>)}
-        </div>);
+        const {open, onRequestChange, actions} = this.props;
+
+        return (open && (<section style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            zIndex: 6
+        }}>
+            <header
+                onClick={onRequestChange}
+                style={{
+                    position: "fixed",
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    backgroundColor: "rgba(0, 0, 0, .3)",
+                    zIndex: -1
+                }}>
+            </header>
+
+            <ul style={{
+                listStyle: 'none',
+                width: '100%',
+                margin: 0,
+                padding: 0
+            }}>
+                {
+                    actions && actions.map(item => <li style={styles.btn} onClick={item.fun}>{item.label}</li>)
+                }
+            </ul>
+
+            <footer style={{...styles.btn,
+                borderTop: `${toRem(20)} solid #d7d7d7`
+            }} onClick={onRequestChange}>取消</footer>
+        </section>));
     }
 }
 

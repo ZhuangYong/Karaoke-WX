@@ -13,6 +13,18 @@ export default (state = initialState, action = {}) => {
                 msg: "msg",
                 loading: "loading"
             });
+        case ActionTypes.AUDIO.API_UPLOAD_SOUND_ALBUM:
+            return fetchProcess(state, action, {
+                data: "uploadData",
+                msg: "uploadMsg",
+                loading: "uploadLoading"
+            });
+        case ActionTypes.AUDIO.API_GET_ALL_PICS:
+            return fetchProcess(state, action, {
+                data: "allPicsData",
+                msg: "allPicsMsg",
+                loading: "allPicsLoading"
+            });
         default:
             return state;
     }

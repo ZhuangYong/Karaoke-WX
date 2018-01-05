@@ -7,6 +7,7 @@ module.exports = {
     appVersion: '1.1.1', // 版本号
     environment: 'expand',
     apiDomain: 'http://120.27.250.32:9080',
+    // apiDomain: 'http://192.168.1.211:8080',
     contextPath: "/",
     // mallIndex: 'https://jmake.haitai.tv/haitai-weisite/shop/index',
     // mallOrder: 'https://jmake.haitai.tv/haitai-weisite/shop/order_list',

@@ -6,7 +6,7 @@ import {chkDevice, linkTo, toRem} from "../../utils/comUtils";
 import {GridList, GridTile} from "material-ui";
 import MoreHorizIcon from 'material-ui/svg-icons/navigation/more-horiz';
 
-import defaultImg from "../../../img/common/tile_default.jpg";
+import defaultImg from "../../../img/album/1.png";
 
 class RecordingGrid extends React.Component {
     constructor(props) {
@@ -15,7 +15,6 @@ class RecordingGrid extends React.Component {
 
     render() {
         const recordsList = this.props.data;
-        const {isIos} = chkDevice();
         return (<GridList
             cellHeight={"auto"}
             style={{margin: `0 ${toRem(20)}`, clear: "both"}}
@@ -23,7 +22,7 @@ class RecordingGrid extends React.Component {
         >
             {recordsList.map((tile) => (
                 <GridTile
-                    key={tile.uid}
+                    key={tile.shareId}
                     style={{
                         position: "relative",
                         width: toRem(230),
@@ -31,7 +30,7 @@ class RecordingGrid extends React.Component {
                     }}
                 >
                     <img
-                        src={tile.defaultImg}
+                        src={tile.pagePicture || defaultImg}
                         onError={function (e) {
                             e.target.src = defaultImg;
                         }}
@@ -42,13 +41,10 @@ class RecordingGrid extends React.Component {
                             height: toRem(230)
                         }}
                         onTouchTap={() => {
-                            if (isIos) {
-                                location.href = `/user/recordings/play/${tile.uid}`;
-                            } else {
-                                linkTo(`user/recordings/play/${tile.uid}`, false, null);
-                            }
+                            linkTo(`recording/edit/${tile.uid}/${tile.shareId}`, false, null);
                         }}
                     />
+
                     <div
                         style={{
                             position: "absolute",
@@ -62,7 +58,7 @@ class RecordingGrid extends React.Component {
                             boxSizing: "border-box"
                         }}
                         onClick={() => {
-                            this.props.operateClick(tile.uid);
+                            this.props.operateClick(tile);
                         }}>
                         <div style={{
                             display: "inline-block",

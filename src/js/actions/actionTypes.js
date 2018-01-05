@@ -36,8 +36,14 @@ const USER = {
 
     // 获取录音分享列表
     API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST",
+    // 录音编辑提交
+    API_UPLOAD_SOUND_ALBUM: "API_UPLOAD_SOUND_ALBUM",
+    // 获取录音关联图片
+    API_GET_ALL_PICS: "API_GET_ALL_PICS",
     // 删除录音
     API_DELETE_RECORDING: "API_DELETE_RECORDING",
+    // 更换录音封面图
+    API_CHANGE_FIRST_PAGE: "API_CHANGE_FIRST_PAGE",
 
     // 获取我的订单列表
     API_GET_ORDER_FORM: "API_GET_ORDER_FORM",

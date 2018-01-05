@@ -3,8 +3,8 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
-import {deleteRecording, getRecordsList, getUserInfo} from "../../actions/userActions";
-import {formatTime, linkTo, reqHeader, timeToYmd, toRem} from "../../utils/comUtils";
+import { deleteRecording, getRecordsList, getUserInfo } from '../../actions/userActions';
+import { formatTime, getWxinfoFromSession, linkTo, reqHeader, timeToYmd, toRem } from '../../utils/comUtils';
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
@@ -20,13 +20,15 @@ import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
 import VIPPayContent from "../../../img/vip_pay_content.png";
 import PayIcon from "../../../img/common/icon_pay.png";
-import {setGlobAlert} from "../../actions/common/actions";
+import { setGlobAlert } from '../../actions/common/actions';
 
 import defaultAvatar from "../../../img/default_avatar.png";
 import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
 import MallImg from "../../../img/mall/me.png";
 import sysConfig from "../../utils/sysConfig";
 import intl from 'react-intl-universal';
+import ButtonHeader from '../../components/common/header/ButtonHeader';
+import SubmitLoading from '../../components/common/SubmitLoading';
 
 const styles = {
     headerImg: {
@@ -57,11 +59,10 @@ const RightIcon = (props) => (<SvgIcon
     style={props.style}>
     <path style={{fillRule: "evenodd", clipRule: "evenodd"}} d="M13.729,11.236L1.722,0.294c-0.394-0.392-1.033-0.392-1.427,0c-0.394,0.392-0.394,1.028,0,1.42l11.283,10.283L0.296,22.28c-0.394,0.392-0.394,1.028,0,1.42c0.394,0.392,1.033,0.392,1.427,0l12.007-10.942c0.21-0.209,0.3-0.486,0.286-0.76C14.029,11.723,13.939,11.446,13.729,11.236z"/>
 </SvgIcon>);
-const RightCircleIcon = (props) => (<SvgIcon
-    style={props.style}
-    viewBox='0 0 32 32'>
-    <path style={{fillRule: "evenodd", clipRule: "evenodd"}} d="M20.536,15.121l-7.657-7.657c-0.391-0.391-1.024-0.391-1.414,0c-0.391,0.391-0.391,1.024,0,1.414L18.586,16l-7.121,7.121c-0.391,0.391-0.391,1.024,0,1.414c0.391,0.391,1.024,0.391,1.414,0l7.657-7.657c0.24-0.24,0.314-0.568,0.26-0.879C20.85,15.69,20.775,15.361,20.536,15.121z M16,0C7.163,0,0,7.164,0,16c0,8.837,7.163,16,16,16c8.837,0,16-7.163,16-16C32,7.164,24.837,0,16,0z M16,30C8.268,30,2,23.732,2,16C2,8.268,8.268,2,16,2c7.732,0,14,6.268,14,14C30,23.732,23.732,30,16,30z"/>
-</SvgIcon>);
+
+const CONFIG = {
+  NO_RECORDING_CHANNEL: "nst_yinba"
+};
 
 class UserIndex extends BaseComponent {
 
@@ -74,14 +75,20 @@ class UserIndex extends BaseComponent {
             recordsListTotalCounts: 0,
             recordsListData: [],
             open: false,
-            deleteRecordingUid: null
+            selectItem: null,
+            loading: false
         };
 
         this.updateRecordsList = this.updateRecordsList.bind(this);
         this.gxTimer = this.gxTimer.bind(this);
         this.showGxStatus = this.showGxStatus.bind(this);
+        this.deleteGetter = this.deleteGetter.bind(this);
+        this.changeCoverGetter = this.changeCoverGetter.bind(this);
     }
 
+    componentWillMount() {
+        window.sessionStorage.removeItem("recordingFormData");
+    }
     componentDidUpdate(preProps) {
         if (preProps.recordsList.recordsListStamp !== this.props.recordsList.recordsListStamp) {
             this.updateRecordsList();
@@ -95,15 +102,8 @@ class UserIndex extends BaseComponent {
 
     componentDidMount() {
 
-        if (super.isBindDevice(this.props.userInfo.userInfoData)) {
-            const getRecordsListParams = {
-                pageSize: 9,
-                currentPage: 1
-            };
-            this.props.getRecordsListAction(getRecordsListParams, reqHeader(getRecordsListParams));
-        }
+        this.getRecordingsGetter();
     }
-
     componentWillUnmount() {
         if (this.state.gxTimer) {
             clearInterval(this.state.gxTimer);
@@ -116,9 +116,8 @@ class UserIndex extends BaseComponent {
         const {data} = userInfoData || {data: {}};
         let {headerImg} = data;
         headerImg = headerImg || "";
-        const actionSetGlobAlert = this.props.action_setGlobAlert;
-        const recordsList = this.state.recordsListData;
-        const recordsListTotalCounts = this.state.recordsListTotalCounts;
+        const actionSetGlobAlert = this.props.globAlertAction;
+        const {recordsListData, recordsListTotalCounts, loading} = this.state;
         let bindDeviceStatus = parseInt(data.isReDevice, 10);
         if (bindDeviceStatus === 3) bindDeviceStatus = intl.get("device.bind.expired");
         if (bindDeviceStatus === 2) bindDeviceStatus = intl.get("device.disconnected");
@@ -227,55 +226,27 @@ class UserIndex extends BaseComponent {
 
                 </section>
 
-                {!(data.channel === "nst_yinba") && (<section>
-                    <header style={{
-                        width: "100%",
-                        height: "55px",
-                        borderTop: "5px solid #d9d5d5"
-                    }}>
-                        <div style={{
-                            float: "left",
-                            marginLeft: toRem(20),
-                            lineHeight: toRem(110),
-                            color: "#222",
-                            fontSize: toRem(34),
-                            fontWeight: "bold"
-                        }}>{intl.get("title.my.record")}</div>
-                        <div style={{
-                            float: "right",
-                            marginRight: toRem(20)
-                        }}
-                             onClick={() => {
-                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
+                {(!(data.channel === CONFIG.NO_RECORDING_CHANNEL)) && (<section>
+                    <header>
+                        <ButtonHeader
+                            title={intl.get("title.my.record")}
+                            rightButtonClick={() => {
+                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
 
-                                 if (recordsListTotalCounts < 1) {
-                                     actionSetGlobAlert(intl.get("audio.empty"));
-                                     return;
-                                 }
-                                 linkTo(`user/recordings`, false, null);
-                             }}>
-                            <span style={{
-                                lineHeight: toRem(110),
-                                color: "#999",
-                                fontSize: toRem(24)
-                            }}>{intl.get("audio.total", {number: recordsListTotalCounts})}</span>
+                                linkTo(`user/recordings`, false, null);
+                            }}
+                            rightButtonRightIcon={true}
+                            rightButtonDisabled={!(recordsListTotalCounts && recordsListTotalCounts > 0)}
+                            rightButtonLabel={intl.get("audio.total", {number: recordsListTotalCounts || 0})}
+                        />
 
-                            <RightCircleIcon style={{
-                                position: "relative",
-                                top: toRem(5),
-                                marginLeft: toRem(20),
-                                color: "#ff7d4f",
-                                width: toRem(30),
-                                height: toRem(30)
-                            }}/>
-                        </div>
                     </header>
 
                     <RecordingGrid
-                        data={(recordsList && recordsList.length) ? recordsList.filter((i, index) => index < 3) : []}
-                        operateClick={(uid) => {
+                        data={recordsListData || []}
+                        operateClick={(item) => {
                             this.setState({
-                                deleteRecordingUid: uid,
+                                selectItem: item,
                                 open: true
                             });
                         }}
@@ -299,51 +270,65 @@ class UserIndex extends BaseComponent {
                             open: false
                         });
                     }}
-                    actions={[
-                        <button
-                            style={{
-                                width: "80%",
-                                height: "100%",
-                                color: "#ff6832",
-                                fontSize: toRem(38),
-                                background: "#fff",
-                                border: "none"
-                            }}
-                            onClick={() => {
-                                const uid = this.state.deleteRecordingUid;
-                                const params = {
-                                    uid: uid
-                                };
-                                this.props.deleteRecordingAction(params, reqHeader(params), (res) => {
-                                    const {status} = res;
-                                    if (status === 1) {
-                                        const getRecordsListParams = {
-                                            pageSize: 9,
-                                            currentPage: 1
-                                        };
-                                        this.props.getRecordsListAction(getRecordsListParams, reqHeader(getRecordsListParams));
-                                    }
-                                    this.setState({
-                                        open: false
-                                    });
-                                });
-                            }}
-                        >{intl.get("button.delete")}</button>
-                    ]}
+                    actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
                 />
+
+                <SubmitLoading hide={!loading} />
+
             </div>
         );
     }
 
+    /**
+     * 删除录音
+     */
+    deleteGetter() {
+        this.setState({loading: true});
+        const {globAlertAction, deleteRecordingAction} = this.props;
+        const {selectItem} = this.state;
+        const params = {uid: selectItem.uid};
+        deleteRecordingAction(params, reqHeader(params), res => {
+            const {status} = res;
+            parseInt(status, 10) === 1 && this.getRecordingsGetter();
+            globAlertAction(parseInt(status, 10) === 1 ? '删除成功' : '删除失败');
+            this.setState({open: false, loading: false});
+        });
+    }
+
+    /**
+     * 更换录音封面
+     */
+    changeCoverGetter() {
+        const {selectItem} = this.state;
+        linkTo(`user/photoAlbum/cover/1/${selectItem.shareId}`, false, null);
+    }
+
+    /**
+     * 加载录音数据
+     */
+    getRecordingsGetter() {
+        const userInfoData = this.props.userInfo.userInfoData || getWxinfoFromSession();
+        const {openid, channel} = userInfoData.data;
+        if (openid && channel !== CONFIG.NO_RECORDING_CHANNEL) {
+
+            const getRecordsListParams = {
+                pageSize: 3,
+                currentPage: 1,
+                openid: openid
+            };
+            this.props.getRecordsListAction(getRecordsListParams, reqHeader(getRecordsListParams));
+        }
+    }
+
+    /**
+     * 更新录音数据
+     */
     updateRecordsList() {
-        const {status, data, msg} = this.props.recordsList.recordsListData || {};
-        const {result} = data || {result: []};
+        const {status, data, msg} = this.props.recordsList.recordsListData;
+        const {result, totalCount} = data;
         this.setState({
-            recordsListTotalCounts: data.totalCount,
-            recordsListData: result.filter((item) => {
-                item.defaultImg = this.randomDefaultImg();
-                return item;
-            })
+            recordsListTotalCounts: totalCount,
+            recordsListData: result
         });
     }
 
@@ -410,7 +395,7 @@ class UserIndex extends BaseComponent {
                 boxSizing: "initial"
             }}
             onTouchTap={() => {
-                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
+                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
 
                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
                     linkTo(`pay/deviceRegister`, false, null);
@@ -457,7 +442,7 @@ class UserIndex extends BaseComponent {
                 boxSizing: "initial"
             }}
             onTouchTap={() => {
-                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
+                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
 
                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
                     linkTo(`pay/deviceRegister`, false, null);
@@ -485,10 +470,6 @@ class UserIndex extends BaseComponent {
                 float: 'right'
             }} src={PayIcon} />
         </div>);
-    }
-
-    randomDefaultImg() {
-        return `../../../img/album/${parseInt(Math.random() * 3, 10) + 1}.png`;
     }
 
     gxTimer() {
@@ -531,7 +512,7 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         userInfoAction: bindActionCreators(getUserInfo, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch),
         deleteRecordingAction: bindActionCreators(deleteRecording, dispatch),
         getRecordsListAction: bindActionCreators(getRecordsList, dispatch)
     };

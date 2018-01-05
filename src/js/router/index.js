@@ -234,8 +234,14 @@ export default class router extends React.Component {
                 <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
                 <Route path={`/user`} exact component={UserContainer}/>
                 <Route path={`/user/recordings`} exact component={RecordingsContainer}/>
-                <Route path={`/user/recordings/play/:uid`} component={AudioContainer}/>
-                <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
+
+                /**
+                * 录音播放页面
+                * edit 是否可编辑 edit/play
+                * uid 录音id
+                */
+                <Route path={`/recording/:edit/:uid/:shareId?`} component={AudioContainer}/>
+                <Route path={`/user/photoAlbum/:edit?/:maxNum?/:shareId?`} exact component={PhotoAlbumContainer}/>
                 <Route path={`/user/crop/:dataUrl`} exact component={PhotoAlbumCropContainer}/>
                 <Route path={`/user/myOrder`} exact component={myOrderContainer}/>
                 <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>

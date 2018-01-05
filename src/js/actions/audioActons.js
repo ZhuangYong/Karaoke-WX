@@ -3,14 +3,14 @@ import {comFetch} from "../utils/fetchUtils";
 import apiUrl from "./apiUrl";
 import sysConfig from "../utils/sysConfig";
 
-export function getShareAudio(data, headers) {
+export function getShareAudio(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_QUERY_USER_SOUND;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.AUDIO.API_GET_SHARE_AUDIO
-        }, null);
+        }, callback, failBack);
     };
 }
 

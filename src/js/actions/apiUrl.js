@@ -40,10 +40,16 @@ export default {
 
     // 录音分享播放详情
     "API_QUERY_USER_SOUND": "/user/qryUserSound",
+    // 录音编辑提交
+    "API_UPLOAD_SOUND_ALBUM": "/user/uploadSoundAlbum",
+    // 获取录音关联图片
+    "API_GET_ALL_PICS": "/user/getAllPics",
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
     // 删除录音
     "API_DELETE_RECORDING": "/user/deleteUserSound",
+    // 更换录音封面图
+    "API_CHANGE_FIRST_PAGE": "/user/changeFirstPage",
 
     // base64上传图片
     "API_UPLOAD_IMG_BASE64": "/upload/uploadImgBase64",

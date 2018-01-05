@@ -50,19 +50,6 @@ class InputBox extends React.Component {
 
         return findDOMNode(this.refs.addImgInp);
     }
-    get addBtn() {
-        if (!this.refs)
-            return {};
-
-        return findDOMNode(this.refs.addBtn);
-    }
-
-    componentDidUpdate () {
-        const {isShowAddBtn} = this.props;
-        if (this.addBtn && this.addBtn.parentNode) {
-            this.addBtn.parentNode.hidden = !isShowAddBtn;
-        }
-    }
 
     /**
      * props
@@ -86,76 +73,82 @@ class InputBox extends React.Component {
      */
 
     render () {
-        const {isShowSelectBorder, cols, style, data, itemStyle, badgeBackgroundColor, badgeStyle, badgeContent, imgStyle, imgTouchTap} = this.props;
+        const {isShowSelectBorder, cols, style, itemStyle, badgeBackgroundColor, badgeStyle, badgeContent, imgStyle, imgTouchTap, isShowAddBtn} = this.props;
+        const {data} = this.props || [];
+        const dataList = (isShowAddBtn) ? [{addBtn: true}].concat(data) : data;
 
         return (
-            <GridList
-                cellHeight={'auto'}
-                cols={cols || 2}
-                padding={0}
-                style={Object.assign({}, {
-                    margin: 0,
-                    padding: `0 ${toRem(20)}`,
-                    boxSizing: "border-box"}, style || {})}>
+            <div>
 
-                <div ref="addBtn" style={Object.assign({}, {
-                        ...styles.tile,
-                        backgroundColor: "#fff",
-                        border: "1px solid #ccc"
-                    }, itemStyle || {})}
-                    onClick={() => {
-                        this.addBtnTouchTap();
-                    }}>
+                <GridList
+                    cellHeight={'auto'}
+                    cols={cols || 2}
+                    padding={0}
+                    style={Object.assign({}, {
+                        margin: 0,
+                        padding: `0 ${toRem(20)}`,
+                        boxSizing: "border-box"}, style || {})}>
 
-                    <AddIcon style={{
-                        position: "relative",
-                        top: "20%",
-                        left: "20%",
-                        width: "60%",
-                        height: "60%",
-                        color: "#ccc"
-                    }}/>
+                    {dataList.map((item) => (
+                        item.addBtn ? <div key={99999999}
+                           style={Object.assign({}, {
+                                ...styles.tile,
+                                backgroundColor: "#fff",
+                                border: "1px solid #ccc"
+                            }, itemStyle || {})}
+                           onClick={() => {
+                               this.addBtnTouchTap();
+                           }}>
 
-                    <input
-                        ref="addImgInp"
-                        type="file"
-                        accept="image/*"
-                        style={{display: "none"}}
-                        onChange={this.listenInputChange}/>
+                            <AddIcon style={{
+                                position: "relative",
+                                top: "20%",
+                                left: "20%",
+                                width: "60%",
+                                height: "60%",
+                                color: "#ccc"
+                            }}/>
 
-                </div>
+                            <input
+                                ref="addImgInp"
+                                type="file"
+                                accept="image/*"
+                                style={{display: "none"}}
+                                onChange={this.listenInputChange}/>
 
-                {data && data.map((item) => (<Badge
-                    key={item.id}
-                    data-id={item.id}
-                    style={Object.assign({}, styles.tile, itemStyle || {})}
-                    badgeStyle={Object.assign({}, {
-                            display: item.isShowBadge ? "block" : "none",
-                            position: "absolute",
-                            backgroundColor: badgeBackgroundColor || "#a4c639"
-                        },
-                        badgeStyle || {}
-                    )}
-                    badgeContent={badgeContent}>
+                        </div> : <Badge
+                            key={item.id}
+                            data-id={item.id}
+                            style={Object.assign({}, styles.tile, itemStyle || {})}
+                            badgeStyle={Object.assign({}, {
+                                    display: item.isShowBadge ? "block" : "none",
+                                    position: "absolute",
+                                    backgroundColor: badgeBackgroundColor || "#a4c639"
+                                },
+                                badgeStyle || {}
+                            )}
+                            badgeContent={badgeContent}>
 
-                    <img
-                        className="img-not-loaded"
-                        src={item.imgUrl || blankImg}
-                        style={Object.assign({}, {
-                            ...styles.tileImg,
-                            border: (isShowSelectBorder && item.isShowBadge) ? `${toRem(8)} solid #ff6832` : 'none'
-                        }, imgStyle || {})}
-                        onError={function (e) {
-                            e.target.src = blankImg;
-                        }}
-                        onClick={() => {
-                            imgTouchTap && imgTouchTap(item);
-                        }}/>
+                            <img
+                                className="img-not-loaded"
+                                src={item.imgUrl}
+                                style={Object.assign({}, {
+                                    ...styles.tileImg,
+                                    border: (isShowSelectBorder && item.isShowBadge) ? `${toRem(8)} solid #ff6832` : 'none'
+                                }, imgStyle || {})}
+                                onError={function (e) {
+                                    e.target.src = blankImg;
+                                }}
+                                onClick={() => {
+                                    imgTouchTap && imgTouchTap(item);
+                                }}/>
 
-                </Badge>))}
+                        </Badge>
+                    ))}
 
-            </GridList>
+                </GridList>
 
+            </div>
         );
     }
 

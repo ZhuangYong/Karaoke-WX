@@ -130,7 +130,6 @@ class Crop extends BaseComponent {
             }}>
                 <header>
                     <ButtonHeader
-                        isShowLeftButton={true}
                         leftButtonClick={() => {
                             window.history.back();
                         }}

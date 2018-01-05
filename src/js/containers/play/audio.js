@@ -3,9 +3,9 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import "../../../sass/audio/playAudio.scss";
-import * as audioActions from "../../actions/audioActons";
+import {getShareAudio} from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import { getQueryString, reqHeader, toRem, wxAuthorizedUrl, wxShare } from '../../utils/comUtils';
+import { getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl, wxShare } from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
@@ -18,8 +18,67 @@ import SlidePng1 from "../../../img/album/1.png";
 import SlidePng2 from "../../../img/album/2.png";
 import SlidePng3 from "../../../img/album/3.png";
 import intl from 'react-intl-universal';
+import RaisedButton from 'material-ui/RaisedButton';
+import Avatar from 'material-ui/Avatar';
+import defaultAvatar from "../../../img/default_avatar.png";
+import ButtonHeader from '../../components/common/header/ButtonHeader';
+import InputBox from '../../components/photoAlbum/index';
+import ClearIcon from "material-ui/svg-icons/content/clear";
+import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
+import { setGlobAlert } from '../../actions/common/actions';
+import SubmitLoading from '../../components/common/SubmitLoading';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
+
+const styles = {
+    center: {
+      marginTop: toRem(20),
+      paddingRight: 16,
+      textAlign: "center",
+      fontSize: '.4rem',
+      lineHeight: '.6rem'
+    },
+    itemStyle: {
+        margin: 0,
+        padding: `0 ${toRem(5)}`,
+        width: toRem(140),
+        height: toRem(140)
+    },
+    badgeStyle: {
+        top: `-${toRem(5)}`,
+        right: `-${toRem(2)}`,
+        width: "20px",
+        height: "20px"
+    },
+    clearIconStyle: {
+        width: "20px",
+        height: "20px",
+        color: "#fff"
+    },
+    btn: {
+        width: toRem(540),
+        height: toRem(100),
+        borderRadius: toRem(100),
+        overflow: "hidden"
+    },
+    btnLabelStyle: {
+        lineHeight: toRem(100),
+        fontSize: toRem(32),
+        color: "#fff"
+    }
+};
+
+const defaultRecordingFormData = {
+    isEdit: false,
+    pagePicture: [],
+    albums: [],
+    shareId: null
+};
+
+const CONFIG = {
+    ALBUMS_MAX: 3
+};
+
 class PlayAudio extends BaseComponent {
 
     constructor(props) {
@@ -31,35 +90,49 @@ class PlayAudio extends BaseComponent {
             percent: 0,
             currentTime: 0,
             wxTimer: -1,
-            musicUrl: "",
             imgUrl: "",
             autoPlayEd: false,
-            isEdit: false
+            recordingFormData: {...defaultRecordingFormData},
+            loading: false
         };
+
+        this.loadAudioGetter = this.loadAudioGetter.bind(this);
+        this.toEdit = this.toEdit.bind(this);
+        this.cancel = this.cancel.bind(this);
+        this.addBtnTouchTap = this.addBtnTouchTap.bind(this);
+        this.submit = this.submit.bind(this);
     }
 
     componentWillMount() {
-        const params = {...this.state.params, openid: getQueryString('openid')};
-        console.log(params);
-        this.props.actions.getShareAudio(params, reqHeader(params));
+        const recordingFormDataStr = window.sessionStorage.getItem("recordingFormData");
+
+        if (recordingFormDataStr === null) {
+            this.loadAudioGetter();
+        } else {
+            const recordingFormData = recordingFormDataStr ? JSON.parse(recordingFormDataStr) : Object.assign({}, defaultRecordingFormData, {pagePicture: [], albums: []});
+
+            this.setState({
+                recordingFormData: recordingFormData
+            });
+        }
     }
 
     componentDidUpdate() {
-        const imgUrl = this.state.imgUrl;
-        const {isWeixin} = window.sysInfo;
+        const {imgUrl, autoPlayEd} = this.state;
         const {data} = this.props.audio.audioInfo;
-        if (data && data.musicUrl && !this.state.autoPlayEd) {
+        if (data && !autoPlayEd) {
+            const {musicUrl, nameNorm, shareId, headerImg} = data;
+            const {isWeixin} = window.sysInfo;
             if (isWeixin) {
                 window.wx && window.wx.ready(() => {
                     this.refs.audio.refs.audio.refs.audio.play();
                     this.state.autoPlayEd = true;
                     wxShare({
-                        title: intl.get("audio.share.title", {name: data.nameNorm}),
+                        title: intl.get("audio.share.title", {name: nameNorm}),
                         desc: intl.get("audio.share.from"),
-                        // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.href),
-                        link: location.href,
-                        imgUrl: imgUrl === "" ? data.image : imgUrl,
-                        dataUrl: data.musicUrl
+                        link: `${location.protocol}//${location.host}/recording/play/${shareId}?language=${getQueryString('language')}`,
+                        imgUrl: imgUrl === "" ? headerImg : imgUrl,
+                        dataUrl: musicUrl
                     });
                 });
             } else {
@@ -91,7 +164,7 @@ class PlayAudio extends BaseComponent {
         this.refs.audio && console.log(window.audio = this.refs.audio.refs.audio.refs.audio);
         const {w, h} = this.props.common;
         const {status, data, msg} = this.props.audio.audioInfo;
-        const {image, musicUrl, musicTime, nameNorm} = data || {};
+        const {musicUrl, musicTime, nameNorm, headerImg, nickName, albums, pagePictureId, pagePictureUrl, shareId} = data || {};
         let swipePanelStyle = {};
         let topPanelStyle = {};
         if (w > h) {
@@ -103,55 +176,300 @@ class PlayAudio extends BaseComponent {
 
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
-        const isEdit = this.state.isEdit;
+        const {params, recordingFormData, loading} = this.state;
+        const {isEdit} = recordingFormData || {};
+        const ableEdit = params.edit === 'edit';
+
+        const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
+
+        console.log(pagePictureId);
 
         return (
             <div className="audio-play">
-                <div style={{
-                        position: 'relative',
-                        float: 'right',
-                        marginRight: toRem(20)
-                    }}
-                    onClick={() => {
-                        this.setState({
-                            isEdit: !isEdit
-                        });
-                    }}>
 
-                    <span style={{
-                        lineHeight: toRem(110),
-                        color: "#ff6832",
-                        fontSize: toRem(24)
-                    }}>{isEdit ? '取消' : '编辑'}</span>
-                </div>
+                {
+                    isEdit ? <section>
+                        <header>
+                            <ButtonHeader
+                                isShowLeftButton={false}
+                                title="编辑录音"
+                                rightButtonClick={this.cancel}
+                                rightButtonLabel="取消"
+                            />
+                        </header>
 
-                <div className="top-panel" style={topPanelStyle}>
-                        <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
-                            <div className="img-div" onTouchTap={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
-                            <div className="img-div"><img src={SlidePng1}/></div>
-                            <div className="img-div"><img src={SlidePng2}/></div>
-                            <div className="img-div"><img src={SlidePng3}/></div>
-                        </AutoPlaySwipeAbleViews>
-                    <Audio ref="audio" source={musicUrl} className="audio-item"/>
-                </div>
-                <p className="song-label">
-                    <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
-                </p>
-                <Subheader style={{paddingRight: 16, textAlign: "center", fontSize: '.4rem', lineHeight: '.6rem'}}>
-                    <font style={{fontSize: '.4rem'}}>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</font>
-                    <p style={{fontSize: '.32rem', height: '.4rem', margin: 0}}>&nbsp;{`${musicTime || "..."}`}&nbsp;</p>
-                </Subheader>
-                <Subheader style={{paddingRight: 16, textAlign: "center", fontSize: '.4rem', lineHeight: '.6rem', bottom: '.8rem'}}>
-                    <p style={{color: '#ff6832', fontSize: '.32rem'}}>{intl.get("msg.from.j.make")}</p>
-                </Subheader>
+                        <section>
+                            <header style={{paddingBottom: toRem(20)}}>
+                                <ButtonHeader
+                                    style={{
+                                        background: "none",
+                                        border: "none"
+                                    }}
+                                    title={`选择封面图（${(recordingFormData.pagePicture.length) || 0}/1）`} />
+                            </header>
 
-                <img src={image} style={{display: "none"}} onError={() => {
-                    this.setState({
-                        imgUrl: "http://wx.j-make.cn/img/logo.png"
-                    });
-                }}/>
+                            <InputBox
+                                cols={5}
+                                stopInput={true}
+                                addBtnTouchTap={() => {
+                                    this.addBtnTouchTap("pagePicture");
+                                }}
+                                isShowAddBtn={!recordingFormData.pagePicture.length}
+                                itemStyle={styles.itemStyle}
+                                badgeBackgroundColor="#ce0000"
+                                badgeContent={<ClearIcon
+                                    style={styles.clearIconStyle}
+                                    onClick={(e) => {
+                                        recordingFormData.pagePicture = [];
+                                        this.setState({
+                                            recordingFormData: recordingFormData
+                                        });
+                                    }}
+                                />}
+                                badgeStyle={styles.badgeStyle}
+                                data={recordingFormData.pagePicture}
+                                inputChange={this.inputChange}/>
+
+                        </section>
+
+                        <section>
+                            <header style={{paddingBottom: toRem(20)}}>
+                                <ButtonHeader
+                                    style={{
+                                        background: "none",
+                                        border: "none"
+                                    }}
+                                    title={`选择轮播图（${(recordingFormData.albums.length) || 0}/${CONFIG.ALBUMS_MAX}）`} />
+                            </header>
+
+                            <InputBox
+                                cols={5}
+                                stopInput={true}
+                                addBtnTouchTap={() => {
+                                    this.addBtnTouchTap("albums");
+                                }}
+                                isShowAddBtn={recordingFormData.albums.length < CONFIG.ALBUMS_MAX}
+                                itemStyle={styles.itemStyle}
+                                badgeBackgroundColor="#ce0000"
+                                badgeContent={<ClearIcon
+                                    style={styles.clearIconStyle}
+                                    onClick={(e) => {
+                                        const deleteId = e.target.parentNode.parentNode.dataset.id;
+                                        recordingFormData.albums = recordingFormData.albums.filter(item => {
+                                            return parseInt(item.id, 10) !== parseInt(deleteId, 10);
+                                        });
+                                        this.setState({
+                                            recordingFormData: recordingFormData
+                                        });
+                                    }}
+                                />}
+                                badgeStyle={styles.badgeStyle}
+                                data={recordingFormData.albums}
+                                inputChange={this.inputChange}/>
+
+                        </section>
+
+                        <RaisedButton
+                            backgroundColor="#ff6832"
+                            disabledBackgroundColor="rgb(229, 229, 229)"
+                            disabled={!(recordingFormData.albums.length > 0 || recordingFormData.pagePicture.length > 0)}
+                            label="提交"
+                            style={{
+                                ...styles.btn,
+                                position: "absolute",
+                                left: "50%",
+                                bottom: toRem(80),
+                                marginLeft: `-${toRem(540 / 2)}`,
+                            }}
+                            labelStyle={styles.btnLabelStyle}
+                            onClick={this.submit}/>
+
+                    </section> : <div>
+                        <div className="top-panel" style={topPanelStyle}>
+                            <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
+                                {banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}
+                            </AutoPlaySwipeAbleViews>
+                            <Audio ref="audio" source={musicUrl} className="audio-item"/>
+                        </div>
+                        <p className="song-label">
+                            <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
+                        </p>
+
+                        <section style={{paddingTop: toRem(40), borderTop: `${toRem(10)} solid #d7d7d7`}}>
+
+                            <header style={{
+                                position: "relative",
+                                left: "50%",
+                                marginLeft: `-${toRem(130)}`,
+                                height: toRem(100)
+                            }}>
+
+                                <Avatar style={{
+                                    float: "left",
+                                    width: toRem(85),
+                                    height: toRem(85),
+                                    backgroundColor: "rgba(255, 255, 255)",
+                                    background: `url(${defaultAvatar}) no-repeat center`,
+                                    backgroundSize: "cover"
+                                }} src={headerImg} alt=""/>
+
+                                <div style={{
+                                    float: "left",
+                                    marginLeft: toRem(23)
+                                }}>
+                                    <div style={{
+                                        height: toRem(50),
+                                        lineHeight: toRem(50),
+                                        fontSize: toRem(30)
+                                    }}>{nickName || intl.get("device.anonymous")}</div>
+                                    <p style={{fontSize: '.32rem', height: '.4rem', margin: 0, color: "#9a9a9b"}}>{musicTime ? parseTime(parseInt(musicTime, 10)) : "..."}</p>
+                                </div>
+                            </header>
+
+                            <Subheader style={styles.center}>
+                                {ableEdit ? <RaisedButton
+                                    backgroundColor="#ff6832"
+                                    disabledBackgroundColor="rgb(229, 229, 229)"
+                                    disabled={parseInt(status, 10) !== 1}
+                                    label="去编辑"
+                                    style={styles.btn}
+                                    labelStyle={styles.btnLabelStyle}
+                                    onClick={() => this.toEdit(shareId)}/> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
+
+                            </Subheader>
+
+                            <Subheader style={{...styles.center, bottom: '.8rem'}}>
+                                <p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? "唱得太棒了，不用编辑也可以直接分享哦" : intl.get("msg.from.j.make")}</p>
+                            </Subheader>
+
+                        </section>
+
+                        <img src={headerImg} style={{display: "none"}} onError={() => {
+                            this.setState({
+                                imgUrl: "http://wx.j-make.cn/img/logo.png"
+                            });
+                        }}/>
+                    </div>
+                }
+
+                <SubmitLoading hide={!loading} />
+
             </div>
         );
+    }
+
+    /**
+     * 获取录音分享数据
+     */
+    loadAudioGetter(id) {
+        const {uid, shareId} = this.state.params;
+        let params = {
+            uid: uid || null
+        };
+
+        id ? params.shareId = id : (shareId ? params.shareId = shareId : params.openid = getQueryString("openid"));
+
+        this.props.getShareAudioAction(params, reqHeader(params));
+    }
+
+    /**
+     * 编辑提交
+     */
+    submit() {
+        this.setState({loading: true});
+        const {uploadActions, globAlertAction} = this.props;
+        const {recordingFormData} = this.state;
+        const {shareId, pagePicture, albums} = recordingFormData;
+        const params = {};
+
+        params.shareId = shareId;
+
+        if (pagePicture[0]) params.firstPageId = pagePicture[0].id;
+
+        if (albums.length > 0) {
+            let albumArr = [];
+            albums.map(item => {
+                albumArr.push(item.id);
+            });
+            params.albumIds = albumArr.join(',');
+        }
+
+        uploadActions(params, reqHeader(params), res => {
+            const {status} = res;
+            if (parseInt(status, 10) === 1) {
+                this.loadAudioGetter(shareId);
+
+                this.cancel();
+            }
+
+            this.setState({loading: false});
+            globAlertAction(parseInt(status, 10) === 1 ? "提交成功" : "提交失败");
+        });
+    }
+
+    /**
+     * 添加图片按钮点击事件
+     * @param edit
+     */
+    addBtnTouchTap(edit) {
+
+        window.sessionStorage.setItem("recordingFormData", JSON.stringify(this.state.recordingFormData));
+
+        linkTo(`user/photoAlbum/${edit}/${edit === "albums" ? CONFIG.ALBUMS_MAX : 1}`, false, null);
+    }
+
+    /**
+     * 跳转编辑页面
+     * @param shareId 录音的shareId
+     */
+    toEdit(shareId) {
+        const getAllPicsParams = {shareId: shareId};
+
+        const {getAllPicsActions, globAlertAction} = this.props;
+
+        getAllPicsActions(getAllPicsParams, reqHeader(getAllPicsParams), res => {
+            const {status, data} = res;
+            if (parseInt(status, 10) === 1) {
+                const {albums, pagePictureId, pagePictureUrl} = data;
+
+                let recordingFormData = this.state.recordingFormData;
+
+                albums && albums.map(item => {
+                    recordingFormData.albums.push({
+                        id: item.picid,
+                        imgUrl: item.picurl,
+                        isShowBadge: true
+                    });
+                });
+
+                pagePictureId && recordingFormData.pagePicture.push({
+                    id: pagePictureId,
+                    imgUrl: pagePictureUrl,
+                    isShowBadge: true
+                });
+
+                recordingFormData.isEdit = true;
+                recordingFormData.shareId = shareId;
+
+                this.setState({
+                    recordingFormData: recordingFormData
+                });
+            } else {
+                globAlertAction("获取录音相关图片失败");
+            }
+        });
+
+    }
+
+    /**
+     * 跳转回播放页面
+     */
+    cancel() {
+
+        this.setState({
+            recordingFormData: Object.assign({}, defaultRecordingFormData, {pagePicture: [], albums: []})
+        });
+        window.sessionStorage.removeItem("recordingFormData");
     }
 
     handlePercentChange(_percent) {
@@ -173,7 +491,10 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        actions: bindActionCreators(audioActions, dispatch)
+        getShareAudioAction: bindActionCreators(getShareAudio, dispatch),
+        uploadActions: bindActionCreators(uploadSoundAlbum, dispatch),
+        getAllPicsActions: bindActionCreators(getAllPics, dispatch),
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 
