@@ -19,18 +19,17 @@ import ButtonHeader from '../../../components/common/header/ButtonHeader';
 import { setGlobAlert } from '../../../actions/common/actions';
 import SubmitLoading from '../../../components/common/SubmitLoading';
 import RaisedButton from 'material-ui/RaisedButton';
+import MyButton from '../../../components/common/MyButton';
 
 const styles = {
     btn: {
         width: toRem(540),
         height: toRem(80),
-        borderRadius: toRem(80),
-        overflow: "hidden"
+        borderRadius: toRem(80)
     },
     btnLabelStyle: {
         lineHeight: toRem(80),
-        fontSize: toRem(32),
-        color: "#fff"
+        fontSize: toRem(32)
     }
 };
 class PhotoAlbum extends BaseComponent {
@@ -224,11 +223,7 @@ class PhotoAlbum extends BaseComponent {
                 <SubmitLoading hide={!deleteLoading} />
 
                 {typeof edit !== 'undefined' && <div>
-                    <RaisedButton
-                        backgroundColor="#ff6832"
-                        disabledBackgroundColor="rgb(229, 229, 229)"
-                        disabled={selectItemIds.length <= 0}
-                        label="上传图片"
+                    <MyButton
                         style={{
                             ...styles.btn,
                             position: "absolute",
@@ -237,10 +232,11 @@ class PhotoAlbum extends BaseComponent {
                             marginLeft: `-${toRem(540 / 2)}`,
                         }}
                         labelStyle={styles.btnLabelStyle}
-                        onClick={this.uploadEdit}/>
-                    <RaisedButton
-                        backgroundColor="#ff6832"
-                        label="取消"
+                        onClick={this.uploadEdit}
+                        label="上传图片"
+                        disabled={selectItemIds.length <= 0}
+                    />
+                    <MyButton
                         style={{
                             ...styles.btn,
                             position: "absolute",
@@ -251,7 +247,9 @@ class PhotoAlbum extends BaseComponent {
                         labelStyle={styles.btnLabelStyle}
                         onClick={() => {
                             window.history.back();
-                        }}/>
+                        }}
+                        label="取消"
+                    />
                 </div>}
 
             </section>

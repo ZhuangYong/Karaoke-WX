@@ -5,15 +5,7 @@
 import React from 'react';
 import { toRem } from '../../../utils/comUtils';
 import PropTypes from "prop-types";
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import {SvgIcon} from "material-ui";
-
-
-const RightCircleIcon = (props) => (<SvgIcon
-    style={props.style}
-    viewBox='0 0 32 32'>
-    <path style={{fillRule: "evenodd", clipRule: "evenodd"}} d="M20.536,15.121l-7.657-7.657c-0.391-0.391-1.024-0.391-1.414,0c-0.391,0.391-0.391,1.024,0,1.414L18.586,16l-7.121,7.121c-0.391,0.391-0.391,1.024,0,1.414c0.391,0.391,1.024,0.391,1.414,0l7.657-7.657c0.24-0.24,0.314-0.568,0.26-0.879C20.85,15.69,20.775,15.361,20.536,15.121z M16,0C7.163,0,0,7.164,0,16c0,8.837,7.163,16,16,16c8.837,0,16-7.163,16-16C32,7.164,24.837,0,16,0z M16,30C8.268,30,2,23.732,2,16C2,8.268,8.268,2,16,2c7.732,0,14,6.268,14,14C30,23.732,23.732,30,16,30z"/>
-</SvgIcon>);
+import MyButton from '../MyButton';
 
 class ButtonHeader extends React.Component {
     constructor () {
@@ -69,42 +61,25 @@ class ButtonHeader extends React.Component {
             buttonRightIcon: this.props[`${position}ButtonRightIcon`],
         };
 
-        return <div style={Object.assign({}, {
-            position: 'relative',
-            float: btnData.float,
-            marginRight: toRem(20)
-        }, btnData.buttonStyle || {})}
-                    onClick={btnData.buttonClick}>
-
-            {!btnData.buttonLoading ? <div>
-                <span style={Object.assign({}, {
-                    lineHeight: toRem(110),
-                    color: btnData.buttonDisabled ? "rgb(229, 229, 229)" : "#ff6832",
-                    fontSize: toRem(24)
-                }, btnData.buttonLabelStyle || {})}>{btnData.buttonLabel || '点击'}</span>
-
-                {btnData.buttonRightIcon && <RightCircleIcon style={{
-                    position: "relative",
-                    top: toRem(8),
-                    marginLeft: toRem(20),
-                    color: btnData.buttonDisabled ? "rgb(229, 229, 229)" : "#ff6832",
-                    width: toRem(30),
-                    height: toRem(30)
-                }}/>}
-
-            </div> : <RefreshIndicator
-                size={30}
-                left={70}
-                top={0}
-                loadingColor="#FF9800"
-                status="loading"
-                style={{
-                    boxShadow: "none",
-                    top: '-9988px',
-                    left: '-10100px'
-                }}
-            />}
-        </div>;
+        return <MyButton
+            style={{...btnData.buttonStyle,
+                float: btnData.float,
+                marginRight: toRem(20),
+                width: 'auto',
+                height: 'auto',
+                lineHeight: toRem(110)
+            }}
+            onClick={btnData.buttonClick}
+            loading={btnData.buttonLoading}
+            labelStyle={btnData.buttonLabelStyle}
+            label={btnData.buttonLabel}
+            rightIcon={btnData.buttonRightIcon}
+            disabled={btnData.buttonDisabled}
+            backgroundColor=""
+            disabledBackgroundColor=""
+            disabledFontColor="rgb(229, 229, 229)"
+            fontColor="#ff6832"
+        />;
     }
 
     rightButton() {

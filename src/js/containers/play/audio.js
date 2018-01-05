@@ -27,6 +27,7 @@ import ClearIcon from "material-ui/svg-icons/content/clear";
 import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
 import { setGlobAlert } from '../../actions/common/actions';
 import SubmitLoading from '../../components/common/SubmitLoading';
+import MyButton from '../../components/common/MyButton';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
@@ -58,13 +59,11 @@ const styles = {
     btn: {
         width: toRem(540),
         height: toRem(100),
-        borderRadius: toRem(100),
-        overflow: "hidden"
+        borderRadius: toRem(100)
     },
     btnLabelStyle: {
         lineHeight: toRem(100),
-        fontSize: toRem(32),
-        color: "#fff"
+        fontSize: toRem(32)
     }
 };
 
@@ -76,7 +75,7 @@ const defaultRecordingFormData = {
 };
 
 const CONFIG = {
-    ALBUMS_MAX: 3
+    ALBUMS_MAX: 10
 };
 
 class PlayAudio extends BaseComponent {
@@ -269,11 +268,7 @@ class PlayAudio extends BaseComponent {
 
                         </section>
 
-                        <RaisedButton
-                            backgroundColor="#ff6832"
-                            disabledBackgroundColor="rgb(229, 229, 229)"
-                            disabled={!(recordingFormData.albums.length > 0 || recordingFormData.pagePicture.length > 0)}
-                            label="提交"
+                        <MyButton
                             style={{
                                 ...styles.btn,
                                 position: "absolute",
@@ -282,7 +277,10 @@ class PlayAudio extends BaseComponent {
                                 marginLeft: `-${toRem(540 / 2)}`,
                             }}
                             labelStyle={styles.btnLabelStyle}
-                            onClick={this.submit}/>
+                            onClick={this.submit}
+                            label="提交"
+                            disabled={!(recordingFormData.albums.length > 0 || recordingFormData.pagePicture.length > 0)}
+                        />
 
                     </section> : <div>
                         <div className="top-panel" style={topPanelStyle}>
@@ -325,16 +323,14 @@ class PlayAudio extends BaseComponent {
                                     <p style={{fontSize: '.32rem', height: '.4rem', margin: 0, color: "#9a9a9b"}}>{musicTime ? parseTime(parseInt(musicTime, 10)) : "..."}</p>
                                 </div>
                             </header>
-
                             <Subheader style={styles.center}>
-                                {ableEdit ? <RaisedButton
-                                    backgroundColor="#ff6832"
-                                    disabledBackgroundColor="rgb(229, 229, 229)"
-                                    disabled={parseInt(status, 10) !== 1}
-                                    label="去编辑"
+                                {ableEdit ? <MyButton
                                     style={styles.btn}
                                     labelStyle={styles.btnLabelStyle}
-                                    onClick={() => this.toEdit(shareId)}/> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
+                                    onClick={() => this.toEdit(shareId)}
+                                    label="去编辑"
+                                    disabled={parseInt(status, 10) !== 1}
+                                /> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
 
                             </Subheader>
 
@@ -397,8 +393,8 @@ class PlayAudio extends BaseComponent {
         uploadActions(params, reqHeader(params), res => {
             const {status} = res;
             if (parseInt(status, 10) === 1) {
-                this.loadAudioGetter(shareId);
 
+                // this.loadAudioGetter(shareId);
                 this.cancel();
             }
 
