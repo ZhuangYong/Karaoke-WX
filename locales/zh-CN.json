@@ -82,6 +82,8 @@
     "controller.tab.play.controller": "播放控制",
     "controller.tab.selected.list": "已点歌曲",
     "controller.tab.history": "最近唱过",
+    "order.choose.all": "全选",
+    "order.choose.ed": "已选",
     "order.all": "全部订单",
     "order.device.no": "设备号",
     "order.payment.amount": "支付金额",
@@ -101,6 +103,8 @@
     "invoice.co": "公司",
     "invoice.personal": "个人",
     "invoice.title.type": "抬头类型",
+    "invoice.receipt.phone": "收票人手机",
+    "invoice.receipt.email": "收票人邮箱",
     "invoice.taxpayer.identification.number": "纳税人识别号",
     "invoice.we.will.handel.first.time": "我们将会在第一时间处理您的开票信息！",
 
