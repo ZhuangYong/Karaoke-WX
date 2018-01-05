@@ -17,6 +17,7 @@ import NoResult from "../../components/common/NoResult";
 import NoWifi from "../../components/common/NoWifi";
 import NoNetworkImg from "../../../img/common/bg_no_network.png";
 import intl from 'react-intl-universal';
+import blankImg from "../../../img/common/blank.png";
 
 const style = {
     commonSingerList: {
@@ -240,7 +241,7 @@ class SingerList extends BaseComponent {
                                                     <i>
                                                         <img src={RightArrowIcon}/>
                                                     </i>
-                                                    <img className="avatar" size="35.84" src={singer.image}/>
+                                                    <img className="avatar img-not-loaded" style={{backgroundSize: 'auto 1rem'}} size="35.84" src={singer.image} onError={e => singer.image = blankImg}/>
                                                     <div style={{fontSize: '0.4rem'}}>
                                                         {singer.nameNorm}
                                                     </div>

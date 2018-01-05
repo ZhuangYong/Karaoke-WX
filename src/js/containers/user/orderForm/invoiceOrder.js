@@ -148,7 +148,7 @@ class InvoiceOrder extends BaseOrderList {
                     lineHeight: toRem(110),
                     fontSize: toRem(34),
                     color: "#666"
-                }}>{orderList.length !== 0 && orderChosenIds.length > 0 ? "已选" : "全选"}（{orderChosenIds.length}）</span>
+                }}>{orderList.length !== 0 && orderChosenIds.length > 0 ? intl.get("order.choose.ed") : intl.get("order.choose.all")}（{orderChosenIds.length}）</span>
             </header>
 
             <div style={(() => {
