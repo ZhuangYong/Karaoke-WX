@@ -428,7 +428,7 @@ class PlayAudio extends BaseComponent {
             if (parseInt(status, 10) === 1) {
                 const {albums, pagePictureId, pagePictureUrl} = data;
 
-                let recordingFormData = this.state.recordingFormData;
+                let recordingFormData = Object.assign({}, defaultRecordingFormData, {pagePicture: [], albums: []});
 
                 albums && albums.map(item => {
                     recordingFormData.albums.push({
