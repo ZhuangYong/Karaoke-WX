@@ -222,7 +222,7 @@ class Feedback extends BaseComponent {
                         <header>
                             <div
                                 style={styles.sectionHeader}
-                            >问题描述</div>
+                            >{intl.get("Problem Description")}</div>
                         </header>
                         <textarea
                             style={styles.questionDesc}

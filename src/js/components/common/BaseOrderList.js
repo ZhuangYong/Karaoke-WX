@@ -138,7 +138,7 @@ class BaseOrderList extends BaseComponent {
                     </section>))}
 
                     <div style={style.loading}>
-                        <span>亲爱滴，已经到底了</span>
+                        <span>{intl.get("song.list.end")}</span>
                     </div>
 
                     <Dialog
@@ -149,7 +149,7 @@ class BaseOrderList extends BaseComponent {
                         modal={false}
                         open={this.state.openDialog}
                         onRequestClose={this.handleClose}>
-                        确认删除订单吗？
+                        {intl.get("order.sure.or.not.delete.order")}
                     </Dialog>
 
                 </div>) : (<div>
@@ -241,13 +241,13 @@ class BaseOrderList extends BaseComponent {
         return [
             <FlatButton
                 className="cancel-button"
-                label="取消"
+                label={intl.get("button.cancel")}
                 primary={true}
                 onClick={this.handleClose}
             />,
             <FlatButton
                 className="sure-button"
-                label="确认"
+                label={intl.get("button.sure")}
                 primary={true}
                 onClick={this.handleAction}
             />,

@@ -11,7 +11,7 @@ import { getInvoiceOrder } from '../../../actions/userActions';
 import BaseOrderList from '../../../components/common/BaseOrderList';
 import intl from 'react-intl-universal';
 import SucIcon from "material-ui/svg-icons/navigation/check";
-import { accAdd, linkTo, subtr, toRem } from '../../../utils/comUtils';
+import {accAdd, isLongWordLanguage, linkTo, subtr, toRem} from '../../../utils/comUtils';
 
 const styles = {
     deselect: {
@@ -35,6 +35,7 @@ const styles = {
         borderRadius: "20px"
     }
 };
+const longLan = isLongWordLanguage();
 
 class InvoiceOrder extends BaseOrderList {
     constructor(props) {
@@ -48,7 +49,7 @@ class InvoiceOrder extends BaseOrderList {
             dataKey: 'invoiceOrder',
             itemRules: [
                 {name: '', key: 'orderTime'},
-                {name: '订单号：', key: 'orderNo'},
+                {name: intl.get("order.no") + '：', key: 'orderNo'},
                 {name: intl.get("order.device.no") + "：", key: 'deviceId'},
                 {name: intl.get("order.payment.amount") + "：", content: (item) => {
                     return '￥' + item.payAmount;
@@ -146,9 +147,10 @@ class InvoiceOrder extends BaseOrderList {
                 <span style={{
                     marginLeft: "40px",
                     lineHeight: toRem(110),
-                    fontSize: toRem(34),
+
+                    fontSize: longLan ? toRem(24) : toRem(34),
                     color: "#666"
-                }}>{orderList.length !== 0 && orderChosenIds.length > 0 ? "已选" : "全选"}（{orderChosenIds.length}）</span>
+                }}>{orderList.length !== 0 && orderChosenIds.length > 0 ? intl.get("order.choose.ed") : intl.get("order.choose.all")}（{orderChosenIds.length}）</span>
             </header>
 
             <div style={(() => {
@@ -156,7 +158,7 @@ class InvoiceOrder extends BaseOrderList {
                     float: "right",
                     width: toRem(250),
                     height: "100%",
-                    fontSize: toRem(34),
+                    fontSize: longLan ? toRem(24) : toRem(34),
                     lineHeight: toRem(110),
                     textAlign: "center",
                     backgroundColor: "#ff6832",
@@ -176,10 +178,10 @@ class InvoiceOrder extends BaseOrderList {
                 float: "right",
                 marginRight: "10px",
                 height: "100%",
-                fontSize: toRem(34),
+                fontSize: longLan ? toRem(24) : toRem(34),
                 lineHeight: toRem(110),
                 color: "#666"
-            }}>{intl.get("total")}: &yen;{orderChosenTotalMoney}</div>
+            }}>{intl.get("total")}: &yen;{parseFloat(orderChosenTotalMoney).toFixed(2)}</div>
 
         </footer>;
     }

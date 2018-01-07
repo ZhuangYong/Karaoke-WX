@@ -16,17 +16,17 @@ import intl from 'react-intl-universal';
 class OrderForm extends BaseOrderList {
     constructor(props) {
         super(props);
-        super.title("VIP充值订单");
+        super.title(intl.get("title.vip.recharge.orders"));
 
         this.state = {
             ...this.defaultState,
-            title: "全部订单",
-            rightTitle: "我要开票",
+            title: intl.get("order.all"),
+            rightTitle: intl.get("invoice.i.go"),
             dataKey: 'orderForm',
             deleteItem: null,
             itemRules: [
                 {name: '', key: 'orderTime'},
-                {name: '订单号：', key: 'orderNo'},
+                {name: intl.get("order.no") + '：', key: 'orderNo'},
                 {name: intl.get("order.device.no") + "：", key: 'deviceId'},
                 {name: intl.get("order.payment.amount") + "：", content: (item) => {
                     return '￥' + item.payAmount;
@@ -62,7 +62,7 @@ class OrderForm extends BaseOrderList {
                         openDialog: true,
                         deleteItem: item
                     });
-                }}>删除订单</div>
+                }}>{intl.get("order.delete.order")}</div>
         </footer>;
     }
 
@@ -94,12 +94,12 @@ class OrderForm extends BaseOrderList {
                     orderList: orderList,
                     openDialog: false
                 });
-                this.props.action_setGlobAlert("删除成功");
+                this.props.action_setGlobAlert(intl.get("msg.delete.success"));
             } else {
                 this.setState({
                     openDialog: false
                 });
-                this.props.action_setGlobAlert("删除失败");
+                this.props.action_setGlobAlert(intl.get("msg.delete.fail"));
             }
         });
     }

@@ -16,7 +16,7 @@ import Const from "../../../utils/const";
 class InvoiceOrderForDetail extends BaseOrderList {
     constructor(props) {
         super(props);
-        super.title("所含订单");
+        super.title(intl.get("order.include"));
 
         this.state = {
             ...this.defaultState,
@@ -26,7 +26,7 @@ class InvoiceOrderForDetail extends BaseOrderList {
                 {name: '', content: (item) => {
                     return parseTime(item.orderTime);
                 }},
-                {name: '订单号：', key: 'orderNo'},
+                {name: intl.get("order.no") + '：', key: 'orderNo'},
                 // {name: intl.get("order.device.no") + "：", key: 'deviceId'},
                 {name: intl.get("order.payment.amount") + "：", content: (item) => {
                     return '￥' + item.payAmount;

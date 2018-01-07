@@ -67,7 +67,7 @@ class InvoiceDetail extends BaseComponent {
                     linkTo(`user/InvoiceImage/${encodeURIComponent(encoding(imgurl))}`, false, null);
                 }}>
                     <li>
-                        <span style={{color: "#212121"}}>查看电子发票</span>
+                        <span style={{color: "#212121"}}>{intl.get("invoice.show.detail")}</span>
 
                         <RightIcon style={styles.rightIcon}/>
                     </li>
@@ -82,7 +82,7 @@ class InvoiceDetail extends BaseComponent {
                     linkTo(`user/InvoiceOrderForDetail/${id}`, false, null);
                 }}>
                     <li>
-                        <span style={{color: "#212121"}}>包含{orderNum}个订单</span>
+                        <span style={{color: "#212121"}}>{intl.get("invoice.include.number.order", {number: orderNum})}</span>
 
                         <RightIcon style={styles.rightIcon}/>
                     </li>
