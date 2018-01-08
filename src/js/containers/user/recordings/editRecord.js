@@ -15,13 +15,6 @@ import SubmitLoading from '../../../components/common/SubmitLoading';
 import MyButton from '../../../components/common/MyButton';
 
 const styles = {
-    center: {
-        marginTop: toRem(20),
-        paddingRight: 16,
-        textAlign: "center",
-        fontSize: '.4rem',
-        lineHeight: '.6rem'
-    },
     itemStyle: {
         margin: 0,
         padding: `0 ${toRem(5)}`,
@@ -40,6 +33,10 @@ const styles = {
         color: "#fff"
     },
     btn: {
+        position: "absolute",
+        left: "50%",
+        bottom: toRem(80),
+        marginLeft: `-${toRem(540 / 2)}`,
         width: toRem(540),
         height: toRem(100),
         borderRadius: toRem(100)
@@ -176,13 +173,7 @@ class EditRecord extends BaseComponent {
                 </section>
 
                 <MyButton
-                    style={{
-                        ...styles.btn,
-                        position: "absolute",
-                        left: "50%",
-                        bottom: toRem(80),
-                        marginLeft: `-${toRem(540 / 2)}`,
-                    }}
+                    style={styles.btn}
                     labelStyle={styles.btnLabelStyle}
                     onClick={this.submit}
                     label="提交"

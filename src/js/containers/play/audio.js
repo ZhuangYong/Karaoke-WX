@@ -23,6 +23,7 @@ import defaultAvatar from "../../../img/default_avatar.png";
 import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
 import { setGlobAlert } from '../../actions/common/actions';
 import MyButton from '../../components/common/MyButton';
+import navUtils from '../../utils/navUtils';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
@@ -33,23 +34,6 @@ const styles = {
       textAlign: "center",
       fontSize: '.4rem',
       lineHeight: '.6rem'
-    },
-    itemStyle: {
-        margin: 0,
-        padding: `0 ${toRem(5)}`,
-        width: toRem(140),
-        height: toRem(140)
-    },
-    badgeStyle: {
-        top: `-${toRem(5)}`,
-        right: `-${toRem(2)}`,
-        width: "20px",
-        height: "20px"
-    },
-    clearIconStyle: {
-        width: "20px",
-        height: "20px",
-        color: "#fff"
     },
     btn: {
         width: toRem(540),
@@ -98,7 +82,7 @@ class PlayAudio extends BaseComponent {
                     wxShare({
                         title: intl.get("audio.share.title", {name: nameNorm}),
                         desc: intl.get("audio.share.from"),
-                        link: `${location.protocol}//${location.host}/recording/play/${shareId}?language=${getQueryString('language')}`,
+                        link: `${location.protocol}//${location.host}/recording/play/${this.state.params.uid}/${shareId}?language=${getQueryString('language')}`,
                         imgUrl: imgUrl === "" ? headerImg : imgUrl,
                         dataUrl: musicUrl
                     });
@@ -144,7 +128,8 @@ class PlayAudio extends BaseComponent {
 
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
-        const ableEdit = this.state.params.edit === 'edit';
+        const {params} = this.state;
+        const ableEdit = params.edit === 'edit';
 
         const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
 
@@ -235,9 +220,11 @@ class PlayAudio extends BaseComponent {
 
     /**
      * 跳转编辑页面
+     * @param uid 录音的uid
      * @param shareId 录音的shareId
      */
     toEdit(shareId) {
+        navUtils.replace(`${shareId}?language=${getQueryString('language')}`);
         linkTo(`editRecord/${shareId}`, false, null);
     }
 

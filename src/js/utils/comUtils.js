@@ -609,7 +609,7 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
 // 检测是否获取用户信息
 export function isGetUserInfo() {
     const pathname = location.pathname.split("/");
-    return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[1] === "recording"));
+    return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[1] === "recording" && pathname[2] === "play"));
 }
 
 // 解决精度问题
