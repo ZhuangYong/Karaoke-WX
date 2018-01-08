@@ -54,7 +54,7 @@ class BottomDrawer extends React.Component {
                 padding: 0
             }}>
                 {
-                    actions && actions.map(item => <li style={styles.btn} onClick={item.fun}>{item.label}</li>)
+                    actions && actions.map(item => <li key={item.label} style={styles.btn} onClick={item.fun}>{item.label}</li>)
                 }
             </ul>
 

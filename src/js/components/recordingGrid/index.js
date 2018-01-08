@@ -30,6 +30,7 @@ class RecordingGrid extends React.Component {
                     }}
                 >
                     <img
+                        className="img-not-loaded"
                         src={tile.pagePicture || defaultImg}
                         onError={function (e) {
                             e.target.src = defaultImg;

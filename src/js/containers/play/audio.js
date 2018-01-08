@@ -18,15 +18,10 @@ import SlidePng1 from "../../../img/album/1.png";
 import SlidePng2 from "../../../img/album/2.png";
 import SlidePng3 from "../../../img/album/3.png";
 import intl from 'react-intl-universal';
-import RaisedButton from 'material-ui/RaisedButton';
 import Avatar from 'material-ui/Avatar';
 import defaultAvatar from "../../../img/default_avatar.png";
-import ButtonHeader from '../../components/common/header/ButtonHeader';
-import InputBox from '../../components/photoAlbum/index';
-import ClearIcon from "material-ui/svg-icons/content/clear";
 import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
 import { setGlobAlert } from '../../actions/common/actions';
-import SubmitLoading from '../../components/common/SubmitLoading';
 import MyButton from '../../components/common/MyButton';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
@@ -67,17 +62,6 @@ const styles = {
     }
 };
 
-const defaultRecordingFormData = {
-    isEdit: false,
-    pagePicture: [],
-    albums: [],
-    shareId: null
-};
-
-const CONFIG = {
-    ALBUMS_MAX: 10
-};
-
 class PlayAudio extends BaseComponent {
 
     constructor(props) {
@@ -90,30 +74,15 @@ class PlayAudio extends BaseComponent {
             currentTime: 0,
             wxTimer: -1,
             imgUrl: "",
-            autoPlayEd: false,
-            recordingFormData: {...defaultRecordingFormData},
-            loading: false
+            autoPlayEd: false
         };
 
         this.loadAudioGetter = this.loadAudioGetter.bind(this);
         this.toEdit = this.toEdit.bind(this);
-        this.cancel = this.cancel.bind(this);
-        this.addBtnTouchTap = this.addBtnTouchTap.bind(this);
-        this.submit = this.submit.bind(this);
     }
 
     componentWillMount() {
-        const recordingFormDataStr = window.sessionStorage.getItem("recordingFormData");
-
-        if (recordingFormDataStr === null) {
-            this.loadAudioGetter();
-        } else {
-            const recordingFormData = recordingFormDataStr ? JSON.parse(recordingFormDataStr) : Object.assign({}, defaultRecordingFormData, {pagePicture: [], albums: []});
-
-            this.setState({
-                recordingFormData: recordingFormData
-            });
-        }
+        this.loadAudioGetter();
     }
 
     componentDidUpdate() {
@@ -175,9 +144,7 @@ class PlayAudio extends BaseComponent {
 
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
-        const {params, recordingFormData, loading} = this.state;
-        const {isEdit} = recordingFormData || {};
-        const ableEdit = params.edit === 'edit';
+        const ableEdit = this.state.params.edit === 'edit';
 
         const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
 
@@ -185,170 +152,68 @@ class PlayAudio extends BaseComponent {
 
         return (
             <div className="audio-play">
+                <div className="top-panel" style={topPanelStyle}>
+                    <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
+                        {banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}
+                    </AutoPlaySwipeAbleViews>
+                    <Audio ref="audio" source={musicUrl} className="audio-item"/>
+                </div>
+                <p className="song-label">
+                    <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
+                </p>
 
-                {
-                    isEdit ? <section>
-                        <header>
-                            <ButtonHeader
-                                isShowLeftButton={false}
-                                title="编辑录音"
-                                rightButtonClick={this.cancel}
-                                rightButtonLabel="取消"
-                            />
-                        </header>
+                <section style={{paddingTop: toRem(40), borderTop: `${toRem(10)} solid #d7d7d7`}}>
 
-                        <section>
-                            <header style={{paddingBottom: toRem(20)}}>
-                                <ButtonHeader
-                                    style={{
-                                        background: "none",
-                                        border: "none"
-                                    }}
-                                    title={`选择封面图（${(recordingFormData.pagePicture.length) || 0}/1）`} />
-                            </header>
+                    <header style={{
+                        position: "relative",
+                        left: "50%",
+                        marginLeft: `-${toRem(130)}`,
+                        height: toRem(100)
+                    }}>
 
-                            <InputBox
-                                cols={5}
-                                stopInput={true}
-                                addBtnTouchTap={() => {
-                                    this.addBtnTouchTap("pagePicture");
-                                }}
-                                isShowAddBtn={!recordingFormData.pagePicture.length}
-                                itemStyle={styles.itemStyle}
-                                badgeBackgroundColor="#ce0000"
-                                badgeContent={<ClearIcon
-                                    style={styles.clearIconStyle}
-                                    onClick={(e) => {
-                                        recordingFormData.pagePicture = [];
-                                        this.setState({
-                                            recordingFormData: recordingFormData
-                                        });
-                                    }}
-                                />}
-                                badgeStyle={styles.badgeStyle}
-                                data={recordingFormData.pagePicture}
-                                inputChange={this.inputChange}/>
+                        <Avatar style={{
+                            float: "left",
+                            width: toRem(85),
+                            height: toRem(85),
+                            backgroundColor: "rgba(255, 255, 255)",
+                            background: `url(${defaultAvatar}) no-repeat center`,
+                            backgroundSize: "cover"
+                        }} src={headerImg} alt=""/>
 
-                        </section>
-
-                        <section>
-                            <header style={{paddingBottom: toRem(20)}}>
-                                <ButtonHeader
-                                    style={{
-                                        background: "none",
-                                        border: "none"
-                                    }}
-                                    title={`选择轮播图（${(recordingFormData.albums.length) || 0}/${CONFIG.ALBUMS_MAX}）`} />
-                            </header>
-
-                            <InputBox
-                                cols={5}
-                                stopInput={true}
-                                addBtnTouchTap={() => {
-                                    this.addBtnTouchTap("albums");
-                                }}
-                                isShowAddBtn={recordingFormData.albums.length < CONFIG.ALBUMS_MAX}
-                                itemStyle={styles.itemStyle}
-                                badgeBackgroundColor="#ce0000"
-                                badgeContent={<ClearIcon
-                                    style={styles.clearIconStyle}
-                                    onClick={(e) => {
-                                        const deleteId = e.target.parentNode.parentNode.dataset.id;
-                                        recordingFormData.albums = recordingFormData.albums.filter(item => {
-                                            return parseInt(item.id, 10) !== parseInt(deleteId, 10);
-                                        });
-                                        this.setState({
-                                            recordingFormData: recordingFormData
-                                        });
-                                    }}
-                                />}
-                                badgeStyle={styles.badgeStyle}
-                                data={recordingFormData.albums}
-                                inputChange={this.inputChange}/>
-
-                        </section>
-
-                        <MyButton
-                            style={{
-                                ...styles.btn,
-                                position: "absolute",
-                                left: "50%",
-                                bottom: toRem(80),
-                                marginLeft: `-${toRem(540 / 2)}`,
-                            }}
-                            labelStyle={styles.btnLabelStyle}
-                            onClick={this.submit}
-                            label="提交"
-                            disabled={!(recordingFormData.albums.length > 0 || recordingFormData.pagePicture.length > 0)}
-                        />
-
-                    </section> : <div>
-                        <div className="top-panel" style={topPanelStyle}>
-                            <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
-                                {banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}
-                            </AutoPlaySwipeAbleViews>
-                            <Audio ref="audio" source={musicUrl} className="audio-item"/>
+                        <div style={{
+                            float: "left",
+                            marginLeft: toRem(23)
+                        }}>
+                            <div style={{
+                                height: toRem(50),
+                                lineHeight: toRem(50),
+                                fontSize: toRem(30)
+                            }}>{nickName || intl.get("device.anonymous")}</div>
+                            <p style={{fontSize: '.32rem', height: '.4rem', margin: 0, color: "#9a9a9b"}}>{musicTime ? parseTime(parseInt(musicTime, 10)) : "..."}</p>
                         </div>
-                        <p className="song-label">
-                            <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
-                        </p>
+                    </header>
+                    <Subheader style={styles.center}>
+                        {ableEdit ? <MyButton
+                            style={styles.btn}
+                            labelStyle={styles.btnLabelStyle}
+                            onClick={() => this.toEdit(shareId)}
+                            label="去编辑"
+                            disabled={parseInt(status, 10) !== 1}
+                        /> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
 
-                        <section style={{paddingTop: toRem(40), borderTop: `${toRem(10)} solid #d7d7d7`}}>
+                    </Subheader>
 
-                            <header style={{
-                                position: "relative",
-                                left: "50%",
-                                marginLeft: `-${toRem(130)}`,
-                                height: toRem(100)
-                            }}>
+                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
+                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? "唱得太棒了，不用编辑也可以直接分享哦" : intl.get("msg.from.j.make")}</p>
+                    </Subheader>
 
-                                <Avatar style={{
-                                    float: "left",
-                                    width: toRem(85),
-                                    height: toRem(85),
-                                    backgroundColor: "rgba(255, 255, 255)",
-                                    background: `url(${defaultAvatar}) no-repeat center`,
-                                    backgroundSize: "cover"
-                                }} src={headerImg} alt=""/>
+                </section>
 
-                                <div style={{
-                                    float: "left",
-                                    marginLeft: toRem(23)
-                                }}>
-                                    <div style={{
-                                        height: toRem(50),
-                                        lineHeight: toRem(50),
-                                        fontSize: toRem(30)
-                                    }}>{nickName || intl.get("device.anonymous")}</div>
-                                    <p style={{fontSize: '.32rem', height: '.4rem', margin: 0, color: "#9a9a9b"}}>{musicTime ? parseTime(parseInt(musicTime, 10)) : "..."}</p>
-                                </div>
-                            </header>
-                            <Subheader style={styles.center}>
-                                {ableEdit ? <MyButton
-                                    style={styles.btn}
-                                    labelStyle={styles.btnLabelStyle}
-                                    onClick={() => this.toEdit(shareId)}
-                                    label="去编辑"
-                                    disabled={parseInt(status, 10) !== 1}
-                                /> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
-
-                            </Subheader>
-
-                            <Subheader style={{...styles.center, bottom: '.8rem'}}>
-                                <p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? "唱得太棒了，不用编辑也可以直接分享哦" : intl.get("msg.from.j.make")}</p>
-                            </Subheader>
-
-                        </section>
-
-                        <img src={headerImg} style={{display: "none"}} onError={() => {
-                            this.setState({
-                                imgUrl: "http://wx.j-make.cn/img/logo.png"
-                            });
-                        }}/>
-                    </div>
-                }
-
-                <SubmitLoading hide={!loading} />
+                <img src={headerImg} style={{display: "none"}} onError={() => {
+                    this.setState({
+                        imgUrl: "http://wx.j-make.cn/img/logo.png"
+                    });
+                }}/>
 
             </div>
         );
@@ -357,61 +222,15 @@ class PlayAudio extends BaseComponent {
     /**
      * 获取录音分享数据
      */
-    loadAudioGetter(id) {
+    loadAudioGetter() {
         const {uid, shareId} = this.state.params;
         let params = {
             uid: uid || null
         };
 
-        id ? params.shareId = id : (shareId ? params.shareId = shareId : params.openid = getQueryString("openid"));
+        shareId ? params.shareId = shareId : params.openid = getQueryString("openid");
 
         this.props.getShareAudioAction(params, reqHeader(params));
-    }
-
-    /**
-     * 编辑提交
-     */
-    submit() {
-        this.setState({loading: true});
-        const {uploadActions, globAlertAction} = this.props;
-        const {recordingFormData} = this.state;
-        const {shareId, pagePicture, albums} = recordingFormData;
-        const params = {};
-
-        params.shareId = shareId;
-
-        if (pagePicture[0]) params.firstPageId = pagePicture[0].id;
-
-        if (albums.length > 0) {
-            let albumArr = [];
-            albums.map(item => {
-                albumArr.push(item.id);
-            });
-            params.albumIds = albumArr.join(',');
-        }
-
-        uploadActions(params, reqHeader(params), res => {
-            const {status} = res;
-            if (parseInt(status, 10) === 1) {
-
-                // this.loadAudioGetter(shareId);
-                this.cancel();
-            }
-
-            this.setState({loading: false});
-            globAlertAction(parseInt(status, 10) === 1 ? "提交成功" : "提交失败");
-        });
-    }
-
-    /**
-     * 添加图片按钮点击事件
-     * @param edit
-     */
-    addBtnTouchTap(edit) {
-
-        window.sessionStorage.setItem("recordingFormData", JSON.stringify(this.state.recordingFormData));
-
-        linkTo(`user/photoAlbum/${edit}/${edit === "albums" ? CONFIG.ALBUMS_MAX : 1}`, false, null);
     }
 
     /**
@@ -419,53 +238,7 @@ class PlayAudio extends BaseComponent {
      * @param shareId 录音的shareId
      */
     toEdit(shareId) {
-        const getAllPicsParams = {shareId: shareId};
-
-        const {getAllPicsActions, globAlertAction} = this.props;
-
-        getAllPicsActions(getAllPicsParams, reqHeader(getAllPicsParams), res => {
-            const {status, data} = res;
-            if (parseInt(status, 10) === 1) {
-                const {albums, pagePictureId, pagePictureUrl} = data;
-
-                let recordingFormData = Object.assign({}, defaultRecordingFormData, {pagePicture: [], albums: []});
-
-                albums && albums.map(item => {
-                    recordingFormData.albums.push({
-                        id: item.picid,
-                        imgUrl: item.picurl,
-                        isShowBadge: true
-                    });
-                });
-
-                pagePictureId && recordingFormData.pagePicture.push({
-                    id: pagePictureId,
-                    imgUrl: pagePictureUrl,
-                    isShowBadge: true
-                });
-
-                recordingFormData.isEdit = true;
-                recordingFormData.shareId = shareId;
-
-                this.setState({
-                    recordingFormData: recordingFormData
-                });
-            } else {
-                globAlertAction("获取录音相关图片失败");
-            }
-        });
-
-    }
-
-    /**
-     * 跳转回播放页面
-     */
-    cancel() {
-
-        this.setState({
-            recordingFormData: Object.assign({}, defaultRecordingFormData, {pagePicture: [], albums: []})
-        });
-        window.sessionStorage.removeItem("recordingFormData");
+        linkTo(`editRecord/${shareId}`, false, null);
     }
 
     handlePercentChange(_percent) {

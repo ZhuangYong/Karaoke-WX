@@ -86,9 +86,6 @@ class UserIndex extends BaseComponent {
         this.changeCoverGetter = this.changeCoverGetter.bind(this);
     }
 
-    componentWillMount() {
-        window.sessionStorage.removeItem("recordingFormData");
-    }
     componentDidUpdate(preProps) {
         if (preProps.recordsList.recordsListStamp !== this.props.recordsList.recordsListStamp) {
             this.updateRecordsList();

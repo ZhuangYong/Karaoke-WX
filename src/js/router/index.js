@@ -34,6 +34,7 @@ import Suggestions from "../containers/forOldVersion/suggestions";
 
 import User from "../containers/user/index";
 import Recordings from '../containers/user/recordings';
+import EditRecord from '../containers/user/recordings/editRecord';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import PhotoAlbumCrop from '../containers/user/photoAlbum/crop';
 import Feedback from "../containers/user/feedback/index";
@@ -108,6 +109,11 @@ const SongsListContainer = () => (
 );
 const RecordingsContainer = () => (
     <Bundle load={Recordings}>
+        {Component => <Component />}
+    </Bundle>
+);
+const EditRecordContainer = () => (
+    <Bundle load={EditRecord}>
         {Component => <Component />}
     </Bundle>
 );
@@ -221,11 +227,11 @@ export default class router extends React.Component {
                 <Route path={`/`} exact component={HomeContainer}/>
                 <Route path={`/home`} component={HomeContainer}/>
                 {/*
-                        *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
-                        * openid: 用户微信openId
-                        * pollingId: OTT轮询id
-                        * deviceId: OTT设备id
-                        */}
+                *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
+                * openid: 用户微信openId
+                * pollingId: OTT轮询id
+                * deviceId: OTT设备id
+                */}
                 <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
                 <Route path={`/pay`} component={PayContainer}/>
                 <Route path={`/protocol`} component={ProtocolContainer}/>
@@ -234,6 +240,7 @@ export default class router extends React.Component {
                 <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
                 <Route path={`/user`} exact component={UserContainer}/>
                 <Route path={`/user/recordings`} exact component={RecordingsContainer}/>
+                <Route path={`/editRecord/:shareId`} exact component={EditRecordContainer}/>
 
                 /**
                 * 录音播放页面
