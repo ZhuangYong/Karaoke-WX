@@ -127,7 +127,7 @@ export function chkDevice() {
     // console.log(process.env);
 
     const env = process.env.NODE_ENV;
-    if (env === "development") {
+    if (env === "development" || env === "expandTest") {
         isWeixin = true;
     }
     return {
