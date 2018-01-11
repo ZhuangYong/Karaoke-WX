@@ -264,7 +264,7 @@ class SingerList extends BaseComponent {
                                             (!offLine && lastPage) ? intl.get("song.list.end") : ""
                                         }
                                         {
-                                            (offLine && !showNoWifi && !loading) ? Const.STRING_NO_WIFI : ""
+                                            (offLine && !showNoWifi && !loading) ? intl.get("msg.network.die") : ""
                                         }
                                     </span>
                                 </div>
