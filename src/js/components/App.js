@@ -202,7 +202,7 @@ class App extends BaseComponent {
 
     render() {
         let showAlert = !!this.props.globAlert && !this.props.alertData;
-        if (this.props.globAlert === Const.STRING_NO_WIFI && window.lockShowNoWIfi) {
+        if ((this.props.globAlert === intl.get("msg.network.die")) && window.lockShowNoWIfi) {
             setTimeout(() => {
                 this.props.action_setGlobAlert("");
             }, 200);
@@ -216,6 +216,7 @@ class App extends BaseComponent {
                     <Routers/>
                     <Snackbar
                         open={showAlert}
+                        bodyStyle={{height: 'auto', minHeight: 48}}
                         message={this.props.globAlert}
                         autoHideDuration={2000}
                         onRequestClose={() => {

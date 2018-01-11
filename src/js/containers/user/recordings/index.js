@@ -124,7 +124,7 @@ class Records extends BaseComponent {
                             </div>) : ""}
 
                             <span>{this.state.lastPage ? intl.get("song.list.end") : ""}</span>
-                            <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && recordingList.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
+                            <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && recordingList.length !== 0) ? intl.get("msg.network.die") : ""}</span>
                         </div>
 
                         <BottomDrawer

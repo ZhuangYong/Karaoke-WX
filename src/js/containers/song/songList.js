@@ -39,6 +39,7 @@ class SongList extends BaseComponent {
                     {...props}/>
                 <Snackbar
                     open={this.state.barrageSendToast}
+                    bodyStyle={{height: 'auto', minHeight: 48}}
                     message={this.state.barrageToastMsg}
                     autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}
                     onRequestClose={() => {

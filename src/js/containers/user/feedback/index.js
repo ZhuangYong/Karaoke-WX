@@ -187,7 +187,7 @@ class Feedback extends BaseComponent {
                         <header>
                             <div
                                 style={styles.sectionHeader}
-                            >{intl.get("Problem Description")}</div>
+                            >{intl.get("feedback.problem.desc")}</div>
                         </header>
                         <textarea
                             style={styles.questionDesc}
@@ -216,6 +216,7 @@ class Feedback extends BaseComponent {
                         </div>
                         <Snackbar
                             open={this.state.showAlert}
+                            bodyStyle={{height: 'auto', minHeight: 48}}
                             message={this.state.globAlert}
                             autoHideDuration={2000}
                             onRequestClose={() => {
