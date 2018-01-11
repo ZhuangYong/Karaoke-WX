@@ -216,7 +216,7 @@ class Feedback extends BaseComponent {
                         </div>
                         <Snackbar
                             open={this.state.showAlert}
-                            bodyStyle={{height: 'auto', minHeight: 48}}
+                            bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
                             message={this.state.globAlert}
                             autoHideDuration={2000}
                             onRequestClose={() => {

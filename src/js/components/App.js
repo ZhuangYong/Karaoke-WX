@@ -216,7 +216,7 @@ class App extends BaseComponent {
                     <Routers/>
                     <Snackbar
                         open={showAlert}
-                        bodyStyle={{height: 'auto', minHeight: 48}}
+                        bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
                         message={this.props.globAlert}
                         autoHideDuration={2000}
                         onRequestClose={() => {
