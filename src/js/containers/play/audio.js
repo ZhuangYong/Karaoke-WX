@@ -224,7 +224,7 @@ class PlayAudio extends BaseComponent {
      * @param shareId 录音的shareId
      */
     toEdit(shareId) {
-        navUtils.replace(`${shareId}?language=${getQueryString('language')}`);
+        navUtils.replace(`${this.state.params.uid}/${shareId}?language=${getQueryString('language')}`);
         linkTo(`editRecord/${shareId}`, false, null);
     }
 
