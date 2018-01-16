@@ -28,6 +28,7 @@ import VoiceSearch from "../containers/voiceSearch";
 
 import Pay from "../containers/pay";
 import Protocol from "../containers/pay/protocol";
+import DeviceRegister from "../containers/pay/deviceRegister";
 import RedirectPay from "../containers/forOldVersion/pay";
 
 import Suggestions from "../containers/forOldVersion/suggestions";
@@ -164,6 +165,12 @@ const PayContainer = () => (
     </Bundle>
 );
 
+const DeviceRegisterContainer = () => (
+    <Bundle load={DeviceRegister}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 const ProtocolContainer = () => (
     <Bundle load={Protocol}>
         {Component => <Component />}
@@ -227,12 +234,13 @@ export default class router extends React.Component {
                 <Route path={`/`} exact component={HomeContainer}/>
                 <Route path={`/home`} component={HomeContainer}/>
                 {/*
-                *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
+                *state: home/aliPaySuccess/aliPayFailed(页面状态)
                 * openid: 用户微信openId
                 * pollingId: OTT轮询id
                 * deviceId: OTT设备id
                 */}
                 <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
+                <Route path={`/deviceRegister`} component={DeviceRegisterContainer}/>
                 <Route path={`/pay`} component={PayContainer}/>
                 <Route path={`/protocol`} component={ProtocolContainer}/>
                 <Route path={`/controller/`} exact component={SongControllerContainer}/>
@@ -255,26 +263,26 @@ export default class router extends React.Component {
                 <Route path={`/user/invoiceOrder`} exact component={InvoiceOrderContainer}/>
                 <Route path={`/user/invoiceList`} exact component={InvoiceListContainer}/>
                 {/*
-                        * ids: 待开票id
-                        * totalMoney: 代开票总金额
-                        */}
+                * ids: 待开票id
+                * totalMoney: 代开票总金额
+                */}
                 <Route path={`/user/invoiceSubmit/:ids/:totalMoney`} component={InvoiceSubmitContainer}/>
                 <Route path={`/user/invoiceSubmitSuccess`} component={InvoiceSubmitSuccessContainer}/>
                 <Route path={`/user/InvoiceDetail/:id`} component={InvoiceDetailContainer}/>
                 <Route path={`/user/InvoiceImage/:url`} component={InvoiceImageContainer}/>
                 <Route path={`/user/InvoiceOrderForDetail/:id`} component={InvoiceOrderForDetailContainer}/>
                 {/*
-                        *state: home/success(页面状态)
-                        *deviceId: 绑定设备号
-                        * */}
+                *state: home/success(页面状态)
+                *deviceId: 绑定设备号
+                * */}
                 <Route path={`/user/feedback/:state/:deviceId?`} exact component={FeedbackContainer}/>
                 <Route path={`/suggestions/suggestions.html`} exact component={SuggestionsContainer}/>
                 {/*
-                        *state: home/success/failed/invalid(页面状态)
-                        *uuid: 扫码登录参数/用户微信unionId
-                        * userId: 服务器给用户的id
-                        * deviceId: 设备id
-                        */}
+                *state: home/success/failed/invalid(页面状态)
+                *uuid: 扫码登录参数/用户微信unionId
+                * userId: 服务器给用户的id
+                * deviceId: 设备id
+                */}
                 <Route path={`/login/:state/:uuid?/:userId?/:deviceId?`} component={LoginContainer}/>
                 <Route path={`/song/chooselist`} exact component={ChooseListContainer}/>
                 <Route path={`/song/search/:keyword?`} exact component={SearchContainer}/>
