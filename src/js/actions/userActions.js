@@ -23,6 +23,7 @@ export function OTTLogin(data, headers, callback) {
 // 获取用户信息
 export function getUserInfo(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_USER_INFO;
+    // const url = `api/userInfo.json`;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,

@@ -28,6 +28,7 @@ import VoiceSearch from "../containers/voiceSearch";
 
 import Pay from "../containers/pay";
 import Protocol from "../containers/pay/protocol";
+import DeviceRegister from "../containers/pay/deviceRegister";
 import RedirectPay from "../containers/forOldVersion/pay";
 
 import Suggestions from "../containers/forOldVersion/suggestions";
@@ -157,6 +158,12 @@ const PayContainer = () => (
     </Bundle>
 );
 
+const DeviceRegisterContainer = () => (
+    <Bundle load={DeviceRegister}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 const ProtocolContainer = () => (
     <Bundle load={Protocol}>
         {Component => <Component />}
@@ -220,12 +227,13 @@ export default class router extends React.Component {
                 <Route path={`/`} exact component={HomeContainer}/>
                 <Route path={`/home`} component={HomeContainer}/>
                 {/*
-                        *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
+                        *state: home/aliPaySuccess/aliPayFailed(页面状态)
                         * openid: 用户微信openId
                         * pollingId: OTT轮询id
                         * deviceId: OTT设备id
                         */}
                 <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
+                <Route path={`/deviceRegister`} component={DeviceRegisterContainer}/>
                 <Route path={`/pay`} component={PayContainer}/>
                 <Route path={`/protocol`} component={ProtocolContainer}/>
                 <Route path={`/controller/`} exact component={SongControllerContainer}/>

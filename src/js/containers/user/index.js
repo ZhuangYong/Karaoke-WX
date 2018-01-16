@@ -398,7 +398,7 @@ class UserIndex extends BaseComponent {
                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                    linkTo(`pay/deviceRegister`, false, null);
+                    linkTo(`deviceRegister`, false, null);
                     return;
                 }
                 const {isIos} = window.sysInfo;
@@ -445,7 +445,7 @@ class UserIndex extends BaseComponent {
                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                    linkTo(`pay/deviceRegister`, false, null);
+                    linkTo(`deviceRegister`, false, null);
                     return;
                 }
                 const {isIos} = window.sysInfo;

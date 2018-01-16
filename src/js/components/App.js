@@ -174,7 +174,7 @@ class App extends BaseComponent {
         }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
-            linkTo("pay/deviceRegister", false, "");
+            linkTo("deviceRegister", false, "");
             this.props.action_setGlobAlert("", "");
         }
         if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
@@ -231,7 +231,7 @@ class App extends BaseComponent {
                                                                                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
                                                                                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                                                                                    linkTo(`pay/deviceRegister`, false, null);
+                                                                                    linkTo(`deviceRegister`, false, null);
                                                                                     return;
                                                                                 }
                                                                                 const {isIos} = window.sysInfo;
@@ -356,11 +356,11 @@ class App extends BaseComponent {
                     });
                 };
                 break;
-            case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
-                // alertStr = '激活vip免费体验';
-                //TODO ACTIVE
-                //linkTo("", false, "");
-                break;
+            // case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
+            //     // alertStr = '激活vip免费体验';
+            //     //TODO ACTIVE
+            //     //linkTo("", false, "");
+            //     break;
             case ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL:
                 alertStr = intl.get("msg.operate.need.auth");
                 //TODO ACTIVE

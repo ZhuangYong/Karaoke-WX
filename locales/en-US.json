@@ -214,7 +214,7 @@
     "msg.scan.qr.code.expired": "Scan QR code has expired",
     "msg.invalid.qr.code": "Invalid QR code",
     "msg.not.now": "Not now",
-    "msg.join.immediately": "Join immediately",
+    "msg.join.immediately": "Join now",
     "msg.congratulations.pay.success": "Congratulations, payment successful!",
     "msg.woo.pay.fail": "Woo ~ payment failed",
     "msg.unwilling.try.again": "Unwilling, try again",
