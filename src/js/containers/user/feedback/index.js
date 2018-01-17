@@ -20,6 +20,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ClearIcon from "material-ui/svg-icons/content/clear";
 import InputBox from "../../../components/photoAlbum";
 import SubmitSuccessIcon from "../../../../img/submit_success.png";
+import NotWXIcon from "../../../../img/pay_failed.png";
 import navUtils from "../../../utils/navUtils";
 import ButtonPage from "../../../components/common/ButtonPage";
 import {setGlobAlert} from "../../../actions/common/actions";
@@ -169,6 +170,8 @@ class Feedback extends BaseComponent {
     }
 
     render() {
+        const {isWeixin} = window.sysInfo;
+
         const {data} = this.props.questionList.questionListData || {data: {}};
         const {result} = data || {};
         const imgList = this.state.imgList;
@@ -181,7 +184,7 @@ class Feedback extends BaseComponent {
 
         return (
             <div>
-                {this.matchPages() ? (<div>
+                {isWeixin ? (this.matchPages() ? (<div>
                     <section
                         style={{backgroundColor: "#eee"}}
                     >
@@ -362,7 +365,12 @@ class Feedback extends BaseComponent {
                     imgStyle={{width: "100px"}}
                     buttonLabel={intl.get("button.close")}
                     touchTap={this.closePage}
-                />)}
+                />)) : <ButtonPage
+                    src={NotWXIcon}
+                    content={intl.get("msg.operate.in.we.chat")}
+                    imgStyle={{width: "100px"}}
+                    hideButton={true}
+                />}
 
                 <SubmitLoading hide={!(this.state.uploadImgLoading || this.state.deleteLoading)} />
             </div>
@@ -402,11 +410,6 @@ class Feedback extends BaseComponent {
 
         const actionGlobAlert = this.props.action_setGlobAlert;
         const submitParams = this.state.submitParams;
-        const {isWeixin} = window.sysInfo;
-        if (!isWeixin) {
-            actionGlobAlert(intl.get("user.we.chat.operate"));
-            return;
-        }
         if (submitParams.questionIds === null) {
             actionGlobAlert(intl.get("feedback.least.one.question"));
             return;

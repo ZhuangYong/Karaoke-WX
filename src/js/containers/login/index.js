@@ -34,13 +34,15 @@ class Login extends BaseComponent {
     }
 
     render() {
+        const {state, uuid} = this.state.matchParams;
+        const isHome = state === "home";
+
         return (<ButtonPage
             src={LoginIcon}
-            disabled={typeof this.state.matchParams.uuid === "undefined"}
+            disabled={isHome && typeof uuid === "undefined"}
             content={this.matchPages()}
             imgStyle={{width: "100px"}}
-            buttonLabel={intl.get("login.sure.login")}
-            hideButton={this.state.matchParams.state !== "home"}
+            buttonLabel={isHome ? intl.get("login.sure.login") : "关闭"}
             touchTap={() => {
 
                 const {isWeixin} = window.sysInfo;
@@ -49,8 +51,7 @@ class Login extends BaseComponent {
                     return;
                 }
 
-                const uuid = this.state.matchParams.uuid;
-                if (typeof uuid !== "undefined") {
+                if (isHome && typeof uuid !== "undefined") {
                     const params = {
                         uuid: uuid
                     };
@@ -63,6 +64,8 @@ class Login extends BaseComponent {
                             navUtils.replace(`/login/success`);
                         }
                     });
+                } else if (!isHome) {
+                    window.WeixinJSBridge.call('closeWindow');
                 }
             }}
         />);
