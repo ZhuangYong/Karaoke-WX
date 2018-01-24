@@ -127,7 +127,10 @@ class InputBox extends React.Component {
                                 },
                                 badgeStyle || {}
                             )}
-                            badgeContent={badgeContent}>
+                            badgeContent={badgeContent}
+                            onClick={() => {
+                                imgTouchTap && imgTouchTap(item);
+                            }}>
 
                             <img
                                 className="img-not-loaded"
@@ -138,9 +141,6 @@ class InputBox extends React.Component {
                                 }, imgStyle || {})}
                                 onError={function (e) {
                                     e.target.src = blankImg;
-                                }}
-                                onClick={() => {
-                                    imgTouchTap && imgTouchTap(item);
                                 }}/>
 
                         </Badge>

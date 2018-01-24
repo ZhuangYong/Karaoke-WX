@@ -71,6 +71,13 @@ export default {
      */
     "API_OSS_UPLOAD_ALBUM": "/ossToken/ossUploadAlbum",
 
+    /**
+     * 上传已存储到微信服务器的图片（自建后台）
+     * keys-图片Id,以逗号隔开
+     * type-类型,1-相册图片 2-反馈图片
+     */
+    "API_OSS_UPLOAD_WX_PIC": "/ossToken/ossUploadWxPic",
+
     // 查询我的相册列表
     "API_PHOTO_ALBUM_LIST": "/user/qryWxUserAlbum",
     // 删除我的相册图片

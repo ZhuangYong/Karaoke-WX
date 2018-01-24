@@ -29,6 +29,8 @@ const USER = {
 
     // 相册上传
     API_OSS_UPLOAD_ALBUM: "API_OSS_UPLOAD_ALBUM",
+    // 上传已存储到微信服务器的图片（自建后台）
+    API_OSS_UPLOAD_WX_PIC: "API_OSS_UPLOAD_WX_PIC",
     // 查询我的相册列表
     API_GET_PHOTO_ALBUM_LIST: "API_GET_PHOTO_ALBUM_LIST",
     // 删除我的相册图片

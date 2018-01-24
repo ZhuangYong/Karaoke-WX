@@ -116,7 +116,8 @@ module.exports = {
             {
                 test: /\.scss$/,
                 include: [
-                    PATH_SRC_SASS
+                    PATH_SRC_SASS,
+                    PATH_MODULES
                 ],
                 use: [{
                     loader: "style-loader"

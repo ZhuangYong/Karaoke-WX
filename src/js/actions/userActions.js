@@ -161,6 +161,21 @@ export function uploadImg(data, headers, callback) {
     };
 }
 
+// 上传已存储到微信服务器的图片（自建后台）
+export function ossUploadWxPic(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_OSS_UPLOAD_WX_PIC;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_OSS_UPLOAD_ALBUM
+        }, callback);
+    };
+}
+
 // 删除图片
 export function deleteImg(data, headers, callback) {
 

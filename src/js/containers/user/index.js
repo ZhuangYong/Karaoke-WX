@@ -160,7 +160,7 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 4}>
+                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -205,19 +205,17 @@ class UserIndex extends BaseComponent {
                             </GridTile>
                         }
 
-                        {
-                            (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div /> : <GridTile
-                                onTouchTap={() => {
-                                    linkTo(`user/photoAlbum`, false, null);
-                                    // linkTo(`user/myOrder`, false, null);
-                                }}>
-                                <img
-                                    src={MyAlbumIcon}
-                                    style={{...styles.headerImg, width: "auto"}}
-                                />
-                                <div style={styles.headerDesc}>我的相册</div>
-                            </GridTile>
-                        }
+                        {/*<GridTile
+                            onTouchTap={() => {
+                                linkTo(`user/photoAlbum`, false, null);
+                                // linkTo(`user/myOrder`, false, null);
+                            }}>
+                            <img
+                                src={MyAlbumIcon}
+                                style={{...styles.headerImg, width: "auto"}}
+                            />
+                            <div style={styles.headerDesc}>我的相册</div>
+                        </GridTile>*/}
 
                     </GridList>
 
@@ -267,7 +265,8 @@ class UserIndex extends BaseComponent {
                             open: false
                         });
                     }}
-                    actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
+                    // actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
+                    actions={[{label: '删除', fun: this.deleteGetter}]}
                 />
 
                 <SubmitLoading hide={!loading} />

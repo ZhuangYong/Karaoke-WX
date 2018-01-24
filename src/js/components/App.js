@@ -27,6 +27,7 @@ import intl from 'react-intl-universal';
 import _ from "lodash";
 import Routers from '../router';
 import {cryptoFetch} from "../utils/fetchUtils";
+import canvasToBlob from '../utils/canvasToBlob';
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];

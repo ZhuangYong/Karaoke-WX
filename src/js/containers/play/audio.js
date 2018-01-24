@@ -129,7 +129,8 @@ class PlayAudio extends BaseComponent {
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
         const {params} = this.state;
-        const ableEdit = params.edit === 'edit';
+        // const ableEdit = params.edit === 'edit';
+        const ableEdit = params.edit === false;
 
         const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
 
@@ -139,7 +140,12 @@ class PlayAudio extends BaseComponent {
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
                     <AutoPlaySwipeAbleViews className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
-                        {banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}
+                        {/*{banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}*/}
+                        <div className="img-div" onTouchTap={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
+                        <div className="img-div"><img src={SlidePng1}/></div>
+                        <div className="img-div"><img src={SlidePng2}/></div>
+                        <div className="img-div"><img src={SlidePng3}/></div>
+
                     </AutoPlaySwipeAbleViews>
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>

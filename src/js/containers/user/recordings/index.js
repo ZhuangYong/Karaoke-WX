@@ -137,7 +137,8 @@ class Records extends BaseComponent {
                                     open: false
                                 });
                             }}
-                            actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
+                            // actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
+                            actions={[{label: '删除', fun: this.deleteGetter}]}
                         />
 
                         <SubmitLoading hide={!submitLoading} />

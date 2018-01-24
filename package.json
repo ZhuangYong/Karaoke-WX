@@ -19,7 +19,6 @@
     "rc-progress": "^2.2.1",
     "rc-slider": "^8.2.0",
     "react": "^15.6.1",
-    "react-avatar-editor": "^10.3.0",
     "react-dom": "^15.6.1",
     "react-event-listener": "^0.4.5",
     "react-intl-universal": "^1.6.1",

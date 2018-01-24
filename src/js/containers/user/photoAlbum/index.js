@@ -18,8 +18,8 @@ import intl from 'react-intl-universal';
 import ButtonHeader from '../../../components/common/header/ButtonHeader';
 import { setGlobAlert } from '../../../actions/common/actions';
 import SubmitLoading from '../../../components/common/SubmitLoading';
-import RaisedButton from 'material-ui/RaisedButton';
 import MyButton from '../../../components/common/MyButton';
+import ActionTypes from '../../../actions/actionTypes';
 
 const styles = {
     btn: {
@@ -54,6 +54,8 @@ class PhotoAlbum extends BaseComponent {
         this.imgTouch = this.imgTouch.bind(this);
         this.close = this.close.bind(this);
         this.uploadEdit = this.uploadEdit.bind(this);
+        this.addBtnTouchTap = this.addBtnTouchTap.bind(this);
+        this.toCropPage = this.toCropPage.bind(this);
     }
 
     componentWillMount() {
@@ -90,6 +92,7 @@ class PhotoAlbum extends BaseComponent {
     }
 
     render() {
+        const {isWeixin} = window.sysInfo;
         const {dataList, params, totalCount, albumMaxNum, selectItemIds, isDeletePage, visible, viewerInd, deleteLoading} = this.state;
         const {edit} = params;
 
@@ -157,11 +160,9 @@ class PhotoAlbum extends BaseComponent {
 
                 <InputBox
                     cols={3}
-                    stopInput={!(totalCount < albumMaxNum)}
+                    stopInput={isWeixin || !(totalCount < albumMaxNum)}
                     isShowAddBtn={!isDeletePage}
-                    addBtnTouchTap={() => {
-                        !(totalCount < albumMaxNum) && this.props.globAlertAction(`最多只能添加${albumMaxNum}张照片哦`);
-                    }}
+                    addBtnTouchTap={this.addBtnTouchTap}
                     badgeStyle={{
                         width: 0,
                         height: 0,
@@ -400,7 +401,7 @@ class PhotoAlbum extends BaseComponent {
 
             if (parseInt(status, 10) === 1) {
                 const newDataList = dataList.filter(item => {
-                    return ids.indexOf(item.id) < 0;
+                    return ids.indexOf(item.id) === -1;
                 });
 
                 this.setState({
@@ -434,13 +435,52 @@ class PhotoAlbum extends BaseComponent {
             //处理 android 4.1 兼容问题
             const base64 = reader.result.split(',')[1];
             const dataUrl = 'data:image/png;base64,' + base64;
-            const sessionKey = 'uploadImageDataUrl';
 
-            window.sessionStorage.setItem(sessionKey, dataUrl);
-
-            linkTo(`user/crop/${sessionKey}`, false, null);
+            this.toCropPage(dataUrl);
         };
         reader.readAsDataURL(file);
+    }
+
+    /**
+     * 添加按钮点击事件
+     */
+    addBtnTouchTap() {
+        const {totalCount, albumMaxNum} = this.state;
+        const {globAlertAction} = this.props;
+        if (!(totalCount < albumMaxNum)) {
+            globAlertAction(`最多只能添加${albumMaxNum}张照片哦`);
+            return;
+        }
+        const {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            window.wx && window.wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: (res) => {
+                    const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    // alert(res.localIds[0]);
+                    this.toCropPage(localIds[0]);
+                },
+                fail: () => {
+                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                }
+            });
+
+        }
+    }
+
+    /**
+     * 跳转剪切页面
+     * @param dataUrl
+     */
+    toCropPage(dataUrl) {
+
+        const sessionKey = 'uploadImageDataUrl';
+
+        window.sessionStorage.setItem(sessionKey, dataUrl);
+
+        linkTo(`user/crop/${sessionKey}`, false, null);
     }
 
 }

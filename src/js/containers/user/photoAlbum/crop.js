@@ -9,7 +9,6 @@ import PropTypes from "prop-types";
 import { uploadImg, OSSAccessToken } from '../../../actions/userActions';
 import { getWxinfoFromSession, reqHeader, toRem } from '../../../utils/comUtils';
 import BaseComponent from "../../../components/common/BaseComponent";
-import AvatarEditor from 'react-avatar-editor';
 import pinch from "touch-pinch";
 
 import intl from 'react-intl-universal';
@@ -19,23 +18,33 @@ import ButtonHeader from '../../../components/common/header/ButtonHeader';
 import { setGlobAlert } from '../../../actions/common/actions';
 import {findDOMNode} from "react-dom";
 import SubmitLoading from '../../../components/common/SubmitLoading';
+import Draggable from 'react-draggable';
 
 const imgMax = {
+    size: 600 * 1024,
+    width: 650,
+    height: 650,
     screenW: document.documentElement.clientWidth || document.body.clientWidth,
-    screenH: document.documentElement.clientHeight || document.body.clientHeight
+    screenH: document.documentElement.clientHeight || document.body.clientHeight,
+    scaleRate: 0.8
 };
+
 
 class Crop extends BaseComponent {
     constructor(props) {
         super(props);
+        super.title("裁剪图片");
 
         this.state = {
             dataUrl: '',
+            imgWidth: 0,
+            imgHeight: 0,
             client: null,
             setEditorRef: (editor) => this.editor = editor,
             isDealPinch: false,
             pinchDist: 0,
             scale: 1,
+            rotate: 0,
             uploadLoading: false
         };
 
@@ -52,6 +61,31 @@ class Crop extends BaseComponent {
             return {};
 
         return findDOMNode(this.refs.cropWidow);
+    }
+
+    componentWillMount() {
+
+        /**
+         * 获取OSS对象参数
+         */
+        this.props.OSSTokenActions({}, reqHeader({}));
+
+
+        const dataUrl = window.sessionStorage.getItem(this.props.match.params.dataUrl) || "http://wx.j-make.cn/img/album/1.png";
+        if (typeof dataUrl !== 'undefined') {
+
+            const img = new Image();
+            img.src = dataUrl;
+            img.onload = () => {
+
+                this.setState({
+                    dataUrl: dataUrl,
+                    imgWidth: img.width,
+                    imgHeight: img.height
+                });
+            };
+        }
+
     }
 
     componentDidUpdate(preProps) {
@@ -84,7 +118,7 @@ class Crop extends BaseComponent {
                     let scale = this.state.scale;
 
                     if (pinchChange > 0) {
-                        scale = scale > 1 ? (scale - 0.05) : 1;
+                        scale = scale > 0.2 ? (scale - 0.05) : 0.2;
                     } else {
                         scale = scale <= 2 ? (scale + 0.05) : 2;
                     }
@@ -106,27 +140,19 @@ class Crop extends BaseComponent {
         }
     }
 
-    componentDidMount() {
-
-        this.setState({
-           dataUrl: window.sessionStorage.getItem(this.props.match.params.dataUrl)
-        });
-
-        /**
-         * 获取OSS对象参数
-         */
-        this.props.OSSTokenActions({}, reqHeader({}));
-
-    }
 
     render() {
+
+        const {scale, imgWidth, imgHeight} = this.state;
+        const transitionW = imgWidth * scale;
+        const transitionH = transitionW * imgHeight / imgWidth;
 
         return (
             <section ref="cropWidow" style={{
                 position: 'relative',
                 width: `${imgMax.screenW}px`,
                 height: `${imgMax.screenH}px`,
-                backgroundColor: 'rgba(0, 0, 0, 0.6)'
+                // backgroundColor: 'rgba(0, 0, 0, 1)'
             }}>
                 <header>
                     <ButtonHeader
@@ -140,7 +166,54 @@ class Crop extends BaseComponent {
                     />
                 </header>
 
-                <AvatarEditor
+                <div>{scale}</div>
+                <div>{imgWidth}</div>
+                <div>{imgHeight}</div>
+
+                <div style={{
+                    position: 'absolute',
+                    top: toRem(110),
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    overflow: 'hidden',
+                    // display: 'flex',
+                    // justifyContent: 'center',
+                    // alignItems: 'center',
+                    // border: `${toRem(100)} solid rgba(0, 0, 0, 0.7)`,
+                    background: 'rgba(0, 0, 0, 0.7)'
+                }}>
+                    {/*<div style={{
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0,
+                        zIndex: 5
+                    }} />*/}
+
+                    <Draggable bounds="parent">
+                        <div style={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            margin: `-${toRem(transitionH / 2)} 0 0 -${toRem(transitionW / 2)}`,
+                            width: `${toRem(transitionW)}`,
+                            height: `${toRem(transitionH)}`
+                        }}>
+                            <img ref="cropWidow"
+                                 style={{
+                                     width: '100%',
+                                     height: '100%'
+                                 }}
+                                 src={this.state.dataUrl} />
+
+                        </div>
+                    </Draggable>
+
+                </div>
+
+                {/*<AvatarEditor
                     ref={this.state.setEditorRef}
                     style={{
                         position: 'absolute',
@@ -156,8 +229,8 @@ class Crop extends BaseComponent {
                     border={10}
                     color={[0, 0, 0, 0.6]} // RGBA
                     scale={this.state.scale}
-                    rotate={0}
-                />
+                    rotate={this.state.rotate}
+                />*/}
 
                 <SubmitLoading hide={!this.state.uploadLoading} />
 
@@ -167,16 +240,31 @@ class Crop extends BaseComponent {
 
     uploadRightBtn() {
 
-        this.setState({
-            uploadLoading: true
-        });
+        alert(JSON.stringify(this.cropper.getData()));
 
-        if (this.editor) {
+        // if (typeof this.cropper.getCroppedCanvas() === 'undefined') {
+        //     return;
+        // }
+        //
+        // alert(this.cropper.getCroppedCanvas().toDataURL());
+
+        /*this.setState({
+            cropResult: this.cropper.getCroppedCanvas().toDataURL(),
+        });*/
+
+        /*this.setState({
+            uploadLoading: true
+        });*/
+
+        /*if (this.editor) {
             const canvas = this.editor.getImage();
             const globAlert = this.props.action_setGlobAlert;
 
+            alert(canvas.width);
+
             canvas.toBlob(blob => {
                 console.log(blob);
+                alert(blob);
 
                 //将Blob 对象转换成 ArrayBuffer
                 const reader = new FileReader();
@@ -205,7 +293,7 @@ class Crop extends BaseComponent {
             }, 'image/jpeg', 1);
 
             // console.log(canvas);
-        }
+        }*/
     }
 
     /**
