@@ -84,18 +84,21 @@ class InputBox extends React.Component {
                     cellHeight={'auto'}
                     cols={cols || 2}
                     padding={0}
-                    style={Object.assign({}, {
+                    style={{
                         margin: 0,
                         padding: `0 ${toRem(20)}`,
-                        boxSizing: "border-box"}, style || {})}>
+                        boxSizing: "border-box",
+                        ...style
+                    }}>
 
                     {dataList.map((item) => (
                         item.addBtn ? <div key={99999999}
-                           style={Object.assign({}, {
-                                ...styles.tile,
-                                backgroundColor: "#fff",
-                                border: "1px solid #ccc"
-                            }, itemStyle || {})}
+                           style={{
+                               ...styles.tile,
+                               backgroundColor: "#fff",
+                               border: "1px solid #ccc",
+                               ...itemStyle
+                           }}
                            onClick={() => {
                                this.addBtnTouchTap();
                            }}>
@@ -118,16 +121,14 @@ class InputBox extends React.Component {
 
                         </div> : <Badge
                             key={item.id}
-                            data-id={item.id}
-                            style={Object.assign({}, styles.tile, itemStyle || {})}
-                            badgeStyle={Object.assign({}, {
-                                    display: item.isShowBadge ? "block" : "none",
-                                    position: "absolute",
-                                    backgroundColor: badgeBackgroundColor || "#a4c639"
-                                },
-                                badgeStyle || {}
-                            )}
-                            badgeContent={badgeContent}
+                            style={{...styles.tile, ...itemStyle}}
+                            badgeStyle={{
+                                display: item.isShowBadge ? "block" : "none",
+                                position: "absolute",
+                                backgroundColor: badgeBackgroundColor,
+                                ...badgeStyle
+                            }}
+                            badgeContent={<div onClick={() => this.badgeContentClick(item.id)}>{badgeContent}</div>}
                             onClick={() => {
                                 imgTouchTap && imgTouchTap(item);
                             }}>
@@ -135,10 +136,11 @@ class InputBox extends React.Component {
                             <img
                                 className="img-not-loaded"
                                 src={item.imgUrl}
-                                style={Object.assign({}, {
+                                style={{
                                     ...styles.tileImg,
-                                    border: (isShowSelectBorder && item.isShowBadge) ? `${toRem(8)} solid #ff6832` : 'none'
-                                }, imgStyle || {})}
+                                    border: (isShowSelectBorder && item.isShowBadge) ? `${toRem(8)} solid #ff6832` : 'none',
+                                    ...imgStyle
+                                }}
                                 onError={function (e) {
                                     e.target.src = blankImg;
                                 }}/>
@@ -170,6 +172,14 @@ class InputBox extends React.Component {
         if (file && this.props.inputChange)
             this.props.inputChange(file);
     }
+
+    /**
+     * 角标点击事件
+     */
+    badgeContentClick(id) {
+
+        this.props.badgeContentClick && this.props.badgeContentClick(id);
+    }
 }
 
 InputBox.propTypes = {
@@ -185,7 +195,25 @@ InputBox.propTypes = {
     imgTouchTap: PropTypes.func,
     inputChange: PropTypes.func,
     addBtnTouchTap: PropTypes.func,
+    badgeContentClick: PropTypes.func,
     isShowSelectBorder: PropTypes.bool
+};
+
+InputBox.defaultProps = {
+    cols: 3,
+    stopInput: false,
+    data: [],
+    isShowAddBtn: true,
+    style: {},
+    itemStyle: {},
+    badgeStyle: {},
+    badgeBackgroundColor: "#a4c639",
+    badgeContent: {},
+    imgTouchTap: null,
+    inputChange: null,
+    addBtnTouchTap: null,
+    badgeContentClick: null,
+    isShowSelectBorder: false
 };
 
 export default InputBox;

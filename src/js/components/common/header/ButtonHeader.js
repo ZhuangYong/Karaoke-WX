@@ -19,19 +19,22 @@ class ButtonHeader extends React.Component {
 
         const {style, titleStyle, title, rightButtonLabel} = this.props;
 
-        return <section style={Object.assign({}, {
+        return <section style={{
             width: "100%",
             height: toRem(110),
             backgroundColor: "#fff",
-            borderBottom: "2px solid #d7d7d7"}, style || {})}>
+            borderBottom: "2px solid #d7d7d7",
+            ...style
+        }}>
 
-            <header style={Object.assign({}, {
-                    float: "left",
-                    marginLeft: toRem(20),
-                    lineHeight: toRem(110),
-                    color: "#212121",
-                    fontSize: toRem(36)
-                }, titleStyle || {})}>
+            <header style={{
+                float: "left",
+                marginLeft: toRem(20),
+                lineHeight: toRem(110),
+                color: "#212121",
+                fontSize: toRem(36),
+                ...titleStyle
+            }}>
 
                 {title ? title || 'Title' : this.button('left')}
 
@@ -112,6 +115,25 @@ ButtonHeader.propTypes = {
     rightButtonLabel: PropTypes.string,
     rightButtonClick: PropTypes.func,
     rightButtonRightIcon: PropTypes.bool
+};
+
+ButtonHeader.defaultProps = {
+    style: {},
+    title: null,
+    titleStyle: {},
+    leftButtonLoading: false,
+    leftButtonStyle: {},
+    leftButtonDisabled: false,
+    leftButtonLabelStyle: {},
+    leftButtonLabel: null,
+    leftButtonClick: null,
+    rightButtonStyle: {},
+    rightButtonLoading: false,
+    rightButtonLabelStyle: {},
+    rightButtonDisabled: false,
+    rightButtonLabel: null,
+    rightButtonClick: null,
+    rightButtonRightIcon: false
 };
 
 export default ButtonHeader;

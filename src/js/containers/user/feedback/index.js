@@ -283,6 +283,7 @@ class Feedback extends BaseComponent {
                         </header>
 
                         <InputBox
+                            ref="getInputBox"
                             cols={5}
                             stopInput={isWeixin}
                             addBtnTouchTap={this.addBtnTouchTap}
@@ -300,12 +301,8 @@ class Feedback extends BaseComponent {
                                     height: "20px"
                                 }}
                                 color="#fff"
-                                onClick={(e) => {
-                                    const deleteId = e.target.parentNode.parentNode.dataset.id;
-
-                                    this.deleteImgGetter(deleteId);
-                                }}
                             />}
+                            badgeContentClick={this.deleteImgGetter}
                             badgeStyle={{
                                 top: `-${toRem(5)}`,
                                 right: `-${toRem(2)}`,
@@ -441,7 +438,6 @@ class Feedback extends BaseComponent {
             const nodeEnv = process.env.NODE_ENV;
             if (nodeEnv === 'expand' || nodeEnv === 'expandTest' || nodeEnv === 'master') {
                 submitParams.deviceUuid = matchParams.deviceId;
-
                 header = reqHeader(submitParams);
             } else {
 
@@ -619,7 +615,7 @@ class Feedback extends BaseComponent {
                                     const {status, data} = res;
                                     if (parseInt(status, 10) === 1) {
 
-                                        result = Object.assign({}, data, {msg: "上传成功"});
+                                        result = {...data, msg: "上传成功"};
                                         resolve(result);
                                     } else {
 
