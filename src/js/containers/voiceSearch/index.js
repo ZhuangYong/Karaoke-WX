@@ -43,6 +43,7 @@ class VoiceSearch extends BaseComponent {
         super.title(intl.get("title.voice.search"));
 
         this.state = {
+            // 录音是否已经开始
             isRecordStart: false,
             // 页面状态 0(正常未开始录音)/1(录音中)/2(断网)/3(无法识别)
             pageState: 0,
@@ -53,24 +54,18 @@ class VoiceSearch extends BaseComponent {
         };
     }
 
-    componentDidMount() {
-        document.addEventListener("touchend", (e) => {
-            if (!this.state.isRecordStart) return;
-
-            this.setState({
-                isRecordStart: false,
-                pageState: 0
-            });
-            this.voiceRecognite(false);
+    componentWillMount() {
+        document.addEventListener("touchend", e => {
+            this.state.isRecordStart && this.voiceRecognition();
         });
     }
 
     componentWillUnmount() {
-        if (this.state.isRecordStart) {
-            this.stopRecord(0);
+        const { stopRecordTimer, isRecordStart } = this.state;
+        if (isRecordStart) {
+            this.stopRecord();
         }
 
-        const stopRecordTimer = this.state.stopRecordTimer;
         if (stopRecordTimer !== null) {
             clearTimeout(stopRecordTimer);
         }
@@ -80,10 +75,10 @@ class VoiceSearch extends BaseComponent {
 
 
     render() {
-        const isRecordStart = this.state.isRecordStart;
+        const { isRecordStart } = this.state;
         return (
             <div>
-                {this.pageStateRecognite()}
+                {this.pageStateMatch()}
                 <section style={{
                         position: "absolute",
                         width: "100%",
@@ -100,90 +95,41 @@ class VoiceSearch extends BaseComponent {
                      }}
                      onTouchEnd={(e) => {
                          e.preventDefault();
-                     }}
-                >
+                     }}>
+
                     <header style={{
                         marginTop: "90px",
                         textAlign: "center",
                         color: "#ff8226",
                         fontSize: "18px"
                     }}>{isRecordStart ? intl.get("release.will.stop") : intl.get("press.and.say")}</header>
-                   {/* <FloatingActionButton
-                        backgroundColor="#ff6c00"
-                        disabledColor="#ff6c00"
-                        disabled={this.state.btnDisabled}
-                        style={styles.btn}
-                        iconStyle={{width: "100%", height: "100%"}}
-                        onClick={() => {
-                            const {isWeixin} = window.sysInfo;
-                            if (!isWeixin) {
-                                this.props.action_setGlobAlert("请在微信客户端操作");
-                                return;
-                            }
 
-                            this.setState({
-                                btnDisabled: true,
-                                pageState: this.state.pageState !== 0 ? 0 : 1,
-                                isRecordStart: !isRecordStart
-                            });
-                            setTimeout(() => {
-                                this.setState({
-                                    btnDisabled: false
-                                });
-                            }, 1000);
-                            this.voiceRecognite(!isRecordStart);
-                        }}
-                    >
-                        {!isRecordStart ? (<img src={BtnIcon} style={{width: "auto", height: "35px"}} alt="录音"/>) : (<div className="voiceSearchScaleBox">
-                            <div className="voiceSearchScaleLong">
-                            </div>
-                            <div className="voiceSearchScaleShort">
-                            </div>
-                            <div className="voiceSearchScaleLong">
-                            </div>
-                        </div>)}
-                    </FloatingActionButton>*/}
-
-                    <div
-                        style={styles.btn}
-                        onTouchStart={(e) => {
+                    <div style={styles.btn}
+                        onTouchStart={e => {
                             e.preventDefault();
-                            const {isWeixin} = window.sysInfo;
-                            if (!isWeixin) {
-                                this.props.action_setGlobAlert(intl.get("msg.operate.in.we.chat"));
-                                return;
-                            }
-                            const touch = e.targetTouches[0];
-                            this.setState({
-                                startX: touch.pageX,
-                                startY: touch.pageY,
-                                pageState: 1,
-                                isRecordStart: true
-                            });
-                            this.voiceRecognite(true);
+                            this.recordTouchStart(e);
                         }}
                         onTouchMove={(e) => {
                             e.preventDefault();
-
-                            const startX = this.state.startX;
-                            const startY = this.state.startY;
-
-                            const touch = e.targetTouches[0];
-                            const moveX = touch.pageX;
-                            const moveY = touch.pageY;
-
-                            if (Math.abs(moveX - startX) > 80 || Math.abs(moveY - startY) > 80) this.stopRecord();
-
-                        }}
-                        onTouchEnd={(e) => {
-                            e.preventDefault();
-                        }}/>
+                            const { startX, startY } = this.state;
+                            const { pageX, pageY } = e.targetTouches[0];
+                            if (
+                                Math.abs(pageX - startX) > 80 ||
+                                Math.abs(pageY - startY) > 80
+                            ) this.stopRecord()
+                                .then(res => this.setState({
+                                    isRecordStart: false,
+                                    pageState: 0
+                                }))
+                                .catch(err => this.setState({
+                                    isRecordStart: false,
+                                    pageState: 0
+                                }));
+                        }} />
 
                     {isRecordStart && (<div>
-                        <div className="btnBfAnimationA" style={styles.btn}>
-                        </div>
-                        <div className="btnBfAnimationB" style={styles.btn}>
-                        </div>
+                        <div className="btnBfAnimationA" style={styles.btn} />
+                        <div className="btnBfAnimationB" style={styles.btn} />
                     </div>)}
 
                 </section>
@@ -192,7 +138,7 @@ class VoiceSearch extends BaseComponent {
     }
 
     // 页面状态识别
-    pageStateRecognite() {
+    pageStateMatch() {
         const pageState = this.state.pageState;
 
         let content = {
@@ -240,112 +186,150 @@ class VoiceSearch extends BaseComponent {
         </section>);
     }
 
-    // 语音识别
-    voiceRecognite(isRecordStart) {
-        // const isRecordStart = this.state.isRecordStart;
+    /**
+     * touchStart recording
+     * @param e
+     */
+    recordTouchStart(e) {
+        if (this.isNoNet()) return;
+
+        const {actionGlobAlert} = this.props;
+        const {isWeixin} = window.sysInfo;
+        if (!isWeixin) {
+            actionGlobAlert(intl.get("msg.operate.in.we.chat"));
+            return;
+        }
+
+        const { pageX, pageY } = e.targetTouches[0];
+        this.setState({
+            startX: pageX,
+            startY: pageY,
+            pageState: 1,
+            isRecordStart: true,
+        });
+
+        this.startRecord();
+    }
+
+    /**
+     * 停止录音并识别录音转为文字
+     */
+    voiceRecognition() {
+        this.stopRecord()
+            .then(this.translateVoice)
+            .then(res => {
+                linkTo(`song/search/${encodeURIComponent(stripScript(res))}`, false, null);
+            })
+            .catch(err => {
+                // this.props.actionGlobAlert(err.errMsg);
+                this.setState({
+                    isRecordStart: false,
+                    pageState: 3
+                });
+            });
+    }
+
+    /**
+     * 调用接口前判断是否处于无网络状态
+     * @returns {boolean}
+     */
+    isNoNet() {
         if (!window.navigator.onLine) {
             this.setState({
                 isRecordStart: false,
                 pageState: 2
             });
-            return;
+
+            return true;
         }
 
-        const actionGlobAlert = this.props.action_setGlobAlert;
-        let stopRecordTimer = this.state.stopRecordTimer;
+        return false;
+    }
+
+    /**
+     * 调用微信API开始录音
+     */
+    startRecord() {
+        const { actionGlobAlert } = this.props;
+        let { stopRecordTimer } = this.state;
         if (stopRecordTimer !== null) {
             clearTimeout(stopRecordTimer);
         }
-        if (isRecordStart) {
-            window.wx && window.wx.startRecord({
-                success: () => {
-                    stopRecordTimer = setTimeout(() => {
-                        this.voiceRecognite(false);
-                    }, 30000);
-                },
-                fail: () => {
-                    this.setState({
-                        pageState: 0,
-                        isRecordStart: !isRecordStart
-                    });
 
-                    actionGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
-                }
-            });
-        } else {
-            window.wx && window.wx.stopRecord({
-                success: (res) => {
-                    // alert(res.localId);
-                    window.wx.translateVoice({
-                        localId: res.localId, // 需要识别的音频的本地Id，由录音相关接口获得
-                        isShowProgressTips: 1, // 默认为1，显示进度提示
-                        success: (resl) => {
-                            if (window.location.pathname !== "/voiceSearch") return;
-                            const res = resl.translateResult;
-                            if (typeof res !== "undefined") {
-                                linkTo(`song/search/${encodeURIComponent(stripScript(res))}`, false, null);
-                            } else {
-                                this.setState({
-                                    isRecordStart: false,
-                                    pageState: 3
-                                });
-                            }
-                        },
-                        fail: () => {
-                            this.setState({
-                                pageState: 3,
-                                isRecordStart: isRecordStart
-                            });
-                            // actionGlobAlert('语音识别失败');
-                        }
-                    });
-                },
-                fail: () => {
-                    this.setState({
-                        pageState: 3,
-                        isRecordStart: isRecordStart
-                    });
-                }
-            });
-        }
-    }
-
-    stopRecord(times) {
-        window.wx && window.wx.stopRecord({
+        window.wx && window.wx.startRecord({
+            success: () => {
+                this.setState({
+                    stopRecordTimer: setTimeout(this.voiceRecognition, 30000)
+                });
+            },
             fail: () => {
-
-                /*if (times >= 3) return;
-                let timer = 1000;
-                if (times > 0) timer = 2000;
-                setTimeout(() => {
-                    // this.props.action_setGlobAlert(times.toString());
-                    times++;
-                    this.stopRecord(times);
-                }, timer);*/
-
                 this.setState({
                     pageState: 0,
                     isRecordStart: false
                 });
+
+                actionGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
             }
         });
     }
+
+    /**
+     * 调用微信API识别本地音频
+     * @param localId 需要识别的音频的本地Id，由录音相关接口获得
+     */
+    translateVoice(localId) {
+        return new Promise((resolve, reject) => {
+            window.wx && window.wx.translateVoice({
+                localId: localId, // 需要识别的音频的本地Id，由录音相关接口获得
+                isShowProgressTips: 1, // 默认为1，显示进度提示
+                success: (result) => {
+                    let data = { errMsg: '识别音频成功' };
+                    const res = result.translateResult;
+                    if (window.location.pathname !== "/voiceSearch" || typeof res === "undefined") {
+                        data.errMsg = '识别音频失败';
+                        reject(data);
+                    }
+
+                    resolve(data);
+                },
+                fail: err => {
+                    reject(err);
+                }
+            });
+        });
+    }
+
+    /**
+     * 调用微信API停止录音
+     */
+    stopRecord() {
+        return new Promise((resolve, reject) => {
+            window.wx && window.wx.stopRecord({
+                success: (res) => {
+                    // alert(res.localId);
+                    const { localId } = res;
+                    if (typeof localId === 'undefined') {
+                        const data = { errMsg: '录音id不存在' };
+                        reject(data);
+                    }
+
+                    resolve(localId);
+                },
+                fail: err => {
+                    reject(err);
+                }
+            });
+        });
+
+    }
 }
-
-VoiceSearch.defaultProps = {
-    result: {}
-};
-
-VoiceSearch.propTypes = {
-    result: PropTypes.object
-};
 
 const mapStateToProps = (state, ownPorps) => {
     return {};
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        actionGlobAlert: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VoiceSearch));
