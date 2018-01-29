@@ -66,7 +66,7 @@ class SongItem extends BaseComponent {
         const param = {id: JSON.stringify(song), type: 4};
         const success = () => {
             //this.state.pushIng[song.serialNo] = false;
-            this.pushSuccess(song.serialNo);
+            this.pushSuccess(song.id || song.serialNo);
             setTimeout(() => {
                 this.setState({
                     pushIng: this.state.pushIng
@@ -76,7 +76,7 @@ class SongItem extends BaseComponent {
         };
         const fail = (msg) => {
             //this.state.pushIng[song.serialNo] = false;
-            this.pushFail(song.serialNo);
+            this.pushFail(song.id || song.serialNo);
             this.setState({
                 pushIng: this.state.pushIng
             });
