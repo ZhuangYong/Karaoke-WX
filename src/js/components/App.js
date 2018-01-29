@@ -227,7 +227,7 @@ class App extends BaseComponent {
                         {validUserStatusDialog}
 
                         {
-                            (location.pathname !== "/pay" && location.pathname !== "/user" && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
+                            (this.pageFilterToShowGXTimer() && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
                                                                             onClick={() => {
                                                                                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
@@ -265,6 +265,25 @@ class App extends BaseComponent {
                 </MuiThemeProvider>
             </div> : <div/>
         );
+    }
+
+    /**
+     * 判断当前页面是否显示共享倒计时
+     * @returns {boolean}
+     */
+    pageFilterToShowGXTimer() {
+        const pathNames = [
+            '/pay',
+            '/user',
+            '/recording'
+        ];
+        let bool = true;
+
+        pathNames.map(pathName => {
+            if (location.pathname.indexOf(pathName) > -1) bool = false;
+        });
+
+        return bool;
     }
 
     removeAppLoading() {
