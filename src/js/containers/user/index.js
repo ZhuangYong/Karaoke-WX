@@ -226,8 +226,7 @@ class UserIndex extends BaseComponent {
                         <ButtonHeader
                             title={intl.get("title.my.record")}
                             rightButtonClick={() => {
-                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
-
+                                // if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
                                 linkTo(`user/recordings`, false, null);
                             }}
                             rightButtonRightIcon={true}
