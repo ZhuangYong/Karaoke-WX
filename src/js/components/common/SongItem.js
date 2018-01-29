@@ -59,7 +59,7 @@ class SongItem extends BaseComponent {
     pushSong() {
         const {song, onPushSongSuccess, onPushSongFail, userInfo, ottInfo, action_setGlobAlert} = this.props;
         if (super.validUserStatus(userInfo.userInfoData, ottInfo, action_setGlobAlert) !== true) return;
-        this.state.pushIng[song.serialNo] = true;
+        this.state.pushIng[song.id || song.serialNo] = true;
         this.setState({
             pushIng: this.state.pushIng
         });
