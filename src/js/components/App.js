@@ -565,7 +565,7 @@ class App extends BaseComponent {
                         let gxAlert = JSON.parse(window.localStorage.getItem("gxAlert") || "{}");
                         if (!gxAlert.done) {
                             const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
-                            if (isBindDevice) {
+                            if (isBindDevice && this.pageFilterToShowGXTimer()) {
                                 actionSetGlobAlert && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
                                 window.localStorage.setItem("gxAlert", '{"done": true}');
                             }

@@ -41,7 +41,7 @@ class RecordingGrid extends React.Component {
                             width: toRem(230),
                             height: toRem(230)
                         }}
-                        onTouchTap={() => {
+                        onClick={() => {
                             linkTo(`recording/edit/${tile.uid}/${tile.shareId}`, false, null);
                         }}
                     />
