@@ -7,36 +7,43 @@ import BaseComponent from "../../../components/common/BaseComponent";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
+import {SvgIcon} from "material-ui";
 
-import {reqHeader, toRem} from "../../../utils/comUtils";
+import { reqHeader, parseTime, toRem, linkTo } from '../../../utils/comUtils';
 import {getInvoiceDetail} from "../../../actions/userActions";
-import ClearIcon from "material-ui/svg-icons/content/clear";
-
-// 图片预览插件，因为没有添加读取package中css的loader，所以对应css暂时放在src\css下
-import Viewer from 'react-viewer-mobile';
-import '../../../../css/reactViewer.css';
 import intl from 'react-intl-universal';
+import {btoa as encoding} from "Base64";
 
+
+const RightIcon = (props) => (<SvgIcon
+    style={props.style}>
+    <path style={{fillRule: "evenodd", clipRule: "evenodd"}} d="M13.729,11.236L1.722,0.294c-0.394-0.392-1.033-0.392-1.427,0c-0.394,0.392-0.394,1.028,0,1.42l11.283,10.283L0.296,22.28c-0.394,0.392-0.394,1.028,0,1.42c0.394,0.392,1.033,0.392,1.427,0l12.007-10.942c0.21-0.209,0.3-0.486,0.286-0.76C14.029,11.723,13.939,11.446,13.729,11.236z"/>
+</SvgIcon>);
 const styles = {
-    close: {
-        position: "absolute",
-        top: toRem(15),
-        right: toRem(20),
-        width: toRem(100),
-        height: toRem(100),
-        zIndex: 999999
+    orderCard: {
+        listStyle: "none",
+        padding: toRem(20),
+        margin: 0,
+        fontSize: toRem(28),
+        color: "#999",
+        lineHeight: toRem(60),
+        backgroundColor: '#f0f3f5'
+    },
+    rightIcon: {
+        float: "right",
+        marginTop: toRem(15),
+        marginLeft: toRem(10),
+        width: toRem(16.5),
+        height: toRem(24),
+        color: "#212121"
     }
 };
-
 
 class InvoiceDetail extends BaseComponent {
     constructor(props) {
         super(props);
         super.title(intl.get("title.invoice.detail"));
 
-        this.state = {
-            visible: false,
-        };
     }
 
     componentDidMount() {
@@ -48,47 +55,39 @@ class InvoiceDetail extends BaseComponent {
     }
 
     render() {
-        const {data} = this.props.orderForm.invoiceDetailData || {data: {url: ""}};
-        const {imgurl} = data;
+        const {data} = this.props.orderForm.invoiceDetailData || {};
+        const {time, orderNum, startTime, endTime, id, imgurl} = data || {};
 
         return (
-            <div style={{position: "relative"}}>
+            <div style={{
+                padding: toRem(20)
+            }}>
 
-                <Viewer
-                    visible={this.state.visible}
-                    images={[{src: imgurl, alt: ''}]}
-                />
+                <ul style={styles.orderCard} onClick={() => {
+                    linkTo(`user/InvoiceImage/${encodeURIComponent(encoding(imgurl))}`, false, null);
+                }}>
+                    <li>
+                        <span style={{color: "#212121"}}>{intl.get("invoice.show.detail")}</span>
 
-                {this.state.visible && <div>
-                    <div style={styles.close}/>
-                    <ClearIcon
-                        style={{
-                            ...styles.close,
-                            width: toRem(80),
-                            border: "2px solid #ccc",
-                            borderRadius: toRem(100),
-                            height: toRem(80)}}
-                        color="#ccc"
-                        onClick={() => {
-                            this.setState({
-                                visible: false
-                            });
-                        }}
-                    />
-                </div>}
+                        <RightIcon style={styles.rightIcon}/>
+                    </li>
+                    <li>{time}</li>
+                </ul>
 
-                <img
-                    style={{
-                        paddingTop: toRem(25),
-                        paddingRight: toRem(20),
-                        paddingLeft: toRem(20),
-                        width: '100%'}}
-                    src={imgurl}
-                    onClick={() => {
-                        this.setState({
-                            visible: true
-                        });
-                    }}/>
+                <ul style={{
+                    ...styles.orderCard,
+                    marginTop: toRem(20),
+                    backgroundColor: '#f0f3f5'
+                }} onClick={() => {
+                    linkTo(`user/InvoiceOrderForDetail/${id}`, false, null);
+                }}>
+                    <li>
+                        <span style={{color: "#212121"}}>{intl.get("invoice.include.number.order", {number: orderNum})}</span>
+
+                        <RightIcon style={styles.rightIcon}/>
+                    </li>
+                    <li>{parseTime(startTime)}{endTime && ' - ' + parseTime(endTime)}</li>
+                </ul>
             </div>
         );
     }

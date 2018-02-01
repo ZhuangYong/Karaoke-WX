@@ -9,7 +9,7 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import {
-    deleteImg, feedbackSubmit, getFeedbackQuestionList, OSSAccessToken,
+    deleteImg, feedbackSubmit, getFeedbackQuestionList, OSSAccessToken, ossUploadWxPic,
     uploadImg
 } from '../../../actions/userActions';
 import { getEncryptHeader, getWxinfoFromSession, reqHeader, toRem } from '../../../utils/comUtils';
@@ -20,6 +20,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import ClearIcon from "material-ui/svg-icons/content/clear";
 import InputBox from "../../../components/photoAlbum";
 import SubmitSuccessIcon from "../../../../img/submit_success.png";
+import NotWXIcon from "../../../../img/pay_failed.png";
 import navUtils from "../../../utils/navUtils";
 import ButtonPage from "../../../components/common/ButtonPage";
 import {setGlobAlert} from "../../../actions/common/actions";
@@ -123,9 +124,11 @@ class Feedback extends BaseComponent {
         this.inputChange = this.inputChange.bind(this);
         this.uploadImgGetter = this.uploadImgGetter.bind(this);
         this.deleteImgGetter = this.deleteImgGetter.bind(this);
+        this.addBtnTouchTap = this.addBtnTouchTap.bind(this);
     }
 
     componentDidUpdate(preProps) {
+        const {isWeixin} = window.sysInfo;
 
         /**
          * 页面内容处理
@@ -140,20 +143,23 @@ class Feedback extends BaseComponent {
         /**
          * 生成OSS实例对象
          */
-        const {data} = this.props.result.OSSTokenData;
-        if (typeof data !== 'undefined' && data !== {} && this.state.client === null) {
+        if (!isWeixin) {
+            const {data} = this.props.result.OSSTokenData;
+            if (typeof data !== 'undefined' && data !== {} && this.state.client === null) {
 
-            this.state.client = new OSS.Wrapper({
-                accessKeyId: data.accessKeyId,
-                accessKeySecret: data.accessKeySecret,
-                stsToken: data.securityToken,
-                endpoint: data.endpoint,
-                bucket: data.bucketName
-            });
+                this.state.client = new OSS.Wrapper({
+                    accessKeyId: data.accessKeyId,
+                    accessKeySecret: data.accessKeySecret,
+                    stsToken: data.securityToken,
+                    endpoint: data.endpoint,
+                    bucket: data.bucketName
+                });
+            }
         }
     }
 
     componentDidMount() {
+        const {isWeixin} = window.sysInfo;
 
         /**
          * 获取问题类型列表
@@ -165,10 +171,12 @@ class Feedback extends BaseComponent {
         /**
          * 获取OSS对象参数
          */
-        this.props.OSSTokenActions({}, reqHeader({}));
+        !isWeixin && this.props.OSSTokenActions({}, reqHeader({}));
     }
 
     render() {
+        const {isWeixin} = window.sysInfo;
+
         const {data} = this.props.questionList.questionListData || {data: {}};
         const {result} = data || {};
         const imgList = this.state.imgList;
@@ -181,7 +189,7 @@ class Feedback extends BaseComponent {
 
         return (
             <div>
-                {this.matchPages() ? (<div>
+                {isWeixin ? (this.matchPages() ? (<div>
                     <section
                         style={{backgroundColor: "#eee"}}
                     >
@@ -222,7 +230,7 @@ class Feedback extends BaseComponent {
                         <header>
                             <div
                                 style={styles.sectionHeader}
-                            >问题描述</div>
+                            >{intl.get("feedback.problem.desc")}</div>
                         </header>
                         <textarea
                             style={styles.questionDesc}
@@ -251,6 +259,7 @@ class Feedback extends BaseComponent {
                         </div>
                         <Snackbar
                             open={this.state.showAlert}
+                            bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
                             message={this.state.globAlert}
                             autoHideDuration={2000}
                             onRequestClose={() => {
@@ -274,7 +283,10 @@ class Feedback extends BaseComponent {
                         </header>
 
                         <InputBox
+                            ref="getInputBox"
                             cols={5}
+                            stopInput={isWeixin}
+                            addBtnTouchTap={this.addBtnTouchTap}
                             isShowAddBtn={imgList.length < 5}
                             itemStyle={{
                                 margin: 0,
@@ -289,12 +301,8 @@ class Feedback extends BaseComponent {
                                     height: "20px"
                                 }}
                                 color="#fff"
-                                onClick={(e) => {
-                                    const deleteId = e.target.parentNode.parentNode.dataset.id;
-
-                                    this.deleteImgGetter(deleteId);
-                                }}
                             />}
+                            badgeContentClick={this.deleteImgGetter}
                             badgeStyle={{
                                 top: `-${toRem(5)}`,
                                 right: `-${toRem(2)}`,
@@ -361,7 +369,12 @@ class Feedback extends BaseComponent {
                     imgStyle={{width: "100px"}}
                     buttonLabel={intl.get("button.close")}
                     touchTap={this.closePage}
-                />)}
+                />)) : <ButtonPage
+                    src={NotWXIcon}
+                    content={intl.get("msg.operate.in.we.chat")}
+                    imgStyle={{width: "100px"}}
+                    hideButton={true}
+                />}
 
                 <SubmitLoading hide={!(this.state.uploadImgLoading || this.state.deleteLoading)} />
             </div>
@@ -399,13 +412,8 @@ class Feedback extends BaseComponent {
     submit() {
         let header = null;
 
-        const actionGlobAlert = this.props.action_setGlobAlert;
+        const actionGlobAlert = this.props.globAlertAction;
         const submitParams = this.state.submitParams;
-        const {isWeixin} = window.sysInfo;
-        if (!isWeixin) {
-            actionGlobAlert(intl.get("user.we.chat.operate"));
-            return;
-        }
         if (submitParams.questionIds === null) {
             actionGlobAlert(intl.get("feedback.least.one.question"));
             return;
@@ -426,11 +434,19 @@ class Feedback extends BaseComponent {
 
         const matchParams = this.state.matchParams;
         if (typeof matchParams.deviceId !== "undefined") {
-            const encryptHeader = getEncryptHeader({
-                deviceId: matchParams.deviceId
-            });
 
-            header = reqHeader(submitParams, encryptHeader);
+            const nodeEnv = process.env.NODE_ENV;
+            if (nodeEnv === 'expand' || nodeEnv === 'expandTest' || nodeEnv === 'master') {
+                submitParams.deviceUuid = matchParams.deviceId;
+                header = reqHeader(submitParams);
+            } else {
+
+                const encryptHeader = getEncryptHeader({
+                    deviceId: matchParams.deviceId
+                });
+
+                header = reqHeader(submitParams, encryptHeader);
+            }
         } else {
             header = reqHeader(submitParams);
         }
@@ -448,6 +464,44 @@ class Feedback extends BaseComponent {
 
 
     /**
+     * 添加按钮点击事件
+     */
+    addBtnTouchTap() {
+
+        const globAlert = this.props.globAlertAction;
+        const {isWeixin} = window.sysInfo;
+        isWeixin && this.uploadWxImgGetter().then(res => {
+
+            const {msg, result} = res;
+
+            let imgList = this.state.imgList;
+
+            result.map(item => {
+                const imgObj = {
+                    id: item.id,
+                    imgUrl: item.url,
+                    isShowBadge: true
+                };
+                imgList.push(imgObj);
+            });
+
+            this.setState({
+                uploadImgLoading: false,
+                imgList: imgList
+            });
+
+            globAlert(msg);
+        }).catch(err => {
+
+            this.setState({
+                uploadImgLoading: false
+            });
+
+            globAlert(err.msg);
+        });
+    }
+
+    /**
      * 删除图片
      * @param id 删除图片id[]
      */
@@ -456,7 +510,7 @@ class Feedback extends BaseComponent {
         this.setState({
             deleteLoading: true
         });
-        const globAlert = this.props.action_setGlobAlert;
+        const globAlert = this.props.globAlertAction;
 
         const params = {
             uid: id
@@ -497,7 +551,7 @@ class Feedback extends BaseComponent {
            uploadImgLoading: true
         });
 
-        const globAlert = this.props.action_setGlobAlert;
+        const globAlert = this.props.globAlertAction;
         const name = 'feedback/' + UUID().new() + '.' + file.type.split('/')[1];
 
         console.log(name);
@@ -530,6 +584,58 @@ class Feedback extends BaseComponent {
     }
 
     /**
+     * 上传已存储到微信服务器的图片（自建后台）
+     * @returns {Promise}
+     */
+    uploadWxImgGetter() {
+
+        return new Promise((resolve, reject) => {
+            const {globAlertAction, ossUploadWxPicActions} = this.props;
+            window.wx && window.wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: (res) => {
+                    const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    localIds.map((item) => {
+                        window.wx.uploadImage({
+                            localId: item, // 需要上传的图片的本地ID，由chooseImage接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: (res) => {
+                                this.setState({
+                                    uploadImgLoading: true
+                                });
+                                let result;
+                                const params = {
+                                    type: 2,
+                                    keys: res.serverId // 返回图片的服务器端ID
+                                };
+                                ossUploadWxPicActions(params, reqHeader(params), res => {
+                                    console.log("======上传成功========");
+                                    const {status, data} = res;
+                                    if (parseInt(status, 10) === 1) {
+
+                                        result = {...data, msg: "上传成功"};
+                                        resolve(result);
+                                    } else {
+
+                                        result = {msg: "上传服务器失败"};
+                                        reject(result);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                },
+                fail: () => {
+                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                }
+            });
+        });
+
+    }
+
+    /**
      * 上传图片到OSS，然后发文件路径传给服务器
      * @param file 图片文件 required file/Buffer/String
      * @param name 图片名字 string
@@ -557,7 +663,10 @@ class Feedback extends BaseComponent {
                         const {status, data} = res;
                         if (parseInt(status, 10) === 1) {
 
-                            result = {...data, msg: "上传成功"};
+                            result = {
+                                data: data,
+                                msg: "上传成功"
+                            };
                             resolve(result);
                         } else {
 
@@ -602,9 +711,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         OSSTokenActions: bindActionCreators(OSSAccessToken, dispatch),
         getFeedbackQuestionListAction: bindActionCreators(getFeedbackQuestionList, dispatch),
         uploadImgActions: bindActionCreators(uploadImg, dispatch),
+        ossUploadWxPicActions: bindActionCreators(ossUploadWxPic, dispatch),
         deleteImgActions: bindActionCreators(deleteImg, dispatch),
         feedbackSubmitAction: bindActionCreators(feedbackSubmit, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Feedback));

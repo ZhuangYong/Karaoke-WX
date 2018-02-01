@@ -9,13 +9,14 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 
 import RaisedButton from 'material-ui/RaisedButton';
-import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
+import {isLongWordLanguage, linkTo, reqHeader, toRem} from "../../../utils/comUtils";
 import {submitInvoice} from "../../../actions/userActions";
 import FlatButton from "material-ui/FlatButton";
 import Dialog from "material-ui/Dialog";
 import {setGlobAlert} from "../../../actions/common/actions";
 import intl from 'react-intl-universal';
 
+const longLan = isLongWordLanguage();
 // 样式表
 let styles = {
     submitBtn: {
@@ -50,7 +51,8 @@ let styles = {
         color: "#222",
         textAlign: "center",
         lineHeight: toRem(60),
-        borderColor: "#dadada"
+        borderColor: "#dadada",
+        fontSize: longLan ? '.3rem' : '.4rem'
     },
     tabActive: {
         display: "inline-block",
@@ -62,7 +64,8 @@ let styles = {
         textAlign: "center",
         lineHeight: toRem(60),
         color: "#ff6832",
-        borderColor: "#ff6832"
+        borderColor: "#ff6832",
+        fontSize: longLan ? '.3rem' : '.4rem'
     }
 };
 
@@ -101,6 +104,7 @@ class InvoiceSubmit extends BaseComponent {
 
         this.handleAction = this.handleAction.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.validSubmitParam = this.validSubmitParam.bind(this);
     }
 
     render() {
@@ -148,45 +152,56 @@ class InvoiceSubmit extends BaseComponent {
                         <span style={submitParams.gflx === "03" ? styles.tabActive : styles.tab}
                               onClick={() => {
                                   submitParams.gflx = "03";
+                                  submitParams.gfmc = intl.get("invoice.personal");
                                   this.setState({
                                       submitParams: submitParams
                                   });
                               }}>{intl.get("invoice.personal")}</span>
                     </div>
-                    <input style={styles.input}
-                           onChange={(e) => {
-                               submitParams.gfmc = e.target.value;
-                               this.setState({
-                                   submitParams: submitParams
-                               });
-                           }}
-                           placeholder="请输入发票抬头"
-                           type="text"/>
+
+                    {
+                        submitParams.gflx === "03" ? <div style={styles.input}>
+                            {intl.get("invoice.personal")}
+                        </div> : <input
+                            style={styles.input}
+                            onChange={(e) => {
+                                submitParams.gfmc = e.target.value;
+                                this.setState({
+                                    submitParams: submitParams
+                                });
+                            }}
+                            placeholder={intl.get("msg.input.invoice.title")}
+                            type="text"/>
+                    }
+
                 </section>
 
-                <section style={Object.assign({}, styles.singleItem, {
-                    paddingBottom: toRem(20),
-                    borderBottom: "1px solid #d7d7d7"
-                })}>
-                    <header>*纳税人识别号</header>
-                    <input style={styles.input}
-                           onChange={(e) => {
-                               submitParams.gfsh = e.target.value;
-                               this.setState({
-                                   submitParams: submitParams
-                               });
-                           }}
-                           placeholder="请输入纳税人识别号"
-                           type="text"/>
-                </section>
+                {
+                    submitParams.gflx !== "03" && <section
+                        style={Object.assign({}, styles.singleItem, {
+                            paddingBottom: toRem(20),
+                            borderBottom: "1px solid #d7d7d7"
+                        })}>
+                        <header>*{intl.get("invoice.taxpayer.identification.number")}</header>
+                        <input style={styles.input}
+                               onChange={(e) => {
+                                   submitParams.gfsh = e.target.value;
+                                   this.setState({
+                                       submitParams: submitParams
+                                   });
+                               }}
+                               placeholder={intl.get("msg.input.taxpayer.identification.number")}
+                               type="text"/>
+                    </section>
+                }
 
                 <section style={styles.singleItem}>
-                    <span>发票金额: </span>
+                    <span>{intl.get("invoice.amount")}: </span>
                     <span style={{color: "#222"}}>&yen;{totalMoney}</span>
                 </section>
 
                 <section style={styles.singleItem}>
-                    <span>*收票人手机: </span>
+                    <span>*{intl.get("invoice.receipt.phone")}: </span>
                     <input style={styles.input}
                            onChange={(e) => {
                                submitParams.gfsj = e.target.value;
@@ -194,12 +209,12 @@ class InvoiceSubmit extends BaseComponent {
                                    submitParams: submitParams
                                });
                            }}
-                           placeholder="请输入收票手机号码"
+                           placeholder={intl.get("msg.input.receipt.phone")}
                            type="text"/>
                 </section>
 
                 <section style={styles.singleItem}>
-                    <span>*收票人邮箱: </span>
+                    <span>*{intl.get("invoice.receipt.email")}: </span>
                     <input style={styles.input}
                            onChange={(e) => {
                                submitParams.gfyx = e.target.value;
@@ -207,15 +222,15 @@ class InvoiceSubmit extends BaseComponent {
                                    submitParams: submitParams
                                });
                            }}
-                           placeholder="请输入收票人邮箱"
+                           placeholder={intl.get("msg.input.receipt.mail")}
                            type="text"/>
                 </section>
 
-                <div style={{width: "100%", height: "80px"}} />
+                {/*<div style={{width: "100%", height: "80px"}} />*/}
 
                 <section
                     style={{
-                        position: "fixed",
+                        // position: "fixed",
                         bottom: 0,
                         left: 0,
                         width: "100%",
@@ -226,33 +241,12 @@ class InvoiceSubmit extends BaseComponent {
                         backgroundColor="#ff8632"
                         disabledBackgroundColor="#ccc"
                         disabled={false}
-                        label="提交"
+                        label={intl.get("button.submit")}
                         style={styles.submitBtn}
                         buttonStyle={styles.submitBtn}
                         labelStyle={{lineHeight: "50px", fontSize: "18px", color: "#fff"}}
                         onClick={() => {
-
-                            if (submitParams.gfmc.length <= 0) {
-                                this.props.action_setGlobAlert(intl.get("msg.input.invoice.title"));
-                                return;
-                            }
-
-                            if (!(/^([A-Z\d]{15}|[A-Z\d]{18}|[A-Z\d]{20})$/).test(submitParams.gfsh)) {
-                                this.props.action_setGlobAlert(intl.get("msg.input.correct.taxpayer.identification.number"));
-                                return;
-                            }
-
-                            if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(submitParams.gfsj))) {
-                                this.props.action_setGlobAlert(intl.get("msg.input.correct.phone.number"));
-                                return;
-                            }
-
-                            if (!(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(submitParams.gfyx))) {
-                                this.props.action_setGlobAlert(intl.get("msg.input.correct.email"));
-                                return;
-                            }
-
-                            this.setState({openDialog: true});
+                            this.setState({openDialog: this.validSubmitParam()});
                         }}
                     />
                 </section>
@@ -273,10 +267,10 @@ class InvoiceSubmit extends BaseComponent {
                         color: "#999",
                         lineHeight: toRem(45)
                     }}>
-                        <li>{intl.get("invoice.title.type")}: <span style={{color: "#212121"}}>{submitParams.gflx === "03" ? "个人" : "公司"}</span></li>
+                        <li>{intl.get("invoice.title.type")}: <span style={{color: "#212121"}}>{submitParams.gflx === "03" ? intl.get("invoice.personal") : intl.get("invoice.co")}</span></li>
                         <li>{intl.get("invoice.type")}: <span style={{color: "#212121"}}>{intl.get("invoice.vat")}</span></li>
                         <li>{intl.get("invoice.title")}: <span style={{color: "#212121"}}>{submitParams.gfmc}</span></li>
-                        <li>{intl.get("invoice.taxpayer.identification.number")}: <span style={{color: "#212121"}}>{submitParams.gfsh}</span></li>
+                        {submitParams.gflx !== "03" && <li>{intl.get("invoice.taxpayer.identification.number")}: <span style={{color: "#212121"}}>{submitParams.gfsh}</span></li>}
                         <li>{intl.get("phone")}: <span style={{color: "#212121"}}>{submitParams.gfsj}</span></li>
                         <li>{intl.get("email")}: <span style={{color: "#212121"}}>{submitParams.gfyx}</span></li>
                         <li style={{fontSize: `${toRem(14)} !important`}}>*{intl.get("msg.after.submit.can.show.in.history")}</li>
@@ -286,9 +280,49 @@ class InvoiceSubmit extends BaseComponent {
         );
     }
 
+    /**
+     * 提交验证
+     * @returns {boolean}
+     */
+    validSubmitParam() {
+        const submitParams = this.state.submitParams;
+        const globAlert = this.props.action_setGlobAlert;
+
+        // 发票title
+        if (submitParams.gfmc.length <= 0) {
+            globAlert(intl.get("msg.input.invoice.title"));
+            return false;
+        }
+
+        // 发票税号
+        if (!(/^([A-Z\d]{15}|[A-Z\d]{18}|[A-Z\d]{20})$/).test(submitParams.gfsh) && submitParams.gflx !== "03") {
+            globAlert(intl.get("msg.input.correct.taxpayer.identification.number"));
+            return false;
+        }
+
+        // 电话号码
+        if (!(/^1[3|4|5|8][0-9]\d{4,8}$/.test(submitParams.gfsj))) {
+            globAlert(intl.get("msg.input.correct.phone.number"));
+            return false;
+        }
+
+        // 邮箱
+        if (!(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(submitParams.gfyx))) {
+            globAlert(intl.get("msg.input.correct.email"));
+            return false;
+        }
+
+        return true;
+    }
+
     handleAction() {
         const params = this.state.submitParams;
         console.log(params);
+
+        if (params.gflx === "03") {
+            params.gfsh = "";
+        }
+
         this.props.submitInvoiceAction(params, reqHeader(params), (res) => {
 
             const {status} = res;

@@ -27,6 +27,7 @@ import intl from 'react-intl-universal';
 import _ from "lodash";
 import Routers from '../router';
 import {cryptoFetch} from "../utils/fetchUtils";
+import canvasToBlob from '../utils/canvasToBlob';
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
@@ -174,7 +175,7 @@ class App extends BaseComponent {
         }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
-            linkTo("pay/deviceRegister", false, "");
+            linkTo("deviceRegister", false, "");
             this.props.action_setGlobAlert("", "");
         }
         if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
@@ -202,7 +203,7 @@ class App extends BaseComponent {
 
     render() {
         let showAlert = !!this.props.globAlert && !this.props.alertData;
-        if (this.props.globAlert === Const.STRING_NO_WIFI && window.lockShowNoWIfi) {
+        if ((this.props.globAlert === intl.get("msg.network.die")) && window.lockShowNoWIfi) {
             setTimeout(() => {
                 this.props.action_setGlobAlert("");
             }, 200);
@@ -216,6 +217,7 @@ class App extends BaseComponent {
                     <Routers/>
                     <Snackbar
                         open={showAlert}
+                        bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
                         message={this.props.globAlert}
                         autoHideDuration={2000}
                         onRequestClose={() => {
@@ -225,12 +227,12 @@ class App extends BaseComponent {
                         {validUserStatusDialog}
 
                         {
-                            (location.pathname !== "/pay" && location.pathname !== "/user" && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
+                            (this.pageFilterToShowGXTimer() && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
                                                                             onClick={() => {
                                                                                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
                                                                                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                                                                                    linkTo(`pay/deviceRegister`, false, null);
+                                                                                    linkTo(`deviceRegister`, false, null);
                                                                                     return;
                                                                                 }
                                                                                 const {isIos} = window.sysInfo;
@@ -263,6 +265,25 @@ class App extends BaseComponent {
                 </MuiThemeProvider>
             </div> : <div/>
         );
+    }
+
+    /**
+     * 判断当前页面是否显示共享倒计时
+     * @returns {boolean}
+     */
+    pageFilterToShowGXTimer() {
+        const pathNames = [
+            '/pay',
+            '/user',
+            '/recording'
+        ];
+        let bool = true;
+
+        pathNames.map(pathName => {
+            if (location.pathname.indexOf(pathName) > -1) bool = false;
+        });
+
+        return bool;
     }
 
     removeAppLoading() {
@@ -355,11 +376,11 @@ class App extends BaseComponent {
                     });
                 };
                 break;
-            case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
-                // alertStr = '激活vip免费体验';
-                //TODO ACTIVE
-                //linkTo("", false, "");
-                break;
+            // case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
+            //     // alertStr = '激活vip免费体验';
+            //     //TODO ACTIVE
+            //     //linkTo("", false, "");
+            //     break;
             case ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL:
                 alertStr = intl.get("msg.operate.need.auth");
                 //TODO ACTIVE
@@ -544,7 +565,7 @@ class App extends BaseComponent {
                         let gxAlert = JSON.parse(window.localStorage.getItem("gxAlert") || "{}");
                         if (!gxAlert.done) {
                             const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
-                            if (isBindDevice) {
+                            if (isBindDevice && this.pageFilterToShowGXTimer()) {
                                 actionSetGlobAlert && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
                                 window.localStorage.setItem("gxAlert", '{"done": true}');
                             }

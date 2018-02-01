@@ -73,7 +73,7 @@ class SingerAlumb extends BaseComponent {
                     }}
                         titleBackground="transparent"
                         onClick={() => {
-                            if (singer.name) linkTo(`singer/${singer.id || singer.serialNo}/${singer.name}`, false, null);
+                            if (singer.name) linkTo(`singer/${singer.id || singer.serialNo}/${singer.name.replace(/\s+/g, " ")}`, false, null);
                         }}
                         >
                         <div>

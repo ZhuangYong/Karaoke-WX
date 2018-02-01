@@ -5,7 +5,7 @@
 import React from 'react';
 import { toRem } from '../../../utils/comUtils';
 import PropTypes from "prop-types";
-import RefreshIndicator from "material-ui/RefreshIndicator";
+import MyButton from '../MyButton';
 
 class ButtonHeader extends React.Component {
     constructor () {
@@ -17,27 +17,30 @@ class ButtonHeader extends React.Component {
 
     render() {
 
-        const {style, titleStyle, title, isShowLeftButton} = this.props;
+        const {style, titleStyle, title, rightButtonLabel} = this.props;
 
-        return <section style={Object.assign({}, {
+        return <section style={{
             width: "100%",
             height: toRem(110),
             backgroundColor: "#fff",
-            borderBottom: "2px solid #d7d7d7"}, style || {})}>
+            borderBottom: "2px solid #d7d7d7",
+            ...style
+        }}>
 
-            <header style={Object.assign({}, {
-                    float: "left",
-                    marginLeft: toRem(20),
-                    lineHeight: toRem(110),
-                    color: "#212121",
-                    fontSize: toRem(36)
-                }, titleStyle || {})}>
+            <header style={{
+                float: "left",
+                marginLeft: toRem(20),
+                lineHeight: toRem(110),
+                color: "#212121",
+                fontSize: toRem(36),
+                ...titleStyle
+            }}>
 
-                {!isShowLeftButton ? title || 'Title' : this.button('left')}
+                {title ? title || 'Title' : this.button('left')}
 
             </header>
 
-            {this.button('right')}
+            {rightButtonLabel && this.button('right')}
 
             <div style={{clear: 'both'}} />
         </section>;
@@ -49,6 +52,7 @@ class ButtonHeader extends React.Component {
      * @returns {XML}
      */
     button(position) {
+
         const btnData = {
             float: position,
             buttonStyle: this.props[`${position}ButtonStyle`],
@@ -56,33 +60,29 @@ class ButtonHeader extends React.Component {
             buttonLoading: this.props[`${position}ButtonLoading`],
             buttonDisabled: this.props[`${position}ButtonDisabled`],
             buttonLabelStyle: this.props[`${position}ButtonLabelStyle`],
-            buttonLabel: this.props[`${position}ButtonLabel`]
+            buttonLabel: this.props[`${position}ButtonLabel`],
+            buttonRightIcon: this.props[`${position}ButtonRightIcon`],
         };
 
-        return <div style={Object.assign({}, {
-            position: 'relative',
-            float: btnData.float,
-            marginRight: toRem(20)
-        }, btnData.buttonStyle || {})}
-                    onClick={btnData.buttonClick}>
-
-            {!btnData.buttonLoading ? <span style={Object.assign({}, {
-                lineHeight: toRem(110),
-                color: btnData.buttonDisabled ? "rgb(229, 229, 229)" : "#ff6832",
-                fontSize: toRem(24)
-            }, btnData.buttonLabelStyle || {})}>{btnData.buttonLabel || '点击'}</span> : <RefreshIndicator
-                size={30}
-                left={70}
-                top={0}
-                loadingColor="#FF9800"
-                status="loading"
-                style={{
-                    boxShadow: "none",
-                    top: '-9988px',
-                    left: '-10100px'
-                }}
-            />}
-        </div>;
+        return <MyButton
+            style={{...btnData.buttonStyle,
+                float: btnData.float,
+                marginRight: toRem(20),
+                width: 'auto',
+                height: 'auto',
+                lineHeight: toRem(110)
+            }}
+            onClick={btnData.buttonClick}
+            loading={btnData.buttonLoading}
+            labelStyle={btnData.buttonLabelStyle}
+            label={btnData.buttonLabel}
+            rightIcon={btnData.buttonRightIcon}
+            disabled={btnData.buttonDisabled}
+            backgroundColor=""
+            disabledBackgroundColor=""
+            disabledFontColor="rgb(229, 229, 229)"
+            fontColor="#ff6832"
+        />;
     }
 
     rightButton() {
@@ -102,7 +102,6 @@ ButtonHeader.propTypes = {
     style: PropTypes.object,
     title: PropTypes.string,
     titleStyle: PropTypes.object,
-    isShowLeftButton: PropTypes.bool,
     leftButtonLoading: PropTypes.bool,
     leftButtonStyle: PropTypes.object,
     leftButtonDisabled: PropTypes.bool,
@@ -114,7 +113,27 @@ ButtonHeader.propTypes = {
     rightButtonLabelStyle: PropTypes.object,
     rightButtonDisabled: PropTypes.bool,
     rightButtonLabel: PropTypes.string,
-    rightButtonClick: PropTypes.func
+    rightButtonClick: PropTypes.func,
+    rightButtonRightIcon: PropTypes.bool
+};
+
+ButtonHeader.defaultProps = {
+    style: {},
+    title: null,
+    titleStyle: {},
+    leftButtonLoading: false,
+    leftButtonStyle: {},
+    leftButtonDisabled: false,
+    leftButtonLabelStyle: {},
+    leftButtonLabel: null,
+    leftButtonClick: null,
+    rightButtonStyle: {},
+    rightButtonLoading: false,
+    rightButtonLabelStyle: {},
+    rightButtonDisabled: false,
+    rightButtonLabel: null,
+    rightButtonClick: null,
+    rightButtonRightIcon: false
 };
 
 export default ButtonHeader;

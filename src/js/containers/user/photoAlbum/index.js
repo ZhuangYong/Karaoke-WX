@@ -6,7 +6,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import { getPhotoAlbumList, uploadImg, deleteImg } from '../../../actions/userActions';
+import { getPhotoAlbumList, uploadImg, deleteImg, changeFirstPage } from '../../../actions/userActions';
 import { linkTo, reqHeader, toRem } from '../../../utils/comUtils';
 import BaseComponent from "../../../components/common/BaseComponent";
 import DoneIcon from "material-ui/svg-icons/action/done";
@@ -18,14 +18,28 @@ import intl from 'react-intl-universal';
 import ButtonHeader from '../../../components/common/header/ButtonHeader';
 import { setGlobAlert } from '../../../actions/common/actions';
 import SubmitLoading from '../../../components/common/SubmitLoading';
+import MyButton from '../../../components/common/MyButton';
+import ActionTypes from '../../../actions/actionTypes';
 
+const styles = {
+    btn: {
+        width: toRem(540),
+        height: toRem(80),
+        borderRadius: toRem(80)
+    },
+    btnLabelStyle: {
+        lineHeight: toRem(80),
+        fontSize: toRem(32)
+    }
+};
 class PhotoAlbum extends BaseComponent {
     constructor(props) {
         super(props);
         super.title('我的相册');
 
         this.state = {
-            data: [],
+            params: this.props.match.params,
+            dataList: [],
             selectItemIds: [],
             isDeletePage: false,
             deleteLoading: false,
@@ -39,6 +53,31 @@ class PhotoAlbum extends BaseComponent {
         this.inputChange = this.inputChange.bind(this);
         this.imgTouch = this.imgTouch.bind(this);
         this.close = this.close.bind(this);
+        this.uploadEdit = this.uploadEdit.bind(this);
+        this.addBtnTouchTap = this.addBtnTouchTap.bind(this);
+        this.toCropPage = this.toCropPage.bind(this);
+    }
+
+    componentWillMount() {
+
+        const {edit} = this.state.params;
+        const recordingFormDataStr = window.sessionStorage.getItem("recordingFormData");
+        const recordingFormData = recordingFormDataStr ? JSON.parse(recordingFormDataStr) : null;
+
+        if (typeof edit !== 'undefined' && recordingFormData !== null) {
+
+            let {selectItemIds} = this.state;
+            console.log(recordingFormData);
+
+            const imgArr = recordingFormData[edit];
+
+            imgArr.length > 0 && imgArr.map(item => selectItemIds.push(item.id));
+
+            this.setState({
+                selectItemIds: selectItemIds,
+                recordingFormData: recordingFormData
+            });
+        }
     }
 
     componentDidUpdate(preProps) {
@@ -53,14 +92,12 @@ class PhotoAlbum extends BaseComponent {
     }
 
     render() {
-        const dataList = this.state.data;
-        const totalCount = this.state.totalCount;
-        const albumMaxNum = this.state.albumMaxNum;
-        const selectItemIds = this.state.selectItemIds;
-        const isDeletePage = this.state.isDeletePage;
+        const {isWeixin} = window.sysInfo;
+        const {dataList, params, totalCount, albumMaxNum, selectItemIds, isDeletePage, visible, viewerInd, deleteLoading} = this.state;
+        const {edit} = params;
 
         // 相册列表编辑页面判断是否全选状态
-        const isSelectAll = this.state.selectItemIds.length > 0 && this.state.selectItemIds.length === this.state.data.length;
+        const isSelectAll = selectItemIds.length > 0 && selectItemIds.length === dataList.length;
 
         // InputBox组件所需数据
         const imgList = (() => {
@@ -98,8 +135,6 @@ class PhotoAlbum extends BaseComponent {
                             top: 0,
                             zIndex: 10
                         }}
-                        isLoading={true}
-                        isShowLeftButton={false}
                         title="我的相册"
 
                         rightButtonClick={() => {
@@ -110,7 +145,7 @@ class PhotoAlbum extends BaseComponent {
                             });
                         }}
                         rightButtonDisabled={!(totalCount > 0)}
-                        rightButtonLabel={isDeletePage ? '取消' : '编辑'}
+                        rightButtonLabel={typeof edit === 'undefined' ? (isDeletePage ? '取消' : '编辑') : null}
                     />
                     <div style={{
                         position: 'fixed',
@@ -125,11 +160,9 @@ class PhotoAlbum extends BaseComponent {
 
                 <InputBox
                     cols={3}
-                    stopInput={!(totalCount < albumMaxNum)}
+                    stopInput={isWeixin || !(totalCount < albumMaxNum)}
                     isShowAddBtn={!isDeletePage}
-                    addBtnTouchTap={() => {
-                        !(totalCount < albumMaxNum) && this.props.action_setGlobAlert(`最多只能添加${albumMaxNum}张照片哦`);
-                    }}
+                    addBtnTouchTap={this.addBtnTouchTap}
                     badgeStyle={{
                         width: 0,
                         height: 0,
@@ -152,14 +185,12 @@ class PhotoAlbum extends BaseComponent {
 
                 {isDeletePage && <footer>
                     <ButtonHeader
-                        isLoading={true}
                         style={{
                             position: 'fixed',
                             bottom: 0,
                             border: 'none',
                             borderTop: "2px solid #d7d7d7"
                         }}
-                        isShowLeftButton={true}
                         leftButtonClick={() => {
 
                             const newSelectItemIds = isSelectAll ? [] : (() => {
@@ -184,14 +215,43 @@ class PhotoAlbum extends BaseComponent {
                     />
                 </footer>}
 
-                {this.state.visible && <WxImageViewer
+                {visible && <WxImageViewer
                     maxZoomNum={1}
                     onClose={this.close}
                     urls={imgUrlList}
-                    index={this.state.viewerInd}/>}
+                    index={viewerInd}/>}
 
+                <SubmitLoading hide={!deleteLoading} />
 
-                <SubmitLoading hide={!this.state.deleteLoading} />
+                {typeof edit !== 'undefined' && <div>
+                    <MyButton
+                        style={{
+                            ...styles.btn,
+                            position: "absolute",
+                            left: "50%",
+                            bottom: toRem(120),
+                            marginLeft: `-${toRem(540 / 2)}`,
+                        }}
+                        labelStyle={styles.btnLabelStyle}
+                        onClick={this.uploadEdit}
+                        label="上传图片"
+                        disabled={selectItemIds.length <= 0}
+                    />
+                    <MyButton
+                        style={{
+                            ...styles.btn,
+                            position: "absolute",
+                            left: "50%",
+                            bottom: toRem(20),
+                            marginLeft: `-${toRem(540 / 2)}`,
+                        }}
+                        labelStyle={styles.btnLabelStyle}
+                        onClick={() => {
+                            window.history.back();
+                        }}
+                        label="取消"
+                    />
+                </div>}
 
             </section>
         );
@@ -207,25 +267,79 @@ class PhotoAlbum extends BaseComponent {
     }
 
     /**
+     * 录音分享编辑完成调用
+     */
+    uploadEdit() {
+        const {recordingFormData, params, selectItemIds} = this.state;
+        const {edit, shareId} = params;
+
+        if (edit === 'cover') {
+            const {globAlertAction, changeFirstPageAction} = this.props;
+            const params = {
+                shareId: shareId,
+                firstPageId: selectItemIds.join(',')
+            };
+            this.setState({deleteLoading: true});
+            changeFirstPageAction(params, reqHeader(params), res => {
+                const {status} = res;
+                globAlertAction(parseInt(status, 10) === 1 ? '操作成功' : '操作失败');
+                parseInt(status, 10) === 1 && window.history.back();
+            });
+        } else {
+            recordingFormData[edit] = this.pushImgObj();
+
+            window.sessionStorage.setItem("recordingFormData", JSON.stringify(recordingFormData));
+            window.history.back();
+        }
+    }
+
+    /**
+     * 数据拼接
+     * @param arr
+     */
+    pushImgObj() {
+        let arr = [];
+        const {dataList, selectItemIds} = this.state;
+        dataList.map(item => {
+            if (selectItemIds.indexOf(item.id) >= 0) {
+                let imgObj = {};
+                imgObj.id = item.id;
+                imgObj.imgUrl = item.thumbnail;
+                imgObj.isShowBadge = true;
+                arr.push(imgObj);
+            }
+        });
+        return arr;
+    }
+
+    /**
      * 图片点击事件
      * @param target 被点击图片对象
      */
     imgTouch(target) {
 
-        const dataList = this.state.data;
-        const selectItemIds = this.state.selectItemIds;
-        const isDeletePage = this.state.isDeletePage;
+        const {dataList, isDeletePage, params} = this.state;
+        const {edit, maxNum} = params;
         const targetId = target.id;
 
-        if (isDeletePage) {
+        if (isDeletePage || typeof edit !== "undefined") {
+
+            let {selectItemIds} = this.state;
 
             const selectItemIdIdn = selectItemIds.indexOf(targetId);
             if (selectItemIdIdn >= 0) {
                 selectItemIds.splice(selectItemIdIdn, 1);
             } else {
-                selectItemIds.push(dataList.filter(data => {
-                    return data.id === targetId;
-                })[0].id);
+
+                if (edit === 'pagePicture' || edit === 'cover') selectItemIds = [];
+
+                if (edit === 'albums' && selectItemIds.length >= maxNum) {
+                    this.props.globAlertAction(`最多只能添加${maxNum}张照片哦`);
+                } else {
+                    selectItemIds.push(dataList.filter(data => {
+                        return data.id === targetId;
+                    })[0].id);
+                }
             }
 
             this.setState({
@@ -264,7 +378,7 @@ class PhotoAlbum extends BaseComponent {
         this.setState({
             albumMaxNum: albumMaxNum,
             totalCount: totalCount,
-            data: result
+            dataList: result
         });
     }
 
@@ -276,8 +390,8 @@ class PhotoAlbum extends BaseComponent {
         this.setState({
             deleteLoading: true
         });
-        let dataList = this.state.data;
-        const globAlert = this.props.action_setGlobAlert;
+        let dataList = this.state.dataList;
+        const globAlert = this.props.globAlertAction;
 
         const params = {
             uid: ids.join(',')
@@ -287,11 +401,11 @@ class PhotoAlbum extends BaseComponent {
 
             if (parseInt(status, 10) === 1) {
                 const newDataList = dataList.filter(item => {
-                    return ids.indexOf(item.id) < 0;
+                    return ids.indexOf(item.id) === -1;
                 });
 
                 this.setState({
-                    data: newDataList,
+                    dataList: newDataList,
                     totalCount: newDataList.length,
                     selectItemIds: [],
                     deleteLoading: false,
@@ -321,13 +435,52 @@ class PhotoAlbum extends BaseComponent {
             //处理 android 4.1 兼容问题
             const base64 = reader.result.split(',')[1];
             const dataUrl = 'data:image/png;base64,' + base64;
-            const sessionKey = 'uploadImageDataUrl';
 
-            window.sessionStorage.setItem(sessionKey, dataUrl);
-
-            linkTo(`user/crop/${sessionKey}`, false, null);
+            this.toCropPage(dataUrl);
         };
         reader.readAsDataURL(file);
+    }
+
+    /**
+     * 添加按钮点击事件
+     */
+    addBtnTouchTap() {
+        const {totalCount, albumMaxNum} = this.state;
+        const {globAlertAction} = this.props;
+        if (!(totalCount < albumMaxNum)) {
+            globAlertAction(`最多只能添加${albumMaxNum}张照片哦`);
+            return;
+        }
+        const {isWeixin} = window.sysInfo;
+        if (isWeixin) {
+            window.wx && window.wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['original', 'compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: (res) => {
+                    const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    // alert(res.localIds[0]);
+                    this.toCropPage(localIds[0]);
+                },
+                fail: () => {
+                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                }
+            });
+
+        }
+    }
+
+    /**
+     * 跳转剪切页面
+     * @param dataUrl
+     */
+    toCropPage(dataUrl) {
+
+        const sessionKey = 'uploadImageDataUrl';
+
+        window.sessionStorage.setItem(sessionKey, dataUrl);
+
+        linkTo(`user/crop/${sessionKey}`, false, null);
     }
 
 }
@@ -351,7 +504,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         getPhotoAlbumListActions: bindActionCreators(getPhotoAlbumList, dispatch),
         uploadImgActions: bindActionCreators(uploadImg, dispatch),
         deleteImgActions: bindActionCreators(deleteImg, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        changeFirstPageAction: bindActionCreators(changeFirstPage, dispatch),
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch)
     };
 };
 

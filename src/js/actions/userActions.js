@@ -36,6 +36,7 @@ export function OTTLogin(data, headers, callback) {
 // 获取用户信息
 export function getUserInfo(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_USER_INFO;
+    // const url = `api/userInfo.json`;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
@@ -88,6 +89,48 @@ export function deleteRecording(data, headers, callback) {
     };
 }
 
+// 更换录音封面图
+export function changeFirstPage(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_CHANGE_FIRST_PAGE;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_CHANGE_FIRST_PAGE
+        }, callback);
+    };
+}
+
+// 获取录音关联图片
+export function getAllPics(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_GET_ALL_PICS;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_GET_ALL_PICS
+        }, callback);
+    };
+}
+
+// 录音编辑提交
+export function uploadSoundAlbum(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_UPLOAD_SOUND_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_UPLOAD_SOUND_ALBUM
+        }, callback);
+    };
+}
+
 // 获取我的相册列表
 export function getPhotoAlbumList(data, headers) {
 
@@ -107,6 +150,21 @@ export function getPhotoAlbumList(data, headers) {
 export function uploadImg(data, headers, callback) {
 
     const url = sysConfig.apiDomain + apiUrl.API_OSS_UPLOAD_ALBUM;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_OSS_UPLOAD_ALBUM
+        }, callback);
+    };
+}
+
+// 上传已存储到微信服务器的图片（自建后台）
+export function ossUploadWxPic(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_OSS_UPLOAD_WX_PIC;
 
     return (dispatch) => {
         comFetch(dispatch, data, {
@@ -204,6 +262,21 @@ export function getInvoiceDetail(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_GET_INVOICE_DETAIL
+        }, callback);
+    };
+}
+
+// 查询发票包含订单列表
+export function getInvoiceOrderForDetail(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_GET_INVOICE_DETAIL_ORDER;
+
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_GET_INVOICE_DETAIL_ORDER
         }, callback);
     };
 }

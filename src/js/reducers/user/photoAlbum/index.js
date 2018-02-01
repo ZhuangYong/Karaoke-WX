@@ -34,6 +34,11 @@ export default (state = initState, action = {}) => {
                 data: "OSSUploadData",
                 msg: "OSSUploadMsg"
             });
+        case ActionTypes.USER.API_OSS_UPLOAD_WX_PIC:
+            return fetchProcess(state, action, {
+                data: "OSSUploadWxPicData",
+                msg: "OSSUploadWxPicMsg"
+            });
         default:
             return state;
     }

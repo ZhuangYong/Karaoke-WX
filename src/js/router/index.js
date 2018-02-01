@@ -28,12 +28,14 @@ import VoiceSearch from "../containers/voiceSearch";
 
 import Pay from "../containers/pay";
 import Protocol from "../containers/pay/protocol";
+import DeviceRegister from "../containers/pay/deviceRegister";
 import RedirectPay from "../containers/forOldVersion/pay";
 
 import Suggestions from "../containers/forOldVersion/suggestions";
 
 import User from "../containers/user/index";
 import Recordings from '../containers/user/recordings';
+import EditRecord from '../containers/user/recordings/editRecord';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import PhotoAlbumCrop from '../containers/user/photoAlbum/crop';
 import Feedback from "../containers/user/feedback/index";
@@ -42,6 +44,8 @@ import InvoiceList from "../containers/user/orderForm/invoiceList";
 import InvoiceOrder from "../containers/user/orderForm/invoiceOrder";
 import InvoiceSubmit from "../containers/user/orderForm/invoiceSubmit";
 import InvoiceDetail from "../containers/user/orderForm/invoiceDetail";
+import InvoiceImage from "../containers/user/orderForm/invoiceImage";
+import InvoiceOrderForDetail from "../containers/user/orderForm/invoiceOrderForDetail";
 import InvoiceSubmitSuccess from "../containers/user/orderForm/invoiceSubmitSuccess";
 import myOrder from "../containers/user/orderForm/myOrder";
 
@@ -109,6 +113,11 @@ const RecordingsContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const EditRecordContainer = () => (
+    <Bundle load={EditRecord}>
+        {Component => <Component />}
+    </Bundle>
+);
 
 const PhotoAlbumContainer = () => (
     <Bundle load={PhotoAlbum}>
@@ -156,6 +165,12 @@ const PayContainer = () => (
     </Bundle>
 );
 
+const DeviceRegisterContainer = () => (
+    <Bundle load={DeviceRegister}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 const ProtocolContainer = () => (
     <Bundle load={Protocol}>
         {Component => <Component />}
@@ -196,6 +211,16 @@ const InvoiceDetailContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const InvoiceImageContainer = () => (
+    <Bundle load={InvoiceImage}>
+        {Component => <Component />}
+    </Bundle>
+);
+const InvoiceOrderForDetailContainer = () => (
+    <Bundle load={InvoiceOrderForDetail}>
+        {Component => <Component />}
+    </Bundle>
+);
 const myOrderContainer = () => (
     <Bundle load={myOrder}>
         {Component => <Component />}
@@ -209,12 +234,13 @@ export default class router extends React.Component {
                 <Route path={`/`} exact component={HomeContainer}/>
                 <Route path={`/home`} component={HomeContainer}/>
                 {/*
-                        *state: home/aliPaySuccess/aliPayFailed/deviceRegister(页面状态)
-                        * openid: 用户微信openId
-                        * pollingId: OTT轮询id
-                        * deviceId: OTT设备id
-                        */}
+                *state: home/aliPaySuccess/aliPayFailed(页面状态)
+                * openid: 用户微信openId
+                * pollingId: OTT轮询id
+                * deviceId: OTT设备id
+                */}
                 <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
+                <Route path={`/deviceRegister`} component={DeviceRegisterContainer}/>
                 <Route path={`/pay`} component={PayContainer}/>
                 <Route path={`/protocol`} component={ProtocolContainer}/>
                 <Route path={`/controller/`} exact component={SongControllerContainer}/>
@@ -222,32 +248,41 @@ export default class router extends React.Component {
                 <Route path={`/controller/barrage`} exact component={BarrageContainer}/>
                 <Route path={`/user`} exact component={UserContainer}/>
                 <Route path={`/user/recordings`} exact component={RecordingsContainer}/>
-                <Route path={`/user/recordings/play/:uid`} component={AudioContainer}/>
-                <Route path={`/user/photoAlbum`} exact component={PhotoAlbumContainer}/>
+                <Route path={`/editRecord/:shareId`} exact component={EditRecordContainer}/>
+
+                /**
+                * 录音播放页面
+                * edit 是否可编辑 edit/play
+                * uid 录音id
+                */
+                <Route path={`/recording/:edit/:uid/:shareId?`} component={AudioContainer}/>
+                <Route path={`/user/photoAlbum/:edit?/:maxNum?/:shareId?`} exact component={PhotoAlbumContainer}/>
                 <Route path={`/user/crop/:dataUrl`} exact component={PhotoAlbumCropContainer}/>
                 <Route path={`/user/myOrder`} exact component={myOrderContainer}/>
                 <Route path={`/user/orderForm`} exact component={OrderFormContainer}/>
                 <Route path={`/user/invoiceOrder`} exact component={InvoiceOrderContainer}/>
                 <Route path={`/user/invoiceList`} exact component={InvoiceListContainer}/>
                 {/*
-                        * ids: 待开票id
-                        * totalMoney: 代开票总金额
-                        */}
+                * ids: 待开票id
+                * totalMoney: 代开票总金额
+                */}
                 <Route path={`/user/invoiceSubmit/:ids/:totalMoney`} component={InvoiceSubmitContainer}/>
                 <Route path={`/user/invoiceSubmitSuccess`} component={InvoiceSubmitSuccessContainer}/>
                 <Route path={`/user/InvoiceDetail/:id`} component={InvoiceDetailContainer}/>
+                <Route path={`/user/InvoiceImage/:url`} component={InvoiceImageContainer}/>
+                <Route path={`/user/InvoiceOrderForDetail/:id`} component={InvoiceOrderForDetailContainer}/>
                 {/*
-                        *state: home/success(页面状态)
-                        *deviceId: 绑定设备号
-                        * */}
+                *state: home/success(页面状态)
+                *deviceId: 绑定设备号
+                * */}
                 <Route path={`/user/feedback/:state/:deviceId?`} exact component={FeedbackContainer}/>
                 <Route path={`/suggestions/suggestions.html`} exact component={SuggestionsContainer}/>
                 {/*
-                        *state: home/success/failed/invalid(页面状态)
-                        *uuid: 扫码登录参数/用户微信unionId
-                        * userId: 服务器给用户的id
-                        * deviceId: 设备id
-                        */}
+                *state: home/success/failed/invalid(页面状态)
+                *uuid: 扫码登录参数/用户微信unionId
+                * userId: 服务器给用户的id
+                * deviceId: 设备id
+                */}
                 <Route path={`/login/:state/:uuid?/:userId?/:deviceId?`} component={LoginContainer}/>
                 <Route path={`/song/chooselist`} exact component={ChooseListContainer}/>
                 <Route path={`/song/search/:keyword?`} exact component={SearchContainer}/>
