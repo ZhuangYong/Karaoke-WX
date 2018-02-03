@@ -160,7 +160,8 @@ class UserIndex extends BaseComponent {
                     <GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
-                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>
+                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 3 : 4}>
+                        {/*cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>*/}
 
                         <GridTile
                             onTouchTap={() => {
@@ -191,6 +192,18 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>{intl.get("title.feedback")}</div>
                         </GridTile>
 
+                        <GridTile
+                            onTouchTap={() => {
+                                linkTo(`user/photoAlbum`, false, null);
+                                // linkTo(`user/myOrder`, false, null);
+                            }}>
+                            <img
+                                src={MyAlbumIcon}
+                                style={{...styles.headerImg, width: "auto"}}
+                            />
+                            <div style={styles.headerDesc}>{intl.get('title.photoAlbum')}</div>
+                        </GridTile>
+
                         {
                             (userInfoData && typeof userInfoData.data.time !== 'undefined') ? <div /> : <GridTile
                                 onTouchTap={() => {
@@ -204,18 +217,6 @@ class UserIndex extends BaseComponent {
                                 <div style={styles.headerDesc}>{intl.get("title.my.order")}</div>
                             </GridTile>
                         }
-
-                        {/*<GridTile
-                            onTouchTap={() => {
-                                linkTo(`user/photoAlbum`, false, null);
-                                // linkTo(`user/myOrder`, false, null);
-                            }}>
-                            <img
-                                src={MyAlbumIcon}
-                                style={{...styles.headerImg, width: "auto"}}
-                            />
-                            <div style={styles.headerDesc}>我的相册</div>
-                        </GridTile>*/}
 
                     </GridList>
 
@@ -264,8 +265,8 @@ class UserIndex extends BaseComponent {
                             open: false
                         });
                     }}
-                    // actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
-                    actions={[{label: '删除', fun: this.deleteGetter}]}
+                    actions={[{label: intl.get("button.delete"), fun: this.deleteGetter}, {label: intl.get('button.change.cover'), fun: this.changeCoverGetter}]}
+                    // actions={[{label: '删除', fun: this.deleteGetter}]}
                 />
 
                 <SubmitLoading hide={!loading} />
@@ -285,7 +286,7 @@ class UserIndex extends BaseComponent {
         deleteRecordingAction(params, reqHeader(params), res => {
             const {status} = res;
             parseInt(status, 10) === 1 && this.getRecordingsGetter();
-            globAlertAction(parseInt(status, 10) === 1 ? '删除成功' : '删除失败');
+            globAlertAction(parseInt(status, 10) === 1 ? intl.get("msg.delete.success") : intl.get("msg.delete.fail"));
             this.setState({open: false, loading: false});
         });
     }

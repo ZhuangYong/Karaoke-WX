@@ -615,11 +615,11 @@ class Feedback extends BaseComponent {
                                     const {status, data} = res;
                                     if (parseInt(status, 10) === 1) {
 
-                                        result = {...data, msg: "上传成功"};
+                                        result = {...data, msg: intl.get('msg.upload.success')};
                                         resolve(result);
                                     } else {
 
-                                        result = {msg: "上传服务器失败"};
+                                        result = {msg: intl.get('msg.upload.fail')};
                                         reject(result);
                                     }
                                 });

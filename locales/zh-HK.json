@@ -3,6 +3,8 @@
     "nav.controller": "播控",
     "nav.my": "我的",
     "title.home": "主頁",
+    "title.photoAlbum": "我的相冊",
+    "title.crop": "裁剪圖片",
     "title.sound.control": "音效控制",
     "title.barrage": "彈幕",
     "title.controller": "播控",
@@ -32,6 +34,10 @@
     "button.submit": "提交",
     "button.sure.submit": "確認提交",
     "button.delete": "刪除",
+    "button.select.all": "全部選擇",
+    "button.select.none": "全部不選",
+    "button.edit": "編輯",
+    "button.change.cover": "更換封面",
     "login.sure.login": "確認登錄",
     "index.we.chat.song": "金麥客微信點歌",
     "pay.vip.package": "VIP會員套餐",
@@ -56,6 +62,7 @@
     "audio.bring.karaoke.home": "金麥客，把專業卡拉OK帶回家",
     "audio.empty": "暫無錄音",
     "audio.total": "共 {number} 首",
+    "audio.text.edit": "唱得太棒了，不用編輯也可以直接分享哦",
     "song.loading": "正在加載",
     "song.list.end": "親愛滴，已經到底了",
     "song.add.success": "點歌成功",
@@ -112,6 +119,7 @@
     "invoice.taxpayer.identification.number": "納稅人識別號",
     "invoice.we.will.handel.first.time": "我們將會在第壹時間處理您的開票信息！",
 
+    "photoAlbum.msg.maxCount": "最多只能添加{number}張照片哦",
     "feedback.problem.type": "問題類型",
     "feedback.problem.desc": "問題描述",
     "feedback.write.down.your.suggest": "親愛的麥粉，把妳遇到的問題或建議寫下來吧......",
@@ -247,5 +255,7 @@
     "msg.song.time.end": "歡唱結束",
     "msg.song.continue": "沒唱爽，繼續海！",
     "msg.device.not.online": "設備不在線",
-    "msg.not.more.than": "不能輸入超過{number, number}個字符"
+    "msg.not.more.than": "不能輸入超過{number, number}個字符",
+    "msg.upload.success": "上傳成功",
+    "msg.upload.fail": "上傳失敗"
 }

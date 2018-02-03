@@ -3,6 +3,7 @@
  */
 import React from "react";
 import {toRem} from "../../utils/comUtils";
+import intl from 'react-intl-universal';
 import {GridList, GridTile} from "material-ui/GridList";
 
 const styles = {
@@ -60,7 +61,7 @@ class BottomDrawer extends React.Component {
 
             <footer style={{...styles.btn,
                 borderTop: `${toRem(20)} solid #d7d7d7`
-            }} onClick={onRequestChange}>取消</footer>
+            }} onClick={onRequestChange}>{intl.get('button.cancel')}</footer>
         </section>));
     }
 }

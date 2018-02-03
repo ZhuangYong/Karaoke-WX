@@ -134,17 +134,16 @@ class PlayAudio extends BaseComponent {
 
         const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
 
-        console.log(pagePictureId);
-
         return (
             <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
                     <AutoPlaySwipeAbleViews disabled className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
-                        {/*{banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}*/}
-                        <div className="img-div" onClick={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
+                        {banners.map(item => <div key={item.picid} className="img-div"><img src={item.picurl}/></div>)}
+
+                        {/*<div className="img-div" onClick={f => location.href = sysConfig.mallIndex}><img src={SlidePngMall1}/></div>
                         <div className="img-div"><img src={SlidePng1}/></div>
                         <div className="img-div"><img src={SlidePng2}/></div>
-                        <div className="img-div"><img src={SlidePng3}/></div>
+                        <div className="img-div"><img src={SlidePng3}/></div>*/}
 
                     </AutoPlaySwipeAbleViews>
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
@@ -188,14 +187,14 @@ class PlayAudio extends BaseComponent {
                             style={styles.btn}
                             labelStyle={styles.btnLabelStyle}
                             onClick={() => this.toEdit(shareId)}
-                            label="去编辑"
+                            label={intl.get("button.edit")}
                             disabled={parseInt(status, 10) !== 1}
                         /> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
 
                     </Subheader>
 
                     <Subheader style={{...styles.center, bottom: '.8rem'}}>
-                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? "唱得太棒了，不用编辑也可以直接分享哦" : intl.get("msg.from.j.make")}</p>
+                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? intl.get("audio.text.edit") : intl.get("msg.from.j.make")}</p>
                     </Subheader>
 
                 </section>

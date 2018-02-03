@@ -3,6 +3,8 @@
     "nav.controller": "Controller",
     "nav.my": "Me",
     "title.home": "Home",
+    "title.photoAlbum": "Photos",
+    "title.crop": "Crop image",
     "title.sound.control": "Sound control",
     "title.barrage": "Barrage",
     "title.controller": "Controller",
@@ -32,6 +34,10 @@
     "button.submit": "Submit",
     "button.sure.submit": "Submit",
     "button.delete": "Delete",
+    "button.select.all": "Select all",
+    "button.select.none": "Select none",
+    "button.edit": "Edit",
+    "button.change.cover": "Change cover",
     "login.sure.login": "Login",
     "index.we.chat.song": "J-Make WeChat song",
     "pay.vip.package": "VIP membership package",
@@ -56,6 +62,7 @@
     "audio.bring.karaoke.home": "J-Make, Bring professional Karaoke home",
     "audio.empty": "Empty",
     "audio.total": "Total {number}",
+    "audio.text.edit": "It's a great singing, and you can share it without editors.",
     "song.loading": "Loading",
     "song.list.end": "End of list",
     "song.add.success": "Add success",
@@ -112,6 +119,7 @@
     "invoice.taxpayer.identification.number": "Taxpayer identification number",
     "invoice.we.will.handel.first.time": "We will process your invoice as soon as possible!",
 
+    "photoAlbum.msg.maxCount": "Only {number} photos can be added at most.",
     "feedback.problem.type": "Problem type",
     "feedback.problem.desc": "Problem description",
     "feedback.write.down.your.suggest": "Please write down your problems or suggestions......",
@@ -246,5 +254,7 @@
     "msg.song.time.end": "Singing time is over",
     "msg.song.continue": "Not happy enough, continue!",
     "msg.device.not.online": "Device is not online",
-    "msg.not.more.than": "Not more than {number, number} characters"
+    "msg.not.more.than": "Not more than {number, number} characters",
+    "msg.upload.success": "Upload success",
+    "msg.upload.fail": "Upload fail"
 }
