@@ -19,8 +19,8 @@
     "rc-progress": "^2.2.1",
     "rc-slider": "^8.2.0",
     "react": "^15.6.1",
+    "react-cropper": "^1.0.1",
     "react-dom": "^15.6.1",
-    "react-draggable": "^3.0.5",
     "react-event-listener": "^0.4.5",
     "react-intl-universal": "^1.6.1",
     "react-iscroll": "^2.0.3",
@@ -40,7 +40,6 @@
     "redux-thunk": "^2.2.0",
     "short-uuid": "^2.3.4",
     "silk-scroller": "^1.0.6",
-    "touch-pinch": "^1.0.1",
     "weinre": "^2.0.0-pre-I0Z7U9OV"
   },
   "devDependencies": {
@@ -83,7 +82,6 @@
     "html-webpack-plugin": "^2.29.0",
     "isomorphic-fetch": "^2.2.1",
     "jasmine-core": "^2.6.4",
-    "jquery": "1.11.2",
     "jshint-stylish": "^1.0.0",
     "karma": "^1.7.0",
     "karma-cli": "^1.0.1",

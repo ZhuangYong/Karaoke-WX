@@ -3,6 +3,8 @@
     "nav.controller": "播控",
     "nav.my": "我的",
     "title.home": "主页",
+    "title.photoAlbum": "我的相册",
+    "title.crop": "裁剪图片",
     "title.sound.control": "音效控制",
     "title.barrage": "弹幕",
     "title.controller": "播控",
@@ -32,6 +34,10 @@
     "button.submit": "提交",
     "button.sure.submit": "确认提交",
     "button.delete": "删除",
+    "button.select.all": "全部选择",
+    "button.select.none": "全部不选",
+    "button.edit": "编辑",
+    "button.change.cover": "更换封面",
     "login.sure.login": "确认登录",
     "index.we.chat.song": "金麦客微信点歌",
     "pay.vip.package": "VIP会员套餐",
@@ -56,6 +62,7 @@
     "audio.bring.karaoke.home": "金麦客，把专业卡拉OK带回家",
     "audio.empty": "暂无录音",
     "audio.total": "共 {number} 首",
+    "audio.text.edit": "唱得太棒了，不用编辑也可以直接分享哦",
     "song.loading": "正在加载",
     "song.list.end": "亲爱滴，已经到底了",
     "song.add.success": "点歌成功",
@@ -112,6 +119,7 @@
     "invoice.taxpayer.identification.number": "纳税人识别号",
     "invoice.we.will.handel.first.time": "我们将会在第一时间处理您的开票信息！",
 
+    "photoAlbum.msg.maxCount": "最多只能添加{number}张照片哦",
     "feedback.problem.type": "问题类型",
     "feedback.problem.desc": "问题描述",
     "feedback.write.down.your.suggest": "亲爱的麦粉，把你遇到的问题或建议写下来吧......",
@@ -247,5 +255,7 @@
     "msg.song.time.end": "欢唱结束",
     "msg.song.continue": "没唱爽，继续嗨！",
     "msg.device.not.online": "设备不在线",
-    "msg.not.more.than": "不能输入超过{number, number}个字符"
+    "msg.not.more.than": "不能输入超过{number, number}个字符",
+    "msg.upload.success": "上传成功",
+    "msg.upload.fail": "上传失败"
 }

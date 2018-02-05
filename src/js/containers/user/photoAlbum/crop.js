@@ -6,233 +6,109 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
-import { uploadImg, OSSAccessToken } from '../../../actions/userActions';
+import { uploadImg, OSSAccessToken, ossUploadWxPic } from '../../../actions/userActions';
 import { getWxinfoFromSession, reqHeader, toRem } from '../../../utils/comUtils';
 import BaseComponent from "../../../components/common/BaseComponent";
-import pinch from "touch-pinch";
 
 import intl from 'react-intl-universal';
-import OSS from "../../../../css/aliyun-oss-sdk-4.4.4.min";
-import UUID from "short-uuid";
 import ButtonHeader from '../../../components/common/header/ButtonHeader';
 import { setGlobAlert } from '../../../actions/common/actions';
-import {findDOMNode} from "react-dom";
 import SubmitLoading from '../../../components/common/SubmitLoading';
-import Draggable from 'react-draggable';
-
-const imgMax = {
-    size: 600 * 1024,
-    width: 650,
-    height: 650,
-    screenW: document.documentElement.clientWidth || document.body.clientWidth,
-    screenH: document.documentElement.clientHeight || document.body.clientHeight,
-    scaleRate: 0.8
-};
-
+import Cropper from 'react-cropper';
+import 'cropperjs/dist/cropper.css';
+import DefaultImg from '../../../../img/album/1.png';
+import ActionTypes from '../../../actions/actionTypes';
 
 class Crop extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title("裁剪图片");
+        super.title(intl.get('title.crop'));
 
         this.state = {
-            dataUrl: '',
-            imgWidth: 0,
-            imgHeight: 0,
-            client: null,
-            setEditorRef: (editor) => this.editor = editor,
-            isDealPinch: false,
-            pinchDist: 0,
-            scale: 1,
-            rotate: 0,
-            uploadLoading: false
+            localId: '',
+            localData: '',
+            uploadLoading: false,
+            realWidth: 0,
         };
 
         this.uploadImgGetter = this.uploadImgGetter.bind(this);
         this.uploadRightBtn = this.uploadRightBtn.bind(this);
     }
 
-    /**
-     * 裁剪图片页面dom节点
-     * @returns {*}
-     */
-    get cropWidow() {
-        if (!this.refs)
-            return {};
-
-        return findDOMNode(this.refs.cropWidow);
-    }
-
     componentWillMount() {
 
-        /**
-         * 获取OSS对象参数
-         */
-        this.props.OSSTokenActions({}, reqHeader({}));
+        const localId = window.sessionStorage.getItem(this.props.match.params.dataUrl) || DefaultImg;
+        if (typeof localId !== 'undefined') {
 
-
-        const dataUrl = window.sessionStorage.getItem(this.props.match.params.dataUrl) || "http://wx.j-make.cn/img/album/1.png";
-        if (typeof dataUrl !== 'undefined') {
-
-            const img = new Image();
-            img.src = dataUrl;
-            img.onload = () => {
-
-                this.setState({
-                    dataUrl: dataUrl,
-                    imgWidth: img.width,
-                    imgHeight: img.height
-                });
-            };
-        }
-
-    }
-
-    componentDidUpdate(preProps) {
-
-        /**
-         * 生成OSS实例对象
-         */
-        const {data} = this.props.result.OSSTokenData;
-        if (typeof data !== 'undefined' && data !== {} && this.state.client === null) {
-
-            this.state.client = new OSS.Wrapper({
-                accessKeyId: data.accessKeyId,
-                accessKeySecret: data.accessKeySecret,
-                stsToken: data.securityToken,
-                endpoint: data.endpoint,
-                bucket: data.bucketName
-            });
-        }
-
-        /**
-         * 这里监听图片的随手指（两只）放大缩小事件，最大放大2倍，最小缩小1倍，默认1倍
-         */
-        if (!this.state.isDealPinch && this.cropWidow) {
-
-            pinch(this.cropWidow)
-                .on('change', (dist, prev) => {
-
-                    const pinchChange = this.state.pinchDist - parseInt(dist, 10);
-
-                    let scale = this.state.scale;
-
-                    if (pinchChange > 0) {
-                        scale = scale > 0.2 ? (scale - 0.05) : 0.2;
-                    } else {
-                        scale = scale <= 2 ? (scale + 0.05) : 2;
-                    }
+            const {globAlertAction} = this.props;
+            window.wx.getLocalImgData({
+                localId: localId, // 图片的localID
+                success: res => {
+                    const localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                    const {isIos} = window.sysInfo;
+                    const imgBase64 = isIos ? localData : ('data:image/jpg;base64,' + localData);
 
                     this.setState({
-                        scale: scale,
-                        pinchDist: dist
+                        localId: localId,
+                        localData: imgBase64,
                     });
-                })
-                .on('end', (dist) => {
-                    this.setState({
-                        pinchDist: 0
-                    });
-                });
 
-            this.setState({
-               isDealPinch: true
+                    const img = new Image();
+                    img.src = imgBase64;
+                    img.onload = e => {
+                        const { width } = img;
+                        this.setState({
+                            realWidth: width,
+                        });
+                    };
+
+                },
+                fail: () => {
+                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                }
             });
+
         }
+
     }
 
 
     render() {
 
-        const {scale, imgWidth, imgHeight} = this.state;
-        const transitionW = imgWidth * scale;
-        const transitionH = transitionW * imgHeight / imgWidth;
+        const { localData, uploadLoading } = this.state;
 
         return (
-            <section ref="cropWidow" style={{
-                position: 'relative',
-                width: `${imgMax.screenW}px`,
-                height: `${imgMax.screenH}px`,
-                // backgroundColor: 'rgba(0, 0, 0, 1)'
-            }}>
+            <section>
                 <header>
                     <ButtonHeader
                         leftButtonClick={() => {
                             window.history.back();
                         }}
-                        leftButtonLabel='取消'
+                        leftButtonLabel={intl.get('button.cancel')}
 
                         rightButtonClick={this.uploadRightBtn}
-                        rightButtonLabel='完成'
+                        rightButtonLabel={intl.get('button.submit')}
                     />
                 </header>
 
-                <div>{scale}</div>
-                <div>{imgWidth}</div>
-                <div>{imgHeight}</div>
-
-                <div style={{
-                    position: 'absolute',
-                    top: toRem(110),
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                    overflow: 'hidden',
-                    // display: 'flex',
-                    // justifyContent: 'center',
-                    // alignItems: 'center',
-                    // border: `${toRem(100)} solid rgba(0, 0, 0, 0.7)`,
-                    background: 'rgba(0, 0, 0, 0.7)'
-                }}>
-                    {/*<div style={{
+                <Cropper
+                    style={{
                         position: 'absolute',
-                        top: 0,
+                        top: toRem(110),
                         right: 0,
                         bottom: 0,
                         left: 0,
-                        zIndex: 5
-                    }} />*/}
-
-                    <Draggable bounds="parent">
-                        <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            margin: `-${toRem(transitionH / 2)} 0 0 -${toRem(transitionW / 2)}`,
-                            width: `${toRem(transitionW)}`,
-                            height: `${toRem(transitionH)}`
-                        }}>
-                            <img ref="cropWidow"
-                                 style={{
-                                     width: '100%',
-                                     height: '100%'
-                                 }}
-                                 src={this.state.dataUrl} />
-
-                        </div>
-                    </Draggable>
-
-                </div>
-
-                {/*<AvatarEditor
-                    ref={this.state.setEditorRef}
-                    style={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: 0,
-                        marginTop: `-${imgMax.screenW / 2}px`,
-                        width: '100%',
-                        height: `${imgMax.screenW}px`,
-                        backgroundColor: '#fff',
-                        boxSizing: 'border-box'
                     }}
-                    image={this.state.dataUrl}
-                    border={10}
-                    color={[0, 0, 0, 0.6]} // RGBA
-                    scale={this.state.scale}
-                    rotate={this.state.rotate}
-                />*/}
+                    viewMode={0}
+                    dragMode="crop"
+                    zoomOnTouch={false}
+                    aspectRatio={1}
+                    guides={true}
+                    src={localData}
+                    ref={cropper => this.cropper = cropper}
+                />
 
-                <SubmitLoading hide={!this.state.uploadLoading} />
+                <SubmitLoading hide={!uploadLoading} />
 
             </section>
         );
@@ -240,60 +116,81 @@ class Crop extends BaseComponent {
 
     uploadRightBtn() {
 
-        alert(JSON.stringify(this.cropper.getData()));
+        const {globAlertAction} = this.props;
+        const { localId, realWidth } = this.state;
+        const cropData = this.cropper.getData();
+        // alert(JSON.stringify(cropData));
 
-        // if (typeof this.cropper.getCroppedCanvas() === 'undefined') {
-        //     return;
-        // }
-        //
-        // alert(this.cropper.getCroppedCanvas().toDataURL());
+        const { x, y, width, height, rotate, scaleX } = cropData;
+        const xstart = Math.round(x);
+        const ystart = Math.round(y);
+        const params = {
+            xstart,
+            ystart,
+            width: Math.round(width),
+            height: Math.round(height),
+            rotate,
+            scale: scaleX,
+            realWidth,
+        };
 
-        /*this.setState({
-            cropResult: this.cropper.getCroppedCanvas().toDataURL(),
-        });*/
 
-        /*this.setState({
-            uploadLoading: true
-        });*/
+        this.uploadWxImgGetter(localId, params).then(res => {
+            globAlertAction(res.msg);
 
-        /*if (this.editor) {
-            const canvas = this.editor.getImage();
-            const globAlert = this.props.action_setGlobAlert;
+            window.history.back();
+        }).catch(err => {
+            globAlertAction(err.msg);
+            this.setState({
+                uploadLoading: false
+            });
 
-            alert(canvas.width);
+        });
+    }
 
-            canvas.toBlob(blob => {
-                console.log(blob);
-                alert(blob);
+    /**
+     * 上传已存储到微信服务器的图片（自建后台）
+     * @returns {Promise}
+     */
+    uploadWxImgGetter(localId, params) {
 
-                //将Blob 对象转换成 ArrayBuffer
-                const reader = new FileReader();
-                reader.readAsArrayBuffer(blob);
-                reader.onload = e => {
-                    const name = 'photoAlbum/' + UUID().new() + '.' + blob.type.split('/')[1];
+        return new Promise((resolve, reject) => {
+            const {globAlertAction, ossUploadWxPicActions} = this.props;
 
-                    // arrayBuffer转Buffer
-                    const buffer = new OSS.Buffer(reader.result);
-
-                    this.uploadImgGetter(buffer, name).then(res => {
-                        globAlert(res.msg);
-
-                        window.history.back();
-
-                    }).catch(err => {
-
-                        globAlert(err.msg);
-                        this.setState({
-                            uploadLoading: false
-                        });
+            window.wx && window.wx.uploadImage({
+                localId: localId, // 需要上传的图片的本地ID，由chooseImage接口获得
+                isShowProgressTips: 1, // 默认为1，显示进度提示
+                success: (res) => {
+                    this.setState({
+                        uploadLoading: true
                     });
-                };
+                    let result;
+                    const uploadParams = {
+                        type: 1,
+                        keys: res.serverId, // 返回图片的服务器端ID
+                        ...params
+                    };
 
-                // this.uploadImgGetter(blob);
-            }, 'image/jpeg', 1);
+                    ossUploadWxPicActions(uploadParams, reqHeader(uploadParams), res => {
+                        console.log("======上传成功========");
+                        const {status, data} = res;
+                        if (parseInt(status, 10) === 1) {
 
-            // console.log(canvas);
-        }*/
+                            result = {...data, msg: intl.get('msg.upload.success')};
+                            resolve(result);
+                        } else {
+
+                            result = {msg: intl.get('msg.upload.fail')};
+                            reject(result);
+                        }
+                    });
+                },
+                fail: () => {
+                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                }
+            });
+        });
+
     }
 
     /**
@@ -367,7 +264,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         uploadImgActions: bindActionCreators(uploadImg, dispatch),
         OSSTokenActions: bindActionCreators(OSSAccessToken, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch),
+        ossUploadWxPicActions: bindActionCreators(ossUploadWxPic, dispatch),
     };
 };
 

@@ -35,7 +35,7 @@ const styles = {
 class PhotoAlbum extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title('我的相册');
+        super.title(intl.get('title.photoAlbum'));
 
         this.state = {
             params: this.props.match.params,
@@ -126,7 +126,7 @@ class PhotoAlbum extends BaseComponent {
         return (
             <section style={{
                 paddingTop: toRem(110),
-                paddingBottom: toRem(130)
+                paddingBottom: toRem(240)
             }}>
                 <header>
                     <ButtonHeader
@@ -135,7 +135,7 @@ class PhotoAlbum extends BaseComponent {
                             top: 0,
                             zIndex: 10
                         }}
-                        title="我的相册"
+                        title={intl.get('title.photoAlbum')}
 
                         rightButtonClick={() => {
 
@@ -145,7 +145,7 @@ class PhotoAlbum extends BaseComponent {
                             });
                         }}
                         rightButtonDisabled={!(totalCount > 0)}
-                        rightButtonLabel={typeof edit === 'undefined' ? (isDeletePage ? '取消' : '编辑') : null}
+                        rightButtonLabel={typeof edit === 'undefined' ? (isDeletePage ? intl.get('button.cancel') : intl.get('button.edit')) : null}
                     />
                     <div style={{
                         position: 'fixed',
@@ -205,13 +205,13 @@ class PhotoAlbum extends BaseComponent {
                                 selectItemIds: newSelectItemIds
                             });
                         }}
-                        leftButtonLabel={!isSelectAll ? "全部选择" : "全部不选"}
+                        leftButtonLabel={!isSelectAll ? intl.get('button.select.all') : intl.get('button.select.none')}
 
                         rightButtonClick={() => {
                             this.deleteImgGetter(selectItemIds);
                         }}
                         rightButtonDisabled={selectItemIds.length <= 0}
-                        rightButtonLabel='删除'
+                        rightButtonLabel={intl.get('button.delete')}
                     />
                 </footer>}
 
@@ -223,7 +223,12 @@ class PhotoAlbum extends BaseComponent {
 
                 <SubmitLoading hide={!deleteLoading} />
 
-                {typeof edit !== 'undefined' && <div>
+                {typeof edit !== 'undefined' && <footer style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
+                }}>
                     <MyButton
                         style={{
                             ...styles.btn,
@@ -234,7 +239,7 @@ class PhotoAlbum extends BaseComponent {
                         }}
                         labelStyle={styles.btnLabelStyle}
                         onClick={this.uploadEdit}
-                        label="上传图片"
+                        label={intl.get('feedback.upload.photo')}
                         disabled={selectItemIds.length <= 0}
                     />
                     <MyButton
@@ -249,9 +254,9 @@ class PhotoAlbum extends BaseComponent {
                         onClick={() => {
                             window.history.back();
                         }}
-                        label="取消"
+                        label={intl.get('button.cancel')}
                     />
-                </div>}
+                </footer>}
 
             </section>
         );
@@ -282,7 +287,7 @@ class PhotoAlbum extends BaseComponent {
             this.setState({deleteLoading: true});
             changeFirstPageAction(params, reqHeader(params), res => {
                 const {status} = res;
-                globAlertAction(parseInt(status, 10) === 1 ? '操作成功' : '操作失败');
+                globAlertAction(parseInt(status, 10) === 1 ? intl.get('msg.upload.success') : intl.get('msg.upload.fail'));
                 parseInt(status, 10) === 1 && window.history.back();
             });
         } else {
@@ -334,7 +339,7 @@ class PhotoAlbum extends BaseComponent {
                 if (edit === 'pagePicture' || edit === 'cover') selectItemIds = [];
 
                 if (edit === 'albums' && selectItemIds.length >= maxNum) {
-                    this.props.globAlertAction(`最多只能添加${maxNum}张照片哦`);
+                    this.props.globAlertAction(intl.get('photoAlbum.msg.maxCount', {number: maxNum}));
                 } else {
                     selectItemIds.push(dataList.filter(data => {
                         return data.id === targetId;
@@ -365,7 +370,10 @@ class PhotoAlbum extends BaseComponent {
      * 获取相册列表
      */
     refreshAlbum() {
-        const params = {};
+        const params = {
+            page: 1,
+            size: 50,
+        };
         this.props.getPhotoAlbumListActions(params, reqHeader(params));
     }
 
@@ -391,17 +399,18 @@ class PhotoAlbum extends BaseComponent {
             deleteLoading: true
         });
         let dataList = this.state.dataList;
-        const globAlert = this.props.globAlertAction;
+        const { globAlertAction, deleteImgActions } = this.props;
 
         const params = {
             uid: ids.join(',')
         };
-        this.props.deleteImgActions(params, reqHeader(params), res => {
+        deleteImgActions(params, reqHeader(params), res => {
             const {status} = res;
 
             if (parseInt(status, 10) === 1) {
                 const newDataList = dataList.filter(item => {
-                    return ids.indexOf(item.id) === -1;
+                   const idStr = `,${ids.join(',')},`;
+                   if (idStr.indexOf(`,${item.id},`) === -1) return item;
                 });
 
                 this.setState({
@@ -412,10 +421,10 @@ class PhotoAlbum extends BaseComponent {
                     isDeletePage: newDataList.length > 0
                 });
 
-                globAlert(intl.get("msg.delete.success"));
+                globAlertAction(intl.get("msg.delete.success"));
             } else {
 
-                globAlert(intl.get("msg.delete.fail"));
+                globAlertAction(intl.get("msg.delete.fail"));
                 this.setState({
                     deleteLoading: false
                 });
@@ -448,9 +457,10 @@ class PhotoAlbum extends BaseComponent {
         const {totalCount, albumMaxNum} = this.state;
         const {globAlertAction} = this.props;
         if (!(totalCount < albumMaxNum)) {
-            globAlertAction(`最多只能添加${albumMaxNum}张照片哦`);
+            globAlertAction(intl.get('photoAlbum.msg.maxCount', {number: albumMaxNum}));
             return;
         }
+
         const {isWeixin} = window.sysInfo;
         if (isWeixin) {
             window.wx && window.wx.chooseImage({
@@ -460,6 +470,7 @@ class PhotoAlbum extends BaseComponent {
                 success: (res) => {
                     const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
                     // alert(res.localIds[0]);
+
                     this.toCropPage(localIds[0]);
                 },
                 fail: () => {

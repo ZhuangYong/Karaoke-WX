@@ -137,8 +137,8 @@ class Records extends BaseComponent {
                                     open: false
                                 });
                             }}
-                            // actions={[{label: '删除', fun: this.deleteGetter}, {label: '更换封面', fun: this.changeCoverGetter}]}
-                            actions={[{label: '删除', fun: this.deleteGetter}]}
+                            actions={[{label: intl.get('button.delete'), fun: this.deleteGetter}, {label: intl.get('button.change.cover'), fun: this.changeCoverGetter}]}
+                            // actions={[{label: '删除', fun: this.deleteGetter}]}
                         />
 
                         <SubmitLoading hide={!submitLoading} />
@@ -164,7 +164,7 @@ class Records extends BaseComponent {
                     return item.uid !== selectItem.uid;
                 })
             });
-            globAlertAction(parseInt(status, 10) === 1 ? '删除成功' : '删除失败');
+            globAlertAction(parseInt(status, 10) === 1 ? intl.get("msg.delete.success") : intl.get("msg.delete.fail"));
             this.setState({open: false, submitLoading: false});
         });
     }
@@ -216,7 +216,7 @@ class Records extends BaseComponent {
                 loading: true
             });
         } else {
-            this.props.globAlertAction("用户信息获取失败");
+            this.props.globAlertAction(intl.get("get.user.info.fail.try.again"));
         }
 
     }
