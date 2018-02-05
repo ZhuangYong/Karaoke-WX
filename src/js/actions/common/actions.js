@@ -26,7 +26,7 @@ export function getLocalesData(language, callback, failBack) {
         default:
             break;
     }
-    const url = apiUrl.API_GET_LOCAL_LANGUAGE + language + ".json?" + getRandomString();
+    const url = apiUrl.API_GET_LOCAL_LANGUAGE + language + ".json?" + getRandomString(6);
     return (dispatch) => {
         comFetch(dispatch, {}, {
             url: url,

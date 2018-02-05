@@ -46,6 +46,8 @@ const styles = {
     }
 };
 
+const defaultImg = `${location.protocol}//${location.host}/img/album/1.png`;
+
 class PlayAudio extends BaseComponent {
 
     constructor(props) {
@@ -70,10 +72,10 @@ class PlayAudio extends BaseComponent {
     }
 
     componentDidUpdate() {
-        const {imgUrl, autoPlayEd} = this.state;
+        const {imgUrl, autoPlayEd, params} = this.state;
         const {data} = this.props.audio.audioInfo;
         if (data && !autoPlayEd) {
-            const {musicUrl, nameNorm, shareId, headerImg} = data;
+            const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
             const {isWeixin} = window.sysInfo;
             if (isWeixin) {
                 window.wx && window.wx.ready(() => {
@@ -82,8 +84,8 @@ class PlayAudio extends BaseComponent {
                     wxShare({
                         title: intl.get("audio.share.title", {name: nameNorm}),
                         desc: intl.get("audio.share.from"),
-                        link: `${location.protocol}//${location.host}/recording/play/${this.state.params.uid}/${shareId}?language=${getQueryString('language')}`,
-                        imgUrl: imgUrl === "" ? headerImg : imgUrl,
+                        link: `${location.protocol}//${location.host}/recording/play/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                        imgUrl: imgUrl === "" ? pagePictureUrl : imgUrl,
                         dataUrl: musicUrl
                     });
                 });
@@ -105,7 +107,7 @@ class PlayAudio extends BaseComponent {
                     title: intl.get("audio.we.chat.song"),
                     desc: intl.get("audio.share.from"),
                     link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
-                    imgUrl: "http://wx.j-make.cn/img/logo.png",
+                    imgUrl: defaultImg,
                     dataUrl: null
                 });
             });
@@ -199,9 +201,9 @@ class PlayAudio extends BaseComponent {
 
                 </section>
 
-                <img src={headerImg} style={{display: "none"}} onError={() => {
+                <img src={pagePictureUrl} style={{display: "none"}} onError={() => {
                     this.setState({
-                        imgUrl: "http://wx.j-make.cn/img/logo.png"
+                        imgUrl: defaultImg,
                     });
                 }}/>
 
