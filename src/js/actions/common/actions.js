@@ -2,6 +2,7 @@ import ActionTypes from '../actionTypes';
 import apiUrl from "../apiUrl";
 import {comFetch} from "../../utils/fetchUtils";
 import sysConfig from "../../utils/sysConfig";
+import { getRandomString } from '../../utils/comUtils';
 
 export function updateScreen() {
     return {
@@ -25,7 +26,7 @@ export function getLocalesData(language, callback, failBack) {
         default:
             break;
     }
-    const url = apiUrl.API_GET_LOCAL_LANGUAGE + language + ".json";
+    const url = apiUrl.API_GET_LOCAL_LANGUAGE + language + ".json?" + getRandomString();
     return (dispatch) => {
         comFetch(dispatch, {}, {
             url: url,
