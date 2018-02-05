@@ -20,6 +20,7 @@ import { setGlobAlert } from '../../../actions/common/actions';
 import SubmitLoading from '../../../components/common/SubmitLoading';
 import MyButton from '../../../components/common/MyButton';
 import ActionTypes from '../../../actions/actionTypes';
+import { FlatButton, Dialog } from "material-ui";
 
 const styles = {
     btn: {
@@ -46,7 +47,8 @@ class PhotoAlbum extends BaseComponent {
             visible: false,
             viewerInd: 0,
             totalCount: 0,
-            albumMaxNum: 0
+            albumMaxNum: 0,
+            openDialog: false,
         };
 
         this.updateList = this.updateList.bind(this);
@@ -56,6 +58,8 @@ class PhotoAlbum extends BaseComponent {
         this.uploadEdit = this.uploadEdit.bind(this);
         this.addBtnTouchTap = this.addBtnTouchTap.bind(this);
         this.toCropPage = this.toCropPage.bind(this);
+        this.handleAction = this.handleAction.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     componentWillMount() {
@@ -92,8 +96,9 @@ class PhotoAlbum extends BaseComponent {
     }
 
     render() {
+
         const {isWeixin} = window.sysInfo;
-        const {dataList, params, totalCount, albumMaxNum, selectItemIds, isDeletePage, visible, viewerInd, deleteLoading} = this.state;
+        const { dataList, params, totalCount, albumMaxNum, selectItemIds, isDeletePage, visible, viewerInd, deleteLoading, openDialog } = this.state;
         const {edit} = params;
 
         // 相册列表编辑页面判断是否全选状态
@@ -207,9 +212,7 @@ class PhotoAlbum extends BaseComponent {
                         }}
                         leftButtonLabel={!isSelectAll ? intl.get('button.select.all') : intl.get('button.select.none')}
 
-                        rightButtonClick={() => {
-                            this.deleteImgGetter(selectItemIds);
-                        }}
+                        rightButtonClick={() => this.setState({openDialog: true})}
                         rightButtonDisabled={selectItemIds.length <= 0}
                         rightButtonLabel={intl.get('button.delete')}
                     />
@@ -258,8 +261,54 @@ class PhotoAlbum extends BaseComponent {
                     />
                 </footer>}
 
+                <Dialog
+                    className="dialog-panel"
+                    actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
+                    contentStyle={{textAlign: 'center'}}
+                    actions={this.actionHTMLs()}
+                    modal={false}
+                    open={openDialog}
+                    onRequestClose={this.handleClose}>
+
+                    <div>
+                        <p style={{fontWeight: 'bold'}}>{intl.get('msg.delete.photos.title')}</p>
+                        <span>{intl.get('msg.delete.photos.sub')}</span>
+                    </div>
+                </Dialog>
+
             </section>
         );
+    }
+
+    /**
+     * 弹出框按钮html
+     * @returns {[XML,XML]}
+     */
+    actionHTMLs() {
+        return [
+            <FlatButton
+                className="sure-button"
+                label={intl.get("button.delete")}
+                primary={true}
+                onClick={this.handleAction}
+            />,
+            <FlatButton
+                className="cancel-button"
+                label={intl.get("button.cancel")}
+                primary={true}
+                onClick={this.handleClose}
+            />,
+        ];
+    }
+
+    handleAction() {
+        const { selectItemIds } = this.state;
+        this.deleteImgGetter(selectItemIds);
+        this.setState({openDialog: false});
+    }
+
+    handleClose() {
+        this.setState({openDialog: false});
     }
 
     /**

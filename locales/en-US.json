@@ -256,5 +256,7 @@
     "msg.device.not.online": "Device is not online",
     "msg.not.more.than": "Not more than {number, number} characters",
     "msg.upload.success": "Upload success",
-    "msg.upload.fail": "Upload fail"
+    "msg.upload.fail": "Upload fail",
+    "msg.delete.photos.title": "Do you make sure that the selected photos are deleted?",
+    "msg.delete.photos.sub": "If the photo is set to the cover, it will be deleted."
 }

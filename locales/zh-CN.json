@@ -257,5 +257,7 @@
     "msg.device.not.online": "设备不在线",
     "msg.not.more.than": "不能输入超过{number, number}个字符",
     "msg.upload.success": "上传成功",
-    "msg.upload.fail": "上传失败"
+    "msg.upload.fail": "上传失败",
+    "msg.delete.photos.title": "确定删除选中的照片吗？",
+    "msg.delete.photos.sub": "如果照片被设置为封面也将被删除。"
 }
