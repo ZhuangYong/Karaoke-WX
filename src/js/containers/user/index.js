@@ -183,7 +183,7 @@ class UserIndex extends BaseComponent {
                         <GridTile
                             onTouchTap={() => {
                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
-                                linkTo(`user/feedback/home`, false, null);
+                                linkTo(`user/feedback/webHome`, false, null);
                             }}>
                             <img
                                 src={FeedbackIcon}

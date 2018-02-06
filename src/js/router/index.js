@@ -272,7 +272,7 @@ export default class router extends React.Component {
                 <Route path={`/user/InvoiceImage/:url`} component={InvoiceImageContainer}/>
                 <Route path={`/user/InvoiceOrderForDetail/:id`} component={InvoiceOrderForDetailContainer}/>
                 {/*
-                *state: home/success(页面状态)
+                *state: home/webHome/success(页面状态)
                 *deviceId: 绑定设备号
                 * */}
                 <Route path={`/user/feedback/:state/:deviceId?`} exact component={FeedbackContainer}/>

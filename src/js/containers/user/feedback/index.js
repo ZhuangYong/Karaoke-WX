@@ -383,11 +383,12 @@ class Feedback extends BaseComponent {
 
     closePage() {
         const matchParams = this.state.matchParams;
-        if (matchParams.deviceId !== "undefined") {
-            window.WeixinJSBridge.call('closeWindow');
-        } else {
+        if (matchParams.deviceId === 'webHome') {
             window.history.back();
+            return;
         }
+
+        window.WeixinJSBridge.call('closeWindow');
     }
 
     // 页面状态识别
@@ -396,6 +397,9 @@ class Feedback extends BaseComponent {
         const matchParams = this.props.match.params;
         switch (matchParams.state) {
             case "home":
+                res = true;
+                break;
+            case "webHome":
                 res = true;
                 break;
             case "success":
@@ -455,7 +459,7 @@ class Feedback extends BaseComponent {
             const {status, msg} = res;
 
             if (status === 1) {
-                navUtils.replace(`/user/feedback/success/${matchParams.deviceId}`);
+                navUtils.replace(`/user/feedback/success/${matchParams.state}`);
             } else {
                 actionGlobAlert(intl.get("msg.network.die"));
             }
