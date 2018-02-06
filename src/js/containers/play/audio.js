@@ -5,7 +5,10 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/playAudio.scss";
 import {getShareAudio} from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import { getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl, wxShare } from '../../utils/comUtils';
+import {
+    getEncryptHeader, getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl,
+    wxShare
+} from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
@@ -67,7 +70,7 @@ class PlayAudio extends BaseComponent {
         this.toEdit = this.toEdit.bind(this);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.loadAudioGetter();
     }
 
@@ -215,14 +218,30 @@ class PlayAudio extends BaseComponent {
      * 获取录音分享数据
      */
     loadAudioGetter() {
+        const { globAlertAction, getShareAudioAction } = this.props;
         const {uid, shareId} = this.state.params;
-        let params = {
-            uid: uid || null
-        };
+        let params = {};
 
-        shareId ? params.shareId = shareId : params.openid = getQueryString("openid");
+        if (typeof uid === 'undefined') {
+            globAlertAction('无法获取录音');
+            return;
+        }
 
-        this.props.getShareAudioAction(params, reqHeader(params));
+        params.uid = uid;
+
+        if (typeof shareId !== 'undefined') {
+            params.shareId = shareId;
+        } else {
+            const openid = getQueryString('openid');
+            if (openid === null) {
+                globAlertAction('无法获取录音');
+                return;
+            }
+
+            params.openid = openid;
+        }
+
+        getShareAudioAction(params, reqHeader(params));
     }
 
     /**

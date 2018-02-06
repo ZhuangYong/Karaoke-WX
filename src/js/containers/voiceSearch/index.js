@@ -54,23 +54,12 @@ class VoiceSearch extends BaseComponent {
         };
     }
 
-    componentWillMount() {
-        document.addEventListener("touchend", e => {
-            this.state.isRecordStart && this.voiceRecognition();
-        });
-    }
-
     componentWillUnmount() {
         const { stopRecordTimer, isRecordStart } = this.state;
-        if (isRecordStart) {
-            this.stopRecord();
-        }
+        if (isRecordStart) this.stopRecord();
 
-        if (stopRecordTimer !== null) {
-            clearTimeout(stopRecordTimer);
-        }
+        if (stopRecordTimer !== null) clearTimeout(stopRecordTimer);
 
-        document.removeEventListener("touchend");
     }
 
 
@@ -125,7 +114,12 @@ class VoiceSearch extends BaseComponent {
                                     isRecordStart: false,
                                     pageState: 0
                                 }));
-                        }} />
+                        }}
+                        onTouchEnd={e => {
+                            e.preventDefault();
+                            if (isRecordStart) this.voiceRecognition();
+                        }}
+                    />
 
                     {isRecordStart && (<div>
                         <div className="btnBfAnimationA" style={styles.btn} />
@@ -218,10 +212,13 @@ class VoiceSearch extends BaseComponent {
         this.stopRecord()
             .then(this.translateVoice)
             .then(res => {
-                linkTo(`song/search/${encodeURIComponent(stripScript(res))}`, false, null);
+                // if (window.location.pathname !== "/voiceSearch") return;
+
+                const { translateResult } = res;
+                linkTo(`song/search/${encodeURIComponent(stripScript(translateResult))}`, false, null);
             })
             .catch(err => {
-                // this.props.actionGlobAlert(err.errMsg);
+                this.props.actionGlobAlert(err.errMsg);
                 this.setState({
                     isRecordStart: false,
                     pageState: 3
@@ -283,9 +280,13 @@ class VoiceSearch extends BaseComponent {
                 localId: localId, // 需要识别的音频的本地Id，由录音相关接口获得
                 isShowProgressTips: 1, // 默认为1，显示进度提示
                 success: (result) => {
-                    let data = { errMsg: '识别音频成功' };
-                    const res = result.translateResult;
-                    if (window.location.pathname !== "/voiceSearch" || typeof res === "undefined") {
+                    const { translateResult } = result;
+                    const data = {
+                        translateResult: translateResult,
+                        errMsg: '识别音频成功',
+                    };
+
+                    if (typeof translateResult === "undefined") {
                         data.errMsg = '识别音频失败';
                         reject(data);
                     }
