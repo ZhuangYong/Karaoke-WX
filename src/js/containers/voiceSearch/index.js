@@ -212,7 +212,7 @@ class VoiceSearch extends BaseComponent {
         this.stopRecord()
             .then(this.translateVoice)
             .then(res => {
-                // if (window.location.pathname !== "/voiceSearch") return;
+                if (window.location.pathname !== "/voiceSearch") return;
 
                 const { translateResult } = res;
                 linkTo(`song/search/${encodeURIComponent(stripScript(translateResult))}`, false, null);
