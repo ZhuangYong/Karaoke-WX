@@ -77,19 +77,11 @@ class PlayAudio extends BaseComponent {
         const {autoPlayEd, params} = this.state;
         const {data} = this.props.audio.audioInfo;
         if (data && !autoPlayEd) {
-            const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
             const {isWeixin} = window.sysInfo;
             if (isWeixin) {
                 window.wx && window.wx.ready(() => {
                     this.refs.audio.refs.audio.refs.audio.play();
                     this.state.autoPlayEd = true;
-                    wxShare({
-                        title: intl.get("audio.share.title", {name: nameNorm}),
-                        desc: intl.get("audio.share.from"),
-                        link: `${location.protocol}//${location.host}/recording/play/${params.uid}/${shareId}?language=${getQueryString('language')}`,
-                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
-                        dataUrl: musicUrl
-                    });
                 });
             } else {
                 this.refs.audio.refs.audio.refs.audio.play();
@@ -244,7 +236,20 @@ class PlayAudio extends BaseComponent {
             params.openid = openid;
         }
 
-        getShareAudioAction(params, reqHeader(params));
+        getShareAudioAction(params, reqHeader(params), res => {
+            const {status, data} = res;
+            const {isWeixin} = window.sysInfo;
+            if (parseInt(status, 10) === 1 && isWeixin) {
+                const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
+                wxShare({
+                    title: intl.get("audio.share.title", {name: nameNorm}),
+                    desc: intl.get("audio.share.from"),
+                    link: `${location.protocol}//${location.host}/recording/play/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                    imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                    dataUrl: musicUrl
+                });
+            }
+        });
     }
 
     /**
