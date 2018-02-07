@@ -25,11 +25,11 @@ import { FlatButton, Dialog } from "material-ui";
 const styles = {
     btn: {
         width: toRem(540),
-        height: toRem(80),
-        borderRadius: toRem(80)
+        height: toRem(100),
+        borderRadius: toRem(100)
     },
     btnLabelStyle: {
-        lineHeight: toRem(80),
+        lineHeight: toRem(100),
         fontSize: toRem(32)
     }
 };
@@ -144,13 +144,18 @@ class PhotoAlbum extends BaseComponent {
 
                         rightButtonClick={() => {
 
+                            if (edit) {
+                                window.history.back();
+                                return;
+                            }
+
                             this.setState({
                                 isDeletePage: !isDeletePage,
                                 selectItemIds: []
                             });
                         }}
                         rightButtonDisabled={!(totalCount > 0)}
-                        rightButtonLabel={typeof edit === 'undefined' ? (isDeletePage ? intl.get('button.cancel') : intl.get('button.edit')) : null}
+                        rightButtonLabel={(isDeletePage || edit) ? intl.get('button.cancel') : intl.get('button.edit')}
                     />
                     <div style={{
                         position: 'fixed',
@@ -237,7 +242,7 @@ class PhotoAlbum extends BaseComponent {
                             ...styles.btn,
                             position: "absolute",
                             left: "50%",
-                            bottom: toRem(120),
+                            bottom: toRem(40),
                             marginLeft: `-${toRem(540 / 2)}`,
                         }}
                         labelStyle={styles.btnLabelStyle}
@@ -245,7 +250,7 @@ class PhotoAlbum extends BaseComponent {
                         label={intl.get('feedback.upload.photo')}
                         disabled={selectItemIds.length <= 0}
                     />
-                    <MyButton
+                    {/*<MyButton
                         style={{
                             ...styles.btn,
                             position: "absolute",
@@ -258,7 +263,7 @@ class PhotoAlbum extends BaseComponent {
                             window.history.back();
                         }}
                         label={intl.get('button.cancel')}
-                    />
+                    />*/}
                 </footer>}
 
                 <Dialog
