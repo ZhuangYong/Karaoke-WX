@@ -26,7 +26,6 @@ import defaultAvatar from "../../../img/default_avatar.png";
 import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
 import { setGlobAlert } from '../../actions/common/actions';
 import MyButton from '../../components/common/MyButton';
-import navUtils from '../../utils/navUtils';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
@@ -49,7 +48,7 @@ const styles = {
     }
 };
 
-const defaultImg = `${location.protocol}//${location.host}/img/album/1.png`;
+const defaultCover = 'http://wechat.j-make.cn/img/logo.png';
 
 class PlayAudio extends BaseComponent {
 
@@ -62,7 +61,6 @@ class PlayAudio extends BaseComponent {
             percent: 0,
             currentTime: 0,
             wxTimer: -1,
-            imgUrl: "",
             autoPlayEd: false
         };
 
@@ -71,11 +69,12 @@ class PlayAudio extends BaseComponent {
     }
 
     componentDidMount() {
+
         this.loadAudioGetter();
     }
 
     componentDidUpdate() {
-        const {imgUrl, autoPlayEd, params} = this.state;
+        const {autoPlayEd, params} = this.state;
         const {data} = this.props.audio.audioInfo;
         if (data && !autoPlayEd) {
             const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
@@ -88,7 +87,7 @@ class PlayAudio extends BaseComponent {
                         title: intl.get("audio.share.title", {name: nameNorm}),
                         desc: intl.get("audio.share.from"),
                         link: `${location.protocol}//${location.host}/recording/play/${params.uid}/${shareId}?language=${getQueryString('language')}`,
-                        imgUrl: imgUrl === "" ? pagePictureUrl : imgUrl,
+                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
                         dataUrl: musicUrl
                     });
                 });
@@ -110,7 +109,7 @@ class PlayAudio extends BaseComponent {
                     title: intl.get("audio.we.chat.song"),
                     desc: intl.get("audio.share.from"),
                     link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
-                    imgUrl: defaultImg,
+                    imgUrl: defaultCover,
                     dataUrl: null
                 });
             });
@@ -134,8 +133,8 @@ class PlayAudio extends BaseComponent {
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
         const {params} = this.state;
-        // const ableEdit = params.edit === 'edit';
-        const ableEdit = params.edit === false;
+        const ableEdit = params.edit === 'edit';
+        // const ableEdit = params.edit === false;
 
         const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
 
@@ -204,11 +203,11 @@ class PlayAudio extends BaseComponent {
 
                 </section>
 
-                <img src={pagePictureUrl} style={{display: "none"}} onError={() => {
+                {/*{pagePictureUrl && <img src={pagePictureUrl} style={{display: "none"}} onError={() => {
                     this.setState({
-                        imgUrl: defaultImg,
+                        imgUrl: 'http://wechat.j-make.cn/img/album/1.png',
                     });
-                }}/>
+                }}/>}*/}
 
             </div>
         );
@@ -223,18 +222,22 @@ class PlayAudio extends BaseComponent {
         let params = {};
 
         if (typeof uid === 'undefined') {
-            globAlertAction('无法获取录音');
+            globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
             return;
         }
 
         params.uid = uid;
 
-        if (typeof shareId !== 'undefined') {
+        const {status, data, msg} = this.props.audio.audioInfo;
+
+        if (shareId) {
             params.shareId = shareId;
+        } else if (data && data.shareId) {
+            params.shareId = data.shareId;
         } else {
             const openid = getQueryString('openid');
             if (openid === null) {
-                globAlertAction('无法获取录音');
+                globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
                 return;
             }
 
@@ -250,7 +253,7 @@ class PlayAudio extends BaseComponent {
      * @param shareId 录音的shareId
      */
     toEdit(shareId) {
-        navUtils.replace(`${this.state.params.uid}/${shareId}?language=${getQueryString('language')}`);
+        // navUtils.replace(`${this.state.params.uid}/${shareId}?language=${getQueryString('language')}`);
         linkTo(`editRecord/${shareId}`, false, null);
     }
 

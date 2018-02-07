@@ -35,7 +35,7 @@ import Suggestions from "../containers/forOldVersion/suggestions";
 
 import User from "../containers/user/index";
 import Recordings from '../containers/user/recordings';
-import EditRecord from '../containers/user/recordings/editRecord';
+import EditRecord from '../containers/play/editRecord';
 import PhotoAlbum from '../containers/user/photoAlbum';
 import PhotoAlbumCrop from '../containers/user/photoAlbum/crop';
 import Feedback from "../containers/user/feedback/index";

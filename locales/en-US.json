@@ -24,6 +24,7 @@
     "title.my.record": "My records",
     "title.my": "Me",
     "title.voice.search": "Voice Search",
+    "title.recording.edit": "Recording edit",
     "button.sure": "OK",
     "button.cancel": "Cancel",
     "button.search": "Search",
@@ -63,6 +64,8 @@
     "audio.empty": "Empty",
     "audio.total": "Total {number}",
     "audio.text.edit": "It's a great singing, and you can share it without editors.",
+    "recording.chose.cover": "Chose Cover",
+    "recording.chose.carousel": "Chose carousel figure",
     "song.loading": "Loading",
     "song.list.end": "End of list",
     "song.add.success": "Add success",
@@ -130,6 +133,7 @@
     "feedback.contact": "Contact information",
     "feedback.mobile.QQ.mail": "Phone、QQ or mail",
     "feedback.submit.success": "Submit success",
+    "feedback.submit.fail": "Submit fail",
     "feedback.thanks.feedback": "We will deal with the first time, thank you for your feedback!",
     "feedback.least.one.question": "Choose at least one question type",
     "feedback.word.least": "Seriously! Still a few words",
@@ -258,5 +262,6 @@
     "msg.upload.success": "Upload success",
     "msg.upload.fail": "Upload fail",
     "msg.delete.photos.title": "Do you make sure that the selected photos are deleted?",
-    "msg.delete.photos.sub": "If the photo is set to the cover, it will be deleted."
+    "msg.delete.photos.sub": "If the photo is set to the cover, it will be deleted.",
+    "msg.audio.can.not.get.the.recording": "Can't get the recording!"
 }

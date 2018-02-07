@@ -2,17 +2,19 @@ import React from "react";
 import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import { linkTo, reqHeader, toRem } from '../../../utils/comUtils';
+import { linkTo, reqHeader, toRem } from '../../utils/comUtils';
 
 import PropTypes from "prop-types";
-import BaseComponent from "../../../components/common/BaseComponent";
-import ButtonHeader from '../../../components/common/header/ButtonHeader';
-import InputBox from '../../../components/photoAlbum/index';
+import BaseComponent from "../../components/common/BaseComponent";
+import ButtonHeader from '../../components/common/header/ButtonHeader';
+import InputBox from '../../components/photoAlbum/index';
 import ClearIcon from "material-ui/svg-icons/content/clear";
-import { getAllPics, uploadSoundAlbum } from '../../../actions/userActions';
-import { setGlobAlert } from '../../../actions/common/actions';
-import SubmitLoading from '../../../components/common/SubmitLoading';
-import MyButton from '../../../components/common/MyButton';
+import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
+import { setGlobAlert } from '../../actions/common/actions';
+import SubmitLoading from '../../components/common/SubmitLoading';
+import MyButton from '../../components/common/MyButton';
+import intl from 'react-intl-universal';
+
 
 const styles = {
     itemStyle: {
@@ -48,14 +50,14 @@ const styles = {
 };
 
 const CONFIG = {
-    ALBUMS_MAX: 10
+    ALBUMS_MAX: 3
 };
 
 class EditRecord extends BaseComponent {
 
     constructor(props) {
         super(props);
-        super.title("录音编辑");
+        super.title(intl.get('title.recording.edit'));
         this.state = {
             params: this.props.match.params,
             recordingFormData: {pagePicture: [], albums: []},
@@ -95,9 +97,9 @@ class EditRecord extends BaseComponent {
                 <header>
                     <ButtonHeader
                         isShowLeftButton={false}
-                        title="编辑录音"
+                        title={intl.get('title.recording.edit')}
                         rightButtonClick={this.cancel}
-                        rightButtonLabel="取消"
+                        rightButtonLabel={intl.get('button.cancel')}
                     />
                 </header>
 
@@ -108,7 +110,7 @@ class EditRecord extends BaseComponent {
                                 background: "none",
                                 border: "none"
                             }}
-                            title={`选择封面图（${(recordingFormData.pagePicture.length) || 0}/1）`} />
+                            title={`${intl.get('recording.chose.cover')}（${(recordingFormData.pagePicture.length) || 0}/1）`} />
                     </header>
 
                     <InputBox
@@ -122,13 +124,13 @@ class EditRecord extends BaseComponent {
                         badgeBackgroundColor="#ce0000"
                         badgeContent={<ClearIcon
                             style={styles.clearIconStyle}
-                            onClick={(e) => {
-                                recordingFormData.pagePicture = [];
-                                this.setState({
-                                    recordingFormData: recordingFormData
-                                });
-                            }}
                         />}
+                        badgeContentClick={id => {
+                            recordingFormData.pagePicture = [];
+                            this.setState({
+                                recordingFormData: recordingFormData
+                            });
+                        }}
                         badgeStyle={styles.badgeStyle}
                         data={recordingFormData.pagePicture}
                         inputChange={this.inputChange}/>
@@ -142,7 +144,7 @@ class EditRecord extends BaseComponent {
                                 background: "none",
                                 border: "none"
                             }}
-                            title={`选择轮播图（${(recordingFormData.albums.length) || 0}/${CONFIG.ALBUMS_MAX}）`} />
+                            title={`${intl.get('recording.chose.carousel')}（${(recordingFormData.albums.length) || 0}/${CONFIG.ALBUMS_MAX}）`} />
                     </header>
 
                     <InputBox
@@ -156,16 +158,15 @@ class EditRecord extends BaseComponent {
                         badgeBackgroundColor="#ce0000"
                         badgeContent={<ClearIcon
                             style={styles.clearIconStyle}
-                            onClick={(e) => {
-                                const deleteId = e.target.parentNode.parentNode.dataset.id;
-                                recordingFormData.albums = recordingFormData.albums.filter(item => {
-                                    return parseInt(item.id, 10) !== parseInt(deleteId, 10);
-                                });
-                                this.setState({
-                                    recordingFormData: recordingFormData
-                                });
-                            }}
                         />}
+                        badgeContentClick={id => {
+                            recordingFormData.albums = recordingFormData.albums.filter(item => {
+                                return parseInt(item.id, 10) !== parseInt(id, 10);
+                            });
+                            this.setState({
+                                recordingFormData: recordingFormData
+                            });
+                        }}
                         badgeStyle={styles.badgeStyle}
                         data={recordingFormData.albums}
                         inputChange={this.inputChange}/>
@@ -176,7 +177,7 @@ class EditRecord extends BaseComponent {
                     style={styles.btn}
                     labelStyle={styles.btnLabelStyle}
                     onClick={this.submit}
-                    label="提交"
+                    label={intl.get('button.submit')}
                     disabled={!(recordingFormData.albums.length > 0 || recordingFormData.pagePicture.length > 0)}
                 />
 
@@ -222,7 +223,7 @@ class EditRecord extends BaseComponent {
                     recordingFormData: recordingFormData
                 });
             } else {
-                globAlertAction("获取录音相关图片失败");
+                globAlertAction(intl.get('search.network.die'));
             }
         });
     }
@@ -254,7 +255,7 @@ class EditRecord extends BaseComponent {
 
             parseInt(status, 10) === 1 && this.cancel();
             this.setState({loading: false});
-            globAlertAction(parseInt(status, 10) === 1 ? "提交成功" : "提交失败");
+            globAlertAction(parseInt(status, 10) === 1 ? intl.get('feedback.submit.success') : intl.get('feedback.submit.fail'));
 
         });
     }

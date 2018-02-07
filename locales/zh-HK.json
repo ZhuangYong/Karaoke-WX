@@ -24,6 +24,7 @@
     "title.my.record": "我的錄音",
     "title.my": "我的",
     "title.voice.search": "語音搜索",
+    "title.recording.edit": "錄音編輯",
     "button.sure": "確定",
     "button.cancel": "取消",
     "button.search": "搜索",
@@ -63,6 +64,8 @@
     "audio.empty": "暫無錄音",
     "audio.total": "共 {number} 首",
     "audio.text.edit": "唱得太棒了，不用編輯也可以直接分享哦",
+    "recording.chose.cover": "選擇封面圖",
+    "recording.chose.carousel": "選擇輪播圖",
     "song.loading": "正在加載",
     "song.list.end": "親愛滴，已經到底了",
     "song.add.success": "點歌成功",
@@ -130,6 +133,7 @@
     "feedback.contact": "聯系方式",
     "feedback.mobile.QQ.mail": "手機、QQ或郵箱",
     "feedback.submit.success": "提交成功",
+    "feedback.submit.fail": "提交失敗",
     "feedback.thanks.feedback": "我們將會在第壹時間處理，感謝您的反饋！",
     "feedback.least.one.question": "至少選擇壹個問題類型",
     "feedback.word.least": "認真點！還差幾個字",
@@ -259,5 +263,6 @@
     "msg.upload.success": "上傳成功",
     "msg.upload.fail": "上傳失敗",
     "msg.delete.photos.title": "確定刪除選中的照片嗎？",
-    "msg.delete.photos.sub": "如果照片被設置為封面也將被刪除。"
+    "msg.delete.photos.sub": "如果照片被設置為封面也將被刪除。",
+    "msg.audio.can.not.get.the.recording": "無法獲取錄音"
 }
