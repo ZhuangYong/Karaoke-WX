@@ -179,10 +179,10 @@ class PlayAudio extends BaseComponent {
                         </div>
                     </header>
 
-                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
+                    {/*<Subheader style={{...styles.center, bottom: '.8rem'}}>
 
                         <p>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</p>
-                    </Subheader>
+                    </Subheader>*/}
 
                     <Subheader style={{...styles.center, bottom: '.8rem'}}>
                         {/*<p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? intl.get("audio.text.edit") : intl.get("msg.from.j.make")}</p>*/}
