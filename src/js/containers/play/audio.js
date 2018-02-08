@@ -178,20 +178,28 @@ class PlayAudio extends BaseComponent {
                             <p style={{fontSize: '.32rem', height: '.4rem', margin: 0, color: "#9a9a9b"}}>{musicTime ? parseTime(parseInt(musicTime, 10)) : "..."}</p>
                         </div>
                     </header>
-                    <Subheader style={styles.center}>
-                        {ableEdit ? <MyButton
-                            style={styles.btn}
+
+                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
+
+                        <p>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</p>
+                    </Subheader>
+
+                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
+                        {/*<p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? intl.get("audio.text.edit") : intl.get("msg.from.j.make")}</p>*/}
+                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{intl.get("msg.from.j.make")}</p>
+                    </Subheader>
+
+                    {ableEdit && <Subheader style={styles.center}>
+
+                        <MyButton
+                            style={{...styles.btn, marginBottom: toRem(40)}}
                             labelStyle={styles.btnLabelStyle}
                             onClick={() => this.toEdit(shareId)}
                             label={intl.get("button.edit")}
                             disabled={parseInt(status, 10) !== 1}
-                        /> : <div>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</div>}
+                        />
 
-                    </Subheader>
-
-                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
-                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? intl.get("audio.text.edit") : intl.get("msg.from.j.make")}</p>
-                    </Subheader>
+                    </Subheader>}
 
                 </section>
 
