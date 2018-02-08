@@ -600,8 +600,15 @@ export function dynaPush(funcParam = {
  * @returns {string}
  */
 export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
+
+    const env = process.env.NODE_ENV;
+    let redirectUri = `${encodeURIComponent(apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(Base64.btoa(cbUrl))}`;
+    if (env === "expand" || env === "expandTest" || env === 'master') {
+        redirectUri = `${encodeURIComponent(apiDomain)}%2Fuser%2FweChatCallback%3Fparam=${encodeURIComponent(Base64.btoa(cbUrl))}`;
+    }
+
     // 微信授权登录链接
-    const wxAuthorizedLink = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(Base64.btoa(cbUrl))}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
+    const wxAuthorizedLink = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
 
     return `${apiDomain}/wx/process/toUrl?url=${encodeURIComponent(wxAuthorizedLink)}`;
 }

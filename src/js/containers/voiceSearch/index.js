@@ -218,7 +218,7 @@ class VoiceSearch extends BaseComponent {
                 linkTo(`song/search/${encodeURIComponent(stripScript(translateResult))}`, false, null);
             })
             .catch(err => {
-                this.props.actionGlobAlert(err.errMsg);
+                // this.props.actionGlobAlert(err.errMsg);
                 this.setState({
                     isRecordStart: false,
                     pageState: 3
