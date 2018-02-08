@@ -372,27 +372,11 @@ class Pay extends BaseComponent {
                             payResult: PAY_RESULT_SUCCESS
                         });
                     } else {
-                        actionSetGlobAlert(intl.get("msg.pay.success"));
-                        if (matchParams.openid !== "") {
-                            setTimeout(() => {
-                                window.WeixinJSBridge.call('closeWindow');
-                            }, 500);
-                        } else {
-                            getUserInfoAction({}, reqHeader({}));
-                            window.history.back();
-                        }
-
+                        this.pageBack("msg.pay.success");
                     }
                 },
                 cancel: (res) => {
-                    actionSetGlobAlert(intl.get("msg.pay.cancel"));
-                    if (matchParams.openid !== "") {
-                        setTimeout(() => {
-                            window.WeixinJSBridge.call('closeWindow');
-                        }, 500);
-                    } else {
-                        window.history.back();
-                    }
+                    this.pageBack("msg.pay.cancel");
                 },
                 fail: (res) => {
                     if (this.state.payType === Const.PAY_TYPE_GONG_XIANG) {
@@ -405,6 +389,17 @@ class Pay extends BaseComponent {
                 }
             });
         });
+    }
+
+    pageBack(msg) {
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
+        const matchParams = this.state.matchParams;
+        const { isIos } = window.sysInfo;
+
+        actionSetGlobAlert(intl.get(msg));
+        setTimeout(() => {
+            matchParams.openid !== "" ? window.WeixinJSBridge.call('closeWindow') : window.history.go(isIos ? -2 : -1);
+        }, 800);
     }
 
     // 支付宝支付
