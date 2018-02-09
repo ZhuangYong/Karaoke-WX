@@ -247,7 +247,7 @@ class PhotoAlbum extends BaseComponent {
                         }}
                         labelStyle={styles.btnLabelStyle}
                         onClick={this.uploadEdit}
-                        label={intl.get('feedback.upload.photo')}
+                        label={intl.get('button.sure')}
                         disabled={selectItemIds.length <= 0}
                     />
                     {/*<MyButton
