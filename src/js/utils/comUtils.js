@@ -604,7 +604,7 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
     const env = process.env.NODE_ENV;
     let redirectUri = `${encodeURIComponent(apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(Base64.btoa(cbUrl))}`;
     if (env === "expand" || env === "expandTest" || env === 'master') {
-        redirectUri = `${encodeURIComponent(apiDomain)}%2Fuser%2FweChatCallback%3Fparam=${encodeURIComponent(Base64.btoa(cbUrl))}`;
+        redirectUri = `${encodeURIComponent(apiDomain)}%2Fuser%2FweChatCallback%3Fparam=${encodeURIComponent(cbUrl)}`;
     }
 
     // 微信授权登录链接
