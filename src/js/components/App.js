@@ -535,7 +535,7 @@ class App extends BaseComponent {
 
     configWeiXin() {
         const {isIos} = window.sysInfo;
-        if (!isIos && location.pathname.indexOf('pay/home') >= 0) return;
+        if (!isIos && this.pageFilterForConfigWX()) return;
         let param = {url: location.href.split('#')[0]};
         this.props.action_getUserConfig(param, reqHeader(param), (json) => {
             const {data} = json;
@@ -547,6 +547,24 @@ class App extends BaseComponent {
                 });
             }, 500);
         });
+    }
+
+    /**
+     * 判断当前页面是否显示共享倒计时
+     * @returns {boolean}
+     */
+    pageFilterForConfigWX() {
+        const pathNames = [
+            '/pay',
+            '/voiceSearch'
+        ];
+        let bool = false;
+
+        pathNames.map(pathName => {
+            if (location.pathname.indexOf(pathName) >= 0) bool = true;
+        });
+
+        return bool;
     }
 
     gxTimer() {

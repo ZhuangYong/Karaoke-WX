@@ -11,10 +11,11 @@ import PropTypes from "prop-types";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import BtnIcon from '../../../img/voice_search.png';
 import "../../../sass/voiceSearch.scss";
-import {linkTo, stripScript} from "../../utils/comUtils";
-import {setGlobAlert} from "../../actions/common/actions";
+import { linkTo, reqHeader, stripScript, wxConfig } from '../../utils/comUtils';
+import { setGlobAlert, setWeixinConfigFinished } from '../../actions/common/actions';
 import ActionTypes from "../../actions/actionTypes";
 import intl from "react-intl-universal";
+import { getUserConfig } from '../../actions/userActions';
 
 const styles = {
     btn: {
@@ -52,6 +53,10 @@ class VoiceSearch extends BaseComponent {
             startY: null,
             btnDisabled: false
         };
+    }
+
+    componentWillMount() {
+        this.configWeiXin();
     }
 
     componentWillUnmount() {
@@ -248,15 +253,12 @@ class VoiceSearch extends BaseComponent {
      */
     startRecord() {
         const { actionGlobAlert } = this.props;
-        let { stopRecordTimer } = this.state;
-        if (stopRecordTimer !== null) {
-            clearTimeout(stopRecordTimer);
-        }
 
-        window.wx && window.wx.startRecord({
+        window.wx.startRecord({
             success: () => {
+                const timer = setTimeout(() => this.voiceRecognition(), 30 * 1000);
                 this.setState({
-                    stopRecordTimer: setTimeout(this.voiceRecognition, 30000)
+                    stopRecordTimer: timer,
                 });
             },
             fail: () => {
@@ -305,6 +307,11 @@ class VoiceSearch extends BaseComponent {
      */
     stopRecord() {
         return new Promise((resolve, reject) => {
+            let { stopRecordTimer } = this.state;
+            if (stopRecordTimer !== null) {
+                clearTimeout(stopRecordTimer);
+            }
+
             window.wx && window.wx.stopRecord({
                 success: (res) => {
                     // alert(res.localId);
@@ -323,6 +330,24 @@ class VoiceSearch extends BaseComponent {
         });
 
     }
+
+    /**
+     * 微信api验证授权
+     */
+    configWeiXin() {
+        const { actionSetWeixinConfigFinished, actionGetUserConfig } = this.props;
+        let param = {url: location.href.split('#')[0]};
+        actionGetUserConfig(param, reqHeader(param), (json) => {
+            const {data} = json;
+            setTimeout(() => {
+                actionSetWeixinConfigFinished(false);
+                wxConfig(data);
+                window.wx && window.wx.ready(() => {
+                    actionSetWeixinConfigFinished(true);
+                });
+            }, 500);
+        });
+    }
 }
 
 const mapStateToProps = (state, ownPorps) => {
@@ -330,7 +355,9 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        actionGlobAlert: bindActionCreators(setGlobAlert, dispatch)
+        actionGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        actionGetUserConfig: bindActionCreators(getUserConfig, dispatch),
+        actionSetWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch),
     };
 };
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(VoiceSearch));
