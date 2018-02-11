@@ -128,6 +128,23 @@ class App extends BaseComponent {
     }
 
     componentWillMount() {
+
+        const {isIos} = window.sysInfo;
+        if (isIos) {
+            this.configWeiXin();
+        }
+
+        this.configWxPath();
+
+        window.wx && window.wx.ready(() => {
+            wxShare({
+                title: intl.get("index.we.chat.song"),
+                desc: intl.get("audio.share.from"),
+                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                imgUrl: 'http://wechat.j-make.cn/img/logo.png',
+                dataUrl: null
+            });
+        });
     }
 
     componentDidMount() {
@@ -143,21 +160,6 @@ class App extends BaseComponent {
         window.addEventListener('focus', () => {this.updateUserInfo();});
         this.props.action_updateScreen();
 
-        const {isIos} = window.sysInfo;
-        if (isIos) {
-            this.configWeiXin();
-        }
-        this.configWxPath();
-        window.wx && window.wx.ready(() => {
-            wxShare({
-                title: intl.get("index.we.chat.song"),
-                desc: intl.get("audio.share.from"),
-                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
-                imgUrl: "http://wx.j-make.cn/img/logo.png",
-                dataUrl: null
-            });
-        });
-
         window.lockResize = true;
         setTimeout(() => {
             let commonInfo = this.props.commonInfo || {};
@@ -167,6 +169,9 @@ class App extends BaseComponent {
     }
 
     componentDidUpdate(prevProps) {
+
+        this.configWxPath();
+
         if (isGetUserInfo()) {
             if (window.noUserInfo === true) {
                 this.updateUserInfo();
@@ -197,8 +202,6 @@ class App extends BaseComponent {
                 this.gxUpdateUserInfoTimer();
             }
         }
-
-        this.configWxPath();
     }
 
     render() {
