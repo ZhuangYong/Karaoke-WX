@@ -199,6 +199,17 @@ class VoiceSearch extends BaseComponent {
             return;
         }
 
+        const { isRecordStart } = this.state;
+
+        if (isRecordStart) {
+            this.stopRecord()
+                .then(() => this.startRecord())
+                .catch(err => this.setState({
+                    isRecordStart: false,
+                    pageState: 0
+                }));
+        } else this.startRecord();
+
         const { pageX, pageY } = e.targetTouches[0];
         this.setState({
             startX: pageX,
@@ -207,7 +218,6 @@ class VoiceSearch extends BaseComponent {
             isRecordStart: true,
         });
 
-        this.startRecord();
     }
 
     /**
