@@ -41,31 +41,34 @@ class Crop extends BaseComponent {
         if (typeof localId !== 'undefined') {
 
             const {globAlertAction} = this.props;
-            window.wx.getLocalImgData({
-                localId: localId, // 图片的localID
-                success: res => {
-                    const localData = res.localData; // localData是图片的base64数据，可以用img标签显示
-                    const {isIos} = window.sysInfo;
-                    const imgBase64 = isIos ? localData : ('data:image/jpg;base64,' + localData);
+            window.wx && window.wx.ready(() => {
 
-                    this.setState({
-                        localId: localId,
-                        localData: imgBase64,
-                    });
+                window.wx.getLocalImgData({
+                    localId: localId, // 图片的localID
+                    success: res => {
+                        const localData = res.localData; // localData是图片的base64数据，可以用img标签显示
+                        const {isIos} = window.sysInfo;
+                        const imgBase64 = isIos ? localData : ('data:image/jpg;base64,' + localData);
 
-                    const img = new Image();
-                    img.src = imgBase64;
-                    img.onload = e => {
-                        const { width } = img;
                         this.setState({
-                            realWidth: width,
+                            localId: localId,
+                            localData: imgBase64,
                         });
-                    };
 
-                },
-                fail: () => {
-                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
-                }
+                        const img = new Image();
+                        img.src = imgBase64;
+                        img.onload = e => {
+                            const { width } = img;
+                            this.setState({
+                                realWidth: width,
+                            });
+                        };
+
+                    },
+                    fail: () => {
+                        globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                    }
+                });
             });
 
         }
