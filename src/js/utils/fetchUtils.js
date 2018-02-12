@@ -2,6 +2,7 @@ import fetch from 'isomorphic-fetch';
 import ActionTypes from "../actions/actionTypes";
 import sysConfig from "../utils/sysConfig";
 import Const from "./const";
+import intl from 'react-intl-universal';
 
 export function cryptoFetch(options, succ, fail) {
     let url = options.url;
@@ -113,7 +114,7 @@ export function comFetch(dispatch, param, options = {
         dispatch({
             type: options.action,
             fetchStatus: 1,
-            msg: Const.STRING_NO_WIFI,
+            msg: intl.get("msg.network.die"),
             error: err,
             param: param
         });
@@ -121,12 +122,12 @@ export function comFetch(dispatch, param, options = {
             setTimeout(() => {
                 dispatch({
                     type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-                    globAlert: Const.STRING_NO_WIFI
+                    globAlert: intl.get("msg.network.die")
                 });
             }, 300);
         }
         err.code = Const.CODE_OFF_LINE;
-        failCallback && failCallback(Const.STRING_NO_WIFI, err, rejectCode);
+        failCallback && failCallback(intl.get("msg.network.die"), err, rejectCode);
     };
 
     let timeoutSing;

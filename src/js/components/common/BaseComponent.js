@@ -60,21 +60,23 @@ export default class BaseComponent extends Component {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return false;
         } else if (isBindDevice === true) {
-            if (isFreeActivation === true) {
-                actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE);
-                return false;
-            } else if (isFreeActivation === false) {
-                if (ottIsOnLine()) {
-                    if (isVip === false) {
+            if (ottIsOnLine()) {
+                if (isVip === false) {
+
+                    if (isFreeActivation === true) {
+                        actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE);
+                        return false;
+                    } else if (isFreeActivation === false) {
+
                         actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BE_VIP);
                         return false;
-                    } else {
-                        return true;
                     }
                 } else {
-                    actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
-                    return false;
+                    return true;
                 }
+            } else {
+                actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE);
+                return false;
             }
         }
     }

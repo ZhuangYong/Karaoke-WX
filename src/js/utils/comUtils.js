@@ -7,6 +7,44 @@ import ActionTypes from "../actions/actionTypes";
 import Base64 from "Base64";
 
 /**
+ * 返回特定格式时间字符串
+ * @param time
+ * @param cFormat
+ * @returns {*}
+ */
+export function parseTime(time, cFormat) {
+    if (arguments.length === 0) {
+        return null;
+    }
+    const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}';
+    let date;
+    if (typeof time === 'object') {
+        date = time;
+    } else {
+        if (('' + time).length === 10) time = parseInt(time, 0) * 1000;
+        date = new Date(time);
+    }
+    const formatObj = {
+        y: date.getFullYear(),
+        m: date.getMonth() + 1,
+        d: date.getDate(),
+        h: date.getHours(),
+        i: date.getMinutes(),
+        s: date.getSeconds(),
+        a: date.getDay()
+    };
+    const timeStr = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
+        let value = formatObj[key];
+        if (key === 'a') return ['一', '二', '三', '四', '五', '六', '日'][value - 1];
+        if (result.length > 0 && value < 10) {
+            value = '0' + value;
+        }
+        return value || 0;
+    });
+    return timeStr;
+}
+
+/**
  * 根据时间戳返回对应的y，m，d
  * @param  {[type]} tNum [description]
  * @return {string}      [description]
@@ -89,7 +127,7 @@ export function chkDevice() {
     // console.log(process.env);
 
     const env = process.env.NODE_ENV;
-    if (env === "development" || env === "expand") {
+    if (env === "development" || env === "expandTest") {
         isWeixin = true;
     }
     return {
@@ -562,8 +600,15 @@ export function dynaPush(funcParam = {
  * @returns {string}
  */
 export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
+
+    const env = process.env.NODE_ENV;
+    let redirectUri = `${encodeURIComponent(apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(Base64.btoa(cbUrl))}`;
+    if (env === "expand" || env === "expandTest" || env === 'master') {
+        redirectUri = `${encodeURIComponent(apiDomain)}%2Fuser%2FweChatCallback%3Fparam=${encodeURIComponent(cbUrl)}`;
+    }
+
     // 微信授权登录链接
-    const wxAuthorizedLink = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodeURIComponent(apiDomain)}%2Fwx%2Fprocess%2Flogin%2F${encodeURIComponent(Base64.btoa(cbUrl))}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
+    const wxAuthorizedLink = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=test&connect_redirect=1#wechat_redirect`;
 
     return `${apiDomain}/wx/process/toUrl?url=${encodeURIComponent(wxAuthorizedLink)}`;
 }
@@ -571,7 +616,7 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
 // 检测是否获取用户信息
 export function isGetUserInfo() {
     const pathname = location.pathname.split("/");
-    return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[3] === "play"));
+    return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[1] === "recording" && pathname[2] === "play"));
 }
 
 // 解决精度问题

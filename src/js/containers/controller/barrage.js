@@ -194,6 +194,7 @@ class Barrage extends BaseComponent {
                     }
                     <Snackbar
                         style={{position: 'absolute'}}
+                        bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
                         open={this.state.barrageSendToast}
                         message={this.state.barrageToastMsg}
                         autoHideDuration={Const.TOAST_BOTTOM_SHOW_TIME}

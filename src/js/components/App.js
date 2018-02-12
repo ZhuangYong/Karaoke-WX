@@ -27,6 +27,7 @@ import intl from 'react-intl-universal';
 import _ from "lodash";
 import Routers from '../router';
 import {cryptoFetch} from "../utils/fetchUtils";
+import canvasToBlob from '../utils/canvasToBlob';
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
@@ -127,6 +128,23 @@ class App extends BaseComponent {
     }
 
     componentWillMount() {
+
+        const {isIos} = window.sysInfo;
+        if (isIos) {
+            this.configWeiXin();
+        }
+
+        this.configWxPath();
+
+        window.wx && window.wx.ready(() => {
+            wxShare({
+                title: intl.get("index.we.chat.song"),
+                desc: intl.get("audio.share.from"),
+                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                imgUrl: 'http://wechat.j-make.cn/img/logo.png',
+                dataUrl: null
+            });
+        });
     }
 
     componentDidMount() {
@@ -142,21 +160,6 @@ class App extends BaseComponent {
         window.addEventListener('focus', () => {this.updateUserInfo();});
         this.props.action_updateScreen();
 
-        const {isIos} = window.sysInfo;
-        if (isIos) {
-            this.configWeiXin();
-        }
-        this.configWxPath();
-        window.wx && window.wx.ready(() => {
-            wxShare({
-                title: intl.get("index.we.chat.song"),
-                desc: intl.get("audio.share.from"),
-                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
-                imgUrl: "http://wx.j-make.cn/img/logo.png",
-                dataUrl: null
-            });
-        });
-
         window.lockResize = true;
         setTimeout(() => {
             let commonInfo = this.props.commonInfo || {};
@@ -166,6 +169,9 @@ class App extends BaseComponent {
     }
 
     componentDidUpdate(prevProps) {
+
+        this.configWxPath();
+
         if (isGetUserInfo()) {
             if (window.noUserInfo === true) {
                 this.updateUserInfo();
@@ -174,7 +180,7 @@ class App extends BaseComponent {
         }
         const alertData = this.props.alertData;
         if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
-            linkTo("pay/deviceRegister", false, "");
+            linkTo("deviceRegister", false, "");
             this.props.action_setGlobAlert("", "");
         }
         if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
@@ -196,13 +202,11 @@ class App extends BaseComponent {
                 this.gxUpdateUserInfoTimer();
             }
         }
-
-        this.configWxPath();
     }
 
     render() {
         let showAlert = !!this.props.globAlert && !this.props.alertData;
-        if (this.props.globAlert === Const.STRING_NO_WIFI && window.lockShowNoWIfi) {
+        if ((this.props.globAlert === intl.get("msg.network.die")) && window.lockShowNoWIfi) {
             setTimeout(() => {
                 this.props.action_setGlobAlert("");
             }, 200);
@@ -216,6 +220,7 @@ class App extends BaseComponent {
                     <Routers/>
                     <Snackbar
                         open={showAlert}
+                        bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
                         message={this.props.globAlert}
                         autoHideDuration={2000}
                         onRequestClose={() => {
@@ -225,12 +230,12 @@ class App extends BaseComponent {
                         {validUserStatusDialog}
 
                         {
-                            (location.pathname !== "/pay" && location.pathname !== "/user" && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
+                            (this.pageFilterToShowGXTimer() && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
                                                                             onClick={() => {
                                                                                 if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert) !== true) return;
 
                                                                                 if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                                                                                    linkTo(`pay/deviceRegister`, false, null);
+                                                                                    linkTo(`deviceRegister`, false, null);
                                                                                     return;
                                                                                 }
                                                                                 const {isIos} = window.sysInfo;
@@ -263,6 +268,25 @@ class App extends BaseComponent {
                 </MuiThemeProvider>
             </div> : <div/>
         );
+    }
+
+    /**
+     * 判断当前页面是否显示共享倒计时
+     * @returns {boolean}
+     */
+    pageFilterToShowGXTimer() {
+        const pathNames = [
+            '/pay',
+            '/user',
+            '/recording'
+        ];
+        let bool = true;
+
+        pathNames.map(pathName => {
+            if (location.pathname.indexOf(pathName) > -1) bool = false;
+        });
+
+        return bool;
     }
 
     removeAppLoading() {
@@ -355,11 +379,11 @@ class App extends BaseComponent {
                     });
                 };
                 break;
-            case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
-                // alertStr = '激活vip免费体验';
-                //TODO ACTIVE
-                //linkTo("", false, "");
-                break;
+            // case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
+            //     // alertStr = '激活vip免费体验';
+            //     //TODO ACTIVE
+            //     //linkTo("", false, "");
+            //     break;
             case ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL:
                 alertStr = intl.get("msg.operate.need.auth");
                 //TODO ACTIVE
@@ -511,7 +535,7 @@ class App extends BaseComponent {
 
     configWeiXin() {
         const {isIos} = window.sysInfo;
-        if (!isIos && location.pathname.indexOf('pay/home') >= 0) return;
+        if (!isIos && this.pageFilterForConfigWX()) return;
         let param = {url: location.href.split('#')[0]};
         this.props.action_getUserConfig(param, reqHeader(param), (json) => {
             const {data} = json;
@@ -523,6 +547,24 @@ class App extends BaseComponent {
                 });
             }, 500);
         });
+    }
+
+    /**
+     * 判断当前页面是否显示共享倒计时
+     * @returns {boolean}
+     */
+    pageFilterForConfigWX() {
+        const pathNames = [
+            'pay/home',
+            'voiceSearch'
+        ];
+        let bool = false;
+
+        pathNames.map(pathName => {
+            if (location.pathname.indexOf(pathName) >= 0) bool = true;
+        });
+
+        return bool;
     }
 
     gxTimer() {
@@ -544,7 +586,7 @@ class App extends BaseComponent {
                         let gxAlert = JSON.parse(window.localStorage.getItem("gxAlert") || "{}");
                         if (!gxAlert.done) {
                             const isBindDevice = super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.action_setGlobAlert, true) === true;
-                            if (isBindDevice) {
+                            if (isBindDevice && this.pageFilterToShowGXTimer()) {
                                 actionSetGlobAlert && typeof gxAlert.done !== 'undefined' && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE);
                                 window.localStorage.setItem("gxAlert", '{"done": true}');
                             }

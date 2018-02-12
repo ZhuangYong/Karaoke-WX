@@ -15,11 +15,8 @@ import CheckboxIcon from '../../../img/pay_checkbox.png';
 import CheckboxSelectedIcon from '../../../img/pay_checkbox_selected.png';
 import PaySuccessIcon from "../../../img/pay_success.png";
 import PayFailedIcon from "../../../img/pay_failed.png";
-import DeviceRegisterIcon from "../../../img/device_register.png";
 import ButtonPage from "../../components/common/ButtonPage";
 
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
 import {setGlobAlert} from "../../actions/common/actions";
 import {getUserInfo} from "../../actions/userActions";
 import ActionTypes from "../../actions/actionTypes";
@@ -107,7 +104,6 @@ class Pay extends BaseComponent {
             isCheckboxChecked: true,
             payList: [],
             buttonPage: null,
-            openDialog: false,
             payType: "",
             payResult: ""
         };
@@ -115,8 +111,6 @@ class Pay extends BaseComponent {
         this.pay = this.pay.bind(this);
         this.wxPay = this.wxPay.bind(this);
         this.aliPay = this.aliPay.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleAction = this.handleAction.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -141,20 +135,6 @@ class Pay extends BaseComponent {
         const {isWeixin} = window.sysInfo;
         const {weixinConfigFinish} = this.props;
         const disableSubmitButton = isWeixin && !weixinConfigFinish;
-        const actions = [
-            <FlatButton
-                className="cancel-button"
-                label={intl.get("msg.not.now")}
-                primary={true}
-                onClick={this.handleClose}
-            />,
-            <FlatButton
-                className="sure-button"
-                label={intl.get("msg.join.immediately")}
-                primary={true}
-                onClick={this.handleAction}
-            />,
-        ];
 
         return (
             <div>
@@ -330,45 +310,11 @@ class Pay extends BaseComponent {
                         <br/>
                         <br/>
 
-                        <div>
-                            <Dialog
-                                className="dialog-panel"
-                                actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
-                                contentStyle={{textAlign: 'center'}}
-                                actions={actions}
-                                modal={false}
-                                open={this.state.openDialog}
-                                onRequestClose={this.handleClose}
-                            >
-                                {intl.get("msg.sure.join.vip")}
-                            </Dialog>
-                        </div>
                     </div>
                 }
             </div>
 
         );
-    }
-
-    handleAction() {
-        const actionSetGlobAlert = this.props.action_setGlobAlert;
-        const getUserInfoAction = this.props.getUserInfoAction;
-        this.setState({openDialog: false});
-        const params = {};
-        this.props.deviceRegisterAction(params, reqHeader(params), (res) => {
-            const {status} = res;
-            if (status === 1) {
-                actionSetGlobAlert(intl.get("msg.join.success"));
-
-                getUserInfoAction({}, reqHeader({}));
-            } else {
-                actionSetGlobAlert(intl.get("msg.join.fail"));
-            }
-            window.history.back();
-        });
-    }
-    handleClose() {
-        this.setState({openDialog: false});
     }
 
     // 点击支付
@@ -426,27 +372,11 @@ class Pay extends BaseComponent {
                             payResult: PAY_RESULT_SUCCESS
                         });
                     } else {
-                        actionSetGlobAlert(intl.get("msg.pay.success"));
-                        if (matchParams.openid !== "") {
-                            setTimeout(() => {
-                                window.WeixinJSBridge.call('closeWindow');
-                            }, 500);
-                        } else {
-                            getUserInfoAction({}, reqHeader({}));
-                            window.history.back();
-                        }
-
+                        this.pageBack("msg.pay.success");
                     }
                 },
                 cancel: (res) => {
-                    actionSetGlobAlert(intl.get("msg.pay.cancel"));
-                    if (matchParams.openid !== "") {
-                        setTimeout(() => {
-                            window.WeixinJSBridge.call('closeWindow');
-                        }, 500);
-                    } else {
-                        window.history.back();
-                    }
+                    this.pageBack("msg.pay.cancel");
                 },
                 fail: (res) => {
                     if (this.state.payType === Const.PAY_TYPE_GONG_XIANG) {
@@ -459,6 +389,17 @@ class Pay extends BaseComponent {
                 }
             });
         });
+    }
+
+    pageBack(msg) {
+        const actionSetGlobAlert = this.props.action_setGlobAlert;
+        const matchParams = this.state.matchParams;
+        const { isIos } = window.sysInfo;
+
+        actionSetGlobAlert(intl.get(msg));
+        setTimeout(() => {
+            matchParams.openid !== "" ? window.WeixinJSBridge.call('closeWindow') : window.history.go(isIos ? -2 : -1);
+        }, 800);
     }
 
     // 支付宝支付
@@ -542,19 +483,6 @@ class Pay extends BaseComponent {
                         }}/>
                 });
                 break;
-            case "deviceRegister":
-                this.setState({
-                    buttonPage: <ButtonPage
-                        src={DeviceRegisterIcon}
-                        imgStyle={{width: "162.5px"}}
-                        content={intl.get("msg.congratulations.vip.experience")}
-                        contentStyle={{color: "#c48848"}}
-                        buttonLabel={intl.get("msg.experience.now")}
-                        touchTap={() => {
-                            this.setState({openDialog: true});
-                        }}/>
-                });
-                break;
             default:
                 navUtils.replace("/*");
                 break;
@@ -582,7 +510,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         getPayListAction: bindActionCreators(getPayList, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
         getWXPayParamsAction: bindActionCreators(getWXPayParams, dispatch),
-        deviceRegisterAction: bindActionCreators(deviceRegister, dispatch),
         getUserInfoAction: bindActionCreators(getUserInfo, dispatch),
         alipayAction: bindActionCreators(alipayPay, dispatch)
     };

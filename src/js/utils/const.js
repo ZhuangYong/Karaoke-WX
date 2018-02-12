@@ -2,6 +2,8 @@
  * Created by walljack@163.com on 2017/9/7.
  */
 
+import intl from 'react-intl-universal';
+
 export default{
     //回到顶部出现位置
     NEED_SCROLL_TOP_HEIGHT: 1000,
@@ -12,7 +14,7 @@ export default{
     //不在线code
     CODE_OFF_LINE: "CODE_OFF_LINE",
 
-    STRING_NO_WIFI: "网络开小差咯",
+    STRING_NO_WIFI: intl.get("msg.network.die"),
 
     // downloadStatus: 1下载完成 0等待下载 2下载失败 3 正在下载
     DOWNLOAD_STATUS_NOT_DOWN: 0,

@@ -2,7 +2,7 @@
 // 可以通过cross-env包来设置环境变量
 //
 const env = process.env.NODE_ENV;
-if (env === 'development' || env === "expand") {
+if (env === 'development' || env === "expandTest") {
     module.exports = require('./Store.dev');
 } else {
     module.exports = require('./Store.prod');

@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import PropTypes from "prop-types";
 import {deleteRecording, getRecordsList} from '../../../actions/userActions';
-import {linkTo, reqHeader, toRem} from "../../../utils/comUtils";
+import { getWxinfoFromSession, linkTo, reqHeader, toRem } from '../../../utils/comUtils';
 
 import BaseComponent from "../../../components/common/BaseComponent";
 import RefreshIndicator from "material-ui/RefreshIndicator";
@@ -19,6 +19,8 @@ import Const from "../../../utils/const";
 import NoWifi from "../../../components/common/NoWifi";
 import NoResult from "../../../components/common/NoResult";
 import intl from 'react-intl-universal';
+import SubmitLoading from '../../../components/common/SubmitLoading';
+import { setGlobAlert } from '../../../actions/common/actions';
 
 const style = {
     recordings: {
@@ -57,22 +59,23 @@ class Records extends BaseComponent {
             loading: false,
             lastPage: false,
             open: false,
-            deleteRecordingUid: null,
+            selectItem: null,
             offLine: false,
-            dataLoaded: false
+            dataLoaded: false,
+            submitLoading: false
         };
+
+        this.deleteGetter = this.deleteGetter.bind(this);
+        this.changeCoverGetter = this.changeCoverGetter.bind(this);
     }
 
     componentDidUpdate(preProps) {
         if (preProps.list.recordsListStamp !== this.props.list.recordsListStamp) {
             const {data} = this.props.list.recordsListData || {data: {result: [], islastpage: false}};
             const {result, islastpage} = data;
-            let recordingList = result.filter((item) => {
-                item.defaultImg = this.randomDefaultImg();
-                return item;
-            });
+
             this.setState({
-                recordingList: [...this.state.recordingList, ...(recordingList || [])],
+                recordingList: [...this.state.recordingList, ...(result || [])],
                 lastPage: islastpage,
                 loading: false,
                 dataLoaded: true
@@ -87,7 +90,7 @@ class Records extends BaseComponent {
     }
 
     render() {
-        const recordingList = this.state.recordingList;
+        const {recordingList, offLine, currentPage, dataLoaded, loading, lastPage, open, submitLoading} = this.state;
 
         return (
             <div
@@ -96,23 +99,23 @@ class Records extends BaseComponent {
                 onScroll={this.onScroll.bind(this)}
             >
                 {
-                    (this.state.offLine && this.state.currentPage !== 0 && this.state.pageData.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
+                    (offLine && currentPage !== 0 && recordingList.length === 0) ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                 }
 
                 {
-                    (this.state.dataLoaded && this.state.currentPage >= 1 && recordingList.length === 0) ? (<NoResult style={{position: 'absolute', top: '-1rem'}}/>) : (<div>
+                    (dataLoaded && currentPage >= 1 && recordingList.length === 0) ? (<NoResult style={{position: 'absolute', top: '-1rem'}}/>) : (<div>
                         <RecordingGrid
-                            data={recordingList}
-                            operateClick={(uid) => {
+                            data={recordingList || []}
+                            operateClick={(item) => {
                                 this.setState({
-                                    deleteRecordingUid: uid,
+                                    selectItem: item,
                                     open: true
                                 });
                             }}
                         />
 
                         <div style={style.loading}>
-                            {this.state.loading ? (<div><RefreshIndicator
+                            {loading ? (<div><RefreshIndicator
                                 size={30}
                                 left={70}
                                 top={0}
@@ -123,54 +126,55 @@ class Records extends BaseComponent {
                                 <span>{intl.get("song.loading")}</span>
                             </div>) : ""}
 
-                            <span>{this.state.lastPage ? intl.get("song.list.end") : ""}</span>
-                            <span>{(!this.state.loading && this.state.offLine && this.state.currentPage !== 0 && recordingList.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
+                            <span>{lastPage ? intl.get("song.list.end") : ""}</span>
+                            <span>{(!loading && offLine && currentPage !== 0 && recordingList.length !== 0) ? Const.STRING_NO_WIFI : ""}</span>
                         </div>
 
                         <BottomDrawer
-                            open={this.state.open}
+                            open={open}
                             onRequestChange={() => {
                                 this.setState({
                                     open: false
                                 });
                             }}
-                            actions={[
-                                <button
-                                    style={{
-                                        width: "80%",
-                                        height: "100%",
-                                        color: "#ff6832",
-                                        fontSize: toRem(38),
-                                        background: "#fff",
-                                        border: "none"
-                                    }}
-                                    onClick={() => {
-                                        const _this = this;
-                                        const uid = this.state.deleteRecordingUid;
-                                        const params = {
-                                            uid: uid
-                                        };
-                                        this.props.deleteRecordingAction(params, reqHeader(params), (res) => {
-                                            const {status} = res;
-                                            if (status === 1) {
-                                                const recordingList = _this.state.recordingList;
-
-                                                _this.setState({
-                                                    open: false,
-                                                    recordingList: recordingList.filter((item) => {
-                                                        if (item.uid !== uid) return item;
-                                                    })
-                                                });
-                                            }
-                                        });
-                                    }}
-                                >{intl.get("button.delete")}</button>
-                            ]}
+                            actions={[{label: intl.get('button.delete'), fun: this.deleteGetter}, {label: intl.get('button.change.cover'), fun: this.changeCoverGetter}]}
+                            // actions={[{label: '删除', fun: this.deleteGetter}]}
                         />
+
+                        <SubmitLoading hide={!submitLoading} />
                     </div>)
                 }
             </div>
         );
+    }
+
+
+    /**
+     * 删除录音
+     */
+    deleteGetter() {
+        this.setState({submitLoading: true});
+        const {globAlertAction, deleteRecordingAction} = this.props;
+        const {selectItem, recordingList} = this.state;
+        const params = {uid: selectItem.uid};
+        deleteRecordingAction(params, reqHeader(params), res => {
+            const {status} = res;
+            parseInt(status, 10) === 1 && this.setState({
+                recordingList: recordingList.filter((item) => {
+                    return item.uid !== selectItem.uid;
+                })
+            });
+            globAlertAction(parseInt(status, 10) === 1 ? intl.get("msg.delete.success") : intl.get("msg.delete.fail"));
+            this.setState({open: false, submitLoading: false});
+        });
+    }
+
+    /**
+     * 更换录音封面
+     */
+    changeCoverGetter() {
+        const {selectItem} = this.state;
+        linkTo(`user/photoAlbum/cover/1/${selectItem.shareId}`, false, null);
     }
 
     onScroll(e) {
@@ -187,26 +191,34 @@ class Records extends BaseComponent {
      * */
     loadMoreAction() {
         if (this.state.loading || this.state.lastPage) return;
-        const currentPage = this.state.currentPage + 1;
-        const pageSize = this.state.pageSize;
-        let param = {currentPage: currentPage, pageSize: pageSize};
-        //个性化推荐
-        this.props.getRecordsListActions(param, reqHeader(param), null, (msg, err) => {
-            if (err.code === Const.CODE_OFF_LINE) {
-                this.setState({
-                    offLine: true,
-                    loading: false
-                });
-            }
-        });
-        this.setState({
-            currentPage: currentPage,
-            loading: true
-        });
-    }
 
-    randomDefaultImg() {
-        return `../../../../img/album/${parseInt(Math.random() * 3, 10) + 1}.png`;
+        const userInfoData = getWxinfoFromSession();
+        const {openid} = userInfoData.data;
+        if (openid) {
+            const currentPage = this.state.currentPage + 1;
+            const pageSize = this.state.pageSize;
+
+            const getRecordsListParams = {
+                pageSize: pageSize,
+                currentPage: currentPage,
+                openid: openid
+            };
+            this.props.getRecordsListActions(getRecordsListParams, reqHeader(getRecordsListParams), null, (msg, err) => {
+                if (err.code === Const.CODE_OFF_LINE) {
+                    this.setState({
+                        offLine: true,
+                        loading: false
+                    });
+                }
+            });
+            this.setState({
+                currentPage: currentPage,
+                loading: true
+            });
+        } else {
+            this.props.globAlertAction(intl.get("get.user.info.fail.try.again"));
+        }
+
     }
 
 }
@@ -228,6 +240,7 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         deleteRecordingAction: bindActionCreators(deleteRecording, dispatch),
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch),
         getRecordsListActions: bindActionCreators(getRecordsList, dispatch)
     };
 };

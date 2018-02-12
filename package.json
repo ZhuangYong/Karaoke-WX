@@ -19,7 +19,7 @@
     "rc-progress": "^2.2.1",
     "rc-slider": "^8.2.0",
     "react": "^15.6.1",
-    "react-avatar-editor": "^10.3.0",
+    "react-cropper": "^1.0.1",
     "react-dom": "^15.6.1",
     "react-event-listener": "^0.4.5",
     "react-intl-universal": "^1.6.1",
@@ -40,7 +40,6 @@
     "redux-thunk": "^2.2.0",
     "short-uuid": "^2.3.4",
     "silk-scroller": "^1.0.6",
-    "touch-pinch": "^1.0.1",
     "weinre": "^2.0.0-pre-I0Z7U9OV"
   },
   "devDependencies": {
@@ -83,7 +82,6 @@
     "html-webpack-plugin": "^2.29.0",
     "isomorphic-fetch": "^2.2.1",
     "jasmine-core": "^2.6.4",
-    "jquery": "1.11.2",
     "jshint-stylish": "^1.0.0",
     "karma": "^1.7.0",
     "karma-cli": "^1.0.1",
@@ -135,7 +133,7 @@
   "scripts": {
     "dev": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --history-api-fallback",
     "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
-    "dev:expand": "npm run copy:dev && cross-env NODE_ENV=expand webpack-dev-server --env=expand --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
+    "dev:expand": "npm run copy:dev && cross-env NODE_ENV=expand webpack-dev-server --env=expandTest --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
     "build:test": "npm run copy:dev && cross-env NODE_ENV=development webpack --config ./src/config/webpack.config.js --env=test",
     "build:expand": "npm run copy:dev && cross-env NODE_ENV=expand webpack --config ./src/config/webpack.config.js --env=expand",
     "build:master": "npm run copy:dev && cross-env NODE_ENV=master webpack --config ./src/config/webpack.config.js --env=master",

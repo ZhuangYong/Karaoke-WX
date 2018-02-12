@@ -40,10 +40,16 @@ export default {
 
     // 录音分享播放详情
     "API_QUERY_USER_SOUND": "/user/qryUserSound",
+    // 录音编辑提交
+    "API_UPLOAD_SOUND_ALBUM": "/user/uploadSoundAlbum",
+    // 获取录音关联图片
+    "API_GET_ALL_PICS": "/user/getAllPics",
     // 录音列表
     "API_RECORDS_LIST": "/user/qryUserSoundList",
     // 删除录音
     "API_DELETE_RECORDING": "/user/deleteUserSound",
+    // 更换录音封面图
+    "API_CHANGE_FIRST_PAGE": "/user/changeFirstPage",
 
     // base64上传图片
     "API_UPLOAD_IMG_BASE64": "/upload/uploadImgBase64",
@@ -64,6 +70,13 @@ export default {
      * @param key 上传OSS时图片的storeAs
      */
     "API_OSS_UPLOAD_ALBUM": "/ossToken/ossUploadAlbum",
+
+    /**
+     * 上传已存储到微信服务器的图片（自建后台）
+     * keys-图片Id,以逗号隔开
+     * type-类型,1-相册图片 2-反馈图片
+     */
+    "API_OSS_UPLOAD_WX_PIC": "/ossToken/ossUploadWxPic",
 
     // 查询我的相册列表
     "API_PHOTO_ALBUM_LIST": "/user/qryWxUserAlbum",
@@ -95,6 +108,12 @@ export default {
      * url：发票下载地址，开票成功存在
      */
     "API_GET_INVOICE_DETAIL": "/invoice/invoiceDetail",
+
+    /**
+     * 查询当前发票所包含订单列表
+     * id
+     */
+    "API_GET_INVOICE_DETAIL_ORDER": "/invoice/listInvoiceOrder",
 
     /**
      * 提交电子发票开票信息

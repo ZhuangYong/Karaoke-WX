@@ -29,6 +29,8 @@ const USER = {
 
     // 相册上传
     API_OSS_UPLOAD_ALBUM: "API_OSS_UPLOAD_ALBUM",
+    // 上传已存储到微信服务器的图片（自建后台）
+    API_OSS_UPLOAD_WX_PIC: "API_OSS_UPLOAD_WX_PIC",
     // 查询我的相册列表
     API_GET_PHOTO_ALBUM_LIST: "API_GET_PHOTO_ALBUM_LIST",
     // 删除我的相册图片
@@ -36,8 +38,14 @@ const USER = {
 
     // 获取录音分享列表
     API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST",
+    // 录音编辑提交
+    API_UPLOAD_SOUND_ALBUM: "API_UPLOAD_SOUND_ALBUM",
+    // 获取录音关联图片
+    API_GET_ALL_PICS: "API_GET_ALL_PICS",
     // 删除录音
     API_DELETE_RECORDING: "API_DELETE_RECORDING",
+    // 更换录音封面图
+    API_CHANGE_FIRST_PAGE: "API_CHANGE_FIRST_PAGE",
 
     // 获取我的订单列表
     API_GET_ORDER_FORM: "API_GET_ORDER_FORM",
@@ -49,6 +57,8 @@ const USER = {
     API_GET_INVOICE_LIST: "API_GET_INVOICE_LIST",
     // 查询开票详情
     API_GET_INVOICE_DETAIL: "API_GET_INVOICE_DETAIL",
+    // 查询当前发票所包含订单列表
+    API_GET_INVOICE_DETAIL_ORDER: "API_GET_INVOICE_DETAIL_ORDER",
     // 提交电子发票开票信息
     API_GET_INVOICE_SUBMIT: "API_GET_INVOICE_SUBMIT",
 

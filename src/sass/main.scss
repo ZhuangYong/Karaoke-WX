@@ -22,12 +22,12 @@
             height: .7rem;
             align-items: center;
             font {
-                overflow: hidden;
+                overflow-x: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 align-items: center;
                 line-height: .4rem;
-                height: .4rem;
+                height: .48rem;
             }
             .label-vip {
                 margin-left: .133rem;

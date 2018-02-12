@@ -1,0 +1,33 @@
+{
+    "msg":"成功",
+    "data":{
+        "deviceUuid":"2717ab9d-ff2c-47df-b9f9-2707ef66a7c3",
+        "appVersion":"1.1.3.10",
+        "wechatUses":[
+            {"deviceUuid":"2717ab9d-ff2c-47df-b9f9-2707ef66a7c3","unionid":"ohSltvz1TBcuv0ndoJ87UD6KBdfw","createTime":"2018-01-15 11:30:08","nickName":"DeadPoorGuy","openid":"oU9Pg1XJ_5AUnCCWPn8bR0YdRk0E","id":2929,"headerImg":"http://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqO6UhI2M7riausueC5FbVghFzOelZvl5PYfnQmh3FrI3Zb5cu0JdavEKjMwvAT2BaibiaXcg9DPYRibw/132"},
+            {"deviceUuid":"2717ab9d-ff2c-47df-b9f9-2707ef66a7c3","unionid":"ohSltvwi917srh6Ui9BVyUs8hD2Y","createTime":"2018-01-16 08:27:45","nickName":"星🍭尘","openid":"oU9Pg1bacGuTSUmjCUaIzyF5Xs9w","id":2937,"headerImg":"http://wx.qlogo.cn/mmopen/vi_32/cRA4ML4ZW9sGQ1kYAbwcpCH3sALgt9t07tV5txrecDmAMlS6S5M1jcEZoknWgHRzYnmhgX023GFqHJrBwqaoVA/132"},
+            {"deviceUuid":"2717ab9d-ff2c-47df-b9f9-2707ef66a7c3","unionid":"ohSltv9HZk6EQev31TVRYgzNESho","createTime":"2018-01-13 16:48:21","nickName":"诶服阿尔","openid":"oU9Pg1XvVsx9JjvNWb_hFsJ6SS0o","id":2947,"headerImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKJUHPlr10N3WDc2EMKBCxiaOhwnRelY7E3UDK1cVLL9wMJibkccTHSicNVQ3raqzOclmrEFpricdloNA/132"},
+            {"deviceUuid":"2717ab9d-ff2c-47df-b9f9-2707ef66a7c3","unionid":"ohSltvwgabfZPNDxc2r14tlf7rwM","createTime":"2018-01-16 10:23:18","nickName":"I DO","openid":"oU9Pg1V7jLpmmurJeiai9_oUrSNc","id":2948,"headerImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLEKcvKticTotX2FjeGPjalQTUcBDDFVWFKR06h64JGIV5fLeAF6klom1UXZYiaUx301Srr5pMFticPA/132"},
+            {"deviceUuid":"2717ab9d-ff2c-47df-b9f9-2707ef66a7c3","unionid":"ohSltv7ZpdGeSB_QC1ezz9xf3g5k","createTime":"2018-01-16 10:42:43","nickName":"朱琴","openid":"oU9Pg1daZEE9msLVk4GeuRGlxv-8","id":2955,"headerImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTIXnjYhCpvD2wZyZheefmtVvficX4ibj3DHU2DYouWmZAWgPCEGfQokBtAtXJXUbq0SfkBT290BjRicQ/132"}
+        ],
+        "unionid":"ohSltvwgabfZPNDxc2r14tlf7rwM",
+        "isFreeActivation":0,
+        "registerTime":1515659640000,
+        "nickName":"I DO",
+        "openid":"oU9Pg1V7jLpmmurJeiai9_oUrSNc",
+        "channel":"gx_gg_s1",
+        "bindExpireTime":1516076598000,
+        "uuid":"ohSltvwgabfZPNDxc2r14tlf7rwM",
+        "deviceId":"59a3254c724a852d10052c65c2c5dfd1",
+        "userId":106345,
+        "version":"v1.0",
+        "mac":"28070d000005",
+        "isReDevice":1,
+        "expireTime":1518426196000,
+        "createTime":"2018-01-16 10:23:18",
+        "time":61,
+        "vipStatus":1,
+        "headerImg":"http://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTLEKcvKticTotX2FjeGPjalQTUcBDDFVWFKR06h64JGIV5fLeAF6klom1UXZYiaUx301Srr5pMFticPA/132"
+    },
+    "status":1
+}

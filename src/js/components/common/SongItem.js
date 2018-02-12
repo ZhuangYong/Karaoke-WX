@@ -59,14 +59,14 @@ class SongItem extends BaseComponent {
     pushSong() {
         const {song, onPushSongSuccess, onPushSongFail, userInfo, ottInfo, action_setGlobAlert} = this.props;
         if (super.validUserStatus(userInfo.userInfoData, ottInfo, action_setGlobAlert) !== true) return;
-        this.state.pushIng[song.serialNo] = true;
+        this.state.pushIng[song.id || song.serialNo] = true;
         this.setState({
             pushIng: this.state.pushIng
         });
         const param = {id: JSON.stringify(song), type: 4};
         const success = () => {
             //this.state.pushIng[song.serialNo] = false;
-            this.pushSuccess(song.serialNo);
+            this.pushSuccess(song.id || song.serialNo);
             setTimeout(() => {
                 this.setState({
                     pushIng: this.state.pushIng
@@ -76,7 +76,7 @@ class SongItem extends BaseComponent {
         };
         const fail = (msg) => {
             //this.state.pushIng[song.serialNo] = false;
-            this.pushFail(song.serialNo);
+            this.pushFail(song.id || song.serialNo);
             this.setState({
                 pushIng: this.state.pushIng
             });

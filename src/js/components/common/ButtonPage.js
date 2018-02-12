@@ -4,6 +4,7 @@
 import React from "react";
 import RaisedButton from 'material-ui/RaisedButton';
 import {FontIcon} from "material-ui";
+import { toRem } from '../../utils/comUtils';
 
 const styles = {
     submitBtn: {
@@ -32,7 +33,7 @@ class ButtonPage extends React.Component {
                     <img
                         style={Object.assign({}, {
                             display: "block",
-                            margin: "130px auto 0",
+                            margin: `${toRem(130)} auto 0`,
                             width: "100px"
                         }, this.props.imgStyle)}
                         src={this.props.src}

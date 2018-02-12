@@ -24,10 +24,11 @@ class SubmitLoading extends React.Component {
                     top={(imgMax.screenH - imgMax.gifSize * 3) / 2}
                     loadingColor="#FF9800"
                     status="loading"
-                    style={Object.assign({}, {
+                    style={{
                         background: 'none',
-                        boxShadow: 'none'
-                    }, gifStyle)}
+                        boxShadow: 'none',
+                        ...gifStyle
+                    }}
                 />}
             </div>
 		);
@@ -40,6 +41,13 @@ SubmitLoading.propTypes = {
     gifStyle: PropTypes.object,
     hide: PropTypes.bool,
     hideGif: PropTypes.bool
+};
+
+SubmitLoading.defaultProps = {
+    style: {},
+    gifStyle: {},
+    hide: true,
+    hideGif: false
 };
 
 export default SubmitLoading;
