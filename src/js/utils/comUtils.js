@@ -550,7 +550,7 @@ export function dynaPush(funcParam = {
     const {userInfoData} = userInfo || {};
     const {deviceIp, devicePort, networkType, systemTime, timeStamp} = data || {};
     const localParam = Object.assign({}, param, {
-        debug: sysConfig.environment !== "product",
+        debug: sysConfig.environment !== "master",
         deviceId: userInfoData.data.deviceId
     });
     const header = reqHeader(param);
