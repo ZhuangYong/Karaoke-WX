@@ -157,7 +157,9 @@ class App extends BaseComponent {
         this.runCheckLocal();
         //this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
-        window.addEventListener('focus', () => {this.updateUserInfo();});
+        window.addEventListener('focus', () => {
+            if (isGetUserInfo()) this.updateUserInfo();
+        });
         this.props.action_updateScreen();
 
         window.lockResize = true;
@@ -276,9 +278,10 @@ class App extends BaseComponent {
      */
     pageFilterToShowGXTimer() {
         const pathNames = [
-            '/pay',
-            '/user',
-            '/recording'
+            '/pay/',
+            '/user/',
+            '/recording/',
+            '/recordingPlay/'
         ];
         let bool = true;
 

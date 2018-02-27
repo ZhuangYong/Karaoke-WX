@@ -124,8 +124,7 @@ class PlayAudio extends BaseComponent {
 
         super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
-        const {params} = this.state;
-        const ableEdit = params.edit === 'edit';
+        const ableEdit = window.sessionStorage.getItem('isRecordingEdit') === 'true';
         // const ableEdit = params.edit === false;
 
         const banners = (albums && albums.length > 0) ? albums : (pagePictureId ? [{picid: pagePictureId, picurl: pagePictureUrl}] : [{picid: 123456789, picurl: SlidePng1}]);
@@ -249,12 +248,15 @@ class PlayAudio extends BaseComponent {
             const {isWeixin} = window.sysInfo;
             if (parseInt(status, 10) === 1 && isWeixin) {
                 const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
-                wxShare({
-                    title: intl.get("audio.share.title", {name: nameNorm}),
-                    desc: intl.get("audio.share.from"),
-                    link: `${location.protocol}//${location.host}/recording/play/${params.uid}/${shareId}?language=${getQueryString('language')}`,
-                    imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
-                    dataUrl: musicUrl
+
+                window.wx && window.wx.ready(() => {
+                    wxShare({
+                        title: intl.get("audio.share.title", {name: nameNorm}),
+                        desc: intl.get("audio.share.from"),
+                        link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                        dataUrl: musicUrl
+                    });
                 });
             }
         });
@@ -292,7 +294,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         getShareAudioAction: bindActionCreators(getShareAudio, dispatch),
         uploadActions: bindActionCreators(uploadSoundAlbum, dispatch),
         getAllPicsActions: bindActionCreators(getAllPics, dispatch),
-        globAlertAction: bindActionCreators(setGlobAlert, dispatch)
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch),
     };
 };
 

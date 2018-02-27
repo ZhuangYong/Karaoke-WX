@@ -11,6 +11,7 @@ import Bundle from "../components/Bundle";
 import Home from "../containers/home";
 import Login from "../containers/login";
 
+import RedirectAudio from "../containers/play/redirectAudio";
 import Audio from "../containers/play/audio";
 
 import Search from "../containers/song/search";
@@ -57,6 +58,12 @@ const LoginContainer = () => (
 
 const HomeContainer = () => (
     <Bundle load={Home}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const RedirectAudioContainer = () => (
+    <Bundle load={RedirectAudio}>
         {Component => <Component />}
     </Bundle>
 );
@@ -255,7 +262,9 @@ export default class router extends React.Component {
                 * edit 是否可编辑 edit/play
                 * uid 录音id
                 */
-                <Route path={`/recording/:edit/:uid/:shareId?`} component={AudioContainer}/>
+                <Route path={`/recording/:edit/:uid/:shareId?`} component={RedirectAudioContainer}/>
+                <Route path={`/recordingPlay/:uid/:shareId`} exact component={AudioContainer}/>
+
                 <Route path={`/user/photoAlbum/:edit?/:maxNum?/:shareId?`} exact component={PhotoAlbumContainer}/>
                 <Route path={`/user/crop/:dataUrl`} exact component={PhotoAlbumCropContainer}/>
                 <Route path={`/user/myOrder`} exact component={myOrderContainer}/>

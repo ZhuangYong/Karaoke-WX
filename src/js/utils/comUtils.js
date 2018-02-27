@@ -615,8 +615,19 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
 
 // 检测是否获取用户信息
 export function isGetUserInfo() {
-    const pathname = location.pathname.split("/");
-    return !((pathname[1] === "login") || (pathname[1] === "pay") || (pathname[1] === "recording" && pathname[2] === "play"));
+    const pathNames = [
+        '/pay/',
+        '/login/',
+        '/recordingPlay/',
+        '/recording/'
+    ];
+    let bool = true;
+
+    pathNames.map(pathName => {
+        if (location.pathname.indexOf(pathName) > -1) bool = false;
+    });
+
+    return bool;
 }
 
 // 解决精度问题
