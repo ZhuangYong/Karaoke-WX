@@ -616,7 +616,7 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
 // 检测是否获取用户信息
 export function isGetUserInfo() {
     const pathNames = [
-        '/pay/',
+        '/pay',
         '/login/',
         '/recordingPlay/'
     ];
