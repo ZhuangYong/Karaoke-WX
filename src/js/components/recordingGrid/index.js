@@ -42,7 +42,8 @@ class RecordingGrid extends React.Component {
                             height: toRem(230)
                         }}
                         onClick={() => {
-                            linkTo(`recording/edit/${tile.uid}/${tile.shareId}`, false, null);
+                            window.sessionStorage.setItem('isRecordingEdit', 'true');
+                            linkTo(`recordingPlay/${tile.uid}/${tile.shareId}`, false, null);
                         }}
                     />
 

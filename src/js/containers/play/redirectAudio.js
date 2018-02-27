@@ -8,9 +8,12 @@ import {getShareAudio} from "../../actions/audioActons";
 import {
     getQueryString,
     reqHeader,
+    wxShare,
 } from '../../utils/comUtils';
 import intl from 'react-intl-universal';
 import { setGlobAlert } from '../../actions/common/actions';
+
+const defaultCover = 'http://wechat.j-make.cn/img/logo.png';
 
 class RedirectAudio extends BaseComponent {
     constructor(props) {
@@ -18,16 +21,10 @@ class RedirectAudio extends BaseComponent {
     }
 
     componentDidMount() {
-        const {uid, edit, shareId} = this.props.match.params;
+        const {uid, edit} = this.props.match.params;
         window.sessionStorage.setItem('isRecordingEdit', edit === 'edit');
 
-        if (uid && shareId) {
-
-            this.replaceLink(uid, shareId);
-        } else {
-
-            this.loadAudioGetter();
-        }
+        this.loadAudioGetter(uid);
     }
     render() {
         return (
@@ -36,7 +33,9 @@ class RedirectAudio extends BaseComponent {
         );
     }
 
-    replaceLink(uid, shareId) {
+    replaceLink(audioData) {
+        const {musicUrl, nameNorm, shareId, pagePictureUrl, uid} = audioData;
+
         const link = `recordingPlay/${uid}/${shareId}?language=${getQueryString('language')}`;
         const {isIos} = window.sysInfo;
         if (isIos) {
@@ -44,22 +43,23 @@ class RedirectAudio extends BaseComponent {
         } else {
             this.props.history.replace("/" + link);
         }
+
+        window.wx && window.wx.ready(() => {
+            wxShare({
+                title: intl.get("audio.share.title", {name: nameNorm}),
+                desc: intl.get("audio.share.from"),
+                link: `${location.protocol}//${location.host}/recordingPlay/${uid}/${shareId}?language=${getQueryString('language')}`,
+                imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                dataUrl: musicUrl
+            });
+        });
     }
 
     /**
      * 获取录音分享数据
      */
-    loadAudioGetter() {
+    loadAudioGetter(uid) {
         const { globAlertAction, getShareAudioAction } = this.props;
-        const {uid} = this.props.match.params;
-        let params = {};
-
-        if (typeof uid === 'undefined') {
-            globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
-            return;
-        }
-
-        params.uid = uid;
 
         const openid = getQueryString('openid');
         if (openid === null) {
@@ -67,15 +67,16 @@ class RedirectAudio extends BaseComponent {
             return;
         }
 
-        params.openid = openid;
+        let params = {
+            uid,
+            openid,
+        };
 
         getShareAudioAction(params, reqHeader(params), res => {
             const {status, data} = res;
             const {isWeixin} = window.sysInfo;
             if (parseInt(status, 10) === 1 && isWeixin) {
-                const {shareId} = data;
-
-                this.replaceLink(uid, shareId);
+                this.replaceLink({...data, uid});
             } else {
                 globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
             }
