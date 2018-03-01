@@ -4,9 +4,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { toRem } from '../../utils/comUtils';
-import RefreshIndicator from "material-ui/RefreshIndicator";
-import {SvgIcon} from "material-ui";
 import intl from 'react-intl-universal';
+import {
+    SvgIcon,
+    CircularProgress,
+} from "material-ui";
 
 const style = {
     position: 'absolute',
@@ -43,30 +45,27 @@ export default class MyButton extends React.Component {
             }, style)}
             onClick={this.click}>
 
-            {!loading ? <div>
-                <span style={Object.assign({}, labelStyle)}>{label}</span>
-
-                {rightIcon && <RightCircleIcon style={{
-                    position: "relative",
-                    top: toRem(8),
-                    marginLeft: toRem(20),
-                    width: toRem(30),
-                    height: toRem(30),
-                    color: disabled ? disabledFontColor : fontColor,
-                }}/>}
-
-            </div> : <RefreshIndicator
-                size={30}
-                left={70}
-                top={0}
-                loadingColor="#FF9800"
-                status="loading"
+            {loading && <CircularProgress
+                className="myButtonCircular"
+                size={18}
+                thickness={1}
+                color={disabledFontColor}
                 style={{
-                    boxShadow: "none",
-                    top: '-9988px',
-                    left: '-10100px'
+                    marginRight: toRem(20),
                 }}
             />}
+
+            <span style={Object.assign({}, labelStyle)}>{label}</span>
+
+            {rightIcon && <RightCircleIcon style={{
+                position: "relative",
+                top: toRem(8),
+                marginLeft: toRem(20),
+                width: toRem(30),
+                height: toRem(30),
+                color: disabled ? disabledFontColor : fontColor,
+            }}/>}
+
         </div>;
     }
 

@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import {alipayPay, deviceRegister, getPayList, getWXPayParams} from "../../actions/payAction";
-import {getEncryptHeader, getQueryString, linkTo, reqHeader} from "../../utils/comUtils";
+import { getEncryptHeader, getQueryString, linkTo, reqHeader, toRem } from '../../utils/comUtils';
 import navUtils from "../../utils/navUtils";
 
 import CheckboxIcon from '../../../img/pay_checkbox.png';
@@ -27,6 +27,7 @@ import Const from "../../utils/const";
 import intl from 'react-intl-universal';
 import MallImg from "../../../img/mall/me.png";
 import sysConfig from "../../utils/sysConfig";
+import MyButton from '../../components/common/MyButton';
 
 const styles = {
     itemBox: {
@@ -285,11 +286,14 @@ class Pay extends BaseComponent {
                                 />
                             </section>
 
-                            <ButtonPage
+                            {/*<ButtonPage
                                 style={{
-                                    position: "relative",
+                                    position: "absolute",
+                                    bottom: 0,
+                                    left: 0,
+                                    right: 0,
                                     height: "80px",
-                                    clear: "both"
+                                    borderRadius: 'none',
                                 }}
                                 headerDom={<div style={{
                                     textAlign: "center",
@@ -305,7 +309,38 @@ class Pay extends BaseComponent {
                                 }}
                                 buttonLabel= {intl.get("button.sure.pay")}
                                 touchTap={this.pay}
-                            />
+                            />*/}
+
+                            <div style={{width: '100%', height: toRem(190)}} />
+
+                            <section style={{
+                                position: "fixed",
+                                bottom: 0,
+                                left: 0,
+                                width: '100%',
+                            }}>
+                                <div style={{
+                                    textAlign: "center",
+                                    color: "#252525",
+                                    fontSize: "14px",
+                                    lineHeight: toRem(80),
+                                }}>{intl.get("pay.payment.amount")}: <span style={{color: "#c48848"}}>{payListActiveItem && payListActiveItem.price} {intl.get("pay.yuan")}</span></div>
+
+                                <MyButton
+                                    style={{
+                                        width: '100%',
+                                        height: toRem(100),
+                                        lineHeight: toRem(100),
+                                        fontSize: toRem(36),
+                                    }}
+                                    label={intl.get("button.sure.pay")}
+                                    disabled={disableSubmitButton || (!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null))}
+                                    loading={disableSubmitButton}
+                                    onClick={this.pay}
+                                />
+
+                            </section>
+
                         </div>) : this.state.buttonPage}
                         <br/>
                         <br/>
