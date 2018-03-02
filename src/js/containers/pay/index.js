@@ -318,6 +318,7 @@ class Pay extends BaseComponent {
                                 bottom: 0,
                                 left: 0,
                                 width: '100%',
+                                zIndex: 9999,
                             }}>
                                 <div style={{
                                     textAlign: "center",

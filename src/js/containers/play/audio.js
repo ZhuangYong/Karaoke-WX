@@ -141,7 +141,7 @@ class PlayAudio extends BaseComponent {
                         <div className="img-div"><img src={SlidePng3}/></div>*/}
 
                     </AutoPlaySwipeAbleViews>
-                    <Audio ref="audio" source="http://j-make.com.cn/music/audio.mp3" className="audio-item"/>
+                    <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>
                 <p className="song-label">
                     <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
