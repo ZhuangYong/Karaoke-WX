@@ -983,7 +983,15 @@ class SongController extends BaseComponent {
         const {data} = this.props.userInfo.userInfoData || {data: {}};
         // 国光老板卡，显示音控台
         // 新加一个版卡支持音效
-        return ((data.channel === 'gg_laobanka' || data.channel === 'gg_f886_ahfy') && data.isReDevice === 1);
+        if (data.isReDevice === 1) {
+            if (Const.EFFECT_NST_CHANNEL_LIST.indexOf(data.channel) >= 0) {
+                if (this.props.ottInfo.data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION) {
+                    return true;
+                }
+            }
+            return Const.EFFECT_GG_CHANNEL_LIST.indexOf(data.channel) >= 0;
+        }
+
     }
 
 }

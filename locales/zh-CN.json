@@ -84,6 +84,7 @@
     "effect.music": "音乐",
     "effect.microphone": "话筒",
     "effect.effect": "效果",
+    "effect.reverberation": "混响",
     "controller.restart": "重唱",
     "controller.play.pause": "播/停",
     "controller.orig.inst": "原/伴",

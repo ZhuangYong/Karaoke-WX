@@ -20,7 +20,12 @@ import BaseComponent from "../../components/common/BaseComponent";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {CircularProgress} from "material-ui";
+import HBackgroundImg from "../../../img/controller/h_background.png";
+import VBackgroundImg from "../../../img/controller/v_background.png";
+import PlusImg from "../../../img/controller/plus.png";
+import ReduceImg from "../../../img/controller/reduce.png";
 import intl from 'react-intl-universal';
+import Const from "../../utils/const";
 
 //模式
 const AUDIO_EFFECT_MODE_ADD = 1;
@@ -51,176 +56,322 @@ class AudioEffect extends BaseComponent {
     }
 
     render() {
-        const {w, h} = this.props.common;
-        const revert = w > h;
+        const {data} = this.props.userInfo.userInfoData || {data: {}};
+        let isNstManual = false; //
+        // if ((data.channel === 'nst_sk_a3' || data.channel === 'sk_stb')) {
+        if (Const.EFFECT_NST_CHANNEL_LIST.indexOf(data.channel) >= 0) {
+            // if (data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION && data.romData.version >= Const.EFFECT_MIN_OTT_ROM_VERSION) {
+            if (data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION) {
+                isNstManual = true;
+            }
+        }
         return (
-            <div className="effect">
-                <div className="top-area" style={revert ? {paddingTop: '.2rem'} : {}}>
-                    <div className="big-circle">
-                        <div className="left-choose">
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_MODE_ADD] === true ? <CircularProgress
-                                    style={{
-                                        position: 'absolute',
-                                        right: '.9rem',
-                                        top: '.9rem',
-                                        transform: 'rotate(-45deg)'
-                                    }}
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <LeftArrowIcon style={{
-                                    position: 'absolute',
-                                    right: '.9rem',
-                                    top: '.9rem',
-                                    transform: 'rotate(-45deg)'
-                                }} color="#f96d32" onClick={() => {
-                                    this.sendEffect(AUDIO_EFFECT_MODE_ADD);
-                                }}/>
-                            }
-                        </div>
-                        <div className="right-choose">
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_MODE_REDUCE] === true ? <CircularProgress
-                                    style={{
-                                        position: 'absolute',
-                                        left: '.9rem',
-                                        bottom: '.9rem',
-                                        transform: 'rotate(-45deg)'
-                                    }}
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <RightArrowIcon style={{
-                                    position: 'absolute',
-                                    left: '.9rem',
-                                    bottom: '.9rem',
-                                    transform: 'rotate(-45deg)'
-                                }} color="#f96d32" onClick={() => {
-                                    this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
-                                }}/>
-                            }
-                        </div>
-                        <div className="inside-circle">
-                            {intl.get("effect.mode")}
-                        </div>
-                    </div>
-                </div>
-
-                <div className="center-area" style={revert ? {paddingTop: '.2rem'} : {}}>
-                    <div className="fun-button">
-                        <div className="button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <img src={ToneIconReduce} style={{height: '.4rem'}}/>
-                            }
-                        </div>
-                        <p className="label">{intl.get("effect.falling")}</p>
-                    </div>
-                    <div className="fun-button">
-                        <div className="button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] !== true && this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
-                            }
-                        </div>
-                        <p className="label">{intl.get("effect.stable")}</p>
-                    </div>
-                    <div className="fun-button">
-                        <div className="button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <img src={ToneIconAdd} style={{height: '.4rem'}}/>
-                            }
-                        </div>
-                        <p className="label">{intl.get("effect.rising")}</p>
-                    </div>
-                </div>
-
-                <div className="bottom-area" style={revert ? {marginTop: '.2rem'} : {}}>
-                    <div className="fun-button">
-                        <div className="haf-top-button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <AddIcon color="#f96d32"/>
-                            }
-                        </div>
-                        <div className="haf-bottom-button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_REDUCE);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
-                            }
-                        </div>
-                        <p className="label">{intl.get("effect.music")}</p>
-                    </div>
-                    <div className="fun-button">
-                        <div className="haf-top-button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_ADD);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <AddIcon color="#f96d32"/>
-                            }
-                        </div>
-                        <div className="haf-bottom-button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_REDUCE);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
-                            }
-                        </div>
-                        <p className="label">{intl.get("effect.microphone")}</p>
-                    </div>
-                    <div className="fun-button">
-                        <div className="haf-top-button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_ADD);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <AddIcon color="#f96d32"/>
-                            }
-                        </div>
-                        <div className="haf-bottom-button" onClick={() => {
-                            this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_REDUCE);
-                        }}>
-                            {
-                                this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] === true ? <CircularProgress
-                                    size={20}
-                                    thickness={2}
-                                    color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
-                            }
-                        </div>
-                        <p className="label">{intl.get("effect.effect")}</p>
-                    </div>
-                </div>
+            isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
+                {
+                    this.renderNstCenter()
+                }
+                {
+                    this.renderNstBottom()
+                }
+                <MBottomNavigation selectedIndex={-1}/>
+            </div> : <div className="effect">
+                {
+                    this.renderTopCircle()
+                }
+                {
+                    this.renderCenter()
+                }
+                {
+                    this.renderBottom()
+                }
                 <MBottomNavigation selectedIndex={-1}/>
             </div>
         );
+    }
+
+    renderTopCircle() {
+        const {w, h} = this.props.common;
+        const revert = w > h;
+        return <div className="top-area" style={revert ? {paddingTop: '.2rem'} : {}}>
+            <div className="big-circle">
+                <div className="left-choose">
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_MODE_ADD] === true ? <CircularProgress
+                            style={{
+                                position: 'absolute',
+                                right: '.9rem',
+                                top: '.9rem',
+                                transform: 'rotate(-45deg)'
+                            }}
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <LeftArrowIcon style={{
+                            position: 'absolute',
+                            right: '.9rem',
+                            top: '.9rem',
+                            transform: 'rotate(-45deg)'
+                        }} color="#f96d32" onClick={() => {
+                            this.sendEffect(AUDIO_EFFECT_MODE_ADD);
+                        }}/>
+                    }
+                </div>
+                <div className="right-choose">
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_MODE_REDUCE] === true ? <CircularProgress
+                            style={{
+                                position: 'absolute',
+                                left: '.9rem',
+                                bottom: '.9rem',
+                                transform: 'rotate(-45deg)'
+                            }}
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <RightArrowIcon style={{
+                            position: 'absolute',
+                            left: '.9rem',
+                            bottom: '.9rem',
+                            transform: 'rotate(-45deg)'
+                        }} color="#f96d32" onClick={() => {
+                            this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
+                        }}/>
+                    }
+                </div>
+                <div className="inside-circle">
+                    {intl.get("effect.mode")}
+                </div>
+            </div>
+        </div>;
+    }
+
+    renderCenter() {
+        const {w, h} = this.props.common;
+        const revert = w > h;
+        return <div className="center-area" style={revert ? {paddingTop: '.2rem'} : {}}>
+                <div className="fun-button">
+                <div className="button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
+                }}>
+                {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
+                        size={20}
+                        thickness={2}
+                        color="#ff6832"/> : <img src={ToneIconReduce} style={{height: '.4rem'}}/>
+                }
+            </div>
+            <p className="label">{intl.get("effect.falling")}</p>
+            </div>
+            <div className="fun-button">
+                <div className="button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] !== true && this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label">{intl.get("effect.stable")}</p>
+            </div>
+            <div className="fun-button">
+                <div className="button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <img src={ToneIconAdd} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label">{intl.get("effect.rising")}</p>
+            </div>
+        </div>;
+    }
+
+    renderBottom() {
+        const {w, h} = this.props.common;
+        const revert = w > h;
+        return <div className="bottom-area" style={revert ? {marginTop: '.2rem'} : {}}>
+            <div className="fun-button">
+                <div className="haf-top-button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <AddIcon color="#f96d32"/>
+                    }
+                </div>
+                <div className="haf-bottom-button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
+                    }
+                </div>
+                <p className="label">{intl.get("effect.music")}</p>
+            </div>
+            <div className="fun-button">
+                <div className="haf-top-button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <AddIcon color="#f96d32"/>
+                    }
+                </div>
+                <div className="haf-bottom-button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
+                    }
+                </div>
+                <p className="label">{intl.get("effect.microphone")}</p>
+            </div>
+            <div className="fun-button">
+                <div className="haf-top-button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <AddIcon color="#f96d32"/>
+                    }
+                </div>
+                <div className="haf-bottom-button" onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <ReduceIcon color="#f96d32"/>
+                    }
+                </div>
+                <p className="label">{intl.get("effect.effect")}</p>
+            </div>
+        </div>;
+    }
+
+    renderNstCenter() {
+        const {w, h} = this.props.common;
+        const revert = w > h;
+        return <div className="center-area" style={{backgroundImage: `url(${HBackgroundImg})`, backgroundSize: 'auto 1.7rem', backgroundRepeat: 'no-repeat', paddingTop: 0, marginBottom: '1.6rem', backgroundPosition: 'center .1rem'}}>
+            <div className="fun-button" style={{width: revert ? '16%' : '33.333%'}}>
+                <div className="button white" style={{border: 'none', paddingTop: '.3rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white"/> : <img src={PlusImg} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.falling")}</p>
+            </div>
+            <div className="fun-button" style={{width: revert ? '16%' : '33.333%'}}>
+                <div className="button white" style={{border: 'none', paddingTop: '.3rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white"/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.rising")}</p>
+            </div>
+        </div>;
+    }
+
+    renderNstBottom() {
+        const {w, h} = this.props.common;
+        const revert = w > h;
+        return <div className="bottom-area" style={revert ? {marginTop: '.2rem'} : {}}>
+            <div className="fun-button" style={{backgroundImage: `url(${VBackgroundImg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'auto 4.2rem', backgroundPosition: 'center top'}}>
+                <div className="haf-top-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_EFFECT_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white" style={{width: '.4rem'}}/> : <img src={PlusImg} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <div className="haf-bottom-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_EFFECT_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_EFFECT_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white" style={{width: '.4rem'}}/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.effect")}</p>
+            </div>
+            <div className="fun-button" style={{backgroundImage: `url(${VBackgroundImg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'auto 4.2rem', backgroundPosition: 'center top'}}>
+                <div className="haf-top-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white" style={{width: '.4rem'}}/> : <img src={PlusImg} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <div className="haf-bottom-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_MUSIC_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white" style={{width: '.4rem'}}/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.music")}</p>
+            </div>
+            <div className="fun-button" style={{backgroundImage: `url(${VBackgroundImg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'auto 4.2rem', backgroundPosition: 'center top'}}>
+                <div className="haf-top-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_ADD);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_PHONE_ADD] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white" style={{width: '.4rem'}}/> : <img src={PlusImg} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <div className="haf-bottom-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_PHONE_REDUCE);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_PHONE_REDUCE] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="white" style={{width: '.4rem'}}/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.microphone")}</p>
+            </div>
+        </div>;
     }
 
     /*

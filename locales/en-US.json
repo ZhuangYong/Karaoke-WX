@@ -84,6 +84,7 @@
     "effect.music": "Music",
     "effect.microphone": "Microphone",
     "effect.effect": "Effect",
+    "effect.reverberation": "Reverberation",
     "controller.restart": "Replay",
     "controller.play.pause": "Play/Pause",
     "controller.orig.inst": "Orig/Acco",

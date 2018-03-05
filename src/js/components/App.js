@@ -27,7 +27,6 @@ import intl from 'react-intl-universal';
 import _ from "lodash";
 import Routers from '../router';
 import {cryptoFetch} from "../utils/fetchUtils";
-import canvasToBlob from '../utils/canvasToBlob';
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
@@ -128,23 +127,6 @@ class App extends BaseComponent {
     }
 
     componentWillMount() {
-
-        const {isIos} = window.sysInfo;
-        if (isIos) {
-            this.configWeiXin();
-        }
-
-        this.configWxPath();
-
-        window.wx && window.wx.ready(() => {
-            wxShare({
-                title: intl.get("index.we.chat.song"),
-                desc: intl.get("audio.share.from"),
-                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
-                imgUrl: 'http://wechat.j-make.cn/img/logo.png',
-                dataUrl: null
-            });
-        });
     }
 
     componentDidMount() {
@@ -157,10 +139,23 @@ class App extends BaseComponent {
         this.runCheckLocal();
         //this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
-        window.addEventListener('focus', () => {
-            if (isGetUserInfo()) this.updateUserInfo();
-        });
+        window.addEventListener('focus', () => {isGetUserInfo() && this.updateUserInfo();});
         this.props.action_updateScreen();
+
+        const {isIos} = window.sysInfo;
+        if (isIos) {
+            this.configWeiXin();
+        }
+        this.configWxPath();
+        window.wx && window.wx.ready(() => {
+            wxShare({
+                title: intl.get("index.we.chat.song"),
+                desc: intl.get("audio.share.from"),
+                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                imgUrl: 'http://wechat.j-make.cn/img/logo.png',
+                dataUrl: null
+            });
+        });
 
         window.lockResize = true;
         setTimeout(() => {

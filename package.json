@@ -1,6 +1,6 @@
 {
   "name": "project-alpha",
-  "version": "0.0.1",
+  "version": "2.2.7",
   "private": true,
   "dependencies": {
     "Base64": "^1.0.1",
