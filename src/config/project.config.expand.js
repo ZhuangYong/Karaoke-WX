@@ -14,5 +14,5 @@ module.exports = {
     // mallOrder: 'https://jmake.haitai.tv/haitai-weisite/shop/order_list',
     mallIndex: 'https://jmake.huo.so/shop/index',
     mallOrder: 'https://jmake.huo.so/shop/order_list',
-    appId: "wx4688d2b7b85451aa"
+    appId: "wxbe6ace8e9367703b"
 };
