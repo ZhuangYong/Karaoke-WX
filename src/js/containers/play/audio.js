@@ -102,10 +102,12 @@ class PlayAudio extends BaseComponent {
             const channel = data.channel;
             if (Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0) {
                 const sliderImgs = [SlideK1Png1, SlideK1Png2];
-                this.setState({
-                    customerAd: 'AURA SMART智慧KTV',
-                    customerSliders: sliderImgs
-                });
+                if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
+                    this.setState({
+                        customerAd: 'AURA SMART智慧KTV',
+                        customerSliders: sliderImgs
+                    });
+                }
             }
         }
     }
