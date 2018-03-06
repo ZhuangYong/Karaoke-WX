@@ -68,7 +68,7 @@ class PlayAudio extends BaseComponent {
             musicUrl: "",
             imgUrl: "",
             customerSliders: [], // 客户需求轮播图
-            customerAd: '', // 客户需求广告语
+            customerAd: intl.get("msg.from.j.make"), // 客户需求广告语
             autoPlayEd: false
         };
 
@@ -104,7 +104,7 @@ class PlayAudio extends BaseComponent {
                 const sliderImgs = [SlideK1Png1, SlideK1Png2];
                 if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
                     this.setState({
-                        customerAd: 'AURA SMART智慧KTV',
+                        customerAd: intl.get("audio.share.from.k1"),
                         customerSliders: sliderImgs
                     });
                 }
@@ -211,7 +211,7 @@ class PlayAudio extends BaseComponent {
 
                     <Subheader style={{...styles.center, bottom: '.8rem'}}>
                         {/*<p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? intl.get("audio.text.edit") : intl.get("msg.from.j.make")}</p>*/}
-                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{`${intl.get("msg.from.j.make")}${customerAd !== '' ? ` · ${customerAd}` : ''}`}</p>
+                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{customerAd}</p>
                     </Subheader>
 
                     {ableEdit && <Subheader style={styles.center}>
