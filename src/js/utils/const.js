@@ -41,9 +41,9 @@ export default{
     PAY_TYPE_GONG_XIANG: 'gongxiang',
 
     // 赠送时间
-    DISCOUNT_TYPE_TIME: '2',
+    DISCOUNT_TYPE_TIME: 2,
     // 赠送金额
-    DISCOUNT_TYPE_MONEY: '1',
+    DISCOUNT_TYPE_MONEY: 1,
 
     // K1 渠道号
     CHANNEL_CODE_K1_LIST: ["gx_gg_k1", "gg_k1haiwai", "gg_stb"] // , "gg_k1_child"
