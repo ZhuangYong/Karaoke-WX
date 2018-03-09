@@ -486,7 +486,9 @@ class Pay extends BaseComponent {
         const matchParams = this.state.matchParams;
         switch (matchParams.state) {
             case "home": {
-                const getPayListParams = {};
+                const getPayListParams = {
+                    vipGroupUuid: getQueryString('vipGroupUuid')
+                };
                 let header = null;
                 if (matchParams.deviceId !== "") {
                     header = reqHeader(getPayListParams, getEncryptHeader({deviceId: matchParams.deviceId}));
