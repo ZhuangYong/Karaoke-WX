@@ -11,7 +11,7 @@ class Pay extends BaseComponent {
 
     componentDidMount() {
         const {state, pollingId, deviceId, openid} = this.props.match.params;
-        const link = `pay?state=${state || ""}&pollingId=${pollingId || ""}&deviceId=${deviceId || ""}&openid=${openid || ""}&language=${getQueryString('language')}&vipGroupUuid=${getQueryString('vipGroupUuid')}`;
+        const link = `pay?state=${state || ""}&pollingId=${pollingId || ""}&deviceId=${deviceId || ""}&openid=${openid || ""}&language=${getQueryString('language') || ''}&vipGroupUuid=${getQueryString('vipGroupUuid') || ''}`;
         const {isIos} = window.sysInfo;
         if (isIos) {
             location.href = "/" + link;
