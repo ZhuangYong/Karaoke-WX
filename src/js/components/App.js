@@ -296,10 +296,14 @@ class App extends BaseComponent {
      */
     pageFilterToShowGXTimer() {
         const pathNames = [
-            '/pay/',
-            '/user/',
-            '/recording/',
-            '/recordingPlay/'
+            'pay',
+            'user',
+            'recording',
+            'recordingPlay',
+            'deviceRegister',
+            'protocol',
+            'editRecord',
+            'login',
         ];
         let bool = true;
 
