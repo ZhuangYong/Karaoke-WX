@@ -164,15 +164,7 @@ class App extends BaseComponent {
             this.props.action_setCommonInfo(commonInfo);
         }, 30000);
 
-        if ((getQueryString('uuid') !== null || getQueryString('openid') !== null) && location.pathname.indexOf('recording') < 0) {
-            const link = `${location.pathname}?language=${getQueryString('language')}`;
-            const {isIos} = window.sysInfo;
-            if (isIos) {
-                location.href = link;
-            } else {
-                this.props.history.replace(link);
-            }
-        }
+        this.replaceUrlToProtectUserInfo();
     }
 
     componentDidUpdate(prevProps) {
@@ -275,6 +267,27 @@ class App extends BaseComponent {
                 </MuiThemeProvider>
             </div> : <div/>
         );
+    }
+
+    /**
+     * 替换带有uuid，openid的链接保护当前用户信息，避免被链接带走
+     */
+    replaceUrlToProtectUserInfo() {
+        if ((
+                getQueryString('uuid') !== null ||
+                getQueryString('openid') !== null
+            ) &&
+            location.pathname.indexOf('recording') < 0 &&
+            location.pathname.indexOf('pay') < 0
+            ) {
+            const link = `${location.pathname}?language=${getQueryString('language')}`;
+            const {isIos} = window.sysInfo;
+            if (isIos) {
+                location.href = link;
+            } else {
+                this.props.history.replace(link);
+            }
+        }
     }
 
     /**
