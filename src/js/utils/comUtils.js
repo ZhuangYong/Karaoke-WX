@@ -618,7 +618,9 @@ export function isGetUserInfo() {
     const pathNames = [
         '/pay',
         '/login/',
-        '/recordingPlay/'
+        '/recordingPlay/',
+        'deviceRegister',
+        'protocol',
     ];
     let bool = true;
 
