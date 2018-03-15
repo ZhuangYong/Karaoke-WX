@@ -163,6 +163,16 @@ class App extends BaseComponent {
             commonInfo.stopNavFlash = false;
             this.props.action_setCommonInfo(commonInfo);
         }, 30000);
+
+        if ((getQueryString('uuid') !== null || getQueryString('openid') !== null) && location.pathname.indexOf('recording') < 0) {
+            const link = `${location.pathname}?language=${getQueryString('language')}`;
+            const {isIos} = window.sysInfo;
+            if (isIos) {
+                location.href = link;
+            } else {
+                this.props.history.replace(link);
+            }
+        }
     }
 
     componentDidUpdate(prevProps) {
