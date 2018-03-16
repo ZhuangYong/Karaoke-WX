@@ -163,8 +163,6 @@ class App extends BaseComponent {
             commonInfo.stopNavFlash = false;
             this.props.action_setCommonInfo(commonInfo);
         }, 30000);
-
-        this.replaceUrlToProtectUserInfo();
     }
 
     componentDidUpdate(prevProps) {
@@ -287,6 +285,7 @@ class App extends BaseComponent {
             } else {
                 this.props.history.replace(link);
             }
+            this.configWxPath();
         }
     }
 
@@ -492,7 +491,7 @@ class App extends BaseComponent {
     /**
      * 更新用户信息
      */
-    updateUserInfo() {
+    updateUserInfo(wxInfo) {
         let {isWeixin} = window.sysInfo;
         if (isWeixin) {
             // 获取用户信息
@@ -505,20 +504,26 @@ class App extends BaseComponent {
                 window.sessionStorage.removeItem("wxInfo");
                 wxInfoSession = {};
             }
-            if (wxInfoSession.data && wxInfoSession.data.hasOwnProperty('time')) {
+            const { data, status } = wxInfoSession;
+            if (data && data.hasOwnProperty('time')) {
+                const {uuid, userId, deviceId} = data;
                 const params = {
-                    url: `${location.origin}?uuid=${wxInfoSession.data.uuid}&userid=${wxInfoSession.data.userId}&deviceId=${wxInfoSession.data.deviceId}`
+                    url: `${location.origin}?uuid=${uuid}&userid=${userId}&deviceId=${deviceId}`
                 };
                 wxInfo = {
-                    wxId: wxInfoSession.data.uuid || "",
-                    deviceId: wxInfoSession.data.deviceId || ""
+                    wxId: uuid || "",
+                    deviceId: deviceId || ""
                 };
                 this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
-            } else if (typeof wxInfoSession.status === "undefined" || !!wxInfo.wxId) {
+            } else if (typeof status === "undefined" || !!wxInfo.wxId) {
                 const params = {
                     url: window.location.href.split("#")[0]
                 };
-                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
+                this.props.action_getUserInfo(
+                    params,
+                    reqHeader(params, getEncryptHeader(wxInfo)),
+                    () => this.replaceUrlToProtectUserInfo()
+                );
                 // history.replaceState("", "", "/");
             } else {
                 this.props.action_getUserInfoFromSession();
@@ -647,9 +652,10 @@ class App extends BaseComponent {
     configWxPath() {
         const {isWeixin, isIos} = window.sysInfo;
         if (isWeixin && !isIos) {
-            if (!wxConfigPaths[this.props.history.location.pathname]) {
+            const path = location.href.split('#')[0];
+            if (!wxConfigPaths[path]) {
                 this.configWeiXin();
-                wxConfigPaths[this.props.history.location.pathname] = true;
+                wxConfigPaths[path] = true;
             }
         }
     }
