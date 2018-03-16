@@ -155,7 +155,7 @@ class SearchHeader extends BaseComponent {
                                 <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">{intl.get("search.hot")}</font>
                             </Subheader>
                             <div className="hot-words">
-                                {hotKeyWords && hotKeyWords.data.list.map((word) => (
+                                {hotKeyWords && hotKeyWords.data.result.map((word) => (
                                     <Chip style={{border: '1px solid #b7b7b7', backgroundColor: 'white'}} className="word" key={word.tag} onTouchTap={() => {
                                         this.handelHotSearch(word.tag);
                                     }}>
