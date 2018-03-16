@@ -61,7 +61,7 @@ class SingerAlumb extends BaseComponent {
                     {listData.map((singer) => (
                         <GridTile
                         className="grade-tile img-not-loaded"
-                        key={singer.categoryUuid}
+                        key={singer.id}
                         title=""
                         titleStyle={{
                         display: "flex",
