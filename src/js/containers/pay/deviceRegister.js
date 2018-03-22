@@ -82,7 +82,10 @@ class DeviceRegister extends BaseComponent {
             if (status === 1) {
                 actionSetGlobAlert(intl.get("msg.join.success"));
 
-                getUserInfoAction({}, reqHeader({}));
+                const userInfoParams = {
+                    url: window.location.href.split("#")[0]
+                };
+                getUserInfoAction(userInfoParams, reqHeader(userInfoParams));
             } else {
                 actionSetGlobAlert(intl.get("msg.join.fail"));
             }
