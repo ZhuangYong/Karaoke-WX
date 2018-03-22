@@ -2,7 +2,8 @@ import ActionTypes from "../../actions/actionTypes";
 import {fetchProcess} from "../../utils/fetchUtils";
 
 let initialState = {
-    audioInfo: {}
+    audioInfo: {},
+    allPicsData: {},
 };
 
 export default (state = initialState, action = {}) => {

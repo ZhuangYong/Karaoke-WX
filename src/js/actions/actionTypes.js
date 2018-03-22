@@ -38,10 +38,6 @@ const USER = {
 
     // 获取录音分享列表
     API_GET_RECORDS_LIST: "API_GET_RECORDS_LIST",
-    // 录音编辑提交
-    API_UPLOAD_SOUND_ALBUM: "API_UPLOAD_SOUND_ALBUM",
-    // 获取录音关联图片
-    API_GET_ALL_PICS: "API_GET_ALL_PICS",
     // 删除录音
     API_DELETE_RECORDING: "API_DELETE_RECORDING",
     // 更换录音封面图
@@ -97,7 +93,11 @@ const SONG = {
 };
 //audio relative
 const AUDIO = {
-    API_GET_SHARE_AUDIO: "API_GET_SHARE_AUDIO"
+    API_GET_SHARE_AUDIO: "API_GET_SHARE_AUDIO",
+    // 录音编辑提交
+    API_UPLOAD_SOUND_ALBUM: "API_UPLOAD_SOUND_ALBUM",
+    // 获取录音关联图片
+    API_GET_ALL_PICS: "API_GET_ALL_PICS",
 };
 
 const SEARCH = {

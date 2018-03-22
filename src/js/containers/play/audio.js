@@ -26,7 +26,6 @@ import _ from "lodash";
 import intl from 'react-intl-universal';
 import Avatar from 'material-ui/Avatar';
 import defaultAvatar from "../../../img/default_avatar.png";
-import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
 import { setGlobAlert } from '../../actions/common/actions';
 import MyButton from '../../components/common/MyButton';
 import Const from "../../utils/const";
@@ -318,8 +317,6 @@ const mapStateToProps = (state, ownPorps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getShareAudioAction: bindActionCreators(getShareAudio, dispatch),
-        uploadActions: bindActionCreators(uploadSoundAlbum, dispatch),
-        getAllPicsActions: bindActionCreators(getAllPics, dispatch),
         globAlertAction: bindActionCreators(setGlobAlert, dispatch),
     };
 };

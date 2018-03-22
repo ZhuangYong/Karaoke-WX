@@ -3,6 +3,35 @@ import {comFetch} from "../utils/fetchUtils";
 import apiUrl from "./apiUrl";
 import sysConfig from "../utils/sysConfig";
 
+// 获取录音关联图片
+export function getAllPics(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_GET_ALL_PICS;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.AUDIO.API_GET_ALL_PICS
+        }, callback);
+    };
+}
+
+// 录音编辑提交
+export function uploadSoundAlbum(data, headers, callback) {
+
+    const url = sysConfig.apiDomain + apiUrl.API_UPLOAD_SOUND_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.AUDIO.API_UPLOAD_SOUND_ALBUM
+        }, callback);
+    };
+}
+
+
 export function getShareAudio(data, headers, callback, failBack) {
     const url = sysConfig.apiDomain + apiUrl.API_QUERY_USER_SOUND;
     return (dispatch) => {

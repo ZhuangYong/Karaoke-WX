@@ -9,7 +9,7 @@ import BaseComponent from "../../components/common/BaseComponent";
 import ButtonHeader from '../../components/common/header/ButtonHeader';
 import InputBox from '../../components/photoAlbum/index';
 import ClearIcon from "material-ui/svg-icons/content/clear";
-import { getAllPics, uploadSoundAlbum } from '../../actions/userActions';
+import { getAllPics, uploadSoundAlbum } from '../../actions/audioActons';
 import { setGlobAlert } from '../../actions/common/actions';
 import SubmitLoading from '../../components/common/SubmitLoading';
 import MyButton from '../../components/common/MyButton';
@@ -178,13 +178,44 @@ class EditRecord extends BaseComponent {
                     labelStyle={styles.btnLabelStyle}
                     onClick={this.submit}
                     label={intl.get('button.submit')}
-                    disabled={!(recordingFormData.albums.length > 0 || recordingFormData.pagePicture.length > 0)}
+                    disabled={this.checkDataChange(recordingFormData)}
                 />
 
                 <SubmitLoading hide={!loading} />
 
             </section>
         );
+    }
+
+    /**
+     * 检查图片数据是否变化
+     */
+    checkDataChange(recordingFormData) {
+        const { data } = this.props.audio.allPicsData;
+        const { albums, pagePictureId } = data || {};
+        // console.log(pagePictureId);
+
+        let isCoverEquals = false;
+        if (pagePictureId && recordingFormData.pagePicture[0]) {
+            isCoverEquals = pagePictureId === recordingFormData.pagePicture[0].id;
+        } else if (pagePictureId === 0 && typeof recordingFormData.pagePicture[0] === 'undefined') {
+            isCoverEquals = true;
+        }
+
+
+        let isAlbumsEquals = false;
+        if (albums && (albums.length === recordingFormData.albums.length)) {
+            let bools = [];
+            albums && albums.map(originAlbum => {
+                recordingFormData.albums.map(cacheAlbum => {
+                    originAlbum.picid === cacheAlbum.id && bools.push(true);
+                });
+            });
+
+            isAlbumsEquals = bools.length === albums.length;
+        }
+
+        return isCoverEquals && isAlbumsEquals;
     }
 
     /**
@@ -286,7 +317,6 @@ class EditRecord extends BaseComponent {
 const mapStateToProps = (state, ownPorps) => {
     return {
         audio: state.app.audio,
-        common: state.app.common
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -299,7 +329,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 
 EditRecord.defaultProps = {
     audio: {
-        audioInfo: {}
+        audioInfo: {},
+        allPicsData: {},
     }
 };
 
