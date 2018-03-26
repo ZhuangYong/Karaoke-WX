@@ -410,6 +410,10 @@ class Pay extends BaseComponent {
                         });
                     } else {
                         this.pageBack("msg.pay.success");
+                        const getUserInfoParams = {
+                            url: location.href.split('#')[0],
+                        };
+                        getUserInfoAction(getUserInfoParams, reqHeader(getUserInfoParams));
                     }
                 },
                 cancel: (res) => {
