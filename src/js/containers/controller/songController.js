@@ -540,7 +540,7 @@ class SongController extends BaseComponent {
         const updateChooseSongsInterval = this.state.updateChooseSongsInterval;
         if (!updateChooseSongsInterval) {
             this.state.updateChooseSongsInterval = setInterval(() => {
-                if (!this.state.offLine && this.state.updateChooseSongsCount >= UPDATE_HISTORY_SONG_TIME_COUNT) {
+                if (!this.state.offLine && this.state.updateHistorySongCount >= UPDATE_HISTORY_SONG_TIME_COUNT) {
                     this.updateHistorySongList();
                     this.state.updateHistorySongCount = 0;
                 } else {
@@ -723,12 +723,12 @@ class SongController extends BaseComponent {
      * 更新已点歌曲数据
      */
     updateSong() {
-        const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
-        if (!this.props.songs.chooseList) {
+        if (!this.props.songs.chooseList.data) {
             this.setState({
                 emptyChooseSongs: true
             });
         } else {
+            const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
             let {list, playing} = this.handelList(data.recordJson);
             if (typeof list === "string") list = JSON.parse(list);
             this.setState({
@@ -743,7 +743,7 @@ class SongController extends BaseComponent {
      */
     updateHistorySong() {
         const historyPlayList = this.props.songs.getHistorySongList;
-        let historySongList;
+        let historySongList = [];
         if (historyPlayList && historyPlayList.data) {
             let {list} = this.handelList(historyPlayList.data.recordJson);
             if (typeof list === "string") list = JSON.parse(list);
