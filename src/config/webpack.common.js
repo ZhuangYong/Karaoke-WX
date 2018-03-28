@@ -44,8 +44,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [
-                    PATH_SRC_JS,
-                    path.join(PATH_MODULES, 'react-intl-universal/')
+                    PATH_SRC_JS
                 ],
                 exclude: [
                     path.join(PATH_SRC, 'js/containers'),
@@ -96,8 +95,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 include: [
-                    PATH_SRC_CSS,
-                    PATH_MODULES
+                    PATH_SRC_CSS
                 ],
 
                 //把css link进去
@@ -116,14 +114,13 @@ module.exports = {
             {
                 test: /\.scss$/,
                 include: [
-                    PATH_SRC_SASS,
-                    PATH_MODULES
+                    PATH_SRC_SASS
                 ],
                 use: [{
                     loader: "style-loader"
                 }, {
                     loader: "css-loader"
-                },{
+                }, {
                     loader: "sass-loader"
                 }]
             },

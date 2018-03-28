@@ -27,7 +27,7 @@ import {setGlobAlert} from "../../../actions/common/actions";
 import ActionTypes from "../../../actions/actionTypes";
 import intl from 'react-intl-universal';
 import OSS from "../../../../css/aliyun-oss-sdk-4.4.4.min";
-import UUID from "short-uuid";
+import UUID from "short-uuid/dist/short-uuid";
 import SubmitLoading from '../../../components/common/SubmitLoading';
 
 const styles = {
