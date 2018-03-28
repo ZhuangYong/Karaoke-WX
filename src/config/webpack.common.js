@@ -95,7 +95,8 @@ module.exports = {
             {
                 test: /\.css$/,
                 include: [
-                    PATH_SRC_CSS
+                    PATH_SRC_CSS,
+                    PATH_MODULES
                 ],
 
                 //把css link进去
