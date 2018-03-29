@@ -11,7 +11,7 @@ import Input from "../Input";
 import BaseComponent from "../BaseComponent";
 import PropTypes from "prop-types";
 import * as ReactDOM from "react-dom";
-import Scroller from "silk-scroller/dist/index";
+import Scroller from "silk-scroller";
 import VoiceIcon from "../../../../img/common/icon_voice.png";
 import SearchIcon from "../../../../img/common/icon_search.png";
 import CleanIcon from "material-ui/svg-icons/navigation/cancel";
