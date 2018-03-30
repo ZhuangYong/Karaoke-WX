@@ -66,7 +66,7 @@ class AudioEffect extends BaseComponent {
             }
         }
         return (
-            isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
+            !isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
                 {
                     this.renderNstCenter()
                 }
@@ -277,7 +277,7 @@ class AudioEffect extends BaseComponent {
                         this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
                             size={20}
                             thickness={2}
-                            color="white"/> : <img src={PlusImg} style={{height: '.4rem'}}/>
+                            color="white"/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
                     }
                 </div>
                 <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.falling")}</p>
@@ -290,7 +290,7 @@ class AudioEffect extends BaseComponent {
                         this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
                             size={20}
                             thickness={2}
-                            color="white"/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
+                            color="white"/> : <img src={PlusImg} style={{height: '.4rem'}}/>
                     }
                 </div>
                 <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.rising")}</p>
