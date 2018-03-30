@@ -237,7 +237,7 @@ class SongController extends BaseComponent {
             extAreaMarginTop = '-.1rem';
         }
         return (
-            <div>
+            <div className="controller-page">
                 {/*<div style={{position: 'absolute', width: "100%", height: 500, fontSize: 10, overflow: 'auto', zIndex: 5}}>
                     {
                         playListStr
@@ -246,6 +246,7 @@ class SongController extends BaseComponent {
                 <img src={NoNetworkImg} style={{display: 'none'}}/>
                 <SearchHeadFake grayTheme={"gray"}/>
                 <Tabs
+                    className="song-controller-tab"
                     inkBarStyle={{display: "none"}}
                     tabItemContainerStyle={{display: "-webkit-flex", top: 0, zIndex: 999, position: 'fixed', alignItems: 'center !important', background: '-webkit-gradient(linear, 0 100, 283 0, from(#ff6932), to(#ff8332))', height: '1.2rem', backgroundColor: "#ff8333", padding: ".1rem 10%"}}
                 >
@@ -256,7 +257,7 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.leftTab, backgroundColor: backgroundColor[0], color: fontColor[0]}}
                         label={
-                            <div style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
+                            <div className={this.state.tabIndex === 0 ? "on" : ""} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.play.controller")}
                             </div>
                         }>
@@ -330,37 +331,38 @@ class SongController extends BaseComponent {
 
                                 <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
                                     {
-                                        this.props.ottInfo && this.props.ottInfo.data.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div style={{
+                                        this.props.ottInfo && this.props.ottInfo.data.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div className="controller-bar controller-bar-barrage"
+                                            style={{
                                             margin: '0 .5rem',
                                             display: 'flex',
                                             justifyContent: 'center'
                                         }}>
-                                            <div style={style.extArea.btn}
+                                            <div className="main-color" style={style.extArea.btn}
                                                  onTouchTap={() => {
                                                      linkTo('controller/barrage', false, null);
                                                  }}
                                             >
-                                                <img src={BarrageIcon} style={{...style.extArea.btn.icon, width: '.6rem'}}/>
-                                                <p style={style.extArea.btn.label}>{intl.get("barrage")}</p>
+                                                <div className="icon" style={{...style.extArea.btn.icon, width: '.6rem'}}/>
+                                                <p className="main-color" style={style.extArea.btn.label}>{intl.get("barrage")}</p>
                                             </div>
 
                                         </div> : ""
                                     }
 
                                     {
-                                        this.showAudioEffect() ? <div style={{
+                                        this.showAudioEffect() ? <div className="controller-bar controller-bar-effect" style={{
                                             margin: '0 .5rem',
                                             display: 'flex',
                                             justifyContent: 'center'
                                         }}>
-                                            <div
+                                            <div className="main-color"
                                                 style={style.extArea.btn}
                                                 onTouchTap={() => {
                                                     linkTo('controller/effect', false, null);
                                                 }}
                                             >
-                                                <img src={EffectIcon} style={style.extArea.btn.icon}/>
-                                                <p style={style.extArea.btn.label}>{intl.get("controller.sound.effect")}</p>
+                                                <div className="icon" style={style.extArea.btn.icon}/>
+                                                <p className="main-color" style={style.extArea.btn.label}>{intl.get("controller.sound.effect")}</p>
                                             </div>
                                         </div> : ""
                                     }
@@ -389,7 +391,7 @@ class SongController extends BaseComponent {
                             this.handelChangeTab(1);
                         }}
                         label={
-                            <div style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
+                            <div className={this.state.tabIndex === 1 ? "on" : ""} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.selected.list")}
                             </div>
                         }>
@@ -412,7 +414,7 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
                         label={
-                            <div style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
+                            <div className={this.state.tabIndex === 2 ? "on" : ""} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.history")}
                             </div>
                         }>
@@ -473,7 +475,7 @@ class SongController extends BaseComponent {
                                     key={playingSong.musicNo}
                                     primaryText={<div className="song-title">
                                         <font>{playingSong.musicName}</font>
-                                        <i className="label-vip">{playingSong.vipStutas ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
+                                        <i className="label-vip">{playingSong.vipStutas ? <div src={VIPIcon} style={{height: '.4rem', width: '0.75rem'}}/> : ""}</i>
                                     </div>
                                     }
                                     secondaryText={<div className="song-author">
@@ -498,7 +500,7 @@ class SongController extends BaseComponent {
                                 primaryText={
                                     <div className="song-title">
                                         <font>{song.musicName}</font>
-                                        <i className="label-vip">{song.vipStutas ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
+                                        <i className="label-vip">{song.vipStutas ? <div src={VIPIcon} style={{height: '.4rem', width: '0.75rem'}}/> : ""}</i>
                                     </div>
                                 }
                                 secondaryText={
@@ -635,7 +637,7 @@ class SongController extends BaseComponent {
                     {
                         this.songSetTopButton(song, index) //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
-                    <img src={DelIcon} style={{width: '.4rem'}}
+                    <div className="del-icon" style={{width: '.4rem'}}
                          onTouchTap={() => {
                              this.unChoose(song.musicNo);
                          }}/>
@@ -647,7 +649,7 @@ class SongController extends BaseComponent {
                     {
                         this.songSetTopButton(song, index) //<div style={{marginRight: '0.6rem', width: '0.4rem'}}/>
                     }
-                    <img src={DelIcon} style={{width: '.4rem'}}
+                    <div className="del-icon" style={{width: '.4rem'}}
                          onTouchTap={() => {
                              this.unChoose(song.musicNo);
                          }}/>
@@ -699,7 +701,7 @@ class SongController extends BaseComponent {
         // needDownload:id 0不需要下载 1 需要下载
         const {needDownload, downloadStatus} = song;
         const setTopButton = (
-            <img src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
+            <div className="set-top-icon" src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
                  onClick={() => {
                      this.setTop(song.musicNo);
                  }}/>

@@ -39,7 +39,7 @@ class SongItem extends BaseComponent {
                 className="song-item"
                 key={song.id || song.serialNo}
                 primaryText={<div>
-                    <div className="song-title"><font>{song.nameNorm}</font><i className="label-vip">{song.charge ? <img src={VIPIcon} style={{height: '.4rem'}}/> : ""}</i>
+                    <div className="song-title"><font>{song.nameNorm}</font><i className="label-vip">{song.charge ? <div src={VIPIcon} style={{height: '.4rem', width: '0.75rem'}}/> : ""}</i>
                     </div>
                 </div>}
                 secondaryText={

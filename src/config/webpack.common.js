@@ -15,6 +15,7 @@ const PATH_SRC = path.join(PATH_ROOT, 'src/');
 const PATH_SRC_JS = path.join(PATH_SRC, 'js/');
 const PATH_SRC_JS_LIB = path.join(PATH_SRC_JS, 'lib/');
 const PATH_SRC_CSS = path.join(PATH_SRC, 'css/');
+const PATH_SRC_THEME_SASS = path.join(PATH_SRC, 'js/themes');
 const PATH_SRC_SASS = path.join(PATH_SRC, 'sass/');
 const PATH_MODULES = path.join(PATH_ROOT, 'node_modules/');
 
@@ -44,10 +45,11 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [
-                    PATH_SRC_JS
+                    PATH_SRC_JS,
                 ],
                 exclude: [
                     path.join(PATH_SRC, 'js/containers'),
+                    path.join(PATH_SRC, 'js/themes/bin'),
                     path.join(PATH_SRC, 'js/lib')
                 ],
                 use: [
@@ -70,6 +72,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [
+                    path.join(PATH_SRC, 'js/themes/bin'),
                     path.join(PATH_SRC, 'js/containers')
                 ],
                 use: [
@@ -115,7 +118,8 @@ module.exports = {
             {
                 test: /\.scss$/,
                 include: [
-                    PATH_SRC_SASS
+                    PATH_SRC_SASS,
+                    PATH_SRC_THEME_SASS
                 ],
                 use: [{
                     loader: "style-loader"

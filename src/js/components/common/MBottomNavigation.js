@@ -52,7 +52,7 @@ const style = {
                     bottom: 0,
                     left: "50%",
                     marginLeft: '-.853rem',
-                    backgroundColor: "white"
+                    backgroundColor: "transparent"
                 },
                 maskArc: {
                     height: '1.467rem',
@@ -66,6 +66,7 @@ const style = {
                     left: "50%",
                     marginLeft: '-.7rem',
                     width: '1.4rem',
+                    height: '1.4rem',
                     bottom: '.56rem',
                     backgroundColor: '#ff6d32',
                     borderRadius: '50%'
@@ -102,38 +103,39 @@ class MBottomNavigation extends BaseComponent {
         return (
             <div>
                 <BottomNavigation
+                    className="bottom-nav"
                     selectedIndex={selectedIndex}
                     style={style.nav}
                 >
                     <BottomNavigationItem
                         style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%', width: '40%'}}
-                        label={<div style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>{intl.get("nav.index")}</div>}
+                        label={<div className={selectedIndex === 0 ? "title on" : "title"} style={{...style.nav.label, color: labelColor[0], bottom: '.107rem'}}>{intl.get("nav.index")}</div>}
                         icon={
-                            <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                <img style={{height: ".667rem", width: '.62rem'}} src={indexIcon}/>
+                            <div className="nav-item nav-index" style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <div style={{height: ".667rem", width: '.62rem'}} className={selectedIndex === 0 ? "on" : ""}/>
                             </div>
                         }
                         onTouchTap={() => selectedIndex !== 0 && this.navSelect(0)}
                     />
                     <BottomNavigationItem
                         style={{...style.nav.playController, maxWidth: '100%', width: '20%'}}
-                        label={<div style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>{intl.get("nav.controller")}</div>}
+                        label={<div className={selectedIndex === 1 ? "title on" : "title"} style={{...style.nav.label, color: labelColor[1], bottom: '.107rem'}}>{intl.get("nav.controller")}</div>}
                         icon={
-                            <div style={style.nav.playController.circle}>
-                                <div style={style.nav.playController.circle.arc}/>
-                                <div style={style.nav.playController.circle.maskLine}/>
-                                <div style={style.nav.playController.circle.maskArc}/>
-                                <img style={style.nav.playController.circle.icon} src={this.props.common.commonInfo.stopNavFlash !== false ? navControllerIcon : navControllerIcon}/>
+                            <div className="nav-item nav-controller" style={style.nav.playController.circle}>
+                                <div className="nav-circle-top" style={style.nav.playController.circle.arc}/>
+                                <div className="nav-circle-mask-line" style={style.nav.playController.circle.maskLine}/>
+                                <div className="nav-circle-mask-arc" style={style.nav.playController.circle.maskArc}/>
+                                <div style={style.nav.playController.circle.icon} className={selectedIndex === 1 ? "controller on" : "controller"}/>
                             </div>
                         }
                         onTouchTap={() => selectedIndex !== 1 && this.navSelect(1)}
                     />
                     <BottomNavigationItem
                         style={{paddingTop: '.213rem', paddingBottom: '.113rem', maxWidth: '100%', width: '40%'}}
-                        label={<div style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>{intl.get("nav.my")}</div>}
+                        label={<div className={selectedIndex === 2 ? "title on" : "title"} style={{...style.nav.label, color: labelColor[2], bottom: '.107rem'}}>{intl.get("nav.my")}</div>}
                         icon={
-                            <div style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                <img style={{height: ".667rem", width: ".667rem"}} src={meIcon}/>
+                            <div className="nav-item nav-me" style={{height: '.667rem', marginBottom: '.4rem', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <div style={{height: ".667rem", width: ".667rem"}} className={selectedIndex === 2 ? "on" : ""}/>
                             </div>
                         }
                         onTouchTap={

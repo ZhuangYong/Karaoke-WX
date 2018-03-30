@@ -38,7 +38,7 @@ class SearchHeaderFake extends BaseComponent {
                             <div>
                                 <img className="search" src={searchIcon}/>
                                 <font>{intl.get("search.placeholder")}</font>
-                                <img onTouchTap={(e) => {
+                                <div onTouchTap={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
                                     linkTo("voiceSearch", false, "");

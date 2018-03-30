@@ -11,7 +11,7 @@ import Input from "../Input";
 import BaseComponent from "../BaseComponent";
 import PropTypes from "prop-types";
 import * as ReactDOM from "react-dom";
-import Scroller from "silk-scroller/dist/index";
+import Scroller from "silk-scroller";
 import VoiceIcon from "../../../../img/common/icon_voice.png";
 import SearchIcon from "../../../../img/common/icon_search.png";
 import CleanIcon from "material-ui/svg-icons/navigation/cancel";
@@ -50,6 +50,7 @@ const style = {
 class SearchHeader extends BaseComponent {
     constructor(props) {
         super(props);
+        console.log(Scroller);
         const searchKey = typeof this.props.defaultKeyWord !== "undefined" ? this.props.defaultKeyWord : "";
         this.state = {
             inputting: typeof this.props.inputIng !== "undefined" ? this.props.inputIng : true,
@@ -131,7 +132,7 @@ class SearchHeader extends BaseComponent {
                             <div>
                                 <img className="search" src={SearchIcon}/>
                                 <font>{intl.get("search.placeholder")}</font>
-                                <img onClick={() => {
+                                <div onClick={() => {
                                     linkTo("voiceSearch", false, "");
                                 }} className="voice" src={VoiceIcon}/>
                             </div>
@@ -155,7 +156,7 @@ class SearchHeader extends BaseComponent {
                                 <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">{intl.get("search.hot")}</font>
                             </Subheader>
                             <div className="hot-words">
-                                {hotKeyWords && hotKeyWords.data.result.map((word) => (
+                                {hotKeyWords && hotKeyWords.data.result && hotKeyWords.data.result.map((word) => (
                                     <Chip style={{border: '1px solid #b7b7b7', backgroundColor: 'white'}} className="word" key={word.tag} onTouchTap={() => {
                                         this.handelHotSearch(word.tag);
                                     }}>
