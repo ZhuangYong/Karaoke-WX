@@ -1,0 +1,131 @@
+.default{
+    .main-color{
+        color: #ff6832!important;
+        border-color: #ff6832!important;
+    }
+    .main-background-color{
+        background-color: #ff6832!important;
+    }
+    .search-header{
+        .search-bar-panel{
+            .key-word-input{
+                background-color: #fe9e62 !important;
+                .voice{
+                    display: block;
+                    padding: .16rem .267rem .16rem .48rem;
+                    width: 1.067rem;
+                    height: .8rem;
+                    position: absolute;
+                    right: .32rem;
+                    z-index: 1;
+                    background: url("./assets/common/icon_voice.png") no-repeat center;
+                    background-size: auto 80%;
+                }
+            }
+        }
+    }
+
+    .top-nav{
+        .nav-item{
+            background: no-repeat center;
+            background-size: contain;
+            &.category{
+                background-image: url("./assets/nav/icon_catelog.png");
+            }
+            &.artists{
+                background-image: url("./assets/nav/icon_singer.png");
+            }
+            &.trending{
+                background-image: url("./assets/nav/icon_hot_song.png");
+            }
+        }
+    }
+
+    .nav-item{
+        div{
+            background: no-repeat center;
+            background-size: contain;
+        }
+        &.nav-index div{
+            background-image: url("./assets/nav/nav_index.png");
+            &.on{
+                background-image: url("./assets/nav/nav_index_on.png");
+            }
+        }
+        &.nav-controller .controller{
+            background-image: url("./assets/nav/nav_controll.png");
+        }
+        &.nav-me div{
+            background-image: url("./assets/nav/nav_me.png");
+            &.on{
+                background-image: url("./assets/nav/nav_me_on.png");
+            }
+        }
+    }
+
+    .song-title{
+        .label-vip div{
+            background: url("./assets/common/icon_vip.png") no-repeat;
+            background-size: contain;
+        }
+    }
+
+    .user-section{
+        .function-icon{
+            background: no-repeat center;
+            background-size: contain;
+        }
+        .device-icon{
+            background-image: url("./assets/my/user_device.png");
+        }
+        .my-order-icon{
+            background-image: url("./assets/my/user_myOrder.png");
+        }
+        .album-icon{
+            background-image: url("./assets/my/user_album.png");
+        }
+        .feedback-icon{
+            background-image: url("./assets/my/to_feedback.png");
+        }
+    }
+
+    /*song controller*/
+    .controller-bar {
+        &.controller-bar-barrage .icon{
+            background: url("./assets/common/icon_barrage.png") no-repeat;
+        }
+        &.controller-bar-effect .icon{
+            background: url("./assets/common/icon_effect.png") no-repeat;
+        }
+        &.controller-bar .icon{
+            height: 0.6rem;
+            background-size: contain;
+            background-position: center;
+        }
+    }
+
+    /*song item*/
+    .song-item{
+        .del-icon, .set-top-icon{
+            width: 0.4rem;
+            height: .4rem;
+            background: url("./assets/common/icon_un_top.png") no-repeat;
+            background-size: contain;
+        }
+        .set-top-icon{
+            background: url("./assets/common/icon_set_top.png") no-repeat;
+            background-size: contain;
+        }
+    }
+
+    .change-theme{
+        position: absolute;
+        right: .6rem;
+        top: .6rem;
+        width: .6rem;
+        height: .6rem;
+        background: url("./assets/common/theme_change_children.png") no-repeat;
+        background-size: contain;
+    }
+}
+
