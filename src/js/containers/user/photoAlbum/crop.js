@@ -102,7 +102,7 @@ class Crop extends BaseComponent {
                         bottom: 0,
                         left: 0,
                     }}
-                    viewMode={0}
+                    viewMode={1}
                     dragMode="crop"
                     zoomOnTouch={false}
                     aspectRatio={1}
