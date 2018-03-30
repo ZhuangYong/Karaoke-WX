@@ -19,7 +19,6 @@
             width: 100% !important;
             display: flex !important;
             border-radius: 1.2rem;
-            background-color: #fe9e62 !important;
             height: .93rem !important;
             border: 1px solid #fe9e62;
             div:nth-child(1) {
@@ -101,6 +100,17 @@
                 border: 1px solid white !important;
                 div:nth-child(1) {
                     color: #999999;
+                }
+                .voice{
+                    display: block;
+                    padding: .16rem .267rem .16rem .48rem;
+                    width: 1.067rem;
+                    height: .8rem;
+                    position: absolute;
+                    right: .32rem;
+                    z-index: 1;
+                    background: url("../../img/common/icon_voice_gray.png") no-repeat center;
+                    background-size: auto 80%;
                 }
             }
 

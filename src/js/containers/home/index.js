@@ -42,7 +42,9 @@ const style = {
             textAlign: "center"
         },
         img: {
-            width: "1.5rem"
+            width: "1.5rem",
+            height: "1.5rem",
+            display: "inline-table"
         },
         label: {
             margin: '.16rem',
@@ -170,7 +172,7 @@ class Home extends BaseComponent {
             };
         }
         return (
-            <div>
+            <div className="page-home">
                 <SearchHeadFake back={this.back}/>
                 <div className='home'
                      style={style.home}
@@ -178,23 +180,23 @@ class Home extends BaseComponent {
                     <Paper
                         zDepth={0}
                     >
-                        <div style={style.topNav}>
+                        <div className="top-nav" style={style.topNav}>
                             <span style={style.topNav.item} onClick={() => {
                                 linkTo("catAlbum", false, null);
                             }}>
-                                <img src={IconCate} style={style.topNav.img}/>
+                                <div className="nav-item category" style={style.topNav.img}/>
                                 <p style={style.topNav.label}>{intl.get("index.category")}</p>
                             </span>
                             <span style={style.topNav.item} onClick={() => {
                                 linkTo("singer/album", false, null);
                             }}>
-                                <img src={IconSinger} style={style.topNav.img}/>
+                                <div className="nav-item artists" style={style.topNav.img}/>
                                 <p style={style.topNav.label}>{intl.get("index.artists")}</p>
                             </span>
                             <span style={style.topNav.item} onClick={() => {
                                 linkTo(`songs/hotId/48/${intl.get("index.trending")}/`, false, null);
                             }}>
-                                <img src={IconHotSong} style={style.topNav.img}/>
+                                <div className="nav-item trending" style={style.topNav.img}/>
                                 <p style={style.topNav.label}>{intl.get("index.trending")}</p>
                             </span>
                         </div>

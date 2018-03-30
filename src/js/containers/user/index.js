@@ -4,7 +4,10 @@ import {withRouter} from "react-router-dom";
 import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import { deleteRecording, getRecordsList, getUserInfo } from '../../actions/userActions';
-import { formatTime, getWxinfoFromSession, linkTo, reqHeader, timeToYmd, toRem } from '../../utils/comUtils';
+import {
+    formatTime, getCookie, getWxinfoFromSession, linkTo, reqHeader, setCookie, timeToYmd,
+    toRem
+} from '../../utils/comUtils';
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
@@ -29,6 +32,7 @@ import sysConfig from "../../utils/sysConfig";
 import intl from 'react-intl-universal';
 import ButtonHeader from '../../components/common/header/ButtonHeader';
 import SubmitLoading from '../../components/common/SubmitLoading';
+import ActionTypes from "../../actions/actionTypes";
 
 const styles = {
     headerImg: {
@@ -98,7 +102,6 @@ class UserIndex extends BaseComponent {
     }
 
     componentDidMount() {
-
         this.getRecordingsGetter();
     }
     componentWillUnmount() {
@@ -120,8 +123,8 @@ class UserIndex extends BaseComponent {
         if (bindDeviceStatus === 2) bindDeviceStatus = intl.get("device.disconnected");
         return (
             <div>
-                <section>
-                    <header style={{
+                <section className="user-section">
+                    <header className="user-header" style={{
                         width: "100%",
                         height: toRem(230),
                         background: `url(${HeaderBgIcon}) center no-repeat`,
@@ -145,7 +148,7 @@ class UserIndex extends BaseComponent {
                             paddingTop: toRem(65),
                             marginLeft: toRem(23)
                         }}>
-                            <div style={{
+                            <div className="user-nickname" style={{
                                 height: toRem(50),
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30),
@@ -155,6 +158,9 @@ class UserIndex extends BaseComponent {
                                 typeof data.time !== 'undefined' ? this.showGxStatus(data) : this.showVIPStatus(data)
                             }
                         </div>
+                        <div className="change-theme" onClick={() => {
+                            this.props.globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_CHANGE_THEME);
+                        }}/>
                     </header>
 
                     <GridList
@@ -168,7 +174,7 @@ class UserIndex extends BaseComponent {
                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
                                 actionSetGlobAlert(intl.get("device.connected.add.song"));
                             }}>
-                            <img
+                            <div className="function-icon device-icon"
                                 src={DeviceIcon}
                                 style={styles.headerImg}
                             />
@@ -185,7 +191,7 @@ class UserIndex extends BaseComponent {
                                 if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
                                 linkTo(`user/feedback/webHome`, false, null);
                             }}>
-                            <img
+                            <div className="function-icon feedback-icon"
                                 src={FeedbackIcon}
                                 style={styles.headerImg}
                             />
@@ -197,7 +203,7 @@ class UserIndex extends BaseComponent {
                                 linkTo(`user/photoAlbum`, false, null);
                                 // linkTo(`user/myOrder`, false, null);
                             }}>
-                            <img
+                            <div className="function-icon album-icon"
                                 src={MyAlbumIcon}
                                 style={{...styles.headerImg, width: "auto"}}
                             />
@@ -209,7 +215,7 @@ class UserIndex extends BaseComponent {
                                 linkTo(`user/orderForm`, false, null);
                                 // linkTo(`user/myOrder`, false, null);
                             }}>
-                            <img
+                            <div className="function-icon my-order-icon"
                                 src={MyOrderingsIcon}
                                 style={{...styles.headerImg, width: "auto"}}
                             />
@@ -221,7 +227,7 @@ class UserIndex extends BaseComponent {
                 </section>
 
                 {(!(data.channel === CONFIG.NO_RECORDING_CHANNEL)) && (<section>
-                    <header>
+                    <header className="my-record-header">
                         <ButtonHeader
                             title={intl.get("title.my.record")}
                             rightButtonClick={() => {

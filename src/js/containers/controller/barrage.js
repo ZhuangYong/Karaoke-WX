@@ -108,7 +108,6 @@ const style = {
             height: '1.067rem',
             fontSize: '.45rem',
             color: "#ffffff",
-            backgroundColor: "#ff6832",
             borderRadius: '1.067rem'
         }
     }
@@ -216,7 +215,8 @@ class Barrage extends BaseComponent {
                         zIndex: -1
                     }}>
                     <Tab
-                        buttonStyle={{flexDirection: "row", height: '1.2rem', backgroundColor: tabBackgroundColor[0]}}
+                        className={this.state.tabIndex === 0 ? "main-background-color" : ""}
+                        buttonStyle={{flexDirection: "row", height: '1.2rem'}}
                         onActive={() => {
                             this.handelChangeTab(0);
                         }}
@@ -233,7 +233,8 @@ class Barrage extends BaseComponent {
                         }
                     </Tab>
                     <Tab
-                        buttonStyle={{flexDirection: "row", height: '1.2rem', backgroundColor: tabBackgroundColor[1]}}
+                        className={this.state.tabIndex === 1 ? "main-background-color" : ""}
+                        buttonStyle={{flexDirection: "row", height: '1.2rem'}}
                         onActive={() => {
                             this.handelChangeTab(1);
                         }}
@@ -311,7 +312,7 @@ class Barrage extends BaseComponent {
         let swipeLength = emotionIcons.length % ROW_NUMBER === 0 ? (emotionIcons.length / ROW_NUMBER) : ((emotionIcons.length - (emotionIcons.length % ROW_NUMBER)) / ROW_NUMBER + 1);
         while (count < swipeLength) {
             html.push(
-                <i key={count} style={{...style.dots.dot, borderColor: emotionPage === count ? "#ff6833" : "#d7d7d7"}}/>
+                <i className={emotionPage === count ? "main-color" : ""} key={count} style={{...style.dots.dot, borderColor: "#d7d7d7"}}/>
             );
             count++;
         }
@@ -334,12 +335,12 @@ class Barrage extends BaseComponent {
         const {inputValue, inputImage, sendBarrageIng} = this.state;
         if (inputValue || inputImage) {
             if (sendBarrageIng) {
-                return <div style={style.bottomPanel.submitButtonOn}>
+                return <div className="main-background-color" style={style.bottomPanel.submitButtonOn}>
                     <CircularProgress size={20} thickness={1} color={"white"} style={{right: 6}}/>
                     <font>{intl.get("sending")}</font>
                 </div>;
             } else {
-                return <div style={style.bottomPanel.submitButtonOn} onClick={() => {
+                return <div className="main-background-color" style={style.bottomPanel.submitButtonOn} onClick={() => {
                     this.sendBarrage();
                 }}>
                     {intl.get("button.send")}

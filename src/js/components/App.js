@@ -5,28 +5,42 @@ import "../../sass/main.scss";
 import {bindDevice, getUserConfig, getUserInfo} from "../actions/userActions";
 import {
     getLocalesData,
-    getUserInfoFromSession, setCommonInfo, setGlobAlert, setLocalNet, setWeixinConfigFinished,
+    getUserInfoFromSession,
+    setCommonInfo,
+    setGlobAlert,
+    setLocalNet,
+    setWeixinConfigFinished,
     updateScreen
 } from "../actions/common/actions";
 import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import {
-    chkDevice, reqHeader, wxConfig, getQueryString, getEncryptHeader, linkTo, wxShare,
-    wxAuthorizedUrl, isGetUserInfo, formatTime, setCookie
+    chkDevice,
+    formatTime, getCookie,
+    getEncryptHeader,
+    getQueryString,
+    isGetUserInfo,
+    linkTo,
+    reqHeader,
+    setCookie,
+    wxAuthorizedUrl,
+    wxConfig,
+    wxShare
 } from "../utils/comUtils";
 import {withRouter} from "react-router";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
 import sysConfig from "../utils/sysConfig";
-import Const from "../utils/const";
 import TimeIcon from "../../img/common/icon_time.png";
 import BaseComponent from "./common/BaseComponent";
 import intl from 'react-intl-universal';
 import _ from "lodash";
 import Routers from '../router';
-import {cryptoFetch} from "../utils/fetchUtils";
+import ThemeProvider from "../themes";
+import CommonInfo from "./common/CommonInfo";
+
 
 window.sysInfo = chkDevice();
 let wxConfigPaths = [];
@@ -113,6 +127,7 @@ class App extends BaseComponent {
             checkLocalTimer: 0,
             checkLocalCount: 0,
             checkLocalBetween: 120,
+            theme: getCookie("theme") || "default"
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
@@ -120,7 +135,6 @@ class App extends BaseComponent {
         this.sizeChange = this.sizeChange.bind(this);
         this.runCheckLocal = this.runCheckLocal.bind(this);
         this.updateUserInfo = this.updateUserInfo.bind(this);
-        this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
         this.gxTimer = this.gxTimer.bind(this);
         this.configWxPath = this.configWxPath.bind(this);
         this.loadLocales = this.loadLocales.bind(this);
@@ -139,7 +153,7 @@ class App extends BaseComponent {
         this.runCheckLocal();
         //this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
-        window.addEventListener('focus', () => {isGetUserInfo() && this.updateUserInfo();});
+        // window.addEventListener('focus', () => {isGetUserInfo() && this.updateUserInfo();});
         this.props.action_updateScreen();
 
         const {isIos} = window.sysInfo;
@@ -197,6 +211,7 @@ class App extends BaseComponent {
                 }
                 this.gxTimer();
                 this.gxUpdateUserInfoTimer();
+                this.updateTheme(userInfoData.data.childModel);
             }
         }
     }
@@ -209,12 +224,18 @@ class App extends BaseComponent {
             }, 200);
             showAlert = false;
         }
-        const validUserStatusDialog = this.validUserStatusDialog();
         return (
             this.state.initDone ? <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
                     <div className={`${this.state.showDialog ? "show-alert" : ""}`}>
-                    <Routers/>
+                        <CommonInfo themeChange={theme => {
+                            this.setState({
+                                theme: theme
+                            });
+                        }}/>
+                       <ThemeProvider name={this.state.theme}>
+                           <Routers/>
+                       </ThemeProvider>
                     <Snackbar
                         open={showAlert}
                         bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
@@ -224,7 +245,6 @@ class App extends BaseComponent {
                             this.props.action_setGlobAlert("");
                         }}
                     />
-                        {validUserStatusDialog}
 
                         {
                             (this.pageFilterToShowGXTimer() && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
@@ -348,145 +368,6 @@ class App extends BaseComponent {
         }
     }
 
-    validUserStatusDialog() {
-        const {alertData, globAlert} = this.props;
-        if (!alertData) return;
-        const actionSetGlobAlert = this.props.action_setGlobAlert;
-        let alertStr = "";
-        let showAlert = true;
-        let doAction;
-        switch (alertData) {
-            case ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE:
-                alertStr = globAlert || intl.get("device.not.bind.do.bind");
-                //TODO BIND DEVICE
-                doAction = () => {
-                    window.wx && window.wx.scanQRCode({
-                        needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                        scanType: ["qrCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                        success: (res) => {
-                            let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-
-                            if (result.indexOf("/q/") <= 0) {
-                                actionSetGlobAlert && actionSetGlobAlert(intl.get("msg.invalid.qr.code"), "");
-                                return;
-                            }
-
-                            const userInfo = this.props.userInfo.userInfoData.data;
-                            const params = {
-                                openId: userInfo.openid,
-                                url: result
-                            };
-
-                            this.props.action_bindDevice(params, reqHeader(params), (res) => {
-                                const {status} = res;
-                                if (status === 1) {
-                                    const getUserInfoParams = {
-                                        url: window.location.href.split("#")[0]
-                                    };
-                                    this.props.action_getUserInfo(getUserInfoParams, reqHeader(getUserInfoParams), (res) => {
-                                        const {status} = res;
-                                        if (status === 1) {
-                                            window.location.reload(true);
-                                        }
-                                    });
-                                    actionSetGlobAlert(intl.get("msg.bind.success"), "");
-
-                                } else {
-                                    actionSetGlobAlert(intl.get("msg.bind.fail"), "");
-                                }
-                            });
-                        },
-                        fail: (res) => {
-                            console.log(res);
-                            actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
-                        }
-                    });
-                };
-                break;
-            // case ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE:
-            //     // alertStr = '激活vip免费体验';
-            //     //TODO ACTIVE
-            //     //linkTo("", false, "");
-            //     break;
-            case ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL:
-                alertStr = intl.get("msg.operate.need.auth");
-                //TODO ACTIVE
-                //linkTo("", false, "");
-                doAction = () => {
-                    window.location.reload(true);
-                };
-                break;
-            case ActionTypes.COMMON.ALERT_TYPE_BE_VIP:
-                alertStr = intl.get("msg.recharge.as.vip");
-                //TODO VIP
-                doAction = () => {
-                    linkTo("pay/home", false, "");
-                };
-                break;
-            case ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE:
-                alertStr = <div>
-                    <p style={{fontWeight: 'bold'}}>
-                        {intl.get("msg.song.time.end")}
-                    </p>
-                    <p>
-                        {intl.get("msg.song.continue")}
-                    </p>
-                </div>;
-                doAction = () => {
-                    linkTo("pay/home", false, "");
-                };
-                break;
-            case ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE:
-                showAlert = false;
-                setTimeout(() => {
-                    this.props.action_setGlobAlert(intl.get("msg.device.not.online"), "");
-                }, 100);
-                break;
-            default:
-                showAlert = false;
-                break;
-        }
-        this.state.showDialog = showAlert;
-        if (!alertStr) return;
-        const handleClose = () => {
-            this.state.showDialog = false;
-            this.props.action_setGlobAlert("", "");
-        };
-        const handleSure = () => {
-            this.state.showDialog = false;
-            this.props.action_setGlobAlert("", "");
-            doAction && doAction();
-        };
-        const actions = [
-            <FlatButton
-                label={intl.get("button.cancel")}
-                className="cancel-button"
-                primary={true}
-                onClick={handleClose}
-            />,
-            <FlatButton
-                label={intl.get("button.sure")}
-                className="sure-button"
-                primary={true}
-                onClick={handleSure}
-            />,
-        ];
-        return (
-            <div>
-                <Dialog
-                    className="dialog-panel"
-                    actionsContainerStyle={{borderTop: ".01rem solid #e0e0e0", textAlign: 'center'}}
-                    contentStyle={{textAlign: 'center'}}
-                    actions={actions}
-                    modal={false}
-                    open={showAlert}
-                    // onRequestClose={handleClose}
-                >
-                    {alertStr}
-                </Dialog>
-            </div>
-        );
-    }
 
     /**
      * 更新用户信息
@@ -683,6 +564,32 @@ class App extends BaseComponent {
             this.setState({ initDone: true });
         });
     }
+
+    /**
+     * 更新主题
+     * @param childModel
+     */
+    updateTheme(childModel) {
+        if (typeof childModel !== "undefined") {
+            switch (childModel) {
+                case 1:
+                case "1":
+                    this.setState({
+                        theme: "default"
+                    });
+                    setCookie("theme", "default");
+                    break;
+                case 2:
+                case "2":
+                    this.setState({
+                        theme: "children"
+                    });
+                    setCookie("theme", "children");
+                    break;
+                default:
+            }
+        }
+    }
 }
 
 // 映射state到props
@@ -690,7 +597,6 @@ const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
-        alertData: state.app.common.alertData,
         commonInfo: state.app.common.commonInfo,
         language: state.app.common.language,
         localNetIsWork: state.app.common.localNetIsWork,

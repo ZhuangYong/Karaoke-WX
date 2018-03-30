@@ -133,8 +133,8 @@
   },
   "scripts": {
     "dev": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --history-api-fallback",
-    "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
-    "dev:expand": "npm run copy:dev && cross-env NODE_ENV=expand webpack-dev-server --env=expandTest --inline --content-base ./build --config ./src/config/webpack.config.js --port 80 --host wxzac.j-make.com.cn --history-api-fallback",
+    "dev:host": "npm run copy:dev && cross-env NODE_ENV=development webpack-dev-server --env=dev --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --host wx.j-make.cn --history-api-fallback",
+    "dev:expand": "npm run copy:dev && cross-env NODE_ENV=expand webpack-dev-server --env=expandTest --inline --content-base ./build --config ./src/config/webpack.config.js --port 81 --host wx.j-make.cn --history-api-fallback",
     "build:test": "npm run copy:dev && cross-env NODE_ENV=development webpack --config ./src/config/webpack.config.js --env=test",
     "build:expand": "npm run copy:dev && cross-env NODE_ENV=expand webpack --config ./src/config/webpack.config.js --env=expand",
     "build:master": "npm run copy:dev && cross-env NODE_ENV=master webpack --config ./src/config/webpack.config.js --env=master",
