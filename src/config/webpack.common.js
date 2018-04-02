@@ -46,6 +46,7 @@ module.exports = {
                 test: /\.js$/,
                 include: [
                     PATH_SRC_JS,
+                    path.join(PATH_MODULES, 'react-intl-universal'),
                 ],
                 exclude: [
                     path.join(PATH_SRC, 'js/containers'),
@@ -73,7 +74,6 @@ module.exports = {
                 test: /\.js$/,
                 include: [
                     path.join(PATH_SRC, 'js/themes/bin'),
-                    path.join(PATH_MODULES, 'react-intl-universal'),
                     path.join(PATH_SRC, 'js/containers')
                 ],
                 use: [
