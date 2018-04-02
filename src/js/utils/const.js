@@ -48,7 +48,7 @@ export default{
     // K1 渠道号
     CHANNEL_CODE_K1_LIST: ["gx_gg_k1", "gg_k1haiwai", "gg_stb"], // , "gg_k1_child"
 
-    // 儿童版渠道号
-    CHANNEL_CODE_CHILD: ['gg_k1_child'],
+    // 小朋友模式tag值
+    TAG_CHILD_MODE: 'kid',
 
 };

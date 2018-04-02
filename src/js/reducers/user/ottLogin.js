@@ -15,6 +15,12 @@ export default (state = initState, action) => {
                 msg: "ottLoginMsg",
                 loading: "ottLoginLoading"
             });
+        case ActionTypes.USER.API_OTT_LOGOUT:
+            return fetchProcess(state, action, {
+                data: "ottLogoutData",
+                msg: "ottLogoutMsg",
+                loading: "ottLogoutLoading"
+            });
         default:
             return state;
     }

@@ -1,6 +1,8 @@
 export default {
     // OTT登录
     "API_OTT_LOGIN": "/user/loginAuth",
+    // OTT退出登录
+    "API_OTT_LOGOUT": "/user/wxloginOut",
 
     // 获取支付列表
     "API_GET_PAY_LIST": "/music/listPayProduct",
@@ -33,6 +35,7 @@ export default {
      * userId: 106414
      * uuid: "ohSltvwgabfZPNDxc2r14tlf7rwM"
      * vipStatus: vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
+     * tag（机型模式）: kid-小朋友
      */
     "API_GET_USER_INFO": "/user/info",
     // 获取微信js sdk config参数

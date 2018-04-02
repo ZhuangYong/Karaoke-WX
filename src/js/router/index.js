@@ -10,6 +10,7 @@ import Bundle from "../components/Bundle";
 
 import Home from "../containers/home";
 import Login from "../containers/login";
+import Logout from "../containers/login/logout";
 
 import RedirectAudio from "../containers/play/redirectAudio";
 import Audio from "../containers/play/audio";
@@ -52,6 +53,11 @@ import myOrder from "../containers/user/orderForm/myOrder";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
+        {Component => <Component />}
+    </Bundle>
+);
+const LogoutContainer = () => (
+    <Bundle load={Logout}>
         {Component => <Component />}
     </Bundle>
 );
@@ -293,6 +299,7 @@ export default class router extends React.Component {
                 * deviceId: 设备id
                 */}
                 <Route path={`/login/:state/:uuid?/:userId?/:deviceId?`} component={LoginContainer}/>
+                <Route path={`/logout`} component={LogoutContainer}/>
                 <Route path={`/song/chooselist`} exact component={ChooseListContainer}/>
                 <Route path={`/song/search/:keyword?`} exact component={SearchContainer}/>
                 <Route path={`/singer/album`} exact component={SingerAlbumContainer}/>

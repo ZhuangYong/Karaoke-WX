@@ -24,6 +24,8 @@ const USER = {
     API_OSS_TOKEN: "API_OSS_TOKEN",
     // OTT登录
     API_OTT_LOGIN: "API_OTT_LOGIN",
+    // OTT退出登录
+    API_OTT_LOGOUT: "API_OTT_LOGOUT",
 
     // 获取用户信息
     API_GET_USER_INFO: "API_GET_USER_INFO",

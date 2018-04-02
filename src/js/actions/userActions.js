@@ -33,6 +33,19 @@ export function OTTLogin(data, headers, callback) {
     };
 }
 
+// ott退出登录
+export function OTTLogout(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_OTT_LOGOUT;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.USER.API_OTT_LOGOUT
+        }, callback);
+    };
+}
+
 // 获取用户信息
 export function getUserInfo(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_USER_INFO;
