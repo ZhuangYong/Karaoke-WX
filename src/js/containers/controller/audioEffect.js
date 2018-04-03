@@ -10,7 +10,7 @@ import LeftArrowIcon from "material-ui/svg-icons/hardware/keyboard-arrow-left";
 import RightArrowIcon from "material-ui/svg-icons/hardware/keyboard-arrow-right";
 import AddIcon from "material-ui/svg-icons/content/add";
 import ReduceIcon from "material-ui/svg-icons/content/remove";
-import {dynaPush, reqHeader} from "../../utils/comUtils";
+import {dynaPush, reqHeader, versionMoreThan} from "../../utils/comUtils";
 import bindActionCreators from "redux/es/bindActionCreators";
 import {push, pushLocal} from "../../actions/audioActons";
 import ToneIconAdd from "../../../img/controller/tone_add.png";
@@ -23,6 +23,7 @@ import {CircularProgress} from "material-ui";
 import HBackgroundImg from "../../../img/controller/h_background.png";
 import VBackgroundImg from "../../../img/controller/v_background.png";
 import PlusImg from "../../../img/controller/plus.png";
+import SmoothImg from "../../../img/controller/smooth.png";
 import ReduceImg from "../../../img/controller/reduce.png";
 import intl from 'react-intl-universal';
 import Const from "../../utils/const";
@@ -61,12 +62,12 @@ class AudioEffect extends BaseComponent {
         // if ((data.channel === 'nst_sk_a3' || data.channel === 'sk_stb')) {
         if (Const.EFFECT_NST_CHANNEL_LIST.indexOf(data.channel) >= 0) {
             // if (data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION && data.romData.version >= Const.EFFECT_MIN_OTT_ROM_VERSION) {
-            if (data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION) {
+            if (versionMoreThan(data.appVersion, Const.EFFECT_NST_MIN_OTT_VERSION)) {
                 isNstManual = true;
             }
         }
         return (
-            isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
+            !isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
                 {
                     this.renderNstCenter()
                 }
@@ -268,9 +269,9 @@ class AudioEffect extends BaseComponent {
     renderNstCenter() {
         const {w, h} = this.props.common;
         const revert = w > h;
-        return <div className="center-area nst" style={{backgroundImage: `url(${HBackgroundImg})`, backgroundSize: 'auto 1.7rem', backgroundRepeat: 'no-repeat', paddingTop: 0, marginBottom: '1.6rem', backgroundPosition: 'center .1rem'}}>
+        return <div className="center-area nst" style={{backgroundImage: `url(${HBackgroundImg})`, backgroundSize: 'auto 2.2rem', backgroundRepeat: 'no-repeat', paddingTop: 0, marginBottom: '1.6rem', backgroundPosition: 'center .1rem'}}>
             <div className="fun-button" style={{width: revert ? '16%' : '33.333%'}}>
-                <div className="button white" style={{border: 'none', paddingTop: '.3rem'}} onClick={() => {
+                <div className="button white" style={{border: 'none', paddingTop: '.8rem'}} onClick={() => {
                     this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
                 }}>
                     {
@@ -280,10 +281,23 @@ class AudioEffect extends BaseComponent {
                             color="white"/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
                     }
                 </div>
-                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.falling")}</p>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1.4rem'}}>{intl.get("effect.falling")}</p>
             </div>
             <div className="fun-button" style={{width: revert ? '16%' : '33.333%'}}>
-                <div className="button white" style={{border: 'none', paddingTop: '.3rem'}} onClick={() => {
+                <div className="button white" style={{border: 'none', paddingTop: '.8rem'}} onClick={() => {
+                    this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] !== true && this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
+                }}>
+                    {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] === true ? <CircularProgress
+                            size={20}
+                            thickness={2}
+                            color="#ff6832"/> : <img src={SmoothImg} style={{height: '.4rem'}}/>
+                    }
+                </div>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1.4rem'}}>{intl.get("effect.stable")}</p>
+            </div>
+            <div className="fun-button" style={{width: revert ? '16%' : '33.333%'}}>
+                <div className="button white" style={{border: 'none', paddingTop: '.8rem'}} onClick={() => {
                     this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
                 }}>
                     {
@@ -293,7 +307,7 @@ class AudioEffect extends BaseComponent {
                             color="white"/> : <img src={PlusImg} style={{width: '.4rem'}}/>
                     }
                 </div>
-                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.rising")}</p>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1.4rem'}}>{intl.get("effect.rising")}</p>
             </div>
         </div>;
     }
