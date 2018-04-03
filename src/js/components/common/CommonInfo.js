@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import intl from "react-intl-universal";
 import {getCookie, linkTo, reqHeader, setCookie} from "../../utils/comUtils";
 import ActionTypes from "../../actions/actionTypes";
-import {Dialog, FlatButton} from "material-ui";
 import {setGlobAlert} from "../../actions/common/actions";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {bindDevice, getUserInfo} from "../../actions/userActions";
 import {withRouter} from "react-router";
+import {Dialog, FlatButton, Snackbar} from "material-ui";
 
 class CommonInfo extends React.Component {
     constructor(props) {
@@ -27,11 +27,40 @@ class CommonInfo extends React.Component {
         };
         this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
     }
+    componentDidUpdate() {
+        const {alertData} = this.props;
+        if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
+            linkTo("deviceRegister", false, "");
+            this.props.action_setGlobAlert("", "");
+        }
+    }
     render() {
         const validUserStatusDialog = this.validUserStatusDialog();
-        return <div className="common-info">{validUserStatusDialog}</div>;
+        const snackBar = this.snackBar();
+        return <div className="common-info">
+            {validUserStatusDialog}
+            {snackBar}
+            </div>;
     }
 
+    snackBar() {
+        let showAlert = !!this.props.globAlert && !this.props.alertData;
+        if ((this.props.globAlert === intl.get("msg.network.die")) && window.lockShowNoWIfi) {
+            setTimeout(() => {
+                this.props.action_setGlobAlert("");
+            }, 200);
+            showAlert = false;
+        }
+        return <Snackbar
+            open={showAlert}
+            bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
+            message={this.props.globAlert}
+            autoHideDuration={2000}
+            onRequestClose={() => {
+                this.props.action_setGlobAlert("");
+            }}
+        />;
+    }
     validUserStatusDialog() {
         const {alertData, globAlert} = this.props;
         if (!alertData) return;

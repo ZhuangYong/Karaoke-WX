@@ -28,7 +28,6 @@ import {
     wxShare
 } from "../utils/comUtils";
 import {withRouter} from "react-router";
-import {Dialog, FlatButton, Snackbar} from "material-ui";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
 import sysConfig from "../utils/sysConfig";
@@ -183,11 +182,11 @@ class App extends BaseComponent {
                 window.noUserInfo = false;
             }
         }
-        const alertData = this.props.alertData;
-        if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
-            linkTo("deviceRegister", false, "");
-            this.props.action_setGlobAlert("", "");
-        }
+        // const alertData = this.props.alertData;
+        // if (alertData === ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE) {
+        //     linkTo("deviceRegister", false, "");
+        //     this.props.action_setGlobAlert("", "");
+        // }
         if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
             const {status, data, msg} = this.props.userInfo.userInfoData || {};
             if (parseInt(status, 10) === 302) {
@@ -211,13 +210,6 @@ class App extends BaseComponent {
     }
 
     render() {
-        let showAlert = !!this.props.globAlert && !this.props.alertData;
-        if ((this.props.globAlert === intl.get("msg.network.die")) && window.lockShowNoWIfi) {
-            setTimeout(() => {
-                this.props.action_setGlobAlert("");
-            }, 200);
-            showAlert = false;
-        }
         return (
             this.state.initDone ? <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
@@ -230,15 +222,7 @@ class App extends BaseComponent {
                        <ThemeProvider name={this.state.theme}>
                            <Routers/>
                        </ThemeProvider>
-                    <Snackbar
-                        open={showAlert}
-                        bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
-                        message={this.props.globAlert}
-                        autoHideDuration={2000}
-                        onRequestClose={() => {
-                            this.props.action_setGlobAlert("");
-                        }}
-                    />
+
 
                         {
                             (this.pageFilterToShowGXTimer() && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
@@ -590,7 +574,6 @@ class App extends BaseComponent {
 const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
-        globAlert: state.app.common.globAlert,
         language: state.app.common.language,
         localNetIsWork: state.app.common.localNetIsWork,
     };
