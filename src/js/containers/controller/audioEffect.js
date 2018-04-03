@@ -67,7 +67,7 @@ class AudioEffect extends BaseComponent {
             }
         }
         return (
-            !isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
+            isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
                 {
                     this.renderNstCenter()
                 }
