@@ -6,7 +6,6 @@ import {bindDevice, getUserConfig, getUserInfo} from "../actions/userActions";
 import {
     getLocalesData,
     getUserInfoFromSession,
-    setCommonInfo,
     setGlobAlert,
     setLocalNet,
     setWeixinConfigFinished,
@@ -172,11 +171,6 @@ class App extends BaseComponent {
         });
 
         window.lockResize = true;
-        setTimeout(() => {
-            let commonInfo = this.props.commonInfo || {};
-            commonInfo.stopNavFlash = false;
-            this.props.action_setCommonInfo(commonInfo);
-        }, 30000);
     }
 
     componentDidUpdate(prevProps) {
@@ -597,11 +591,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
-        commonInfo: state.app.common.commonInfo,
         language: state.app.common.language,
         localNetIsWork: state.app.common.localNetIsWork,
-        ottInfo: state.app.device.ottInfo,
-        audioInfo: state.app.audio.audioInfo
     };
 };
 // 映射dispatch到props
@@ -616,7 +607,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
         action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch),
         action_bindDevice: bindActionCreators(bindDevice, dispatch),
-        action_setCommonInfo: bindActionCreators(setCommonInfo, dispatch),
         action_getLocalesData: bindActionCreators(getLocalesData, dispatch)
     };
 };
