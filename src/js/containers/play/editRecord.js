@@ -103,7 +103,7 @@ class EditRecord extends BaseComponent {
                     />
                 </header>
 
-                <section>
+                <section style={{clear: 'both'}}>
                     <header style={{paddingBottom: toRem(20)}}>
                         <ButtonHeader
                             style={{

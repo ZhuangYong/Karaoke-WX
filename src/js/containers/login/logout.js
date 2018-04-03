@@ -45,7 +45,9 @@ class Logout extends BaseComponent {
                 ottLogoutAction(params, reqHeader(params), res => {
                     const {status} = res;
                     globAlertAction(parseInt(status, 10) === 1 ? '退出成功' : intl.get('msg.network.die'));
-                    parseInt(status, 10) === 1 && window.WeixinJSBridge.call('closeWindow');
+                    setTimeout(() => {
+                        parseInt(status, 10) === 1 && window.WeixinJSBridge.call('closeWindow');
+                    }, 500);
                 });
             }}
         />);

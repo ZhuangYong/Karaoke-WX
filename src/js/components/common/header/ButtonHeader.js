@@ -23,7 +23,7 @@ class ButtonHeader extends React.Component {
             width: "100%",
             height: toRem(110),
             backgroundColor: "#fff",
-            borderTop: "2px solid #d7d7d7",
+            borderBottom: "2px solid #d7d7d7",
             ...style
         }}>
 
