@@ -337,7 +337,7 @@ class AudioEffect extends BaseComponent {
                             color="white" style={{width: '.4rem'}}/> : <img src={ReduceImg} style={{width: '.4rem'}}/>
                     }
                 </div>
-                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.effect")}</p>
+                <p className="label" style={{color: 'white', fontSize: '.46rem', paddingTop: '1rem'}}>{intl.get("effect.reverberation")}</p>
             </div>
             <div className="fun-button" style={{backgroundImage: `url(${VBackgroundImg})`, backgroundRepeat: 'no-repeat', backgroundSize: 'auto 4.2rem', backgroundPosition: 'center top'}}>
                 <div className="haf-top-button white" style={{border: 'none', height: '2.1rem'}} onClick={() => {
