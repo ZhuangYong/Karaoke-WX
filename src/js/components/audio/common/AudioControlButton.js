@@ -50,9 +50,9 @@ export default class AudioControlButton extends React.Component {
 
                 <div className="slider-panel">
                     <Slider min={0} max={100} step={0.1} value={percent} included={true} onChange={this.handlePercentChange.bind(this)} onAfterChange={this.handleAfterChange.bind(this)}>
-                        <div className="current-time">{this.formatTime(currentTime)}</div>
-                        <div className="duration">{this.formatTime(duration)}</div>
                     </Slider>
+                    <div className="current-time">{this.formatTime(currentTime)}</div>
+                    <div className="duration">{this.formatTime(duration)}</div>
                 </div>
 
             </div>

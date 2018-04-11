@@ -825,7 +825,8 @@ class SongController extends BaseComponent {
                     setTopSongIdIng: 0,
                     barrageSendToast: true,
                     barrageToastMsg: intl.get("msg.in.top.success"),
-                    updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT
+                    updateChooseSongsCount: UPDATE_CHOOSE_SONG_TIME_COUNT,
+                    updateHistorySongCount: UPDATE_HISTORY_SONG_TIME_COUNT
                 });
             }, 500);
         };

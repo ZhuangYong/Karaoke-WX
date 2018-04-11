@@ -176,6 +176,24 @@ export function getSingerCategoryAlbum(data, headers, callback, failBack) {
  * @param data
  * @param headers
  * @param callback
+ * @returns {function(*=)}
+ */
+export function getSingerListAlbum(data, headers, callback, failBack) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_SINGER_CATEGORY_ALBUM;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_GET_SINGER_LIST_ALBUM
+        }, callback, failBack);
+    };
+}
+
+/**
+ * 获取歌手列表
+ * @param data
+ * @param headers
+ * @param callback
  * @param failBack
  * @returns {function(*=)}
  */

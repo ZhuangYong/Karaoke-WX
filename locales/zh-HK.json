@@ -1,5 +1,5 @@
 {
-    "nav.index": "首頁",
+    "nav.index": "主頁",
     "nav.controller": "播控",
     "nav.my": "我的",
     "title.home": "主頁",
@@ -239,8 +239,8 @@
     "msg.pay.success": "支付成功",
     "msg.pay.fail": "支付失敗",
     "msg.pay.cancel": "取消支付",
-    "msg.recharge.success": "充值成功",
-    "msg.recharge.fail.recharge": "充值失敗，請重新充值",
+    "msg.recharge.success": "支付成功",
+    "msg.recharge.fail.recharge": "支付失敗，請重新試",
     "msg.congratulations.vip.experience": "恭喜妳獲得金麥客VIP體驗資格喲",
     "msg.experience.now": "馬上體驗",
     "msg.from.j.make": "來自金麥客專業家庭卡拉OK",

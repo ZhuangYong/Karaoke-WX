@@ -17,6 +17,7 @@ let initState = {
     recommendSongsStamp: 0,
     getAlbumRecommendSongListStamp: 0,
     recordsListStamp: 0,
+    getSingerCategoryAlbumStamp: 0,
     getSingerAlbumStamp: 0
 };
 export default (state = initState, action = {}) => {
@@ -55,6 +56,13 @@ export default (state = initState, action = {}) => {
                 loading: "loading"
             });
         case ActionTypes.SONG.API_GET_SINGER_CATEGORY_ALBUM:
+            return fetchProcess(state, action, {
+                data: "getSingerCategoryAlbum",
+                msg: "getSingerCategoryAlbumMsg",
+                stamp: "getSingerCategoryAlbumStamp",
+                loading: "loading"
+            });
+        case ActionTypes.SONG.API_GET_SINGER_LIST_ALBUM:
             return fetchProcess(state, action, {
                 data: "getSingerAlbum",
                 msg: "getSingerAlbumMsg",

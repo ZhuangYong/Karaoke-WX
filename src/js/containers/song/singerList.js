@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
-import {getSingerCategoryAlbum} from "../../actions/audioActons";
+import {getSingerCategoryAlbum, getSingerListAlbum} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
 import SearchHeadFake from "../../components/common/header/searchHeaderFake";
 import {Avatar, List, ListItem, Paper, Popover, RefreshIndicator} from "material-ui";
@@ -413,7 +413,7 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        action_getSingerList: bindActionCreators(getSingerCategoryAlbum, dispatch),
+        action_getSingerList: bindActionCreators(getSingerListAlbum, dispatch),
         action_setSingerList: bindActionCreators(setSingerList, dispatch)
     };
 };

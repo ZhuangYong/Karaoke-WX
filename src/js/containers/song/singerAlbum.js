@@ -40,14 +40,14 @@ class SingerAlumb extends BaseComponent {
         const {w, h} = this.props.common;
         let cellHeight = 3 * w / 10 - 8;
         let cellPadding = 0.267 * w / 10;
-        const {getSingerAlbum} = this.props.songs;
+        const {getSingerCategoryAlbum} = this.props.songs;
         let rowNumber = 2;
         if (w >= 568 && h < w) {
             rowNumber = 3;
             cellPadding = 0.16 * w / 10;
             cellHeight = 2 * w / 10 - 8;
         }
-        const listData = (getSingerAlbum && getSingerAlbum.data && getSingerAlbum.data.result) || defaultData;
+        const listData = (getSingerCategoryAlbum && getSingerCategoryAlbum.data && getSingerCategoryAlbum.data.result) || defaultData;
         return (
             <Paper zDepth={0} style={{paddingBottom: 66}}>
                 <SearchHeadFake/>
