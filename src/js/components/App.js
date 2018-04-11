@@ -220,10 +220,10 @@ class App extends BaseComponent {
                             });
                         }}/>
                        <ThemeProvider name={this.state.theme}>
-                           <Routers/>
+
                        </ThemeProvider>
 
-
+                        <Routers/>
                         {
                             (this.pageFilterToShowGXTimer() && typeof this.state.gxTime !== 'undefined') ? <div style={style.gxTimePanel}
                                                                             onClick={() => {

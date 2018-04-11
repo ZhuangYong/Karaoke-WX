@@ -1,6 +1,6 @@
 $main-color: #398ddf;
 $main-bar-color: #398dff;
-.children{
+//.children{
     svg{
         circle{
             stroke: $main-color!important;
@@ -306,4 +306,4 @@ $main-bar-color: #398dff;
         background: url("./assets/common/theme_change_default.png") no-repeat;
         background-size: contain;
     }
-}
+//}

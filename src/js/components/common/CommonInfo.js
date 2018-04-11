@@ -163,11 +163,13 @@ class CommonInfo extends React.Component {
                     if (currentTheme === "children") {
                         this.props.themeChange && this.props.themeChange("default");
                         setCookie("theme", "default");
-                        this.props.action_setGlobAlert("已切换到成人模式");
+                        // this.props.action_setGlobAlert("已切换到成人模式");
+                        location.reload();
                     } else if (currentTheme === "default") {
                         this.props.themeChange && this.props.themeChange("children");
                         setCookie("theme", "children");
-                        this.props.action_setGlobAlert("已切换到儿童模式");
+                        // this.props.action_setGlobAlert("已切换到儿童模式");
+                        location.reload();
                     }
                 };
                 break;
