@@ -33,6 +33,7 @@ import intl from 'react-intl-universal';
 import ButtonHeader from '../../components/common/header/ButtonHeader';
 import SubmitLoading from '../../components/common/SubmitLoading';
 import ActionTypes from "../../actions/actionTypes";
+import Const from '../../utils/const';
 
 const styles = {
     headerImg: {
@@ -114,7 +115,7 @@ class UserIndex extends BaseComponent {
     render() {
         const userInfoData = this.props.userInfo.userInfoData;
         const {data} = userInfoData || {data: {}};
-        let {headerImg} = data;
+        let {headerImg, channel} = data;
         headerImg = headerImg || "";
         const actionSetGlobAlert = this.props.globAlertAction;
         const {recordsListData, recordsListTotalCounts, loading} = this.state;
@@ -158,9 +159,9 @@ class UserIndex extends BaseComponent {
                                 typeof data.time !== 'undefined' ? this.showGxStatus(data) : this.showVIPStatus(data)
                             }
                         </div>
-                        <div className="change-theme" onClick={() => {
+                        {channel && channel.indexOf('_' + Const.TAG_CHILD_MODE) > 0 && <div className="change-theme" onClick={() => {
                             this.props.globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_CHANGE_THEME);
-                        }}/>
+                        }}/>}
                     </header>
 
                     <GridList

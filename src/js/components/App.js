@@ -38,6 +38,7 @@ import _ from "lodash";
 import Routers from '../router';
 import ThemeProvider from "../themes";
 import CommonInfo from "./common/CommonInfo";
+import Const from '../utils/const';
 
 
 window.sysInfo = chkDevice();
@@ -204,7 +205,10 @@ class App extends BaseComponent {
                 }
                 this.gxTimer();
                 this.gxUpdateUserInfoTimer();
-                this.updateTheme(userInfoData.data.childModel);
+            }
+
+            if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('tag')) {
+                this.updateTheme(userInfoData.data.tag);
             }
         }
     }
@@ -545,27 +549,15 @@ class App extends BaseComponent {
 
     /**
      * 更新主题
-     * @param childModel
+     * @param tag
      */
-    updateTheme(childModel) {
-        if (typeof childModel !== "undefined") {
-            switch (childModel) {
-                case 1:
-                case "1":
-                    this.setState({
-                        theme: "default"
-                    });
-                    setCookie("theme", "default");
-                    break;
-                case 2:
-                case "2":
-                    this.setState({
-                        theme: "children"
-                    });
-                    setCookie("theme", "children");
-                    break;
-                default:
-            }
+    updateTheme(tag) {
+        if (typeof tag !== "undefined") {
+            const theme = (tag + ',').indexOf(Const.TAG_CHILD_MODE + ',') > 0 ? 'children' : 'default';
+            this.setState({
+                theme: theme
+            });
+            setCookie("theme", theme);
         }
     }
 }
