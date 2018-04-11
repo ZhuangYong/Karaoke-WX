@@ -571,9 +571,8 @@ export function dynaPush(funcParam = {
         }
     }
     const renderPushResult = (res) => {
-        const {status, data} = res;
-        const pushMsg = JSON.parse(data.msg || "{}");
-        if (status === 1 && pushMsg.ret && pushMsg.ret === 'SUCCESS') {
+        const {status} = res;
+        if (status === 1) {
             success && success(res);
         } else {
             fail && fail("操作失败");
