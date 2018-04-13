@@ -7,6 +7,7 @@ import {syncHistoryWithStore} from "react-router-redux";
 import injectTapEventPlugin from "react-tap-event-plugin";
 import configStore from "../js/components/Store";
 import App from './components/App';
+import {getCookie} from "./utils/comUtils";
 // promise
 require('es6-promise').polyfill();
 

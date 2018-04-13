@@ -257,7 +257,7 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.leftTab, backgroundColor: backgroundColor[0], color: fontColor[0]}}
                         label={
-                            <div className={this.state.tabIndex === 0 ? "on" : ""} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
+                            <div className={this.state.tabIndex === 0 ? "tab-item on" : "tab-item"} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.play.controller")}
                             </div>
                         }>
@@ -391,7 +391,7 @@ class SongController extends BaseComponent {
                             this.handelChangeTab(1);
                         }}
                         label={
-                            <div className={this.state.tabIndex === 1 ? "on" : ""} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
+                            <div className={this.state.tabIndex === 1 ? "tab-item on" : "tab-item"} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.selected.list")}
                             </div>
                         }>
@@ -414,7 +414,7 @@ class SongController extends BaseComponent {
                         }}
                         buttonStyle={{...style.tabs.rightTab, backgroundColor: backgroundColor[2], color: fontColor[2]}}
                         label={
-                            <div className={this.state.tabIndex === 2 ? "on" : ""} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
+                            <div className={this.state.tabIndex === 2 ? "tab-item on" : "tab-item"} style={{fontSize: longLan ? '.3rem' : '.4rem'}}>
                                 {intl.get("controller.tab.history")}
                             </div>
                         }>
@@ -991,6 +991,9 @@ class SongController extends BaseComponent {
                 if (this.props.ottInfo.data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION) {
                     return true;
                 }
+            }
+            if (Const.EFFECT_K1_CHANNEL_LIST.indexOf(data.channel) >= 0) {
+                return true;
             }
             return Const.EFFECT_GG_CHANNEL_LIST.indexOf(data.channel) >= 0;
         }
