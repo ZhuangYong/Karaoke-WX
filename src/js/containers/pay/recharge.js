@@ -152,10 +152,13 @@ class Recharge extends BaseComponent {
             return;
         }*/
 
+        const userUuid = getQueryString('userUuid');
+
         const params = {
             cardNo,
             password,
             deviceUuid,
+            userUuid,
         };
 
         rechargeSubmitAction(params, reqHeader(params), res => {

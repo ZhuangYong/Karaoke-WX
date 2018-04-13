@@ -314,6 +314,7 @@ class App extends BaseComponent {
             'protocol',
             'editRecord',
             'login',
+            'recharge',
         ];
         let bool = true;
 
@@ -452,13 +453,13 @@ class App extends BaseComponent {
     }
 
     /**
-     * 判断当前页面是否显示共享倒计时
+     * 判断当前页面是否调用wx.config
      * @returns {boolean}
      */
     pageFilterForConfigWX() {
         const pathNames = [
-            'pay/home',
-            'voiceSearch'
+            'pay',
+            'voiceSearch',
         ];
         let bool = false;
 

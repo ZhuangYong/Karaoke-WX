@@ -620,6 +620,7 @@ export function isGetUserInfo() {
         '/recordingPlay/',
         'deviceRegister',
         'protocol',
+        'recharge',
     ];
     let bool = true;
 

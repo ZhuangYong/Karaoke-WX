@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 import intl from 'react-intl-universal';
 import ModeOnline from "../../../img/payment/modeOnline.png";
 import ModeRecharge from "../../../img/payment/modeRecharge.png";
-import { linkTo, toRem } from '../../utils/comUtils';
+import { getWxinfoFromSession, linkTo, toRem } from '../../utils/comUtils';
 import bindActionCreators from 'redux/es/bindActionCreators';
 import { getUserInfo } from '../../actions/userActions';
 
@@ -19,11 +19,12 @@ class PayMode extends BaseComponent {
     }
 
     render() {
-        const {data} = this.props.userInfo.userInfoData || {data: {deviceUuid: ''}};
-        const {deviceUuid} = data;
+        const userInfoData = this.props.userInfo.userInfoData || getWxinfoFromSession();
+        const {data} = userInfoData || {data: {}};
+        const {deviceUuid, openid} = data;
         const payModes = [
             {img: ModeOnline, link: `pay?state=home`},
-            {img: ModeRecharge, link: `recharge/${deviceUuid}`},
+            {img: ModeRecharge, link: `recharge/${deviceUuid}?userUuid=${openid}`},
         ];
 
         return <ul style={{
