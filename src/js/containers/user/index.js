@@ -447,12 +447,12 @@ class UserIndex extends BaseComponent {
     }
 
     VIPStatusClick() {
-        // if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
-        //
-        // if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-        //     linkTo(`deviceRegister`, false, null);
-        //     return;
-        // }
+        if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
+
+        if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+            linkTo(`deviceRegister`, false, null);
+            return;
+        }
 
         const {data} = this.props.userInfo.userInfoData || {data: {type: 2}};
         const {type} = data;
