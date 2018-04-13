@@ -49,6 +49,10 @@ const SUPPOER_LOCALES = [
         value: "en-US"
     },
     {
+        name: "Spanish",
+        value: "es-US"
+    },
+    {
         name: "简体中文",
         value: "zh-CN"
     },
@@ -63,6 +67,10 @@ const SUPPOER_LOCALES = [
     {
         name: "English",
         value: "EN"
+    },
+    {
+        name: "西班牙语",
+        value: "ES"
     },
     {
         name: "简体中文",
@@ -126,7 +134,8 @@ class App extends BaseComponent {
             checkLocalTimer: 0,
             checkLocalCount: 0,
             checkLocalBetween: 120,
-            theme: getCookie("theme") || "default"
+            theme: getCookie("theme") || "default",
+            lan: getCookie("language")
         };
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
@@ -217,7 +226,7 @@ class App extends BaseComponent {
         return (
             this.state.initDone ? <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
-                    <div className={`${this.state.showDialog ? "show-alert" : ""}`}>
+                    <div className={`lan_${this.state.lan} ${this.state.showDialog ? "show-alert" : ""}`}>
                         <CommonInfo themeChange={theme => {
                             this.setState({
                                 theme: theme
@@ -540,7 +549,7 @@ class App extends BaseComponent {
                 }
             });
             this.removeAppLoading();
-            this.setState({ initDone: true });
+            this.setState({initDone: true, lan: currentLocale});
         }, err => {
             this.removeAppLoading();
             this.setState({ initDone: true });

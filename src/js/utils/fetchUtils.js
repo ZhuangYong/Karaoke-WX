@@ -3,6 +3,7 @@ import ActionTypes from "../actions/actionTypes";
 import sysConfig from "../utils/sysConfig";
 import Const from "./const";
 import intl from 'react-intl-universal';
+import {getCode2Msg} from "./comUtils";
 
 export function cryptoFetch(options, succ, fail) {
     let url = options.url;
@@ -114,7 +115,7 @@ export function comFetch(dispatch, param, options = {
         dispatch({
             type: options.action,
             fetchStatus: 1,
-            msg: intl.get("msg.network.die"),
+            msg: err.message,
             error: err,
             param: param
         });
@@ -122,12 +123,12 @@ export function comFetch(dispatch, param, options = {
             setTimeout(() => {
                 dispatch({
                     type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-                    globAlert: intl.get("msg.network.die")
+                    globAlert: err.message
                 });
             }, 300);
         }
         err.code = Const.CODE_OFF_LINE;
-        failCallback && failCallback(intl.get("msg.network.die"), err, rejectCode);
+        failCallback && failCallback(err.message, err, rejectCode);
     };
 
     let timeoutSing;
@@ -146,6 +147,10 @@ export function comFetch(dispatch, param, options = {
     }).then(function (json) {
         const {status, msg} = json;
         if (status === 0 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) throw Error(msg);
+        if (status !== 1 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) {
+            const errMsg = getCode2Msg(status) || intl.get("msg.network.die");
+            throw Error(errMsg);
+        }
         try {
             dispatch({
                 type: options.action,

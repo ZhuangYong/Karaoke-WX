@@ -33,6 +33,9 @@ export default{
 
     EFFECT_NST_CHANNEL_LIST: ["nst_sk_a3", "nst_m3", "nst_a3"],
 
+    // k1 音效
+    EFFECT_K1_CHANNEL_LIST: ["gg_stb", "gg_k1_child", "gx_gg_k1"],
+
     EFFECT_GG_CHANNEL_LIST: ["gg_laobanka", "gg_f886_ahfy"],
 
     VIP_ALERT_TIME: 15 * 20 * 60 * 60 * 1000,

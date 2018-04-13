@@ -16,6 +16,9 @@ export function getLocalesData(language, callback, failBack) {
         case 'EN':
             language = 'en-US';
             break;
+        case 'ES':
+            language = 'es-US';
+            break;
         case 'TW':
         case 'HK':
             language = 'zh-HK';

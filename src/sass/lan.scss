@@ -1,0 +1,49 @@
+.lan_ES{
+    //顶部输入框提示
+    .key-word-input{
+        font{
+            font-size: .2rem!important;
+        }
+    }
+    .search-header{
+        .search-bar-panel{
+            .search-button p{
+                font-size: 0.27rem!important;
+            }
+        }
+    }
+    .history-words-title{
+        font{
+            font-size: .28rem!important;
+        }
+    }
+    //顶部分类
+    .top-nav{
+        p{
+            font-size: .3rem!important;
+        }
+    }
+    //底部导航
+    .bottom-nav{
+        button:nth-child(2){
+            .title{
+                font-size: .25rem!important;
+            }
+        }
+    }
+
+    .song-controller-tab{
+        .tab-item{
+            font-size: .14rem!important;
+        }
+    }
+
+    .song-list{
+        .song-item{
+            .choose-button{
+                font-size: .14rem!important;
+            }
+        }
+    }
+
+}
