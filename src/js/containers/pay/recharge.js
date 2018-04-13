@@ -162,22 +162,23 @@ class Recharge extends BaseComponent {
             this.setState({
                 submitLoading: true,
             });
-            const {status} = res;
+            const {status, data} = res;
 
-            switch (parseInt(status, 10)) {
-                case 1:
-                    globAlertAction(intl.get('msg.recharge.invalidCardNo'));
-                    break;
-                case 2:
-                    globAlertAction(intl.get('msg.recharge.invalidPassword'));
-                    break;
-                case 3:
-                    globAlertAction(intl.get('msg.recharge.invalidDate'));
-                    break;
-                case 4:
-                    globAlertAction(intl.get('msg.recharge.used'));
-                    break;
-                case 5:
+            if (parseInt(status, 10) === 1) {
+                switch (parseInt(data.status, 10)) {
+                    case 1:
+                        globAlertAction(intl.get('msg.recharge.invalidCardNo'));
+                        break;
+                    case 2:
+                        globAlertAction(intl.get('msg.recharge.invalidPassword'));
+                        break;
+                    case 3:
+                        globAlertAction(intl.get('msg.recharge.invalidDate'));
+                        break;
+                    case 4:
+                        globAlertAction(intl.get('msg.recharge.used'));
+                        break;
+                    case 5:
                     {
                         globAlertAction(intl.get('msg.recharge.ok'));
                         const getUserInfoParams = {
@@ -189,8 +190,11 @@ class Recharge extends BaseComponent {
                             getQueryString('language') !== null ? window.WeixinJSBridge.call('closeWindow') : window.history.go(-2);
                         }, 800);
                     }
-                    break;
-                default:
+                        break;
+                    default:
+                }
+            } else {
+                globAlertAction(intl.get('msg.network.die'));
             }
 
             this.refs.password.value = '';
