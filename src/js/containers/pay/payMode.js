@@ -15,7 +15,7 @@ import { getUserInfo } from '../../actions/userActions';
 class PayMode extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title(intl.get("title.payment"));
+        super.title(intl.get("title.pay"));
     }
 
     render() {

@@ -10,6 +10,7 @@
     "title.controller": "播控",
     "title.login": "登录",
     "title.pay": "支付",
+    "title.recharge": "充值卡充值",
     "title.payment": "支付协议",
     "title.audio.share": "录音分享",
     "title.categories": "分类",
@@ -266,5 +267,10 @@
     "msg.upload.fail": "上传失败",
     "msg.delete.photos.title": "确定删除选中的照片吗？",
     "msg.delete.photos.sub": "如果照片被设置为封面也将被删除。",
-    "msg.audio.can.not.get.the.recording": "无法获取录音"
+    "msg.audio.can.not.get.the.recording": "无法获取录音",
+    "msg.recharge.invalidCardNo": "卡号不存在",
+    "msg.recharge.invalidPassword": "卡号和密码不匹配，请重新输入",
+    "msg.recharge.invalidDate": "当前时间不在充值卡可使用的有效期内",
+    "msg.recharge.used": "该充值卡已使用",
+    "msg.recharge.ok": "充值成功"
 }

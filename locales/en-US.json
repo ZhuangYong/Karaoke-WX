@@ -10,6 +10,7 @@
     "title.controller": "Controller",
     "title.login": "Login",
     "title.pay": "Pay",
+    "title.recharge": "Prepay card",
     "title.payment": "Payment agreement",
     "title.audio.share": "Record share",
     "title.categories": "Categories",
@@ -265,5 +266,10 @@
     "msg.upload.fail": "Upload fail",
     "msg.delete.photos.title": "Do you make sure that the selected photos are deleted?",
     "msg.delete.photos.sub": "If the photo is set to the cover, it will be deleted.",
-    "msg.audio.can.not.get.the.recording": "Can't get the recording!"
+    "msg.audio.can.not.get.the.recording": "Can't get the recording!",
+    "msg.recharge.invalidCardNo": "Card number does not exist",
+    "msg.recharge.invalidPassword": "Card number and password do not match, please re-enter",
+    "msg.recharge.invalidDate": "The current time is not within the validity period of the recharge card",
+    "msg.recharge.used": "This recharge card is already in use",
+    "msg.recharge.ok": "Recharge success"
 }

@@ -45,7 +45,7 @@ let styles = {
 class Recharge extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title(intl.get("title.payment"));
+        super.title(intl.get("title.recharge"));
 
         this.state = {
             deviceUuid: this.props.match.params.deviceUuid,
@@ -98,7 +98,7 @@ class Recharge extends BaseComponent {
                                    });
                                }}
                                placeholder=''
-                               type="text"/>
+                               type="number"/>
                     </section>)
                 }
             </main>
@@ -125,7 +125,7 @@ class Recharge extends BaseComponent {
                         zIndex: 9999,
                     }}
                     label={intl.get("button.sure")}
-                    disabled={cardNo === '' || password === ''}
+                    disabled={cardNo.length < 14 || password.length !== 8}
                     onClick={this.submit}
                 />
             </footer>
@@ -141,7 +141,7 @@ class Recharge extends BaseComponent {
         const {cardNo, password, deviceUuid} = this.state;
         const { rechargeSubmitAction, globAlertAction, getUserInfoAction } = this.props;
 
-        if (cardNo.length !== 14) {
+        /*if (cardNo.length !== 14) {
             globAlertAction('请输入14位充值卡账号');
             return;
         }
@@ -149,8 +149,15 @@ class Recharge extends BaseComponent {
         if (password.length !== 8) {
             globAlertAction('请输入8位充值卡密码');
             return;
-        }
-        rechargeSubmitAction(this.state, reqHeader(this.state), res => {
+        }*/
+
+        const params = {
+            cardNo,
+            password,
+            deviceUuid,
+        };
+
+        rechargeSubmitAction(params, reqHeader(params), res => {
             this.setState({
                 submitLoading: true,
             });
@@ -158,20 +165,20 @@ class Recharge extends BaseComponent {
 
             switch (parseInt(status, 10)) {
                 case 1:
-                    globAlertAction('卡号不存在');
+                    globAlertAction(intl.get('msg.recharge.invalidCardNo'));
                     break;
                 case 2:
-                    globAlertAction('卡号和密码不匹配，请重新输入');
+                    globAlertAction(intl.get('msg.recharge.invalidPassword'));
                     break;
                 case 3:
-                    globAlertAction('当前时间不在充值卡可使用的有效期内');
+                    globAlertAction(intl.get('msg.recharge.invalidDate'));
                     break;
                 case 4:
-                    globAlertAction('该充值卡已使用');
+                    globAlertAction(intl.get('msg.recharge.used'));
                     break;
                 case 5:
                     {
-                        globAlertAction('充值成功');
+                        globAlertAction(intl.get('msg.recharge.ok'));
                         const getUserInfoParams = {
                             url: location.href.split('#')[0],
                         };
