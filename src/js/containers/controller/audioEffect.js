@@ -97,7 +97,7 @@ class AudioEffect extends BaseComponent {
             <div className="big-circle">
                 <div className="left-choose">
                     {
-                        this.state.controllerIng[AUDIO_EFFECT_MODE_ADD] === true ? <CircularProgress
+                        this.state.controllerIng[AUDIO_EFFECT_MODE_REDUCE] === true ? <CircularProgress
                             style={{
                                 position: 'absolute',
                                 right: '.9rem',
@@ -112,13 +112,13 @@ class AudioEffect extends BaseComponent {
                             top: '.9rem',
                             transform: 'rotate(-45deg)'
                         }} color="#f96d32" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_MODE_ADD);
+                            this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
                         }}/>
                     }
                 </div>
                 <div className="right-choose">
                     {
-                        this.state.controllerIng[AUDIO_EFFECT_MODE_REDUCE] === true ? <CircularProgress
+                        this.state.controllerIng[AUDIO_EFFECT_MODE_ADD] === true ? <CircularProgress
                             style={{
                                 position: 'absolute',
                                 left: '.9rem',
@@ -133,7 +133,7 @@ class AudioEffect extends BaseComponent {
                             bottom: '.9rem',
                             transform: 'rotate(-45deg)'
                         }} color="#f96d32" onClick={() => {
-                            this.sendEffect(AUDIO_EFFECT_MODE_REDUCE);
+                            this.sendEffect(AUDIO_EFFECT_MODE_ADD);
                         }}/>
                     }
                 </div>
