@@ -184,10 +184,13 @@ class Recharge extends BaseComponent {
                     case 5:
                     {
                         globAlertAction(intl.get('msg.recharge.ok'));
-                        const getUserInfoParams = {
-                            url: location.href.split('#')[0],
-                        };
-                        getUserInfoAction(getUserInfoParams, reqHeader(getUserInfoParams));
+
+                        if (getQueryString('language') === null) {
+                            const getUserInfoParams = {
+                                url: location.href.split('#')[0],
+                            };
+                            getUserInfoAction(getUserInfoParams, reqHeader(getUserInfoParams));
+                        }
 
                         setTimeout(() => {
                             getQueryString('language') !== null ? window.WeixinJSBridge.call('closeWindow') : window.history.go(-2);
