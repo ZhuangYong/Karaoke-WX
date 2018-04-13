@@ -705,3 +705,22 @@ export function versionMoreThan(a, b) {
     const bs = b.split(".");
     return a.split(".").some((v, i) => window.parseInt(v) > window.parseInt(bs[i]));
 }
+
+export function getCode2Msg(code) {
+    switch (code) {
+        case 3002:
+        case "3002":
+            return "推送失败";
+        case 3003:
+        case "3003":
+            return "设备不在线";
+        case 3004:
+        case "3004":
+            return "推送超时";
+        case 3005:
+        case "3005":
+            return "推送未知错误";
+        default:
+            return "";
+    }
+}
