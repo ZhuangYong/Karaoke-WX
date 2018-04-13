@@ -89,6 +89,7 @@ class UserIndex extends BaseComponent {
         this.showGxStatus = this.showGxStatus.bind(this);
         this.deleteGetter = this.deleteGetter.bind(this);
         this.changeCoverGetter = this.changeCoverGetter.bind(this);
+        this.VIPStatusClick = this.VIPStatusClick.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -395,21 +396,7 @@ class UserIndex extends BaseComponent {
                 border: `${toRem(2)} solid ${vipParams.borderColor}`,
                 boxSizing: "initial"
             }}
-            onTouchTap={() => {
-                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
-
-                if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                    linkTo(`deviceRegister`, false, null);
-                    return;
-                }
-                const {isIos} = window.sysInfo;
-                if (isIos) {
-                    // linkTo(`pay/home`, false, null);
-                    location.href = '/pay/home';
-                } else {
-                    linkTo(`pay/home`, false, null);
-                }
-            }}>
+            onClick={this.VIPStatusClick}>
             <img style={{
                 width: toRem(100),
                 height: toRem(50)
@@ -442,21 +429,7 @@ class UserIndex extends BaseComponent {
                 border: `${toRem(2)} solid ${vipStatus === 0 ? "#ababaa" : "#ffcb63"}`,
                 boxSizing: "initial"
             }}
-            onTouchTap={() => {
-                if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
-
-                if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
-                    linkTo(`deviceRegister`, false, null);
-                    return;
-                }
-                const {isIos} = window.sysInfo;
-                if (isIos) {
-                    // linkTo(`pay/home`, false, null);
-                    location.href = '/pay/home';
-                } else {
-                    linkTo(`pay/home`, false, null);
-                }
-            }}>
+            onClick={this.VIPStatusClick}>
             {
                 !window.gxTime ? <p style={styles.gxStatusPan}>
                     {intl.get("song.sing.now")}
@@ -471,6 +444,29 @@ class UserIndex extends BaseComponent {
                 float: 'right'
             }} src={PayIcon} />
         </div>);
+    }
+
+    VIPStatusClick() {
+        // if (super.validUserBindDevice(this.props.userInfo.userInfoData, this.props.globAlertAction) !== true) return;
+        //
+        // if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+        //     linkTo(`deviceRegister`, false, null);
+        //     return;
+        // }
+
+        const {data} = this.props.userInfo.userInfoData || {data: {type: 2}};
+        const {type} = data;
+        const linkPath = parseInt(type, 10) === 1 ? `payMode` : `pay?state=home`;
+
+        linkTo(linkPath, false, null);
+
+        /*const {isIos} = window.sysInfo;
+        if (isIos) {
+            // linkTo(`pay/home`, false, null);
+            location.href = '/pay/home';
+        } else {
+            linkTo(`pay/home`, false, null);
+        }*/
     }
 
     gxTimer() {

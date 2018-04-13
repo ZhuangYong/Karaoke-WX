@@ -7,6 +7,18 @@ import {comFetch} from "../utils/fetchUtils";
 import apiUrl from "./apiUrl";
 import sysConfig from "../utils/sysConfig";
 
+// 充值接口
+export function rechargeSubmit(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_RECHARGE_SUBMIT;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.Pay.API_RECHARGE_SUBMIT
+        }, callback);
+    };
+}
+
 export function getPayList(data, headers) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_PAY_LIST;
     return (dispatch) => {

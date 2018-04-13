@@ -29,6 +29,8 @@ import SongController from "../containers/controller/songController";
 import VoiceSearch from "../containers/voiceSearch";
 
 import Pay from "../containers/pay";
+import PayMode from "../containers/pay/payMode";
+import Recharge from '../containers/pay/recharge';
 import Protocol from "../containers/pay/protocol";
 import DeviceRegister from "../containers/pay/deviceRegister";
 import RedirectPay from "../containers/forOldVersion/pay";
@@ -178,6 +180,18 @@ const PayContainer = () => (
     </Bundle>
 );
 
+const payModeContainer = () => (
+    <Bundle load={PayMode}>
+        {Component => <Component />}
+    </Bundle>
+);
+
+const rechargeContainer = () => (
+    <Bundle load={Recharge}>
+        {Component => <Component />}
+    </Bundle>
+);
+
 const DeviceRegisterContainer = () => (
     <Bundle load={DeviceRegister}>
         {Component => <Component />}
@@ -255,6 +269,8 @@ export default class router extends React.Component {
                 <Route path={`/pay/:state/:pollingId?/:deviceId?/:openid?`} component={RedirectPayContainer}/>
                 <Route path={`/deviceRegister`} component={DeviceRegisterContainer}/>
                 <Route path={`/pay`} component={PayContainer}/>
+                <Route path={`/payMode`} component={payModeContainer}/>
+                <Route path={`/recharge/:deviceUuid`} component={rechargeContainer}/>
                 <Route path={`/protocol`} component={ProtocolContainer}/>
                 <Route path={`/controller/`} exact component={SongControllerContainer}/>
                 <Route path={`/controller/effect`} exact component={AudioEffectContainer}/>

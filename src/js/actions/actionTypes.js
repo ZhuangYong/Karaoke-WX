@@ -110,6 +110,8 @@ const SEARCH = {
 };
 
 const Pay = {
+    // 充值接口
+    API_RECHARGE_SUBMIT: 'API_RECHARGE_SUBMIT',
     // 获取支付列表
     API_GET_PAY_LIST: "API_GET_PAY_LIST",
     // 支付宝支付

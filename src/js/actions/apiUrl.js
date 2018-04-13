@@ -4,6 +4,9 @@ export default {
     // OTT退出登录
     "API_OTT_LOGOUT": "/user/wxloginOut",
 
+    // 充值接口
+    'API_RECHARGE_SUBMIT': '/recharge/doRecharge',
+
     // 获取支付列表
     "API_GET_PAY_LIST": "/music/listPayProduct",
     // 支付宝支付
@@ -36,6 +39,8 @@ export default {
      * uuid: "ohSltvwgabfZPNDxc2r14tlf7rwM"
      * vipStatus: vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
      * tag（机型模式）: kid-小朋友
+     * type(1-可以使用充值卡；2-不能使用)
+     * deviceUuid设备唯一uuid
      */
     "API_GET_USER_INFO": "/user/info",
     // 获取微信js sdk config参数

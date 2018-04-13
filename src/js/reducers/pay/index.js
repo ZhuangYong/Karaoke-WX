@@ -35,6 +35,12 @@ export default (state = initialState, action = {}) => {
                 msg: "deviceRegisterMsg",
                 loading: "deviceRegisterLoading"
             });
+        case ActionTypes.API_RECHARGE_SUBMIT:
+            return fetchProcess(state, action, {
+                data: "rechargeSubmitData",
+                msg: "rechargeSubmitMsg",
+                loading: "rechargeSubmitLoading"
+            });
         default:
             return state;
     }
