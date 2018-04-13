@@ -59,8 +59,8 @@ class Recharge extends BaseComponent {
 
     render() {
         const inputs = [
-            {label: '请输入充值卡卡号', state: 'cardNo'},
-            {label: '请输入充值卡密码', state: 'password'},
+            {label: intl.get('recharge.inputCarNo'), state: 'cardNo'},
+            {label: intl.get('recharge.inputPassword'), state: 'password'},
         ];
 
         const {cardNo, password} = this.state;
@@ -91,6 +91,7 @@ class Recharge extends BaseComponent {
                     inputs.map((input, index) => <section key={index} style={styles.singleItem}>
                         <header style={styles.itemLabel}>{input.label}</header>
                         <input style={styles.input}
+                               ref={input.state}
                                className='recharge-input'
                                onChange={(e) => {
                                    this.setState({
@@ -191,6 +192,8 @@ class Recharge extends BaseComponent {
                     break;
                 default:
             }
+
+            this.refs.password.value = '';
             this.setState({
                 password: '',
             });

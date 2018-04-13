@@ -51,6 +51,8 @@
     "pay.payment.time": "支付時間",
     "pay.yuan": "元",
     "pay.agree": "同意",
+    "recharge.inputCarNo": "請輸入充值卡卡號",
+    "recharge.inputPassword": "請輸入充值卡密碼",
     "index.category": "分類",
     "index.artists": "歌星",
     "index.trending": "熱歌",

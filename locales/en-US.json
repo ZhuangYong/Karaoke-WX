@@ -51,6 +51,8 @@
     "pay.payment.time": "Payment time",
     "pay.yuan": "yuan",
     "pay.agree": "Agree",
+    "recharge.inputCarNo": "Please enter the recharge card number",
+    "recharge.inputPassword": "Please enter the charge card password",
     "index.category": "Categories",
     "index.artists": "Artists",
     "index.trending": "Trending",

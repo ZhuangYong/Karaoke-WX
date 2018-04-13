@@ -51,6 +51,8 @@
     "pay.payment.time": "Fecha de pago",
     "pay.yuan": "Yuan",
     "pay.agree": " Aceptar ",
+    "recharge.inputCarNo": "Por favor ingrese el número de tarjeta de recarga",
+    "recharge.inputPassword": "Por favor ingrese la contraseña de la tarjeta de cargo",
     "index.category": " Categoría ",
     "index.artists": " Cantantes ",
     "index.trending": "Canciones populares",
