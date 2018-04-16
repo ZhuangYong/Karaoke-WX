@@ -182,7 +182,6 @@ class Recharge extends BaseComponent {
                         globAlertAction(intl.get('msg.recharge.used'));
                         break;
                     case 5:
-                    {
                         globAlertAction(intl.get('msg.recharge.ok'));
 
                         if (getQueryString('language') === null) {
@@ -195,7 +194,6 @@ class Recharge extends BaseComponent {
                         setTimeout(() => {
                             getQueryString('language') !== null ? window.WeixinJSBridge.call('closeWindow') : window.history.go(-2);
                         }, 800);
-                    }
                         break;
                     default:
                 }

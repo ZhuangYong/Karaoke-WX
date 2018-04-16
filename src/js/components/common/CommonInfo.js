@@ -228,6 +228,7 @@ CommonInfo.propTypes = {
 // 映射state到props
 const mapStateToProps = (state, ownProps) => {
     return {
+        userInfo: state.app.user.userInfo,
         globAlert: state.app.common.globAlert,
         alertData: state.app.common.alertData,
     };
