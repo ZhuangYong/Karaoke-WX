@@ -145,7 +145,11 @@ export function comFetch(dispatch, param, options = {
         }
         return response.json();
     }).then(function (json) {
-        const {status, msg} = json;
+        const {status, msg, data} = json;
+        if (status === 302) {
+            window.location.href = data;
+            return;
+        }
         if (status === 0 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) throw Error(msg);
         if (status !== 1 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) {
             const errMsg = getCode2Msg(status) || intl.get("msg.network.die");
