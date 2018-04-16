@@ -458,7 +458,7 @@ class App extends BaseComponent {
      */
     pageFilterForConfigWX() {
         const pathNames = [
-            'pay',
+            // 'pay',
             'voiceSearch',
         ];
         let bool = false;
