@@ -4,7 +4,7 @@
 
 import React from "react";
 import {BottomNavigation, BottomNavigationItem, Dialog, FlatButton} from "material-ui";
-import { getCookie, linkTo, linkToPayment, setCookie } from '../../utils/comUtils'
+import { getCookie, linkTo, linkToPayment, setCookie } from '../../utils/comUtils';
 import PropTypes from "prop-types";
 import BaseComponent from "./BaseComponent";
 import {withRouter} from "react-router";
