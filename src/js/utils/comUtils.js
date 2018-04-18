@@ -725,3 +725,23 @@ export function getCode2Msg(code) {
             return "";
     }
 }
+
+/**
+ * 跳转到支付页面
+ * @param userInfoData 用户信息
+ */
+export function linkToPayment (userInfoData) {
+    const {data} = userInfoData || {data: {type: 2}};
+    const {type} = data;
+    const linkPath = parseInt(type, 10) === 1 ? `payMode` : `pay?state=home`;
+
+    linkTo(linkPath, false, null);
+
+    /*const {isIos} = window.sysInfo;
+    if (isIos) {
+        // linkTo(`pay/home`, false, null);
+        location.href = '/pay/home';
+    } else {
+        linkTo(`pay/home`, false, null);
+    }*/
+}

@@ -4,7 +4,7 @@
 
 import React from "react";
 import {BottomNavigation, BottomNavigationItem, Dialog, FlatButton} from "material-ui";
-import {getCookie, linkTo, setCookie} from "../../utils/comUtils";
+import { getCookie, linkTo, linkToPayment, setCookie } from '../../utils/comUtils'
 import PropTypes from "prop-types";
 import BaseComponent from "./BaseComponent";
 import {withRouter} from "react-router";
@@ -226,13 +226,7 @@ class MBottomNavigation extends BaseComponent {
                 showAlert: false
             });
             setCookie("vipAlert", JSON.stringify({lastShowAlertTime: new Date()}));
-            const {isIos} = window.sysInfo;
-            if (isIos) {
-                // linkTo(`pay/home`, false, null);
-                location.href = '/pay/home';
-            } else {
-                linkTo(`pay/home`, false, null);
-            }
+            linkToPayment(this.props.userInfoData);
         };
         this.state.actions = [
             <FlatButton

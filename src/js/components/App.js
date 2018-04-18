@@ -20,13 +20,13 @@ import {
     getEncryptHeader,
     getQueryString,
     isGetUserInfo,
-    linkTo,
+    linkTo, linkToPayment,
     reqHeader,
     setCookie,
     wxAuthorizedUrl,
     wxConfig,
     wxShare
-} from "../utils/comUtils";
+} from '../utils/comUtils';
 import {withRouter} from "react-router";
 import ActionTypes from "../actions/actionTypes";
 import {getOttStatus} from "../actions/deviceAction";
@@ -246,13 +246,7 @@ class App extends BaseComponent {
                                                                                     linkTo(`deviceRegister`, false, null);
                                                                                     return;
                                                                                 }
-                                                                                const {isIos} = window.sysInfo;
-                                                                                if (isIos) {
-                                                                                    // linkTo(`pay/home`, false, null);
-                                                                                    location.href = '/pay/home';
-                                                                                } else {
-                                                                                    linkTo(`pay/home`, false, null);
-                                                                                }
+                                                                                linkToPayment(this.props.action_getUserInfo.userInfoData);
                                                                             }}>
                                 <img src={TimeIcon} style={style.gxTimePanel.img}/>
                                 <span style={style.gxTimePanel.span}>

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import intl from "react-intl-universal";
-import {getCookie, linkTo, reqHeader, setCookie} from "../../utils/comUtils";
+import { getCookie, linkTo, linkToPayment, reqHeader, setCookie } from '../../utils/comUtils';
 import ActionTypes from "../../actions/actionTypes";
 import {setGlobAlert} from "../../actions/common/actions";
 import {connect} from "react-redux";
@@ -133,7 +133,7 @@ class CommonInfo extends React.Component {
                 alertStr = intl.get("msg.recharge.as.vip");
                 //TODO VIP
                 doAction = () => {
-                    linkTo("pay/home", false, "");
+                    linkToPayment(this.props.userInfo.userInfoData);
                 };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE:
@@ -146,7 +146,7 @@ class CommonInfo extends React.Component {
                     </p>
                 </div>;
                 doAction = () => {
-                    linkTo("pay/home", false, "");
+                    linkToPayment(this.props.userInfo.userInfoData);
                 };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_DEVICE_NOT_ONLINE:

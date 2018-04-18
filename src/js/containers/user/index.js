@@ -5,7 +5,7 @@ import bindActionCreators from "redux/es/bindActionCreators";
 import PropTypes from "prop-types";
 import { deleteRecording, getRecordsList, getUserInfo } from '../../actions/userActions';
 import {
-    formatTime, getCookie, getWxinfoFromSession, linkTo, reqHeader, setCookie, timeToYmd,
+    formatTime, getCookie, getWxinfoFromSession, linkTo, linkToPayment, reqHeader, setCookie, timeToYmd,
     toRem
 } from '../../utils/comUtils';
 import BaseComponent from "../../components/common/BaseComponent";
@@ -454,19 +454,7 @@ class UserIndex extends BaseComponent {
             return;
         }
 
-        const {data} = this.props.userInfo.userInfoData || {data: {type: 2}};
-        const {type} = data;
-        const linkPath = parseInt(type, 10) === 1 ? `payMode` : `pay?state=home`;
-
-        linkTo(linkPath, false, null);
-
-        /*const {isIos} = window.sysInfo;
-        if (isIos) {
-            // linkTo(`pay/home`, false, null);
-            location.href = '/pay/home';
-        } else {
-            linkTo(`pay/home`, false, null);
-        }*/
+        linkToPayment(this.props.userInfo.userInfoData);
     }
 
     gxTimer() {
