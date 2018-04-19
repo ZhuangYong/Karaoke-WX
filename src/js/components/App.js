@@ -309,7 +309,8 @@ class App extends BaseComponent {
             'editRecord',
             'login',
             'recharge',
-            'effect'
+            'effect',
+            'logout'
         ];
         let bool = true;
 

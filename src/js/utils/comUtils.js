@@ -621,6 +621,7 @@ export function isGetUserInfo() {
         'deviceRegister',
         'protocol',
         'recharge',
+        'logout',
     ];
     let bool = true;
 
