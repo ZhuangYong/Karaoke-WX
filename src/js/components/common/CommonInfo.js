@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import intl from "react-intl-universal";
-import { getCookie, linkTo, linkToPayment, reqHeader, setCookie } from '../../utils/comUtils';
+import {getCookie, getSession, linkTo, linkToPayment, reqHeader, setCookie, setSession} from '../../utils/comUtils';
 import ActionTypes from "../../actions/actionTypes";
 import {setGlobAlert} from "../../actions/common/actions";
 import {connect} from "react-redux";
@@ -23,7 +23,7 @@ class CommonInfo extends React.Component {
             checkLocalTimer: 0,
             checkLocalCount: 0,
             checkLocalBetween: 120,
-            theme: getCookie("theme") || "default"
+            theme: getSession("theme") || "default"
         };
         this.validUserStatusDialog = this.validUserStatusDialog.bind(this);
     }
@@ -157,17 +157,17 @@ class CommonInfo extends React.Component {
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_CHANGE_THEME:
             {
-                const currentTheme = getCookie("theme") || "default";
-                alertStr = `改变当前模式为：${currentTheme === "default" ? "儿童" : "成人"}`;
+                const currentTheme = getSession("theme") || "default";
+                alertStr = currentTheme === "default" ? "当前为大朋友模式，是否切换为小朋友模式？" : "当前为小朋友模式，是否切换为大朋友模式？";
                 doAction = () => {
                     if (currentTheme === "children") {
                         this.props.themeChange && this.props.themeChange("default");
-                        setCookie("theme", "default");
+                        setSession("theme", "default");
                         // this.props.action_setGlobAlert("已切换到成人模式");
                         location.reload();
                     } else if (currentTheme === "default") {
                         this.props.themeChange && this.props.themeChange("children");
-                        setCookie("theme", "children");
+                        setSession("theme", "children");
                         // this.props.action_setGlobAlert("已切换到儿童模式");
                         location.reload();
                     }

@@ -374,6 +374,18 @@ export function reqHeader(data, header, isReturnSign) {
     return header;
 }
 
+export function setSession(key, value) {
+    window.sessionStorage.setItem(key, value);
+}
+
+export function getSession(key) {
+    return window.sessionStorage.getItem(key);
+}
+
+export function removeSession(key) {
+    window.sessionStorage.removeItem(key);
+}
+
 export function setCookie(name, value, expireDays) {
     let date = new Date();
     date.setDate(date.getDate() + expireDays);

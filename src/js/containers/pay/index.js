@@ -227,7 +227,7 @@ class Pay extends BaseComponent {
                                                         </p>
 
                                                         <p style={{margin: '.38rem 0', color: '#ff6832', fontSize: '.52rem'}}>
-                                                            ￥{item.price} {(item.orgprice && item.discountType === Const.DISCOUNT_TYPE_MONEY) ? <font style={{textDecoration: 'line-through', color: 'gray'}}>{`￥${item.orgprice}`}</font> : ""}
+                                                            ￥{item.price}元 {(item.orgprice && item.discountType === Const.DISCOUNT_TYPE_MONEY) ? <font style={{textDecoration: 'line-through', color: 'gray'}}>{`￥${item.orgprice}元`}</font> : ""}
                                                         </p>
                                                     </div>
                                                 }
@@ -252,7 +252,7 @@ class Pay extends BaseComponent {
                                             }}
                                         >
                                             <div style={styles.itemLeft}>{tile.productName}</div>
-                                            <div style={styles.itemRight}>{tile.price}</div>
+                                            <div style={styles.itemRight}>{tile.price}元</div>
                                         </li>))
                                     }
 

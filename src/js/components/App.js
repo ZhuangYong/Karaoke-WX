@@ -18,11 +18,11 @@ import {
     chkDevice,
     formatTime, getCookie,
     getEncryptHeader,
-    getQueryString,
+    getQueryString, getSession,
     isGetUserInfo,
     linkTo, linkToPayment,
     reqHeader,
-    setCookie,
+    setCookie, setSession,
     wxAuthorizedUrl,
     wxConfig,
     wxShare
@@ -134,7 +134,7 @@ class App extends BaseComponent {
             checkLocalTimer: 0,
             checkLocalCount: 0,
             checkLocalBetween: 120,
-            theme: getCookie("theme") || "default",
+            theme: getSession("theme") || "default",
             lan: getCookie("language")
         };
         this.msgOk = this.msgOk.bind(this);
@@ -563,7 +563,7 @@ class App extends BaseComponent {
             this.setState({
                 theme: theme
             });
-            setCookie("theme", theme);
+            setSession("theme", theme);
         }
     }
 }

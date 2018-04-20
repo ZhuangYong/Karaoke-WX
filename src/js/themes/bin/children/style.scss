@@ -250,10 +250,10 @@ $main-bar-color: #398dff;
                 img{
                     height: 0.4rem;
                     position: relative;
-                    left: -50px;
+                    left: -150px;
                     border-right: 20px solid transparent;
-                    -webkit-filter: drop-shadow(20px 0 $main-color);
-                    filter: drop-shadow(60px 0 $main-color);
+                    -webkit-filter: drop-shadow(160px 0 $main-color);
+                    filter: drop-shadow(160px 0 $main-color);
                     overflow: hidden;
                 }
                 .label{
@@ -301,9 +301,9 @@ $main-bar-color: #398dff;
         position: absolute;
         right: .6rem;
         top: .6rem;
-        width: .6rem;
-        height: .6rem;
-        background: url("./assets/common/theme_change_default.png") no-repeat;
+        width: 1.2rem;
+        height: 1.2rem;
+        background: url("./assets/common/theme_change_children.png") no-repeat;
         background-size: contain;
     }
 //}
