@@ -97,8 +97,9 @@ class PlayAudio extends BaseComponent {
                 });
             }
 
+            const {musicUrl, nameNorm, shareId, pagePictureUrl, channel, uid} = data;
+
             // k1特性
-            const channel = data.channel;
             if (Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0) {
                 const sliderImgs = [SlideK1Png1, SlideK1Png2];
                 if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
@@ -108,6 +109,16 @@ class PlayAudio extends BaseComponent {
                     });
                 }
             }
+
+            window.wx && window.wx.ready(() => {
+                wxShare({
+                    title: intl.get("audio.share.title", {name: nameNorm}),
+                    desc: intl.get("audio.share.from"),
+                    link: `${sysConfig.apiDomain}/user/shareSoundUrl?soundId=${uid}&shareId=${shareId}&language=${getQueryString('language')}`,
+                    imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                    dataUrl: musicUrl
+                });
+            });
         }
     }
 
@@ -269,21 +280,7 @@ class PlayAudio extends BaseComponent {
         }
 
         getShareAudioAction(params, reqHeader(params), res => {
-            const {status, data} = res;
-            const {isWeixin} = window.sysInfo;
-            if (parseInt(status, 10) === 1 && isWeixin) {
-                const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
 
-                window.wx && window.wx.ready(() => {
-                    wxShare({
-                        title: intl.get("audio.share.title", {name: nameNorm}),
-                        desc: intl.get("audio.share.from"),
-                        link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
-                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
-                        dataUrl: musicUrl
-                    });
-                });
-            }
         });
     }
 
