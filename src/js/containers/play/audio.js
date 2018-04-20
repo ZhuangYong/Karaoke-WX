@@ -114,7 +114,8 @@ class PlayAudio extends BaseComponent {
                 wxShare({
                     title: intl.get("audio.share.title", {name: nameNorm}),
                     desc: intl.get("audio.share.from"),
-                    link: `${sysConfig.apiDomain}/user/shareSoundUrl?soundId=${uid}&shareId=${shareId}&language=${getQueryString('language')}`,
+                    link: `${location.protocol}//${location.host}/recordingPlay/${uid}/${shareId}?language=${getQueryString('language')}`,
+                    // link: `${sysConfig.apiDomain}/user/shareSoundUrl?soundId=${uid}&shareId=${shareId}&language=${getQueryString('language')}`,
                     imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
                     dataUrl: musicUrl
                 });
