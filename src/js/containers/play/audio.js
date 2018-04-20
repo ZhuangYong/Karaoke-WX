@@ -269,18 +269,20 @@ class PlayAudio extends BaseComponent {
         }
 
         getShareAudioAction(params, reqHeader(params), res => {
-            const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
+            const {status, data} = res;
+            if (parseInt(status, 10) === 1) {
+                const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
 
-            window.wx && window.wx.ready(() => {
-                wxShare({
-                    title: intl.get("audio.share.title", {name: nameNorm}),
-                    desc: intl.get("audio.share.from"),
-                    link: `${location.protocol}//${location.host}/recordingPlay/${uid}/${shareId}?language=${getQueryString('language')}`,
-                    // link: `${sysConfig.apiDomain}/user/shareSoundUrl?soundId=${uid}&shareId=${shareId}&language=${getQueryString('language')}`,
-                    imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
-                    dataUrl: musicUrl
+                window.wx && window.wx.ready(() => {
+                    wxShare({
+                        title: intl.get("audio.share.title", {name: nameNorm}),
+                        desc: intl.get("audio.share.from"),
+                        link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                        dataUrl: musicUrl
+                    });
                 });
-            });
+            }
         });
     }
 
