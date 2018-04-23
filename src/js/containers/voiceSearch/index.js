@@ -48,28 +48,29 @@ class VoiceSearch extends BaseComponent {
             isRecordStart: false,
             // 页面状态 0(正常未开始录音)/1(录音中)/2(断网)/3(无法识别)
             pageState: 0,
-            stopRecordTimer: null,
+            stopRecordTimer: 0,
             startX: null,
             startY: null,
-            btnDisabled: false
+            btnDisabled: false,
+            startRecordTimeout: 0,
         };
     }
 
     componentWillMount() {
-        this.configWeiXin();
+        // this.configWeiXin();
     }
 
     componentWillUnmount() {
         const { stopRecordTimer, isRecordStart } = this.state;
         if (isRecordStart) this.stopRecord();
 
-        if (stopRecordTimer !== null) clearTimeout(stopRecordTimer);
+        if (stopRecordTimer) clearTimeout(stopRecordTimer);
 
     }
 
 
     render() {
-        const { isRecordStart } = this.state;
+        const { isRecordStart, startRecordTimeout, pageState } = this.state;
         return (
             <div>
                 {this.pageStateMatch()}
@@ -96,37 +97,39 @@ class VoiceSearch extends BaseComponent {
                         textAlign: "center",
                         color: "#ff8226",
                         fontSize: "18px"
-                    }}>{isRecordStart ? intl.get("release.will.stop") : intl.get("press.and.say")}</header>
+                    }}>{pageState === 1 ? intl.get("release.will.stop") : intl.get("press.and.say")}</header>
 
                     <div style={styles.btn}
                         onTouchStart={e => {
+                            this.recordTouchStart(e.targetTouches[0]);
                             e.preventDefault();
-                            this.recordTouchStart(e);
                         }}
                         onTouchMove={(e) => {
+                            const { pageX, pageY } = e.targetTouches[0];
                             e.preventDefault();
                             const { startX, startY } = this.state;
-                            const { pageX, pageY } = e.targetTouches[0];
                             if (
-                                Math.abs(pageX - startX) > 80 ||
-                                Math.abs(pageY - startY) > 80
-                            ) this.stopRecord()
-                                .then(res => this.setState({
-                                    isRecordStart: false,
-                                    pageState: 0
-                                }))
-                                .catch(err => this.setState({
-                                    isRecordStart: false,
-                                    pageState: 0
-                                }));
+                                Math.abs(pageX - startX) > 120 ||
+                                Math.abs(pageY - startY) > 120
+                            ) {
+                                isRecordStart && this.stopRecord();
+                                this.setState({
+                                    pageState: 0,
+                                });
+                            }
                         }}
                         onTouchEnd={e => {
                             e.preventDefault();
-                            if (isRecordStart) this.voiceRecognition();
+                            isRecordStart && this.voiceRecognition();
+                            startRecordTimeout && clearTimeout(startRecordTimeout);
+                            this.setState({
+                                pageState: 0,
+                                startRecordTimeout: 0,
+                            });
                         }}
                     />
 
-                    {isRecordStart && (<div>
+                    {pageState === 1 && (<div>
                         <div className="btnBfAnimationA" style={styles.btn} />
                         <div className="btnBfAnimationB" style={styles.btn} />
                     </div>)}
@@ -187,9 +190,9 @@ class VoiceSearch extends BaseComponent {
 
     /**
      * touchStart recording
-     * @param e
+     * @param targetTouche
      */
-    recordTouchStart(e) {
+    recordTouchStart(targetTouche) {
         if (this.isNoNet()) return;
 
         const {actionGlobAlert} = this.props;
@@ -199,23 +202,40 @@ class VoiceSearch extends BaseComponent {
             return;
         }
 
-        const { isRecordStart } = this.state;
+        const startRecordTimeout = setTimeout(() => {
+            const { pageX, pageY } = targetTouche;
+            this.setState({
+                startX: pageX,
+                startY: pageY,
+                pageState: 1,
+                startRecordTimeout: 0,
+            });
 
-        if (isRecordStart) {
-            this.stopRecord()
-                .then(() => this.startRecord())
-                .catch(err => this.setState({
-                    isRecordStart: false,
-                    pageState: 0
-                }));
-        } else this.startRecord();
+            const { isRecordStart } = this.state;
+            if (!isRecordStart) {
+                this.startRecord()
+                    .catch(err => {
+                        actionGlobAlert(err.errMsg);
+                        this.setState({
+                            pageState: 0,
+                        });
+                    });
+            } else {
+                this.stopRecord()
+                    .then(() => {
+                        setTimeout(() => this.startRecord(), 500);
+                    })
+                    .catch(err => {
+                        actionGlobAlert(err.errMsg);
+                        this.setState({
+                            pageState: 0,
+                        });
+                    });
+            }
+        }, 500);
 
-        const { pageX, pageY } = e.targetTouches[0];
         this.setState({
-            startX: pageX,
-            startY: pageY,
-            pageState: 1,
-            isRecordStart: true,
+            startRecordTimeout: startRecordTimeout,
         });
 
     }
@@ -224,19 +244,13 @@ class VoiceSearch extends BaseComponent {
      * 停止录音并识别录音转为文字
      */
     voiceRecognition() {
+
         this.stopRecord()
             .then(this.translateVoice)
-            .then(res => {
-                if (window.location.pathname !== "/voiceSearch") return;
-
-                const { translateResult } = res;
-                linkTo(`song/search/${encodeURIComponent(stripScript(translateResult))}`, false, null);
-            })
             .catch(err => {
                 // this.props.actionGlobAlert(err.errMsg);
                 this.setState({
-                    isRecordStart: false,
-                    pageState: 3
+                    pageState: 3,
                 });
             });
     }
@@ -248,8 +262,7 @@ class VoiceSearch extends BaseComponent {
     isNoNet() {
         if (!window.navigator.onLine) {
             this.setState({
-                isRecordStart: false,
-                pageState: 2
+                pageState: 2,
             });
 
             return true;
@@ -262,23 +275,23 @@ class VoiceSearch extends BaseComponent {
      * 调用微信API开始录音
      */
     startRecord() {
-        const { actionGlobAlert } = this.props;
-
-        window.wx.startRecord({
-            success: () => {
-                const timer = setTimeout(() => this.voiceRecognition(), 30 * 1000);
-                this.setState({
-                    stopRecordTimer: timer,
-                });
-            },
-            fail: () => {
-                this.setState({
-                    pageState: 0,
-                    isRecordStart: false
-                });
-
-                actionGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
-            }
+        return new Promise((resolve, reject) => {
+            const { actionGlobAlert } = this.props;
+            window.wx.startRecord({
+                success: () => {
+                    // actionGlobAlert("开始录音");
+                    const stopRecordTimer = setTimeout(() => this.voiceRecognition(), 30 * 1000);
+                    this.setState({
+                        isRecordStart: true,
+                        stopRecordTimer: stopRecordTimer,
+                    });
+                    resolve();
+                },
+                fail: (err) => {
+                    actionGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                    reject(err);
+                }
+            });
         });
     }
 
@@ -288,6 +301,11 @@ class VoiceSearch extends BaseComponent {
      */
     translateVoice(localId) {
         return new Promise((resolve, reject) => {
+            if (typeof localId === 'undefined') {
+                const data = { errMsg: '录音id不存在' };
+                reject(data);
+            }
+
             window.wx && window.wx.translateVoice({
                 localId: localId, // 需要识别的音频的本地Id，由录音相关接口获得
                 isShowProgressTips: 1, // 默认为1，显示进度提示
@@ -302,6 +320,10 @@ class VoiceSearch extends BaseComponent {
                         data.errMsg = '识别音频失败';
                         reject(data);
                     }
+
+                    if (window.location.pathname !== "/voiceSearch") return;
+
+                    linkTo(`song/search/${encodeURIComponent(stripScript(translateResult))}`, false, null);
 
                     resolve(data);
                 },
@@ -318,18 +340,19 @@ class VoiceSearch extends BaseComponent {
     stopRecord() {
         return new Promise((resolve, reject) => {
             let { stopRecordTimer } = this.state;
-            if (stopRecordTimer !== null) {
+            if (stopRecordTimer) {
                 clearTimeout(stopRecordTimer);
+                this.state.stopRecordTimer = 0;
             }
 
             window.wx && window.wx.stopRecord({
                 success: (res) => {
                     // alert(res.localId);
+                    this.setState({
+                        isRecordStart: false,
+                    });
+
                     const { localId } = res;
-                    if (typeof localId === 'undefined') {
-                        const data = { errMsg: '录音id不存在' };
-                        reject(data);
-                    }
 
                     resolve(localId);
                 },
