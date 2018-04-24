@@ -104,6 +104,21 @@
         }
     }
 
+    /*effect*/
+    .effect {
+        .center-area:not(.nst) {
+            .tone_reduce {
+                background-image: url("./assets/control/tone_reduce.png") !important;
+            }
+            .tone_smooth {
+                background-image: url("./assets/control/tone_smooth.png") !important;
+            }
+            .tone_add {
+                background-image: url("./assets/control/tone_add.png") !important;
+            }
+        }
+    }
+
     /*song item*/
     .song-item{
         .del-icon, .set-top-icon{
