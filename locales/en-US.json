@@ -271,7 +271,7 @@
     "msg.audio.can.not.get.the.recording": "Can't get the recording!",
     "msg.recharge.invalidCardNo": "Card number does not exist",
     "msg.recharge.invalidPassword": "Card number and password do not match, please re-enter",
-    "msg.recharge.invalidDate": "The current time is not within the validity period of the recharge card",
+    "msg.recharge.invalidDate": "The recharge card is not within the validity period",
     "msg.recharge.used": "This recharge card is already in use",
     "msg.recharge.ok": "Recharge success"
 }

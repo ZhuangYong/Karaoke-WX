@@ -13,9 +13,9 @@ import ReduceIcon from "material-ui/svg-icons/content/remove";
 import {dynaPush, reqHeader, versionMoreThan} from "../../utils/comUtils";
 import bindActionCreators from "redux/es/bindActionCreators";
 import {push, pushLocal} from "../../actions/audioActons";
-import ToneIconAdd from "../../../img/controller/tone_add.png";
-import ToneIconSmooth from "../../../img/controller/tone_smooth.png";
-import ToneIconReduce from "../../../img/controller/tone_reduce.png";
+import ToneIconAdd from "../../themes/bin/default/assets/control/tone_add.png";
+import ToneIconSmooth from "../../themes/bin/default/assets/control/tone_smooth.png";
+import ToneIconReduce from "../../themes/bin/default/assets/control/tone_reduce.png";
 import BaseComponent from "../../components/common/BaseComponent";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
@@ -149,45 +149,45 @@ class AudioEffect extends BaseComponent {
         const revert = w > h;
         return <div className="center-area" style={revert ? {paddingTop: '.2rem'} : {}}>
                 <div className="fun-button">
-                <div className="button" onClick={() => {
-                    this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
-                }}>
-                {
-                    this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
-                        size={20}
-                        thickness={2}
-                        color="#ff6832"/> : <img src={ToneIconReduce} style={{height: '.4rem'}}/>
-                }
-            </div>
-            <p className="label">{intl.get("effect.falling")}</p>
-            </div>
-            <div className="fun-button">
-                <div className="button" onClick={() => {
-                    this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] !== true && this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
-                }}>
-                    {
-                        this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] === true ? <CircularProgress
-                            size={20}
-                            thickness={2}
-                            color="#ff6832"/> : <img src={ToneIconSmooth} style={{height: '.4rem'}}/>
-                    }
+                    <div className="button" onClick={() => {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] !== true && this.sendEffect(AUDIO_EFFECT_TONE_REDUCE);
+                    }}>
+                        {
+                            this.state.controllerIng[AUDIO_EFFECT_TONE_REDUCE] === true ? <CircularProgress
+                                size={20}
+                                thickness={2}
+                                color="#ff6832"/> : <div className="button_icon tone_reduce" />
+                        }
+                    </div>
+                    <p className="label">{intl.get("effect.falling")}</p>
                 </div>
-                <p className="label">{intl.get("effect.stable")}</p>
-            </div>
-            <div className="fun-button">
-                <div className="button" onClick={() => {
-                    this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
-                }}>
-                    {
-                        this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
-                            size={20}
-                            thickness={2}
-                            color="#ff6832"/> : <img src={ToneIconAdd} style={{height: '.4rem'}}/>
-                    }
+                <div className="fun-button">
+                    <div className="button" onClick={() => {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] !== true && this.sendEffect(AUDIO_EFFECT_TONE_SMOOTH);
+                    }}>
+                        {
+                            this.state.controllerIng[AUDIO_EFFECT_TONE_SMOOTH] === true ? <CircularProgress
+                                size={20}
+                                thickness={2}
+                                color="#ff6832"/> : <div className="button_icon tone_smooth" />
+                        }
+                    </div>
+                    <p className="label">{intl.get("effect.stable")}</p>
                 </div>
-                <p className="label">{intl.get("effect.rising")}</p>
-            </div>
-        </div>;
+                <div className="fun-button">
+                    <div className="button" onClick={() => {
+                        this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] !== true && this.sendEffect(AUDIO_EFFECT_TONE_ADD);
+                    }}>
+                        {
+                            this.state.controllerIng[AUDIO_EFFECT_TONE_ADD] === true ? <CircularProgress
+                                size={20}
+                                thickness={2}
+                                color="#ff6832"/> : <div className="button_icon tone_add" />
+                        }
+                    </div>
+                    <p className="label">{intl.get("effect.rising")}</p>
+                </div>
+            </div>;
     }
 
     renderBottom() {

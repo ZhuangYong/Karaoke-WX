@@ -246,21 +246,31 @@ $main-bar-color: #398dff;
         }
         .center-area:not(.nst){
             .fun-button{
-                overflow: hidden;
+                //overflow: hidden;
                 img{
                     height: 0.4rem;
                     position: relative;
-                    left: -150px;
+                    left: -21rem;
                     border-right: 20px solid transparent;
-                    -webkit-filter: drop-shadow(160px 0 $main-color);
-                    filter: drop-shadow(160px 0 $main-color);
+                    -webkit-filter: drop-shadow(21.26rem 0 $main-color);
+                    filter: drop-shadow(21.26rem 0 $main-color);
                     overflow: hidden;
+                }
+                .tone_reduce {
+                    background-image: url("./assets/control/tone_reduce_child.png");
+                }
+                .tone_smooth {
+                    background-image: url("./assets/control/tone_smooth_chilld.png");
+                }
+                .tone_add {
+                    background-image: url("./assets/control/tone_add_child.png");
                 }
                 .label{
                     color: $main-color!important;
                 }
                 .button{
                     border-color: lighten($main-color, 20%)!important;
+                    //overflow: hidden;
                 }
 
             }

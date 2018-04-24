@@ -272,7 +272,7 @@
     "msg.audio.can.not.get.the.recording": "無法獲取錄音",
     "msg.recharge.invalidCardNo": "卡號不存在",
     "msg.recharge.invalidPassword": "卡號和密碼不匹配，請重新輸入",
-    "msg.recharge.invalidDate": "當前時間不在充值卡可使用的有效期內",
+    "msg.recharge.invalidDate": "該充值卡不在有效期內",
     "msg.recharge.used": "該充值卡已使用",
     "msg.recharge.ok": "充值成功"
 }

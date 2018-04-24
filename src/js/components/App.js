@@ -391,7 +391,7 @@ class App extends BaseComponent {
                 this.props.action_getUserInfo(
                     params,
                     reqHeader(params, getEncryptHeader(wxInfo)),
-                    () => this.replaceUrlToProtectUserInfo()
+                    // () => this.replaceUrlToProtectUserInfo()
                 );
                 // history.replaceState("", "", "/");
             } else {
@@ -455,7 +455,7 @@ class App extends BaseComponent {
     pageFilterForConfigWX() {
         const pathNames = [
             // 'pay',
-            'voiceSearch',
+            // 'voiceSearch',
         ];
         let bool = false;
 
@@ -521,7 +521,7 @@ class App extends BaseComponent {
     configWxPath() {
         const {isWeixin, isIos} = window.sysInfo;
         if (isWeixin && !isIos) {
-            const path = location.href.split('#')[0];
+            const path = this.props.history.location.pathname;
             if (!wxConfigPaths[path]) {
                 this.configWeiXin();
                 wxConfigPaths[path] = true;

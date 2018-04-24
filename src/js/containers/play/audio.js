@@ -106,7 +106,7 @@ class PlayAudio extends BaseComponent {
             }
 
             // k1特性
-            const channel = data.channel;
+            const {channel} = data;
             if (Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0) {
                 const sliderImgs = [SlideK1Png1, SlideK1Png2];
                 if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
@@ -305,8 +305,7 @@ class PlayAudio extends BaseComponent {
 
         getShareAudioAction(params, reqHeader(params), res => {
             const {status, data} = res;
-            const {isWeixin} = window.sysInfo;
-            if (parseInt(status, 10) === 1 && isWeixin) {
+            if (parseInt(status, 10) === 1) {
                 const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
                 this.getComment(shareId);
                 this.state.shareId = shareId;
