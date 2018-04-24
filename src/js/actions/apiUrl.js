@@ -165,5 +165,9 @@ export default {
 
     "API_LOCAL_TEST_PUSH": "/localserver/status",
 
-    "API_GET_LOCAL_LANGUAGE": "/locales/"
+    "API_GET_LOCAL_LANGUAGE": "/locales/",
+
+    "API_GET_COMMENT_LIST": "/comment/listComments",
+
+    "API_GET_COMMENT_OR_REPLY": "/comment/commentOrReply"
 };

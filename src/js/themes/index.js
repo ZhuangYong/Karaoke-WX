@@ -18,12 +18,13 @@ class themeProvider extends React.Component {
             </Bundle>
         );
         return <div>
-            {
+            <Route path="*" component={childrenThemeComponent}/>
+            {/*{
                 this.props.name === "children" && <Route path="*" component={childrenThemeComponent}/>
             }
             {
                 this.props.name === "default" && <Route path="*" component={defaultThemeComponent}/>
-            }
+            }*/}
         </div>;
     }
 }

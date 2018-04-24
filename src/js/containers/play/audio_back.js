@@ -5,42 +5,40 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/playAudio.scss";
 import {getShareAudio} from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import {getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl, wxShare} from '../../utils/comUtils';
+import {
+    getEncryptHeader, getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl,
+    wxShare
+} from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
 import PropTypes from "prop-types";
-import {FlatButton, Subheader} from "material-ui";
+import {Subheader} from "material-ui";
 import BaseComponent from "../../components/common/BaseComponent";
+import SlidePngMall1 from "../../../img/mall/video.png";
 import SlidePng1 from "../../../img/album/1.png";
+import SlidePng2 from "../../../img/album/2.png";
+import SlidePng3 from "../../../img/album/3.png";
 import SlideK1Png1 from "../../../img/album/k1/1.png";
 import SlideK1Png2 from "../../../img/album/k1/2.png";
 import _ from "lodash";
 import intl from 'react-intl-universal';
 import Avatar from 'material-ui/Avatar';
 import defaultAvatar from "../../../img/default_avatar.png";
-import {setGlobAlert} from '../../actions/common/actions';
-import {getComments, saveComments} from '../../actions/commentActons';
+import { setGlobAlert } from '../../actions/common/actions';
+import MyButton from '../../components/common/MyButton';
 import Const from "../../utils/const";
-import {List} from 'material-ui/List';
-import SwipeItem from "../../components/common/SwipeItem";
-import Input from "../../components/common/Input";
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
 const styles = {
-    left: {
+    center: {
+      marginTop: toRem(20),
       paddingRight: 16,
-      textAlign: "left",
+      textAlign: "center",
       fontSize: '.4rem',
       lineHeight: '.6rem'
-    },
-    center: {
-        paddingRight: 16,
-        textAlign: "center",
-        fontSize: '.4rem',
-        lineHeight: '.6rem'
     },
     btn: {
         width: toRem(540),
@@ -54,7 +52,7 @@ const styles = {
 };
 
 const defaultCover = 'http://wechat.j-make.cn/img/logo.png';
-const SHOW_COMMENT_OFFSET = 10;
+
 class PlayAudio extends BaseComponent {
 
     constructor(props) {
@@ -70,17 +68,11 @@ class PlayAudio extends BaseComponent {
             imgUrl: "",
             customerSliders: [], // 客户需求轮播图
             customerAd: intl.get("msg.from.j.make"), // 客户需求广告语
-            autoPlayEd: false,
-            showComment: false,
-            scrollTop: 0,
-            commentContent: "",
-            shareId: ""
+            autoPlayEd: false
         };
 
         this.loadAudioGetter = this.loadAudioGetter.bind(this);
         this.toEdit = this.toEdit.bind(this);
-        this.getComment = this.getComment.bind(this);
-        this.submitComment = this.submitComment.bind(this);
     }
 
     componentDidMount() {
@@ -160,7 +152,7 @@ class PlayAudio extends BaseComponent {
         const { customerSliders, customerAd } = this.state;
 
         return (
-            <div className="audio-play" onScroll={this.onScroll.bind(this)} onTouchEnd={this.onScroll.bind(this)}>
+            <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
                     <AutoPlaySwipeAbleViews disabled className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
                         {
@@ -176,21 +168,16 @@ class PlayAudio extends BaseComponent {
                     </AutoPlaySwipeAbleViews>
                     <Audio ref="audio" source={musicUrl} className="audio-item"/>
                 </div>
-                <div className="song-label">
-                   {/* <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>*/}
-                    <Subheader className="song-title">
-                        <p>
-                            {nameNorm}
-                        </p>
-                        <span className="do-like-icon">
-                            <p>
-                                {0}
-                            </p>
-                        </span>
-                    </Subheader>
+                <p className="song-label">
+                    <font style={{fontSize: '.4rem'}}>{nameNorm || "..."}</font>
+                </p>
+
+                <section style={{paddingTop: toRem(40), borderTop: `${toRem(10)} solid #d7d7d7`}}>
+
                     <header style={{
                         position: "relative",
-                        left: ".4rem",
+                        left: "50%",
+                        marginLeft: `-${toRem(130)}`,
                         height: toRem(100)
                     }}>
 
@@ -208,7 +195,6 @@ class PlayAudio extends BaseComponent {
                             marginLeft: toRem(23)
                         }}>
                             <div style={{
-                                textAlign: "left",
                                 height: toRem(50),
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30)
@@ -217,50 +203,29 @@ class PlayAudio extends BaseComponent {
                         </div>
                     </header>
 
+                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
 
-                    <Subheader style={{...styles.left, bottom: '.8rem'}}>
-                        <p style={{margin: 0}}>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</p>
+                        <p>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</p>
                     </Subheader>
-                    <Subheader style={{...styles.left, bottom: '.8rem'}}>
-                        <p style={{margin: 0}}>{customerAd}</p>
-                    </Subheader>
-                </div>
 
-                <section style={{borderTop: `${toRem(20)} solid #f3f3f7`}}>
-                    <Subheader className="comment-top">
-                        <p>
-                            评论
-                        </p>
-                        <span className="comment-pen-icon"/>
+                    <Subheader style={{...styles.center, bottom: '.8rem'}}>
+                        {/*<p style={{color: '#ff6832', fontSize: '.32rem'}}>{ableEdit ? intl.get("audio.text.edit") : intl.get("msg.from.j.make")}</p>*/}
+                        <p style={{color: '#ff6832', fontSize: '.32rem'}}>{customerAd}</p>
                     </Subheader>
-                    <List className="comment-list">
-                        <SwipeItem />
-                        <SwipeItem/>
-                        <SwipeItem/>
-                    </List>
+
+                    {ableEdit && <Subheader style={styles.center}>
+
+                        <MyButton
+                            style={{...styles.btn, marginBottom: toRem(40)}}
+                            labelStyle={styles.btnLabelStyle}
+                            onClick={() => this.toEdit(shareId)}
+                            label={intl.get("button.edit")}
+                            disabled={parseInt(status, 10) !== 1}
+                        />
+
+                    </Subheader>}
+
                 </section>
-
-                {
-                    this.state.showComment ? <section className="more-comment-bottom" style={{opacity: this.state.scrollTop / 100}}>
-                        {ableEdit && <Subheader style={styles.center} className="comment-container">
-                            <Input
-                                ref="input"
-                                className="comment-input"
-                                hintText={
-                                    <div>
-                                        <font color="gray">评论该录音</font>
-                                    </div>
-                                }
-                                hintStyle={{color: "white", textAlign: "center", width: "100%"}}
-                                bindState={this.bindState("commentContent")}
-                            />
-                            {
-                                !_.isEmpty(this.state.commentContent) ? <FlatButton label="提交" labelStyle={{fontSize: '.5rem', color: 'gray'}} onClick={this.submitComment}/> : ""
-                            }
-                        </Subheader>}
-                    </section> : ""
-                }
-
 
                 {/*{pagePictureUrl && <img src={pagePictureUrl} style={{display: "none"}} onError={() => {
                     this.setState({
@@ -308,8 +273,7 @@ class PlayAudio extends BaseComponent {
             const {isWeixin} = window.sysInfo;
             if (parseInt(status, 10) === 1 && isWeixin) {
                 const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
-                this.getComment(shareId);
-                this.state.shareId = shareId;
+
                 window.wx && window.wx.ready(() => {
                     wxShare({
                         title: intl.get("audio.share.title", {name: nameNorm}),
@@ -342,65 +306,18 @@ class PlayAudio extends BaseComponent {
         });
     }
 
-    onScroll(e) {
-        if (e.target.classList && e.target.classList.contains("audio-play")) {
-            this.state.scrollTarget = e.target;
-            if (e.target.scrollTop > SHOW_COMMENT_OFFSET) {
-                this.setState({
-                    scrollTop: e.target.scrollTop,
-                    showComment: true
-                });
-            } else {
-                this.setState({
-                    scrollTop: e.target.scrollTop,
-                    showComment: false
-                });
-            }
-
-        }
-    }
-
-    getComment(shareId) {
-        const params = {
-            pageSize: 10,
-            currentPage: 1,
-            shareId: shareId
-        };
-        this.props.getCommentsAction(params, reqHeader(params), res => {
-
-        });
-    }
-
-    submitComment() {
-        const params = {
-            type: 1,
-            userUuid: 1,
-            uuid: this.state.shareId,
-            content: this.state.commentContent
-        };
-        this.state.loading = true;
-        this.props.saveCommentsAction(params, reqHeader(params), res => {
-            this.setState({
-                content: ""
-            });
-        });
-    }
-
 }
 
 const mapStateToProps = (state, ownPorps) => {
     return {
         audio: state.app.audio,
-        common: state.app.common,
-        comment: state.app.comment
+        common: state.app.common
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         getShareAudioAction: bindActionCreators(getShareAudio, dispatch),
         globAlertAction: bindActionCreators(setGlobAlert, dispatch),
-        getCommentsAction: bindActionCreators(getComments, dispatch),
-        saveCommentsAction: bindActionCreators(saveComments, dispatch),
     };
 };
 
