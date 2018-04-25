@@ -9,6 +9,7 @@ export function cryptoFetch(options, succ, fail) {
     let url = options.url;
     let param = options.param;
     let fetchOption = {
+        // credentials: "include",
         method: 'post'
     };
     // 设置参数
@@ -63,6 +64,7 @@ export function comFetch(dispatch, param, options = {
 
     let url = options.url;
     let fetchOption = {
+        // credentials: "include",
         method: 'POST'
     };
 

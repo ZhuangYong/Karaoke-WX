@@ -21,6 +21,7 @@ import SubmitLoading from '../../../components/common/SubmitLoading';
 import MyButton from '../../../components/common/MyButton';
 import ActionTypes from '../../../actions/actionTypes';
 import { FlatButton, Dialog } from "material-ui";
+import Const from '../../../utils/const';
 
 const styles = {
     btn: {
@@ -65,21 +66,21 @@ class PhotoAlbum extends BaseComponent {
     componentWillMount() {
 
         const {edit} = this.state.params;
-        const recordingFormDataStr = window.sessionStorage.getItem("recordingFormData");
-        const recordingFormData = recordingFormDataStr ? JSON.parse(recordingFormDataStr) : null;
 
-        if (typeof edit !== 'undefined' && recordingFormData !== null) {
+        if (typeof edit !== 'undefined') {
+            const albumFormDataStr = window.sessionStorage.getItem(Const.ALBUM_SESSION_KEY);
+            const albumFormData = albumFormDataStr ? JSON.parse(albumFormDataStr) : {[edit]: []};
 
+            console.log(albumFormData);
+
+            const imgArr = albumFormData[edit];
             let {selectItemIds} = this.state;
-            console.log(recordingFormData);
-
-            const imgArr = recordingFormData[edit];
 
             imgArr.length > 0 && imgArr.map(item => selectItemIds.push(item.id));
 
             this.setState({
                 selectItemIds: selectItemIds,
-                recordingFormData: recordingFormData
+                albumFormData: albumFormData
             });
         }
     }
@@ -329,7 +330,7 @@ class PhotoAlbum extends BaseComponent {
      * 录音分享编辑完成调用
      */
     uploadEdit() {
-        const {recordingFormData, params, selectItemIds} = this.state;
+        const {albumFormData, params, selectItemIds} = this.state;
         const {edit, shareId} = params;
 
         if (edit === 'cover') {
@@ -345,9 +346,9 @@ class PhotoAlbum extends BaseComponent {
                 parseInt(status, 10) === 1 && window.history.back();
             });
         } else {
-            recordingFormData[edit] = this.pushImgObj();
+            albumFormData[edit] = this.pushImgObj();
 
-            window.sessionStorage.setItem("recordingFormData", JSON.stringify(recordingFormData));
+            window.sessionStorage.setItem(Const.ALBUM_SESSION_KEY, JSON.stringify(albumFormData));
             window.history.back();
         }
     }
@@ -385,12 +386,12 @@ class PhotoAlbum extends BaseComponent {
 
             let {selectItemIds} = this.state;
 
-            const selectItemIdIdn = selectItemIds.indexOf(targetId);
-            if (selectItemIdIdn >= 0) {
-                selectItemIds.splice(selectItemIdIdn, 1);
+            const selectItemIdInd = selectItemIds.indexOf(targetId);
+            if (selectItemIdInd >= 0) {
+                selectItemIds.splice(selectItemIdInd, 1);
             } else {
 
-                if (edit === 'pagePicture' || edit === 'cover') selectItemIds = [];
+                if (edit !== 'albums') selectItemIds = [];
 
                 if (edit === 'albums' && selectItemIds.length >= maxNum) {
                     this.props.globAlertAction(intl.get('photoAlbum.msg.maxCount', {number: maxNum}));

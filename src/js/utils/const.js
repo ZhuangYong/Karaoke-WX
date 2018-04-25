@@ -54,4 +54,7 @@ export default{
     // 小朋友模式tag值
     TAG_CHILD_MODE: 'child',
 
+    // 相册中选中图片缓存信息key值
+    ALBUM_SESSION_KEY: 'albumFormData',
+
 };

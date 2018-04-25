@@ -125,6 +125,8 @@ class PlayAudio extends BaseComponent {
                 });
             });
         }
+
+        window.sessionStorage.removeItem('isRecordingEdit');
     }
 
     render() {

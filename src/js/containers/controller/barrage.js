@@ -11,9 +11,10 @@ import barrageImg from "../../../img/barrage/barrage.png";
 import barrageOnImg from "../../../img/barrage/barrage_on.png";
 import emotionImg from "../../../img/barrage/emotion.png";
 import emotionOnImg from "../../../img/barrage/emotion_on.png";
+import albumImg from "../../../img/barrage/album.png";
 import {push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "../../components/common/BaseComponent";
-import {chkDevice, dynaPush, reqHeader} from "../../utils/comUtils";
+import { chkDevice, dynaPush, linkTo, reqHeader } from '../../utils/comUtils';
 
 import bindActionCreators from "redux/es/bindActionCreators";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
@@ -147,11 +148,18 @@ class Barrage extends BaseComponent {
     componentDidMount() {
         document.addEventListener("touchstart", this.handelInputBlur);
         window.addEventListener("resize", this.handelResize);
+
+        const albumFormDataStr = window.sessionStorage.getItem(Const.ALBUM_SESSION_KEY);
+        if (albumFormDataStr !== null) {
+            const {barrage} = JSON.parse(albumFormDataStr);
+            this.chooseEmotion(barrage[0].imgUrl);
+        }
     }
 
     componentWillUnmount() {
         document.removeEventListener("touchstart", this.handelInputBlur);
         window.removeEventListener("resize", this.handelResize);
+        window.sessionStorage.removeItem(Const.ALBUM_SESSION_KEY);
     }
 
     render() {
@@ -160,7 +168,7 @@ class Barrage extends BaseComponent {
         const {isAndroid} = chkDevice();
         let tabBackgroundColor = ["#d7d7d7", "#d7d7d7"];
         tabBackgroundColor[this.state.tabIndex] = "#ff6833";
-        let tabIcon = [barrageImg, emotionImg];
+        let tabIcon = [barrageImg, emotionImg, albumImg];
         let tabOnIcon = [barrageOnImg, emotionOnImg];
         tabIcon[this.state.tabIndex] = tabOnIcon[this.state.tabIndex];
         const showTabContainer = window.sysInfo.isAndroid ? !this.state.inputIng : true ;
@@ -257,6 +265,23 @@ class Barrage extends BaseComponent {
                         {
                             this.getEmotionDots()
                         }
+                    </Tab>
+                    <Tab
+                        className={this.state.tabIndex === 2 ? "main-background-color" : ""}
+                        buttonStyle={{flexDirection: "row", height: '1.2rem'}}
+                        onActive={() => {
+                            linkTo(`user/photoAlbum/barrage/1`, false, null);
+                        }}
+                        label={
+                            <div style={{
+                                ...style.tabs.tab.label,
+                                color: this.state.tabIndex === 2 ? "white" : "#9a9a9a"
+                            }}>
+                                <img src={tabIcon[2]}
+                                     style={style.tabs.tab.label.img}/>{intl.get("title.photoAlbum")}
+                            </div>
+                        }>
+
                     </Tab>
                 </Tabs>
 
