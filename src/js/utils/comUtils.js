@@ -792,3 +792,18 @@ export function convertStatus (down_state) {
     }
     return downloadStatus;
 }
+
+export function convertSong (song) {
+    if (song.musicNo) return song;
+    const musicName = song.nameNorm;
+    const musicIcon = song.image;
+    const musicNo = song.serialNo;
+    const fileMark = song.fileMark;
+    const charge = song.vipStutas;
+    song.musicName = musicName;
+    song.musicIcon = musicIcon;
+    song.musicNo = musicNo;
+    song.fileMark = fileMark;
+    song.charge = charge;
+    return song;
+}

@@ -3,7 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 
-import {convertStatus, dynaPush, isLongWordLanguage, linkTo, reqHeader} from "../../utils/comUtils";
+import {convertSong, convertStatus, dynaPush, isLongWordLanguage, linkTo, reqHeader} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {getChooseList, getHistorySongList, push, pushLocal, setSongTop} from "../../actions/audioActons";
@@ -479,7 +479,7 @@ class SongController extends BaseComponent {
                                     </div>
                                     }
                                     secondaryText={<div className="song-author">
-                                        {playingSong.actorName}
+                                        {playingSong.actorName || playingSong.actorsName}
                                     </div>}
                                     rightToggle={<div style={{...style.chooseList.operationArea, justifyContent: 'center'}}>
                                         {
@@ -684,7 +684,7 @@ class SongController extends BaseComponent {
         return (
             <div style={{marginTop: 0, display: 'inline-flex', height: '.8rem', alignItems: 'center', width: '100%'}}>
                 <div className="song-author" style={{marginTop: 'unset'}}>
-                    {song.actorName}
+                    {song.actorName || song.actorsName}
                 </div>
                 <div style={{fontSize: '.3rem', color: (downloadStatus === Const.DOWNLOAD_STATUS_DOWN_FAILED) ? "red" : "#ff8433", marginLeft: '.2rem', whiteSpace: 'nowrap'}}>
                     {downloadStatusStr}
@@ -738,8 +738,8 @@ class SongController extends BaseComponent {
             let {list, playing} = this.handelList(data.recordJson);
             if (typeof list === "string") list = JSON.parse(list);
             this.setState({
-                playList: list,
-                playingSong: playing
+                playList: list ? list.map(s => convertSong(s)) : list,
+                playingSong: playing ? convertSong(playing) : playing
             });
         }
     }
