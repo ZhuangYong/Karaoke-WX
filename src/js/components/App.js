@@ -129,6 +129,7 @@ class App extends BaseComponent {
             showDialog: false,
             msgText: '',
             timer: null,
+            gxTimer: null,
             barrageSendToast: false,
             updateDevice: false,
             checkLocalTimer: 0,
@@ -137,6 +138,7 @@ class App extends BaseComponent {
             theme: getSession("theme") || "default",
             lan: getCookie("language")
         };
+        this.initail = this.initail.bind(this);
         this.msgOk = this.msgOk.bind(this);
         this.showMsg = this.showMsg.bind(this);
         this.configWeiXin = this.configWeiXin.bind(this);
@@ -152,23 +154,33 @@ class App extends BaseComponent {
     }
 
     componentDidMount() {
-        this.loadLocales();
+        //move to after initial user info
+        // this.loadLocales();
         if (isGetUserInfo()) {
             this.updateUserInfo();
         } else {
+            this.initail();
             window.noUserInfo = true;
         }
-        this.runCheckLocal();
+
+        //move to after initial user info
+        // this.runCheckLocal();
+
         //this.removeAppLoading();
         window.addEventListener('resize', this.sizeChange);
         // window.addEventListener('focus', () => {isGetUserInfo() && this.updateUserInfo();});
         this.props.action_updateScreen();
 
-        const {isIos} = window.sysInfo;
-        if (isIos) {
-            this.configWeiXin();
-        }
-        this.configWxPath();
+        //move to after initial user info
+        // const {isIos} = window.sysInfo;
+        // if (isIos) {
+        //     this.configWeiXin();
+        // }
+
+
+        //move to after initial user info
+        // this.configWxPath();
+
         window.wx && window.wx.ready(() => {
             wxShare({
                 title: intl.get("index.we.chat.song"),
@@ -184,7 +196,8 @@ class App extends BaseComponent {
 
     componentDidUpdate(prevProps) {
 
-        this.configWxPath();
+        //move to after initial user info
+        // this.configWxPath();
 
         if (isGetUserInfo()) {
             if (window.noUserInfo === true) {
@@ -198,26 +211,25 @@ class App extends BaseComponent {
         //     this.props.action_setGlobAlert("", "");
         // }
         if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
-            const {status, data, msg} = this.props.userInfo.userInfoData || {};
-            if (parseInt(status, 10) === 302) {
-                window.location.href = data;
-            } else if (parseInt(status, 10) === 1) {
-                window.sessionStorage.setItem("wxInfo", JSON.stringify(this.props.userInfo.userInfoData));
+            const {userInfoData: data} = this.props.userInfo || {};
+            if (data) {
+                setSession("wxInfo", JSON.stringify(data));
                 this.props.action_getOttStatus({}, reqHeader({}));
-            }
 
-            const {userInfoData} = this.props.userInfo;
-            if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('time')) {
-                if (this.state.gxTimer) {
-                    clearInterval(this.state.gxTimer);
-                    this.state.gxTimer = 0;
+                if (data.hasOwnProperty('time')) {
+                    if (this.state.gxTimer) {
+                        clearInterval(this.state.gxTimer);
+                        this.state.gxTimer = 0;
+                    }
+                    this.gxTimer();
+                    this.gxUpdateUserInfoTimer();
                 }
-                this.gxTimer();
-                this.gxUpdateUserInfoTimer();
-            }
 
-            if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('tag')) {
-                this.updateTheme(userInfoData.data.tag);
+                if (data.hasOwnProperty('tag')) {
+                    this.updateTheme(data.tag);
+                }
+
+                this.initail();
             }
         }
     }
@@ -361,50 +373,51 @@ class App extends BaseComponent {
      * 更新用户信息
      */
     updateUserInfo(wxInfo) {
-        let {isWeixin} = window.sysInfo;
-        if (isWeixin) {
-            // 获取用户信息
-            let wxInfo = {
-                wxId: getQueryString("uuid") || "",
-                deviceId: getQueryString("deviceId") || ""
-            };
-            let wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
-            if (wxInfoSession.status === -100) {
-                window.sessionStorage.removeItem("wxInfo");
-                wxInfoSession = {};
-            }
-            const { data, status } = wxInfoSession;
-            if (data && data.hasOwnProperty('time')) {
-                const {uuid, userId, deviceId} = data;
-                const params = {
-                    url: `${location.origin}?uuid=${uuid}&userid=${userId}&deviceId=${deviceId}`
-                };
-                wxInfo = {
-                    wxId: uuid || "",
-                    deviceId: deviceId || ""
-                };
-                this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
-            } else if (typeof status === "undefined" || !!wxInfo.wxId) {
-                const params = {
-                    url: window.location.href.split("#")[0]
-                };
-                this.props.action_getUserInfo(
-                    params,
-                    reqHeader(params, getEncryptHeader(wxInfo)),
-                    // () => this.replaceUrlToProtectUserInfo()
-                );
-                // history.replaceState("", "", "/");
-            } else {
-                this.props.action_getUserInfoFromSession();
-            }
-        } else {
-            window.sessionStorage.setItem("wxInfo", JSON.stringify({
-                status: -100,
-                msg: "",
-                data: {}
-            }));
-            this.props.action_getUserInfoFromSession();
-        }
+        // let {isWeixin} = window.sysInfo;
+        // if (isWeixin) {
+        //     // 获取用户信息
+        //     let wxInfo = {
+        //         wxId: getQueryString("uuid") || "",
+        //         deviceId: getQueryString("deviceId") || ""
+        //     };
+        //     let wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
+        //     if (wxInfoSession.status === -100) {
+        //         window.sessionStorage.removeItem("wxInfo");
+        //         wxInfoSession = {};
+        //     }
+        //     const { data, status } = wxInfoSession;
+        //     if (data && data.hasOwnProperty('time')) {
+        //         const {uuid, userId, deviceId} = data;
+        //         const params = {
+        //             url: `${location.origin}?uuid=${uuid}&userid=${userId}&deviceId=${deviceId}`
+        //         };
+        //         wxInfo = {
+        //             wxId: uuid || "",
+        //             deviceId: deviceId || ""
+        //         };
+        //         this.props.action_getUserInfo(params, reqHeader(params, getEncryptHeader(wxInfo)));
+        //     } else if (typeof status === "undefined" || !!wxInfo.wxId) {
+        //         const params = {
+        //             url: window.location.href.split("#")[0]
+        //         };
+        //         this.props.action_getUserInfo(
+        //             params,
+        //             reqHeader(params, getEncryptHeader(wxInfo)),
+        //             // () => this.replaceUrlToProtectUserInfo()
+        //         );
+        //         // history.replaceState("", "", "/");
+        //     } else {
+        //         this.props.action_getUserInfoFromSession();
+        //     }
+        // } else {
+        //     // window.sessionStorage.setItem("wxInfo", JSON.stringify({
+        //     //     status: -100,
+        //     //     msg: "",
+        //     //     data: {}
+        //     // }));
+        //     this.props.action_getUserInfoFromSession();
+        // }
+        this.props.action_getUserInfo({}, reqHeader({}, getEncryptHeader({})));
     }
 
     /**
@@ -470,7 +483,7 @@ class App extends BaseComponent {
         const {gxTimer} = this.state;
         const actionSetGlobAlert = this.props.action_setGlobAlert;
         if (!gxTimer) {
-            const time = this.state.gxTime = this.props.userInfo.userInfoData.data.time;
+            const time = this.state.gxTime = this.props.userInfo.userInfoData.time;
             if (time) {
                 window.localStorage.setItem("gxAlert", '{"done": false}');
                 window.gxAlertDone = false;
@@ -565,6 +578,16 @@ class App extends BaseComponent {
             });
             setSession("theme", theme);
         }
+    }
+
+    initail() {
+        this.loadLocales();
+        this.runCheckLocal();
+        const {isIos} = window.sysInfo;
+        if (isIos) {
+            this.configWeiXin();
+        }
+        this.configWxPath();
     }
 }
 

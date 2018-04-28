@@ -47,7 +47,7 @@ class SingerAlumb extends BaseComponent {
             cellPadding = 0.16 * w / 10;
             cellHeight = 2 * w / 10 - 8;
         }
-        const listData = (getSingerCategoryAlbum && getSingerCategoryAlbum.data && getSingerCategoryAlbum.data.result) || defaultData;
+        const listData = (getSingerCategoryAlbum && getSingerCategoryAlbum.result) || defaultData;
         return (
             <Paper zDepth={0} style={{paddingBottom: 66}}>
                 <SearchHeadFake/>

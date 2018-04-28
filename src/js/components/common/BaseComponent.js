@@ -44,8 +44,7 @@ export default class BaseComponent extends Component {
      * @returns {*} 如果正在获取用户信息将返回字符串的提示，如果条件都满足将返回true，否则返回false并做出相应的提示
      */
     validUserStatus(userInfoData, ottInfo, actionSetGlobAlert) {
-        const {data} = ottInfo || {};
-        const {systemTime, timeStamp} = data || {};
+        const {systemTime, timeStamp} = ottInfo || {};
         const isVip = this.isVip(userInfoData);
         const isBindDevice = this.isBindDevice(userInfoData);
         const isFreeActivation = this.isFreeActivation(userInfoData);
@@ -102,8 +101,7 @@ export default class BaseComponent extends Component {
     }
 
    validUserDeviceOnline(ottInfo, actionSetGlobAlert) {
-       const {data} = ottInfo || {};
-       const {systemTime, timeStamp} = data || {};
+       const {systemTime, timeStamp} = ottInfo || {};
        if (systemTime && timeStamp) {
            const online = !(systemTime - timeStamp > 12 * 60 * 1000);
            if (!online) {
@@ -122,13 +120,9 @@ export default class BaseComponent extends Component {
      * @returns {*}
      */
     isFreeActivation(userInfoData) {
-        const {status, data} = userInfoData || {};
-        if (typeof status !== 'undefined') {
-            const {isFreeActivation} = data;
-            // 是否可以免费激活1（可以）0（不可以）
-            return isFreeActivation === 1;
-        }
-        return intl.get("getting.user.info");
+        const {isFreeActivation} = userInfoData;
+        // 是否可以免费激活1（可以）0（不可以）
+        return isFreeActivation === 1;
     }
 
     /**
@@ -136,27 +130,17 @@ export default class BaseComponent extends Component {
      * @param userInfoData
      * @returns {*}
      */
-    isBindDevice(userInfoData) {
-        const {status, msg, data} = userInfoData || {};
-        if (typeof status !== 'undefined') {
-            if (status === -100) {
-                return intl.get("user.we.chat.operate");
-            } else if (status === 1) {
-                const {isReDevice, bindExpireTime} = data;
-                //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
-                if (isReDevice === 3) {
-                    return intl.get("bind.expired.re.bind");
-                } else if (isReDevice === 2) {
-                    return intl.get("unbind.device");
-                } else {
-                    return true;
-                }
-            } else {
-                return msg || intl.get("get.user.info.fail.try.again");
-            }
+   isBindDevice(userInfoData = {}) {
+        const {isReDevice, bindExpireTime} = userInfoData;
+        //是否绑定设备1（已绑定）2（未绑定设备）3（绑定过期）
+        if (isReDevice === 3) {
+            return intl.get("bind.expired.re.bind");
+        } else if (isReDevice === 2) {
+            return intl.get("unbind.device");
+        } else {
+            return true;
         }
-        return intl.get("getting.user.info");
-    }
+   }
 
     /**
      * 判断用户是否是vip
@@ -164,13 +148,9 @@ export default class BaseComponent extends Component {
      * @returns {*}
      */
     isVip(userInfoData) {
-        const {status, data} = userInfoData || {};
-        if (typeof status !== 'undefined') {
-            const {vipStatus, expireTime} = data;
-            // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
-            return vipStatus === 1 && new Date().getTime() < expireTime ;
-        }
-        return intl.get("getting.user.info");
+        const {vipStatus, expireTime} = userInfoData;
+        // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
+        return vipStatus === 1 && new Date().getTime() < expireTime ;
     }
 
     /**
@@ -179,16 +159,12 @@ export default class BaseComponent extends Component {
      * @returns {*}
      */
     vipTime(userInfoData) {
-        const {status, data} = userInfoData || {};
-        if (typeof status !== 'undefined') {
-            const {vipStatus, expireTime} = data;
-            // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
-            if (vipStatus === 1) {
-                return expireTime - new Date().getTime();
-            } else {
-                return '0';
-            }
+        const {vipStatus, expireTime} = userInfoData;
+        // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
+        if (vipStatus === 1) {
+            return expireTime - new Date().getTime();
+        } else {
+            return '0';
         }
-        return intl.get("getting.user.info");
     }
 }

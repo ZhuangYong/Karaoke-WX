@@ -149,10 +149,9 @@ class Home extends BaseComponent {
     }
 
     componentDidUpdate(preProps) {
-        const stamp = this.state.stamp;
         if (preProps.songs.recommendSongsStamp !== this.props.songs.recommendSongsStamp) {
-            const {data} = this.props.songs.recommendSongs || {data: {result: [], lastPage: false}};
-            const {result, lastPage} = data;
+            const {recommendSongs} = this.props.songs;
+            const {result, lastPage} = recommendSongs;
             this.setState({
                 pageData: [...this.state.pageData, ...(result || [])],
                 lastPage: lastPage,
@@ -211,7 +210,7 @@ class Home extends BaseComponent {
                             titleStyle={{fontSize: '.453rem', paddingTop: '.22rem', height: '1.467rem', display: 'flex', alignItems: 'center'}}
                             title={intl.get("index.recommend")}/>
                         <div className="home-recommend" style={{width: "100%", overflowX: "visible", overflowY: "hidden", position: "absolute"}}>
-                            {getAlbumRecommendData.data.result.map((recommend) => (
+                            {getAlbumRecommendData.result && getAlbumRecommendData.result.map((recommend) => (
                                 <GridTile
                                     key={recommend.id}
                                     title=""
@@ -246,7 +245,7 @@ class Home extends BaseComponent {
                             title={intl.get("index.rank")}
                         />
                         <div className="home-rank" style={{width: "100%", overflowX: "auto", overflowY: "hidden", position: "absolute"}}>
-                            {getRankingData.data.result.map((rank) => (
+                            {getRankingData.result && getRankingData.result.map((rank) => (
                                 <GridTile
                                     key={rank.id}
                                     title=""

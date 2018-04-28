@@ -3,12 +3,13 @@ import ActionTypes from "../actions/actionTypes";
 import sysConfig from "../utils/sysConfig";
 import Const from "./const";
 import intl from 'react-intl-universal';
-import {getCode2Msg} from "./comUtils";
+import {getCode2Msg, getSession, removeSession, setSession} from "./comUtils";
 
 export function cryptoFetch(options, succ, fail) {
     let url = options.url;
     let param = options.param;
     let fetchOption = {
+        // credentials: "include",
         method: 'post'
     };
     // 设置参数
@@ -63,6 +64,7 @@ export function comFetch(dispatch, param, options = {
 
     let url = options.url;
     let fetchOption = {
+        // credentials: "include",
         method: 'POST'
     };
 
@@ -146,20 +148,25 @@ export function comFetch(dispatch, param, options = {
         return response.json();
     }).then(function (json) {
         const {status, msg, data} = json;
+        const isLanFile = /^\/locales\/[a-z-A-Z]*\.json/gi.test(url);
         if (status === 302) {
+            removeSession("token");
             window.location.href = data;
             return;
         }
-        if (status === 0 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) throw Error(msg);
-        if (status !== 1 && !/^\/locales\/[a-z-A-Z]*\.json/gi.test(url)) {
+        if (status === 0 && !isLanFile) throw Error(msg);
+        if (status !== 1 && !isLanFile) {
             const errMsg = getCode2Msg(status) || intl.get("msg.network.die");
             throw Error(errMsg);
+        }
+        if (data && data.hasOwnProperty("token")) {
+            setSession("token", data.token);
         }
         try {
             dispatch({
                 type: options.action,
                 fetchStatus: 200,
-                data: json,
+                data: isLanFile ? json : data,
                 error: null,
                 param: param
             });
@@ -167,7 +174,7 @@ export function comFetch(dispatch, param, options = {
             console.log(err);
             console.log('fetch success but dispatch error!');
         }
-        callback && callback(json);
+        callback && callback(isLanFile ? json : data);
         // 请求成功回调
     }).catch(rejectFun);
 }

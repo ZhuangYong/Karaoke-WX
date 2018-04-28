@@ -46,12 +46,12 @@ class CatAlbum extends BaseComponent {
     }
 
     render() {
-        const getCatAlbum = this.props.songs.getCatAlbum || {data: {result: [{name: intl.get("topic"), data: defaultData}]}};
+        const getCatAlbum = this.props.songs.getCatAlbum || {result: [{name: intl.get("topic"), data: defaultData}]};
         return (
             <Paper zDepth={0} style={{paddingTop: '1.2rem'}}>
                 <SearchHeadFake/>
                 {
-                    getCatAlbum.data.result.map((cats) => {
+                    getCatAlbum.result.map((cats) => {
                         const name = cats.name;
                         const catArr = cats.data;
                         if (name === intl.get("topic") || name === "主题") {

@@ -114,13 +114,12 @@ class UserIndex extends BaseComponent {
     }
 
     render() {
-        const userInfoData = this.props.userInfo.userInfoData;
-        const {data} = userInfoData || {data: {}};
-        let {headerImg, channel} = data;
+        const {userInfoData} = this.props.userInfo;
+        let {headerImg, channel} = userInfoData;
         headerImg = headerImg || "";
         const actionSetGlobAlert = this.props.globAlertAction;
         const {recordsListData, recordsListTotalCounts, loading} = this.state;
-        let bindDeviceStatus = parseInt(data.isReDevice, 10);
+        let bindDeviceStatus = parseInt(userInfoData.isReDevice, 10);
         if (bindDeviceStatus === 3) bindDeviceStatus = intl.get("device.bind.expired");
         if (bindDeviceStatus === 2) bindDeviceStatus = intl.get("device.disconnected");
         return (
@@ -155,9 +154,9 @@ class UserIndex extends BaseComponent {
                                 lineHeight: toRem(50),
                                 fontSize: toRem(30),
                                 color: "#fff"
-                            }}>{data.nickName || intl.get("device.anonymous")}</div>
+                            }}>{userInfoData.nickName || intl.get("device.anonymous")}</div>
                             {
-                                typeof data.time !== 'undefined' ? this.showGxStatus(data) : this.showVIPStatus(data)
+                                typeof userInfoData.time !== 'undefined' ? this.showGxStatus(userInfoData) : this.showVIPStatus(userInfoData)
                             }
                         </div>
                         {channel && channel.indexOf('_' + Const.TAG_CHILD_MODE) > 0 && <div className="change-theme" onClick={() => {
@@ -183,7 +182,7 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>
                                 <p style={{margin: "0"}}>{intl.get("device.connect")}</p>
                                 <p style={{margin: `${toRem(10)} 0 0`, fontSize: toRem(20), color: "#999"}}>
-                                    {parseInt(data.isReDevice, 10) === 1 ? intl.get("device.connected") + data.deviceId.replace(data.deviceId.slice(4, data.deviceId.length - 4), "***") : bindDeviceStatus}
+                                    {parseInt(userInfoData.isReDevice, 10) === 1 ? intl.get("device.connected") + userInfoData.deviceId.replace(userInfoData.deviceId.slice(4, userInfoData.deviceId.length - 4), "***") : bindDeviceStatus}
                                 </p>
                             </div>
                         </GridTile>
@@ -228,7 +227,7 @@ class UserIndex extends BaseComponent {
 
                 </section>
 
-                {(!(data.channel === CONFIG.NO_RECORDING_CHANNEL)) && (<section>
+                {(!(userInfoData.channel === CONFIG.NO_RECORDING_CHANNEL)) && (<section>
                     <header className="my-record-header">
                         <ButtonHeader
                             title={intl.get("title.my.record")}
@@ -309,8 +308,8 @@ class UserIndex extends BaseComponent {
      * 加载录音数据
      */
     getRecordingsGetter() {
-        const userInfoData = this.props.userInfo.userInfoData || getWxinfoFromSession();
-        const {openid, channel} = userInfoData.data;
+        const userInfoData = this.props.userInfo.userInfoData;
+        const {openid, channel} = userInfoData;
         if (openid && channel !== CONFIG.NO_RECORDING_CHANNEL) {
 
             const getRecordsListParams = {
@@ -326,8 +325,8 @@ class UserIndex extends BaseComponent {
      * 更新录音数据
      */
     updateRecordsList() {
-        const {status, data, msg} = this.props.recordsList.recordsListData;
-        const {result, totalCount} = data;
+        const {recordsListData} = this.props.recordsList;
+        const {result, totalCount} = recordsListData;
         this.setState({
             recordsListTotalCounts: totalCount,
             recordsListData: result

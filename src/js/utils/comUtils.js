@@ -329,18 +329,17 @@ export function loadScript(url, callback) {
 export function getEncryptHeader(Oid) {
     let sessionOid = {};
     const userInfo = getWxinfoFromSession();
-    if (userInfo.status === 1) {
-        const {data} = userInfo;
-        sessionOid = {
-            wxId: data.uuid,
-            deviceId: data.deviceId
-        };
-    }
+    const data = userInfo;
+    sessionOid = {
+        wxId: data.uuid,
+        deviceId: data.deviceId
+    };
     Oid && (Oid = Object.assign({}, sessionOid, Oid));
     !Oid && (Oid = sessionOid);
     let encrypt = new JSEncrypt();
     encrypt.setPublicKey('MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKsWVIYQxtPV5MN+3IJJp5bSIcNfYB4AyG0b9C7NSHNP0VmdH5dVBpYFb70wDwLa9YZwFocO1sjxnkZJv83/oA0CAwEAAQ==');
     //if (!Oid.wxId || !Oid.deviceId) throw Error("微信id或设备id不能为空");
+    console.log("---------------------------------deviceId: " + Oid.deviceId);
     return {
         appId: encrypt.encrypt('kalaebb34de801bb67fd'),
         appVersion: sysConfig.appVersion,
@@ -371,6 +370,8 @@ export function reqHeader(data, header, isReturnSign) {
     // console.log(str);
     if (isReturnSign) return md5(str);
     header.sign = md5(str);
+    header.sessionId = getQueryString("sessionId") || "";
+    header.token = getSession("token") || "";
     return header;
 }
 
@@ -744,7 +745,7 @@ export function getCode2Msg(code) {
  * @param userInfoData 用户信息
  */
 export function linkToPayment (userInfoData) {
-    const {data} = userInfoData || {data: {type: 2}};
+    const data = userInfoData || {type: 2};
     const {type} = data;
     const linkPath = parseInt(type, 10) === 1 ? `payMode` : `pay?state=home`;
 

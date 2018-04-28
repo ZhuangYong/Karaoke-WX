@@ -70,7 +70,7 @@ class BaseOrderList extends BaseComponent {
 
         if (preProps.orderList[this.state.dataKey + 'Stamp'] !== this.props.orderList[this.state.dataKey + 'Stamp']) {
 
-            const {data} = this.props.orderList[this.state.dataKey + 'Data'];
+            const data = this.props.orderList[this.state.dataKey + 'Data'];
             const {result} = data || [];
 
             this.setState({

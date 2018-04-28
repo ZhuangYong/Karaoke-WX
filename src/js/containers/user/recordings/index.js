@@ -71,7 +71,7 @@ class Records extends BaseComponent {
 
     componentDidUpdate(preProps) {
         if (preProps.list.recordsListStamp !== this.props.list.recordsListStamp) {
-            const {data} = this.props.list.recordsListData || {data: {result: [], islastpage: false}};
+            const data = this.props.list.recordsListData || {result: [], islastpage: false};
             const {result, islastpage} = data;
 
             this.setState({
@@ -193,7 +193,7 @@ class Records extends BaseComponent {
         if (this.state.loading || this.state.lastPage) return;
 
         const userInfoData = getWxinfoFromSession();
-        const {openid} = userInfoData.data;
+        const {openid} = userInfoData;
         if (openid) {
             const currentPage = this.state.currentPage + 1;
             const pageSize = this.state.pageSize;

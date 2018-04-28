@@ -110,7 +110,7 @@ class SongList extends BaseComponent {
     componentDidUpdate(preProps) {
         const stamp = this.state.stamp;
         if (preProps.songs[stamp] !== this.props.songs[stamp]) {
-            const {data} = this.props.songs[this.state.dataKey] || {data: {result: [], lastPage: false}};
+            const data = this.props.songs[this.state.dataKey] || {data: {result: [], lastPage: false}};
             const {result, lastPage} = data;
             const pageData = [...this.state.pageData, ...(result || [])];
             this.setState({

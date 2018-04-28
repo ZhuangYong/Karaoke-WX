@@ -435,7 +435,7 @@ class PhotoAlbum extends BaseComponent {
      * 用于当页面state更新时，更新页面数据
      */
     updateList() {
-        const {data} = this.props.result.photoAlbumList;
+        const data = this.props.result.photoAlbumList;
         const {result, totalCount, albumMaxNum} = data;
         this.setState({
             albumMaxNum: albumMaxNum,

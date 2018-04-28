@@ -101,7 +101,7 @@ class SingerList extends BaseComponent {
 
     componentDidUpdate(preProps) {
         if (preProps.songs.getSingerAlbumStamp !== this.props.songs.getSingerAlbumStamp) {
-            const {data} = this.props.songs.getSingerAlbum || {data: {result: [], lastPage: false}};
+            const data = this.props.songs.getSingerAlbum;
             const {result, lastPage} = data;
             const pageData = [...this.state.pageData, ...(result || [])];
             const cacheData = {

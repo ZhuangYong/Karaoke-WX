@@ -20,7 +20,7 @@ class PayMode extends BaseComponent {
 
     render() {
         const userInfoData = this.props.userInfo.userInfoData || getWxinfoFromSession();
-        const {data} = userInfoData || {data: {}};
+        const data = userInfoData || {};
         const {deviceUuid, userUuid} = data;
         const payModes = [
             {img: ModeOnline, link: `pay?state=home`},

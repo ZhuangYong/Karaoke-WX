@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import "../../../../sass/common/searchHeader.scss";
 import {Chip, List, ListItem, Subheader} from "material-ui";
 import {getHotWords} from "../../../actions/searchActons";
-import DelIcon from "material-ui/svg-icons/content/clear";
+    import DelIcon from "material-ui/svg-icons/content/clear";
 import {getCookie, isLongWordLanguage, linkTo, reqHeader, setCookie} from "../../../utils/comUtils";
 import {withRouter} from "react-router-dom";
 import Input from "../Input";
@@ -87,7 +87,7 @@ class SearchHeader extends BaseComponent {
 
     render() {
         const showHelper = this.state.inputting ? "" : "none";
-        const {hotKeyWords} = this.props.hotKeys;
+        const hotKeyWords = this.props.hotKeys.hotKeyWords || {};
         const searchHistory = this.state.searchHistory ? this.state.searchHistory.split(",").map((word) => decodeURIComponent(word)) : [];
 
         const funcBtn = () => {
@@ -156,7 +156,7 @@ class SearchHeader extends BaseComponent {
                                 <font style={{fontWeight: 'bold', fontSize: '.38rem'}} color="#000000">{intl.get("search.hot")}</font>
                             </Subheader>
                             <div className="hot-words">
-                                {hotKeyWords && hotKeyWords.data.result && hotKeyWords.data.result.map((word) => (
+                                {hotKeyWords.result && hotKeyWords.result.map((word) => (
                                     <Chip style={{border: '1px solid #b7b7b7', backgroundColor: 'white'}} className="word" key={word.tag} onTouchTap={() => {
                                         this.handelHotSearch(word.tag);
                                     }}>

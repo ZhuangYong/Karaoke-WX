@@ -57,7 +57,7 @@ class AudioEffect extends BaseComponent {
     }
 
     render() {
-        const {data} = this.props.userInfo.userInfoData || {data: {}};
+        const data = this.props.userInfo.userInfoData || {};
         let isNstManual = false; //
         // if ((data.channel === 'nst_sk_a3' || data.channel === 'sk_stb')) {
         if (Const.EFFECT_NST_CHANNEL_LIST.indexOf(data.channel) >= 0) {

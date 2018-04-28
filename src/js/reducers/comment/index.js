@@ -8,7 +8,7 @@ export default (state = initialState, action = {}) => {
     switch (action.type) {
         case ActionTypes.COMMENT.API_GET_COMMENT_LIST:
             return fetchProcess(state, action, {
-                data: "comment",
+                data: "commentList",
                 msg: "msg",
                 loading: "loading"
             });

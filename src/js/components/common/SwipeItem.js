@@ -50,13 +50,16 @@ export default class SwipeItem extends React.Component {
             <span className="list-item-outer-pan">
                 <div className="list-item-swipe-pan" style={{marginLeft: moveDist + "px"}}>
                     <div className="list-item-inner-pan">
-                        <img src={this.props.data.avatar || blankImg} className="avatar"/>
-                        <div>{this.props.data.title}</div>
-                        <p>
-                            <span>{this.props.data.content}</span>
-                            <br/>
-                            {this.props.data.time} {this.props.data.replyCount}
-                        </p>
+                        <img src={this.props.data.headerImg || blankImg} className="avatar"/>
+                        <div className="nickname">{this.props.data.nickName}</div>
+                        <span>
+                            <p className="content">
+                                {this.props.data.content}
+                            </p>
+                            <p className="footer">
+                            {this.props.data.createTime} {this.props.data.sensitiveFilter}
+                            </p>
+                        </span>
                     </div>
                  </div>
                 {
@@ -66,6 +69,10 @@ export default class SwipeItem extends React.Component {
                         </p>
                     </div> : ""
                 }
+
+                <p className="content-space">
+                    {this.props.data.content}
+                </p>
             </span>
         </div>;
     }

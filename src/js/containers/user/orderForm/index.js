@@ -85,22 +85,19 @@ class OrderForm extends BaseOrderList {
         };
 
         this.props.deleteAction(deleteOrderParam, reqHeader(deleteOrderParam, header), (res) => {
-            const {status} = res;
-            if (parseInt(status, 10) === 1) {
-                let orderList = this.state.orderList.filter((item) => {
-                    return item.id !== id;
-                });
-                this.setState({
-                    orderList: orderList,
-                    openDialog: false
-                });
-                this.props.action_setGlobAlert(intl.get("msg.delete.success"));
-            } else {
-                this.setState({
-                    openDialog: false
-                });
-                this.props.action_setGlobAlert(intl.get("msg.delete.fail"));
-            }
+            let orderList = this.state.orderList.filter((item) => {
+                return item.id !== id;
+            });
+            this.setState({
+                orderList: orderList,
+                openDialog: false
+            });
+            this.props.action_setGlobAlert(intl.get("msg.delete.success"));
+        }, err => {
+            this.setState({
+                openDialog: false
+            });
+            this.props.action_setGlobAlert(intl.get("msg.delete.fail"));
         });
     }
 

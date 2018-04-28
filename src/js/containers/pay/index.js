@@ -463,7 +463,7 @@ class Pay extends BaseComponent {
 
     // 更新支付列表
     updatePayList() {
-        const {data} = this.props.result.payListData || {data: []};
+        const data = this.props.result.payListData || {data: []};
         const {defaultChooseProductId} = this.state;
         if (data && data[0]) {
             let defaultActiveItem = data[0];

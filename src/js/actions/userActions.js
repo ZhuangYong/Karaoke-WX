@@ -192,7 +192,7 @@ export function getOrderForm(data, headers, callback, failBack) {
 }
 
 // 删除订单
-export function deleteOrder(data, headers, callback) {
+export function deleteOrder(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_GET_DELETE_ORDER;
 
@@ -202,7 +202,7 @@ export function deleteOrder(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_GET_DELETE_ORDER
-        }, callback);
+        }, callback, fail);
     };
 }
 

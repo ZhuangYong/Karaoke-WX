@@ -331,7 +331,7 @@ class SongController extends BaseComponent {
 
                                 <Paper style={{...style.extArea, marginTop: extAreaMarginTop}}>
                                     {
-                                        this.props.ottInfo && this.props.ottInfo.data.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div className="controller-bar controller-bar-barrage"
+                                        this.props.ottInfo && this.props.ottInfo.appVersion >= Const.BARRAGE_MIN_OTT_VERSION ? <div className="controller-bar controller-bar-barrage"
                                             style={{
                                             margin: '0 .5rem',
                                             display: 'flex',
@@ -493,7 +493,7 @@ class SongController extends BaseComponent {
                                 />
                             ) : ""
                         }
-                        {playList.map((song, index) => (
+                        {playList && playList.map((song, index) => (
                             <ListItem
                                 className="song-item"
                                 key={song.musicNo}
@@ -725,12 +725,12 @@ class SongController extends BaseComponent {
      * 更新已点歌曲数据
      */
     updateSong() {
-        if (!this.props.songs.chooseList.data) {
+        if (!this.props.songs.chooseList || !this.props.songs.chooseList.length) {
             this.setState({
                 emptyChooseSongs: true
             });
         } else {
-            const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
+            const data = this.props.songs.chooseList || {recordJson: '{"list":[],"playing":{}}'};
             let {list, playing} = this.handelList(data.recordJson);
             if (typeof list === "string") list = JSON.parse(list);
             this.setState({
@@ -746,9 +746,10 @@ class SongController extends BaseComponent {
     updateHistorySong() {
         const historyPlayList = this.props.songs.getHistorySongList;
         let historySongList = [];
-        if (historyPlayList && historyPlayList.data) {
-            let {list} = this.handelList(historyPlayList.data.recordJson);
+        if (historyPlayList) {
+            let {list} = this.handelList(historyPlayList.recordJson);
             if (typeof list === "string") list = JSON.parse(list);
+            if (!list) return;
             historySongList = list.map((song) => {
                 const actorIcon = song.actorIcon;
                 const actorName = song.actorName;
@@ -983,7 +984,7 @@ class SongController extends BaseComponent {
     }
 
     showAudioEffect() {
-        const {data} = this.props.userInfo.userInfoData || {data: {}};
+        const data = this.props.userInfo.userInfoData || {};
         // 国光老板卡，显示音控台
         // 新加一个版卡支持音效
         if (data.isReDevice === 1) {

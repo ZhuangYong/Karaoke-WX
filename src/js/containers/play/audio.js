@@ -90,7 +90,7 @@ class PlayAudio extends BaseComponent {
 
     componentDidUpdate() {
         const {autoPlayEd, params} = this.state;
-        const {data} = this.props.audio.audioInfo;
+        const {audioInfo: data} = this.props.audio;
         if (data && !autoPlayEd) {
             const {isWeixin} = window.sysInfo;
             if (isWeixin) {
@@ -138,7 +138,7 @@ class PlayAudio extends BaseComponent {
     render() {
         if (this.refs.audio) window.audio = this.refs.audio.refs.audio.refs.audio;
         const {w, h} = this.props.common;
-        const {status, data, msg} = this.props.audio.audioInfo;
+        const {audioInfo: data} = this.props.audio;
         const {musicUrl, musicTime, nameNorm, headerImg, nickName, albums, pagePictureId, pagePictureUrl, shareId, channel} = data || {};
         // const isK1 = Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0;
         let swipePanelStyle = {};
@@ -234,9 +234,9 @@ class PlayAudio extends BaseComponent {
                         <span className="comment-pen-icon"/>
                     </Subheader>
                     <List className="comment-list">
-                        <SwipeItem />
-                        <SwipeItem/>
-                        <SwipeItem/>
+                        {
+                            this.props.comment && this.props.comment.commentList && this.props.comment.commentList.result.map(c => <SwipeItem key={c.uuid} data={c}/>)
+                        }
                     </List>
                 </section>
 
@@ -252,6 +252,7 @@ class PlayAudio extends BaseComponent {
                                     </div>
                                 }
                                 hintStyle={{color: "white", textAlign: "center", width: "100%"}}
+                                value={this.state.commentContent}
                                 bindState={this.bindState("commentContent")}
                             />
                             {
@@ -287,12 +288,12 @@ class PlayAudio extends BaseComponent {
 
         params.uid = uid;
 
-        const {status, data, msg} = this.props.audio.audioInfo;
+        const {audioInfo} = this.props.audio;
 
         if (shareId) {
             params.shareId = shareId;
-        } else if (data && data.shareId) {
-            params.shareId = data.shareId;
+        } else if (audioInfo && audioInfo.shareId) {
+            params.shareId = audioInfo.shareId;
         } else {
             const openid = getQueryString('openid');
             if (openid === null) {
@@ -304,21 +305,18 @@ class PlayAudio extends BaseComponent {
         }
 
         getShareAudioAction(params, reqHeader(params), res => {
-            const {status, data} = res;
-            if (parseInt(status, 10) === 1) {
-                const {musicUrl, nameNorm, shareId, pagePictureUrl} = data;
-                this.getComment(shareId);
-                this.state.shareId = shareId;
-                window.wx && window.wx.ready(() => {
-                    wxShare({
-                        title: intl.get("audio.share.title", {name: nameNorm}),
-                        desc: intl.get("audio.share.from"),
-                        link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
-                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
-                        dataUrl: musicUrl
-                    });
+            const {musicUrl, nameNorm, shareId, pagePictureUrl} = res;
+            this.state.shareId = shareId;
+            this.getComment();
+            window.wx && window.wx.ready(() => {
+                wxShare({
+                    title: intl.get("audio.share.title", {name: nameNorm}),
+                    desc: intl.get("audio.share.from"),
+                    link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                    imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                    dataUrl: musicUrl
                 });
-            }
+            });
         });
     }
 
@@ -359,11 +357,11 @@ class PlayAudio extends BaseComponent {
         }
     }
 
-    getComment(shareId) {
+    getComment() {
         const params = {
             pageSize: 10,
             currentPage: 1,
-            shareId: shareId
+            shareId: this.state.shareId
         };
         this.props.getCommentsAction(params, reqHeader(params), res => {
 
@@ -380,8 +378,9 @@ class PlayAudio extends BaseComponent {
         this.state.loading = true;
         this.props.saveCommentsAction(params, reqHeader(params), res => {
             this.setState({
-                content: ""
+                commentContent: ""
             });
+            this.getComment();
         });
     }
 
@@ -389,6 +388,7 @@ class PlayAudio extends BaseComponent {
 
 const mapStateToProps = (state, ownPorps) => {
     return {
+        userInfo: state.app.user.userInfo,
         audio: state.app.audio,
         common: state.app.common,
         comment: state.app.comment
