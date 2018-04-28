@@ -365,6 +365,10 @@ class Barrage extends BaseComponent {
                         });
                     });
                 },
+                cancel: () => {
+                    const result = {msg: intl.get('msg.upload.fail')};
+                    reject(result);
+                },
                 fail: () => {
                     globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
                 }
