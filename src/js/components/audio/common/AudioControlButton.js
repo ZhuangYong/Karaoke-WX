@@ -1,12 +1,11 @@
 import React from "react";
-import {Circle} from "rc-progress";
 import Slider from "rc-slider";
 import "../../../../sass/audio/audioControlButton.scss";
 import get from "lodash/get";
-import PauseIcon from "./PauseIcon.js";
-import PlayIcon from "./PlayIcon.js";
-import range from "lodash/range";
 import PropTypes from "prop-types";
+import pauseIcon from "./../../../../img/play/pause.png";
+import playIcon from "./../../../../img/play/play.png";
+import mvIcon from "./../../../../img/play/mv.png";
 
 export default class AudioControlButton extends React.Component {
 
@@ -16,10 +15,10 @@ export default class AudioControlButton extends React.Component {
 
     render() {
         let percent = this.props.percent;
-        let icon = <PauseIcon />;
+        let icon = pauseIcon;
         switch (this.props.mode) {
             case 'play':
-                icon = <PlayIcon className="audio-control_play"/>;
+                icon = playIcon;
                 break;
             default:
                 break;
@@ -30,9 +29,9 @@ export default class AudioControlButton extends React.Component {
             <div className={`audio-control ${get(this.props, 'className', '')}`}>
                 <div className="control-buttons">
                     <button className="audio-control_btn" disabled={this.props.disabled} onClick={this.props.onClick}>
-                        {icon}
+                        <img src={icon}/>
                     </button>
-                    {
+                    {/*{
                         this.props.showProgress && range(0, this.props.progress.length).map((i) => {
                             const d = this.props.duration;
                             const start = this.props.progress.start(i);
@@ -43,9 +42,9 @@ export default class AudioControlButton extends React.Component {
                                 <Circle percent={buffer * 100} strokeColor="#D9D9D9" strokeWidth={8} trailColor="#FFFFFFFF"/>
                             </div>);
                         })
-                    }
-                    { this.props.showProgress &&
-                    <Circle percent={this.props.percent} strokeColor="#E76161" strokeWidth={8} trailColor="#FFFFFFFF"/> }
+                    }*/}
+                    {/*{ this.props.showProgress &&
+                    <Circle percent={this.props.percent} strokeColor="#E76161" strokeWidth={8} trailColor="#FFFFFFFF"/> }*/}
                 </div>
 
                 <div className="slider-panel">
@@ -54,7 +53,11 @@ export default class AudioControlButton extends React.Component {
                     <div className="current-time">{this.formatTime(currentTime)}</div>
                     <div className="duration">{this.formatTime(duration)}</div>
                 </div>
-
+                <div className="control-buttons-right">
+                    <button className="audio-control_btn video-control-btn" disabled={this.props.disabled} onClick={this.props.onClick}>
+                        <img src={mvIcon}/>
+                    </button>
+                </div>
             </div>
 
         );

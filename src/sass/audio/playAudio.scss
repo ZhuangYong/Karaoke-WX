@@ -1,5 +1,5 @@
 .audio-play{
-    background-color: rgb(247, 247, 247);
+    background-color: white;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -8,29 +8,41 @@
         position: relative;
         display: flex;
         justify-content: center;
-        margin: 1.0667rem 1.0667rem .347rem ;
+        margin: 0 ;
         .audio-item{
             .utilities{
                 position: absolute;
-                top: 2.4rem;
-                width: 88%;
-                left: 6%;
+                top: .2rem;
+                width: 53.4%;
+                left: 23.3%;
                 .control-buttons{
                     position: absolute;
-                    top: 1.6rem;
-                    left:50%;
+                    top: .2rem;
+                    left: -30%;
                     .rc-progress-circle{
                         width: 1.6rem;
                         height: 1.6rem;
                     }
                     .audio-control_btn{
-                        width: 1.5rem;
-                        height: 1.5rem;
-                        background-color: #ff6832;
-                        box-shadow: 1px 6px 20px 6px rgba(255, 104, 50, 0.25);
-                        svg{
-                            height: .6rem;
-                            width: .6rem;
+                        width: .8rem;
+                        height: .8rem;
+                        background-color: transparent;
+                        img{
+                            height: 54%;
+                            width: auto;
+                        }
+                    }
+                }
+                .control-buttons-right{
+                    right: -1.5rem;
+                    position: absolute;
+                    top: .2rem;
+                    left: auto !important;
+                    .video-control-btn{
+                        background-color: transparent;
+                        img{
+                            height: 54%;
+                            width: auto;
                         }
                     }
                 }
@@ -61,13 +73,13 @@
             }
         }
         .swipe-panel {
-            width: 7.867rem;
-            height: 7.867rem;
+            width: 100%;
+            height: 10rem;
             overflow: hidden;
             box-shadow: 0 0 20px 2px rgba(128, 128, 128, 0.28);
             .img-div {
                 width: 100%;
-                height: 7.867rem;
+                height: 10rem;
                 overflow: hidden;
                 img {
                     width: 100%;
@@ -90,16 +102,16 @@
                 color: white;
                 margin-left: .8rem;
                 .current-time {
-                    left: -1.1rem;
+                    left: -1rem;
                     top: -5px;
-                    color: #999999;
+                    color: white;
                     font-size: .257rem;
                     position: absolute;
                 }
                 .duration {
-                    right: -1.1rem;
+                    right: -1rem;
                     top: -5px;
-                    color: #999999;
+                    color: white;
                     font-size: .257rem;
                     position: absolute;
                 }
@@ -110,9 +122,82 @@
     .song-label{
         padding: 0;
         text-align: center;
-        margin: 0 0 3.5rem ;
+        margin: 0 0 .5rem ;
         color: #222222;
         font-size:.4rem;
+        background-color: white;
+        .song-title{
+            box-sizing: border-box!important;
+            color: rgba(0, 0, 0, 0.54)!important;
+            font-size: 0.48rem!important;
+            font-weight: bold!important;
+            line-height: .6rem!important;
+            padding: .4rem!important;
+            width: 100%;
+            text-align: left;
+            bottom: 0.8rem;
+            &>p{
+                width: 85%;
+                overflow: hidden;
+                display: inline-block;
+                margin: 0;
+            }
+            .do-like-icon{
+                height: 1rem;
+                width: 1rem;
+                float: right;
+                background: url("../../img/commend/no_good.png") no-repeat;
+                background-size: contain;
+                &.like{
+                    background-image: url("../../img/commend/good.png") !important;
+                }
+                p{
+                    text-align: center;
+                    padding-top: 1rem;
+                    margin: 0;
+                }
+            }
+        }
+    }
+    .comment-top{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        line-height: 1.2rem!important;
+        p{
+            font-size: .46rem;
+            float: left;
+            margin: 0;
+        }
+        .comment-pen-icon{
+            background-image: url("../../img/commend/commend.png");
+            height: .6rem;
+            width: .6rem;
+            float: right;
+            margin: .4rem;
+            background-size: cover;
+        }
+    }
+    .comment-list{
+        padding-top: 0!important;
+        margin-bottom: 2.3rem;
+    }
+    .more-comment-bottom{
+        padding-top: 0.533333rem;
+        box-shadow: -1px 0px 4px 5px rgba(128, 128, 128, 0.08);
+        margin-top: .3rem;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 9;
+        height: 2.2rem;
+        background-color: white;
+        .comment-container{
+            display: flex;
+            .comment-input{
+                width: 100%!important;
+            }
+        }
     }
 }
 

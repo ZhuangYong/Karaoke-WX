@@ -126,6 +126,11 @@ const DEVICE = {
     API_GET_OTT_DEVICE_STATUS: "API_GET_OTT_DEVICE_STATUS"
 };
 
+const COMMENT = {
+    API_GET_COMMENT_LIST: "API_GET_COMMENT_LIST",
+    API_GET_COMMENT_OR_REPLY: "API_GET_COMMENT_OR_REPLY",
+};
+
 export default {
     COMMON,
     USER,
@@ -133,7 +138,8 @@ export default {
     SONG,
     SEARCH,
     Pay,
-    DEVICE
+    DEVICE,
+    COMMENT
 };
 
 
