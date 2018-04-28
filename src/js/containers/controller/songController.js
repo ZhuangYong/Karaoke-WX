@@ -660,10 +660,10 @@ class SongController extends BaseComponent {
 
     songName(song, index) {
         // needDownload:id 0不需要下载 1 需要下载
-        const {needDownload, downloadStatus: status, mDownloadTime} = song;
+        const {needDownload, downloadStatus: status, mDownState} = song;
         let downloadStatusStr = "";
         let downloadStatus = status;
-        if (mDownloadTime) downloadStatus = convertStatus(mDownloadTime);
+        if (mDownState) downloadStatus = convertStatus(mDownState);
         switch (downloadStatus) {
             case Const.DOWNLOAD_STATUS_NOT_DOWN:
                 downloadStatusStr = intl.get("msg.waiting.download");
@@ -701,9 +701,9 @@ class SongController extends BaseComponent {
      */
     songSetTopButton(song, index) {
         // needDownload:id 0不需要下载 1 需要下载
-        const {needDownload, downloadStatus: status, mDownloadTime} = song;
+        const {needDownload, downloadStatus: status, mDownState} = song;
         let downloadStatus = status;
-        if (mDownloadTime) downloadStatus = convertStatus(mDownloadTime);
+        if (mDownState) downloadStatus = convertStatus(mDownState);
         const setTopButton = (
             <div className="set-top-icon" src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
                  onClick={() => {
