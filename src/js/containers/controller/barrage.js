@@ -1,7 +1,6 @@
 /**
  * Created by walljack@163.com on 2017/8/10.
  */
-
 import React from "react";
 import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
@@ -21,6 +20,9 @@ import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
 import * as ReactDOM from "react-dom";
 import Const from "../../utils/const";
 import intl from 'react-intl-universal';
+import ActionTypes from '../../actions/actionTypes';
+import { ossUploadWxPic } from '../../actions/userActions';
+import SubmitLoading from '../../components/common/SubmitLoading';
 
 let fastWords = [];
 for (let i = 1; i < 21; i++) {
@@ -130,7 +132,8 @@ class Barrage extends BaseComponent {
             inputImage: "",
             sendBarrageIng: false,
             barrageSendToast: false,
-            barrageToastMsg: intl.get("msg.send.success")
+            barrageToastMsg: intl.get("msg.send.success"),
+            uploadImgLoading: false,
         };
         this.onBlur = this.onBlur.bind(this);
         this.onFocus = this.onFocus.bind(this);
@@ -149,17 +152,17 @@ class Barrage extends BaseComponent {
         document.addEventListener("touchstart", this.handelInputBlur);
         window.addEventListener("resize", this.handelResize);
 
-        const albumFormDataStr = window.sessionStorage.getItem(Const.ALBUM_SESSION_KEY);
-        if (albumFormDataStr !== null) {
-            const {barrage} = JSON.parse(albumFormDataStr);
-            this.chooseEmotion(barrage[0].imgUrl);
-        }
+        // const albumFormDataStr = window.sessionStorage.getItem(Const.ALBUM_SESSION_KEY);
+        // if (albumFormDataStr !== null) {
+        //     const {barrage} = JSON.parse(albumFormDataStr);
+        //     this.chooseEmotion(barrage[0].imgUrl);
+        // }
     }
 
     componentWillUnmount() {
         document.removeEventListener("touchstart", this.handelInputBlur);
         window.removeEventListener("resize", this.handelResize);
-        window.sessionStorage.removeItem(Const.ALBUM_SESSION_KEY);
+        // window.sessionStorage.removeItem(Const.ALBUM_SESSION_KEY);
     }
 
     render() {
@@ -270,7 +273,19 @@ class Barrage extends BaseComponent {
                         className={this.state.tabIndex === 2 ? "main-background-color" : ""}
                         buttonStyle={{flexDirection: "row", height: '1.2rem'}}
                         onActive={() => {
-                            linkTo(`user/photoAlbum/barrage/1`, false, null);
+                            // linkTo(`user/photoAlbum/barrage/1`, false, null);
+                            this.setState({uploadImgLoading: true});
+                            const {globAlertAction} = this.props;
+                            const {isWeixin} = window.sysInfo;
+                            isWeixin && this.uploadWxImgGetter().then(res => {
+                                const {msg, result} = res;
+                                this.chooseEmotion(result[0].url);
+                                this.setState({uploadImgLoading: false});
+                                globAlertAction(msg);
+                            }).catch(err => {
+                                this.setState({uploadImgLoading: false});
+                                globAlertAction(err.msg);
+                            });
                         }}
                         label={
                             <div style={{
@@ -290,8 +305,62 @@ class Barrage extends BaseComponent {
                         this.getSendButton()
                     }
                 </div> : ""}
+
+                <SubmitLoading hide={!this.state.uploadImgLoading} />
             </div>
         );
+    }
+
+    /**
+     * 上传已存储到微信服务器的图片（自建后台）
+     * @returns {Promise}
+     */
+    uploadWxImgGetter() {
+
+        return new Promise((resolve, reject) => {
+            const {globAlertAction, ossUploadWxPicActions} = this.props;
+            window.wx && window.wx.chooseImage({
+                count: 1, // 默认9
+                sizeType: ['compressed'], // 可以指定是原图还是压缩图，默认二者都有
+                sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机，默认二者都有
+                success: (res) => {
+                    const localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                    localIds.map((item) => {
+                        window.wx.uploadImage({
+                            localId: item, // 需要上传的图片的本地ID，由chooseImage接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: (res) => {
+                                this.setState({
+                                    uploadImgLoading: true
+                                });
+                                let result;
+                                const params = {
+                                    type: 2,
+                                    keys: res.serverId // 返回图片的服务器端ID
+                                };
+                                ossUploadWxPicActions(params, reqHeader(params), res => {
+                                    console.log("======上传成功========");
+                                    const {status, data} = res;
+                                    if (parseInt(status, 10) === 1) {
+
+                                        result = {...data, msg: intl.get('msg.upload.success')};
+                                        resolve(result);
+                                    } else {
+
+                                        result = {msg: intl.get('msg.upload.fail')};
+                                        reject(result);
+                                    }
+                                });
+                            }
+                        });
+                    });
+                },
+                fail: () => {
+                    globAlertAction("", ActionTypes.COMMON.ALERT_TYPE_WX_API_FAIL);
+                }
+            });
+        });
+
     }
 
     getEmotion() {
@@ -408,8 +477,8 @@ class Barrage extends BaseComponent {
 
     sendBarrage() {
         let type = "";
-        if (super.validUserBindDevice(this.props.userInfoData, this.props.action_setGlobAlert) !== true) return;
-        if (super.validUserDeviceOnline(this.props.ottInfo, this.props.action_setGlobAlert) !== true) return;
+        if (super.validUserBindDevice(this.props.userInfoData, this.props.globAlertAction) !== true) return;
+        if (super.validUserDeviceOnline(this.props.ottInfo, this.props.globAlertAction) !== true) return;
         const {inputValue, inputImage} = this.state;
         const {data} = this.props.userInfo.userInfoData || {data: {}};
         if (inputValue) type = "txt";
@@ -436,13 +505,13 @@ class Barrage extends BaseComponent {
                     inputValue: "",
                     sendBarrageIng: false
                 });
-                this.props.action_setGlobAlert(intl.get("msg.send.success"), "");
+                this.props.globAlertAction(intl.get("msg.send.success"), "");
             };
             const fail = (msg) => {
                 this.setState({
                     sendBarrageIng: false
                 });
-                this.props.action_setGlobAlert(msg, "");
+                this.props.globAlertAction(msg, "");
             };
             dynaPush({
                 ottInfo: this.props.ottInfo,
@@ -452,7 +521,7 @@ class Barrage extends BaseComponent {
                 action_pushLocal: this.props.action_pushLocal,
                 action_setLocalNet: this.props.action_setLocalNet,
                 action_push: this.props.action_push,
-                action_setGlobAlert: this.props.action_setGlobAlert,
+                action_setGlobAlert: this.props.globAlertAction,
                 success: success,
                 fail: fail
             });
@@ -536,15 +605,17 @@ const mapStateToProps = (state, ownProps) => {
         common: state.app.common,
         userInfoData: state.app.user.userInfo.userInfoData,
         ottInfo: state.app.device.ottInfo,
-        localNetIsWork: state.app.common.localNetIsWork
+        localNetIsWork: state.app.common.localNetIsWork,
+        result: state.app.user.photoAlbum
     };
 };
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         action_push: bindActionCreators(push, dispatch),
-        action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
+        globAlertAction: bindActionCreators(setGlobAlert, dispatch),
         action_pushLocal: bindActionCreators(pushLocal, dispatch),
+        ossUploadWxPicActions: bindActionCreators(ossUploadWxPic, dispatch),
         action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
     };
 };
