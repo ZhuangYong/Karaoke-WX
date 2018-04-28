@@ -273,5 +273,7 @@
     "msg.recharge.invalidPassword": "Card number and password  not match, please retry",
     "msg.recharge.invalidDate": "The recharge card is expired.",
     "msg.recharge.used": "This recharge card is used up",
-    "msg.recharge.ok": "Recharge success"
+    "msg.recharge.ok": "Recharge success",
+    "label.recharge.payOnline": "Pay online",
+    "label.recharge.payRecharge": "Recharge"
 }

@@ -274,5 +274,7 @@
     "msg.recharge.invalidPassword": "卡号和密码不匹配，请重新输入",
     "msg.recharge.invalidDate": "该充值卡不在有效期内",
     "msg.recharge.used": "该充值卡已使用",
-    "msg.recharge.ok": "充值成功"
+    "msg.recharge.ok": "充值成功",
+    "label.recharge.payOnline": "在线充值",
+    "label.recharge.payRecharge": "充值卡充值"
 }

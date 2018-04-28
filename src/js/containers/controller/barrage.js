@@ -216,6 +216,7 @@ class Barrage extends BaseComponent {
                     />
                 </div>
                 <Tabs
+                    value={this.state.tabIndex}
                     tabItemContainerStyle={{display: "flex !important", height: '1.2rem', backgroundColor: "#d7d7d7"}}
                     contentContainerStyle={{
                         position: (isAndroid && this.state.inputIng) ? "" : "absolute",
@@ -226,6 +227,7 @@ class Barrage extends BaseComponent {
                         zIndex: -1
                     }}>
                     <Tab
+                        value={0}
                         className={this.state.tabIndex === 0 ? "main-background-color" : ""}
                         buttonStyle={{flexDirection: "row", height: '1.2rem'}}
                         onActive={() => {
@@ -244,6 +246,7 @@ class Barrage extends BaseComponent {
                         }
                     </Tab>
                     <Tab
+                        value={1}
                         className={this.state.tabIndex === 1 ? "main-background-color" : ""}
                         buttonStyle={{flexDirection: "row", height: '1.2rem'}}
                         onActive={() => {
@@ -270,22 +273,12 @@ class Barrage extends BaseComponent {
                         }
                     </Tab>
                     <Tab
-                        className={this.state.tabIndex === 2 ? "main-background-color" : ""}
+                        value={2}
                         buttonStyle={{flexDirection: "row", height: '1.2rem'}}
                         onActive={() => {
                             // linkTo(`user/photoAlbum/barrage/1`, false, null);
-                            this.setState({uploadImgLoading: true});
-                            const {globAlertAction} = this.props;
-                            const {isWeixin} = window.sysInfo;
-                            isWeixin && this.uploadWxImgGetter().then(res => {
-                                const {msg, result} = res;
-                                this.chooseEmotion(result[0].url);
-                                this.setState({uploadImgLoading: false});
-                                globAlertAction(msg);
-                            }).catch(err => {
-                                this.setState({uploadImgLoading: false});
-                                globAlertAction(err.msg);
-                            });
+                            this.handelChangeTab(this.state.tabIndex);
+                            this.albumClick();
                         }}
                         label={
                             <div style={{
@@ -295,9 +288,8 @@ class Barrage extends BaseComponent {
                                 <img src={tabIcon[2]}
                                      style={style.tabs.tab.label.img}/>{intl.get("title.photoAlbum")}
                             </div>
-                        }>
-
-                    </Tab>
+                        }
+                    />
                 </Tabs>
 
                 {((!this.state.inputIng && isAndroid) || !isAndroid) ? <div style={style.bottomPanel}>
@@ -309,6 +301,24 @@ class Barrage extends BaseComponent {
                 <SubmitLoading hide={!this.state.uploadImgLoading} />
             </div>
         );
+    }
+
+    /**
+     * 相册点击事件
+     */
+    albumClick() {
+        this.setState({uploadImgLoading: true});
+        const {globAlertAction} = this.props;
+        const {isWeixin} = window.sysInfo;
+        isWeixin && this.uploadWxImgGetter().then(res => {
+            const {msg, result} = res;
+            this.chooseEmotion(result[0].url);
+            this.setState({uploadImgLoading: false});
+            globAlertAction(msg);
+        }).catch(err => {
+            this.setState({uploadImgLoading: false});
+            globAlertAction(err.msg);
+        });
     }
 
     /**
