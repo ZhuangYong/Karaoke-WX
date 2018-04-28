@@ -766,12 +766,12 @@ export function linkToPayment (userInfoData) {
  *  正在下载 2
  *  下载成功 3
  *  对应 1下载完成 0等待下载 2下载失败 3 正在下载 4 未下载（默认状态）
- * @param down_state
+ * @param mDownState
  * @returns {number}
  */
-export function convertStatus (down_state) {
+export function convertStatus (mDownState) {
     let downloadStatus = 4;
-    switch (down_state) {
+    switch (mDownState) {
         case -1:
         case '-1':
             downloadStatus = 2;
