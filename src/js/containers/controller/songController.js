@@ -3,7 +3,7 @@ import {bindActionCreators} from "redux";
 import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 
-import {dynaPush, isLongWordLanguage, linkTo, reqHeader} from "../../utils/comUtils";
+import {convertStatus, dynaPush, isLongWordLanguage, linkTo, reqHeader} from "../../utils/comUtils";
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import {getChooseList, getHistorySongList, push, pushLocal, setSongTop} from "../../actions/audioActons";
@@ -660,8 +660,10 @@ class SongController extends BaseComponent {
 
     songName(song, index) {
         // needDownload:id 0不需要下载 1 需要下载
-        const {needDownload, downloadStatus} = song;
+        const {needDownload, downloadStatus: status, down_state} = song;
         let downloadStatusStr = "";
+        let downloadStatus = status;
+        if (down_state) downloadStatus = convertStatus(down_state);
         switch (downloadStatus) {
             case Const.DOWNLOAD_STATUS_NOT_DOWN:
                 downloadStatusStr = intl.get("msg.waiting.download");
@@ -699,7 +701,9 @@ class SongController extends BaseComponent {
      */
     songSetTopButton(song, index) {
         // needDownload:id 0不需要下载 1 需要下载
-        const {needDownload, downloadStatus} = song;
+        const {needDownload, downloadStatus: status, down_state} = song;
+        let downloadStatus = status;
+        if (down_state) downloadStatus = convertStatus(down_state);
         const setTopButton = (
             <div className="set-top-icon" src={SetTopIcon} style={{marginRight: '.6rem', width: '.4rem'}}
                  onClick={() => {
@@ -758,6 +762,7 @@ class SongController extends BaseComponent {
                 const musicNo = song.musicNo;
                 const vipStutas = song.vipStutas;
                 const fileMark = song.fileMark;
+                if (!musicNo) return song;
                 return {
                     "nameNorm": musicName,
                     "id": musicNo,
