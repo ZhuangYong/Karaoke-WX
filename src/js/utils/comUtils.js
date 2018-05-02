@@ -760,3 +760,52 @@ export function linkToPayment (userInfoData) {
         linkTo(`pay/home`, false, null);
     }*/
 }
+
+/**
+ * 下载失败-1
+ *  未下载（默认状态）   0
+ *  等待下载 1
+ *  正在下载 2
+ *  下载成功 3
+ *  对应 1下载完成 0等待下载 2下载失败 3 正在下载 4 未下载（默认状态）
+ * @param mDownState
+ * @returns {number}
+ */
+export function convertStatus (mDownState) {
+    let downloadStatus = 4;
+    switch (mDownState) {
+        case -1:
+        case '-1':
+            downloadStatus = 2;
+            break;
+        case 1:
+        case '1':
+            downloadStatus = 0;
+            break;
+        case 2:
+        case '2':
+            downloadStatus = 3;
+            break;
+        case 3:
+        case '3':
+            downloadStatus = 1;
+            break;
+        default:
+    }
+    return downloadStatus;
+}
+
+export function convertSong (song) {
+    if (song.musicNo) return song;
+    const musicName = song.nameNorm;
+    const musicIcon = song.image;
+    const musicNo = song.serialNo;
+    const fileMark = song.fileMark;
+    const charge = song.vipStutas;
+    song.musicName = musicName;
+    song.musicIcon = musicIcon;
+    song.musicNo = musicNo;
+    song.fileMark = fileMark;
+    song.charge = charge;
+    return song;
+}

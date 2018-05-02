@@ -14,6 +14,7 @@ import { setGlobAlert } from '../../actions/common/actions';
 import SubmitLoading from '../../components/common/SubmitLoading';
 import MyButton from '../../components/common/MyButton';
 import intl from 'react-intl-universal';
+import Const from '../../utils/const';
 
 
 const styles = {
@@ -71,7 +72,7 @@ class EditRecord extends BaseComponent {
     }
 
     componentWillMount() {
-        const recordingFormDataStr = window.sessionStorage.getItem("recordingFormData");
+        const recordingFormDataStr = window.sessionStorage.getItem(Const.ALBUM_SESSION_KEY);
 
         if (recordingFormDataStr === null) {
             this.getAllPicsGetter();
@@ -85,7 +86,7 @@ class EditRecord extends BaseComponent {
     }
 
     componentWillUnmount() {
-        this.state.isRemoveSession && window.sessionStorage.removeItem("recordingFormData");
+        this.state.isRemoveSession && window.sessionStorage.removeItem(Const.ALBUM_SESSION_KEY);
     }
 
     render() {
@@ -297,7 +298,7 @@ class EditRecord extends BaseComponent {
      */
     addBtnTouchTap(edit) {
 
-        window.sessionStorage.setItem("recordingFormData", JSON.stringify(this.state.recordingFormData));
+        window.sessionStorage.setItem(Const.ALBUM_SESSION_KEY, JSON.stringify(this.state.recordingFormData));
 
         linkTo(`user/photoAlbum/${edit}/${edit === "albums" ? CONFIG.ALBUMS_MAX : 1}`, false, null);
     }

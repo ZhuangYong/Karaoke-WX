@@ -44,9 +44,9 @@ class SongItem extends BaseComponent {
                 </div>}
                 secondaryText={
                     <div className="song-author">
-                        {song.actor && song.actor.map((actor) => (
+                        {song.actorsName || (song.actor && song.actor.map((actor) => (
                             actor.nameNorm
-                        )).join(" ")}
+                        )).join(" "))}
                     </div>
                 }
                 rightToggle={

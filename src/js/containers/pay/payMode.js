@@ -23,8 +23,8 @@ class PayMode extends BaseComponent {
         const data = userInfoData || {};
         const {deviceUuid, userUuid} = data;
         const payModes = [
-            {img: ModeOnline, link: `pay?state=home`},
-            {img: ModeRecharge, link: `recharge/${deviceUuid}?userUuid=${userUuid}`},
+            {label: intl.get('label.recharge.payOnline'), img: ModeOnline, link: `pay?state=home`},
+            {label: intl.get('label.recharge.payRecharge'), img: ModeRecharge, link: `recharge/${deviceUuid}?userUuid=${userUuid}`},
         ];
 
         return <ul style={{
@@ -35,12 +35,20 @@ class PayMode extends BaseComponent {
             {
                 payModes.map((payMode, index) => <li
                     style={{
+                        position: 'relative',
                         marginBottom: toRem(15),
                     }}
                     key={index}
                     onClick={() => {
                         linkTo(payMode.link, false, null);
                     }}>
+                    <div style={{
+                        position: 'absolute',
+                        top: toRem(100),
+                        left: toRem(100),
+                        fontSize: toRem(48),
+                        color: '#fff',
+                    }}>{payMode.label}</div>
                     <img style={{
                         width: '100%',
                         height: 'auto',
