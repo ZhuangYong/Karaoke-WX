@@ -10,7 +10,8 @@ export default (state = initialState, action = {}) => {
             return fetchProcess(state, action, {
                 data: "commentList",
                 msg: "msg",
-                loading: "loading"
+                loading: "loading",
+                stamp: "commentListStamp"
             });
         default:
             return state;

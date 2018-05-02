@@ -159,6 +159,11 @@ class PlayAudio extends BaseComponent {
 
         const { customerSliders, customerAd } = this.state;
 
+        let commentList = null;
+        if (this.props.comment && this.props.comment.commentList && this.props.comment.commentList.result) {
+            commentList = this.props.comment.commentList.result;
+        }
+
         return (
             <div className="audio-play" onScroll={this.onScroll.bind(this)} onTouchEnd={this.onScroll.bind(this)}>
                 <div className="top-panel" style={topPanelStyle}>
@@ -235,7 +240,12 @@ class PlayAudio extends BaseComponent {
                     </Subheader>
                     <List className="comment-list">
                         {
-                            this.props.comment && this.props.comment.commentList && this.props.comment.commentList.result.map(c => <SwipeItem key={c.uuid} data={c}/>)
+                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c}/>)
+                        }
+                        {
+                            commentList && commentList.length >= 1 ? <span onClick={() => linkTo(`comment/list/${this.state.shareId}`, false, null)}>
+                                查看哥更多
+                            </span> : ""
                         }
                     </List>
                 </section>

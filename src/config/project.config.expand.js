@@ -6,7 +6,7 @@
 module.exports = {
     appVersion: '1.1.1', // 版本号
     environment: 'expandTest',
-    apiDomain: 'http://bmstest.j-make.com.cn',
+    apiDomain: 'http://192.168.1.188',
     // apiDomain: 'http://192.168.1.210:8080',
     // apiDomain: 'http://192.168.1.104:8080',
     contextPath: "/",

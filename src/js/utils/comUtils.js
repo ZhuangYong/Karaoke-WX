@@ -635,6 +635,7 @@ export function isGetUserInfo() {
         'protocol',
         'recharge',
         'logout',
+        'comment/list',
     ];
     let bool = true;
 
