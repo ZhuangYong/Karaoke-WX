@@ -373,8 +373,8 @@ class App extends BaseComponent {
      * 更新用户信息
      */
     updateUserInfo(wxInfo) {
-        // let {isWeixin} = window.sysInfo;
-        // if (isWeixin) {
+        let {isWeixin} = window.sysInfo;
+        if (isWeixin) {
         //     // 获取用户信息
         //     let wxInfo = {
         //         wxId: getQueryString("uuid") || "",
@@ -416,8 +416,10 @@ class App extends BaseComponent {
         //     //     data: {}
         //     // }));
         //     this.props.action_getUserInfoFromSession();
-        // }
-        this.props.action_getUserInfo({}, reqHeader({}, getEncryptHeader({})));
+            this.props.action_getUserInfo({}, reqHeader({}, getEncryptHeader({})));
+        } else {
+            this.initail();
+        }
     }
 
     /**

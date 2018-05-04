@@ -159,49 +159,7 @@
             }
         }
     }
-    .comment-top{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        line-height: 1.2rem!important;
-        p{
-            font-size: .46rem;
-            float: left;
-            margin: 0;
-        }
-        .comment-pen-icon{
-            background-image: url("../../img/commend/commend.png");
-            height: .6rem;
-            width: .6rem;
-            float: right;
-            margin: .4rem;
-            background-size: cover;
-        }
-    }
-    .comment-list{
-        padding-top: 0!important;
-        margin-bottom: 2.3rem;
-    }
-    .more-comment-bottom{
-        padding-top: 0.533333rem;
-        box-shadow: -1px 0px 4px 5px rgba(128, 128, 128, 0.08);
-        margin-top: .3rem;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        z-index: 9;
-        height: 2.2rem;
-        background-color: white;
-        .comment-container{
-            display: flex;
-            .comment-input{
-                width: 100%!important;
-            }
-        }
-    }
 }
-
-
 .user-info {
     margin-top: 10px;
 }

@@ -114,10 +114,11 @@ export function comFetch(dispatch, param, options = {
     const rejectCode = Math.random();
     const rejectFun = (err) => {
         console.log(err);
+        const msg = err.message === "Failed to fetch" ? "请检查网络是否正常" : err.message;
         dispatch({
             type: options.action,
             fetchStatus: 1,
-            msg: err.message,
+            msg: msg,
             error: err,
             param: param
         });
@@ -125,12 +126,12 @@ export function comFetch(dispatch, param, options = {
             setTimeout(() => {
                 dispatch({
                     type: ActionTypes.COMMON.COMMON_GLOB_ALERT,
-                    globAlert: err.message
+                    globAlert: msg
                 });
             }, 300);
         }
         err.code = Const.CODE_OFF_LINE;
-        failCallback && failCallback(err.message, err, rejectCode);
+        failCallback && failCallback(msg, err, rejectCode);
     };
 
     let timeoutSing;

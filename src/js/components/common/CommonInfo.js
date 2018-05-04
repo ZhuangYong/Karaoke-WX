@@ -53,6 +53,7 @@ class CommonInfo extends React.Component {
         }
         return <Snackbar
             open={showAlert}
+            style={{zIndex: 99999}}
             bodyStyle={{height: 'auto', minHeight: 48, lineHeight: '.7rem', display: 'flex', alignItems: 'center'}}
             message={this.props.globAlert}
             autoHideDuration={2000}
@@ -84,7 +85,7 @@ class CommonInfo extends React.Component {
                                 return;
                             }
 
-                            const userInfo = this.props.userInfo.userInfoData.data;
+                            const userInfo = this.props.userInfo.userInfoData;
                             const params = {
                                 openId: userInfo.openid,
                                 url: result

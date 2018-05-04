@@ -169,5 +169,13 @@ export default {
 
     "API_GET_COMMENT_LIST": "/comment/listComments",
 
-    "API_GET_COMMENT_OR_REPLY": "/comment/commentOrReply"
+    "API_GET_COMMENT_REPLY_LIST": "/comment/listReplys",
+
+    "API_GET_COMMENT_OR_REPLY": "/comment/commentOrReply",
+
+    "API_GET_COMMENT_OR_REPLY_DELETE": "/comment/deleteCommentOrReply",
+
+    "API_GET_COMMENT_GET_LIKE": "/comment/getLikeNum",
+
+    "API_GET_COMMENT_LIKE_OR_CANCEL": "/comment/likeOrCancel"
 };

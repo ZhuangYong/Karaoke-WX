@@ -106,7 +106,8 @@ class Pay extends BaseComponent {
             payList: [],
             buttonPage: null,
             payType: "",
-            payResult: ""
+            payResult: "",
+            getWxOption: false
         };
 
         this.pay = this.pay.bind(this);
@@ -337,7 +338,7 @@ class Pay extends BaseComponent {
                                     }}
                                     label={intl.get("button.sure.pay")}
                                     disabled={disableSubmitButton || (!(isCheckboxChecked && payListActiveItem && payListActiveItem.productId !== null))}
-                                    loading={disableSubmitButton}
+                                    loading={disableSubmitButton || this.state.getWxOption}
                                     onClick={this.pay}
                                 />
 
@@ -383,8 +384,14 @@ class Pay extends BaseComponent {
         } else {
             header = reqHeader(params);
         }
+        this.setState({getWxOption: true});
         this.props.getWXPayParamsAction(params, header, (res) => {
-            const {data} = res;
+            const data = res;
+            this.setState({getWxOption: false});
+            if (!data.paySign || !data.signType || !data.timeStamp || data.nonceStr) {
+                actionSetGlobAlert("wx signature error!", "");
+                return;
+            }
             window.wx && window.wx.chooseWXPay({
                 timestamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
                 nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位
@@ -429,7 +436,7 @@ class Pay extends BaseComponent {
                     }
                 }
             });
-        });
+        }, err => this.setState({getWxOption: false}));
     }
 
     pageBack(msg) {

@@ -144,7 +144,7 @@ class Feedback extends BaseComponent {
          * 生成OSS实例对象
          */
         if (!isWeixin) {
-            const {data} = this.props.result.OSSTokenData;
+            const data = this.props.result.OSSTokenData;
             if (typeof data !== 'undefined' && data !== {} && this.state.client === null) {
 
                 this.state.client = new OSS.Wrapper({
@@ -177,7 +177,7 @@ class Feedback extends BaseComponent {
     render() {
         const {isWeixin} = window.sysInfo;
 
-        const {data} = this.props.questionList.questionListData || {data: {}};
+        const data = this.props.questionList.questionListData;
         const {result} = data || {};
         const imgList = this.state.imgList;
         const questionList = result || [];

@@ -5,13 +5,16 @@ import {withRouter} from "react-router-dom";
 import "../../../sass/audio/playAudio.scss";
 import {getShareAudio} from "../../actions/audioActons";
 import Audio from "../../components/audio";
-import {getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl, wxShare} from '../../utils/comUtils';
+import {
+    getEncryptHeader, getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl,
+    wxShare
+} from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
 
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
 import PropTypes from "prop-types";
-import {FlatButton, Subheader} from "material-ui";
+import {FlatButton, Subheader, TextField} from "material-ui";
 import BaseComponent from "../../components/common/BaseComponent";
 import SlidePng1 from "../../../img/album/1.png";
 import SlideK1Png1 from "../../../img/album/k1/1.png";
@@ -21,11 +24,15 @@ import intl from 'react-intl-universal';
 import Avatar from 'material-ui/Avatar';
 import defaultAvatar from "../../../img/default_avatar.png";
 import {setGlobAlert} from '../../actions/common/actions';
-import {getComments, saveComments} from '../../actions/commentActons';
+import {
+    deleteCommentOrReply, getCommentLikeCount, getComments, saveComments,
+    setCommentLikeOrCancel
+} from '../../actions/commentActons';
 import Const from "../../utils/const";
 import {List} from 'material-ui/List';
 import SwipeItem from "../../components/common/SwipeItem";
-import Input from "../../components/common/Input";
+import CommentCommonList from "../../components/common/commentCommonList";
+import {getUserInfo} from "../../actions/userActions";
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
@@ -50,7 +57,19 @@ const styles = {
     btnLabelStyle: {
         lineHeight: toRem(100),
         fontSize: toRem(32)
-    }
+    },
+    loadingRotate: {
+        width: '.42rem',
+        height: '.42rem',
+        position: 'relative',
+        loadingCircle: {
+            stroke: '#FF9800',
+            strokeLinecap: 'round',
+            transition: 'all 850ms ease-in-out 0ms',
+            strokeDasharray: '80, 114',
+            strokeDashoffset: '-403.668'
+        }
+    },
 };
 
 const defaultCover = 'http://wechat.j-make.cn/img/logo.png';
@@ -74,13 +93,22 @@ class PlayAudio extends BaseComponent {
             showComment: false,
             scrollTop: 0,
             commentContent: "",
-            shareId: ""
+            shareId: "",
+            commentCount: 0,
+            loading: {},
+            userLike: 0,
+            selectComment: null
         };
 
         this.loadAudioGetter = this.loadAudioGetter.bind(this);
         this.toEdit = this.toEdit.bind(this);
         this.getComment = this.getComment.bind(this);
         this.submitComment = this.submitComment.bind(this);
+        this.getCommentCount = this.getCommentCount.bind(this);
+        this.setCommentLike = this.setCommentLike.bind(this);
+        this.handelSelectComment = this.handelSelectComment.bind(this);
+        this.handelReplyClose = this.handelReplyClose.bind(this);
+        this.checkUserInfo = this.checkUserInfo.bind(this);
     }
 
     componentDidMount() {
@@ -140,8 +168,8 @@ class PlayAudio extends BaseComponent {
     render() {
         if (this.refs.audio) window.audio = this.refs.audio.refs.audio.refs.audio;
         const {w, h} = this.props.common;
-        const {audioInfo: data} = this.props.audio;
-        const {musicUrl, musicTime, nameNorm, headerImg, nickName, albums, pagePictureId, pagePictureUrl, shareId, channel} = data || {};
+        const data = this.props.audio.audioInfo;
+        const {musicUrl, musicTime, nameNorm, headerImg, nickName, albums, pagePictureId, pagePictureUrl, shareId, channel, uuid} = data || {};
         // const isK1 = Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0;
         let swipePanelStyle = {};
         let topPanelStyle = {};
@@ -162,10 +190,11 @@ class PlayAudio extends BaseComponent {
         const { customerSliders, customerAd } = this.state;
 
         let commentList = null;
+        let myUUID = null;
         if (this.props.comment && this.props.comment.commentList && this.props.comment.commentList.result) {
             commentList = this.props.comment.commentList.result;
+            myUUID = this.props.comment.commentList.unionId;
         }
-
         return (
             <div className="audio-play" onScroll={this.onScroll.bind(this)} onTouchEnd={this.onScroll.bind(this)}>
                 <div className="top-panel" style={topPanelStyle}>
@@ -189,11 +218,15 @@ class PlayAudio extends BaseComponent {
                         <p>
                             {nameNorm}
                         </p>
-                        <span className="do-like-icon">
-                            <p>
-                                {0}
-                            </p>
-                        </span>
+                        {
+                            !this.state.shareId || this.state.loading["likeCount"] || this.state.loading["like"] ? <div style={{float: 'right', marginRight: '.3rem', marginTop: '.3rem'}}>{this.getLoading()}</div> : <span className={`do-like-icon ${this.state.userLike ? "like" : ""}`} onClick={this.setCommentLike}>
+                                    <p>
+                                        {
+                                            this.state.commentCount
+                                        }
+                                    </p>
+                            </span>
+                        }
                     </Subheader>
                     <header style={{
                         position: "relative",
@@ -242,20 +275,26 @@ class PlayAudio extends BaseComponent {
                     </Subheader>
                     <List className="comment-list">
                         {
-                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c}/>)
+                            this.state.loading['audio'] || this.state.loading['comment'] ? this.getLoading() : ""
                         }
                         {
-                            commentList && commentList.length >= 1 ? <span onClick={() => linkTo(`comment/list/${this.state.shareId}`, false, null)}>
-                                查看哥更多
+                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c} canDel={myUUID === c.unionid} handelSelect={this.handelSelectComment} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.getComment}/>)
+                        }
+                        {
+                            this.state.shareId && commentList && commentList.length >= 10 ? <span onClick={() => linkTo(`comment/list/${this.state.shareId}`, false, null)} style={{textAlign: 'center', width: '100%', display: 'block', padding: '1em', color: 'gray'}}>
+                                查看更多评论
                             </span> : ""
                         }
                     </List>
                 </section>
 
                 {
-                    this.state.showComment ? <section className="more-comment-bottom" style={{opacity: this.state.scrollTop / 100}}>
-                        {ableEdit && <Subheader style={styles.center} className="comment-container">
-                            <Input
+                    <section className="more-comment-bottom">
+                        <Subheader style={styles.center} className="comment-container">
+                            <TextField
+                                floatingLabelText=""
+                                multiLine={true}
+                                rowsMax={12}
                                 ref="input"
                                 className="comment-input"
                                 hintText={
@@ -265,15 +304,23 @@ class PlayAudio extends BaseComponent {
                                 }
                                 hintStyle={{color: "white", textAlign: "center", width: "100%"}}
                                 value={this.state.commentContent}
-                                bindState={this.bindState("commentContent")}
+                                onChange={(v, a) => {
+                                    if (a) this.checkUserInfo();
+                                    this.setState({commentContent: a});
+                                }}
                             />
                             {
-                                !_.isEmpty(this.state.commentContent) ? <FlatButton label="提交" labelStyle={{fontSize: '.5rem', color: 'gray'}} onClick={this.submitComment}/> : ""
+                                !_.isEmpty(this.state.commentContent) ? <FlatButton label={this.state.loading["comment"] ? this.getLoading() : "提交"} labelStyle={{fontSize: '.5rem', color: 'gray'}} onClick={this.submitComment}/> : ""
                             }
-                        </Subheader>}
-                    </section> : ""
+                        </Subheader>
+                    </section>
                 }
 
+                {
+                    this.state.selectComment ? <div className="comment-reply-container" style={{width: '100%', height: '100%', position: 'fixed', top: 0, overflowY: 'auto', backgroundColor: 'white', zIndex: 9999}}>
+                        <CommentCommonList shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose}/>
+                    </div> : ""
+                }
 
                 {/*{pagePictureUrl && <img src={pagePictureUrl} style={{display: "none"}} onError={() => {
                     this.setState({
@@ -306,20 +353,15 @@ class PlayAudio extends BaseComponent {
             params.shareId = shareId;
         } else if (audioInfo && audioInfo.shareId) {
             params.shareId = audioInfo.shareId;
-        } else {
-            const openid = getQueryString('openid');
-            if (openid === null) {
-                globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
-                return;
-            }
-
-            params.openid = openid;
         }
 
+        this.state.loading['audio'] = true;
         getShareAudioAction(params, reqHeader(params), res => {
             const {musicUrl, nameNorm, shareId, pagePictureUrl} = res;
             this.state.shareId = shareId;
+            this.state.loading['audio'] = false;
             this.getComment();
+            this.getCommentCount();
             window.wx && window.wx.ready(() => {
                 wxShare({
                     title: intl.get("audio.share.title", {name: nameNorm}),
@@ -329,7 +371,7 @@ class PlayAudio extends BaseComponent {
                     dataUrl: musicUrl
                 });
             });
-        });
+        }, err => this.state.loading['audio'] = false);
     }
 
     /**
@@ -381,21 +423,85 @@ class PlayAudio extends BaseComponent {
     }
 
     submitComment() {
+        if (this.state.loading['comment']) return;
         const params = {
             type: 1,
-            userUuid: 1,
             uuid: this.state.shareId,
             content: this.state.commentContent
         };
-        this.state.loading = true;
+        this.state.loading['comment'] = true;
+        this.setState({loading: this.state.loading});
         this.props.saveCommentsAction(params, reqHeader(params), res => {
+            this.state.loading['comment'] = false;
             this.setState({
-                commentContent: ""
+                commentContent: "",
+                loading: this.state.loading
             });
+            this.props.globAlertAction("评论提交成功！");
             this.getComment();
+        }, err => this.state.loading['comment'] = false);
+    }
+
+    getCommentCount() {
+        const params = {
+            shareId: this.state.shareId
+        };
+        this.state.loading['likeCount'] = true;
+        this.props.getCommentLikeCountAction(params, reqHeader(params), res => {
+            this.state.loading['likeCount'] = false;
+            this.setState({
+                commentCount: res.likeNum,
+                userLike: res.userLike,
+                loading: this.state.loading
+             });
+        }, err => this.state.loading['likeCount'] = false);
+    }
+
+    setCommentLike() {
+        if (this.state.userLike) {
+            return;
+        }
+        const params = {
+            shareId: this.state.shareId,
+            type: 1
+        };
+        this.state.loading['like'] = true;
+        this.setState({loading: this.state.loading});
+        const unload = res => {
+            this.state.loading['like'] = false;
+            this.setState({loading: this.state.loading});
+        };
+        this.props.setCommentLikeOrCancelAction(params, reqHeader(params), () => {
+            this.setState({
+                commentCount: this.state.commentCount + 1,
+                userLike: 1
+            });
+            unload();
+        }, unload);
+    }
+
+    getLoading() {
+        return <svg className="rotate" viewBox="0 0 40 40" style={styles.loadingRotate}>
+            <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20" style={styles.loadingRotate.loadingCircle}/>
+        </svg>;
+    }
+
+    handelSelectComment(data) {
+        this.setState({
+            selectComment: data
+        });
+    }
+    handelReplyClose() {
+        this.setState({
+            selectComment: null
         });
     }
 
+    checkUserInfo() {
+        if (!this.props.userInfo.userInfoData) {
+            this.props.actionGetUserInfo({}, reqHeader({}, getEncryptHeader({})));
+        }
+    }
 }
 
 const mapStateToProps = (state, ownPorps) => {
@@ -408,6 +514,10 @@ const mapStateToProps = (state, ownPorps) => {
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        actionGetUserInfo: bindActionCreators(getUserInfo, dispatch),
+        getCommentLikeCountAction: bindActionCreators(getCommentLikeCount, dispatch),
+        deleteCommentOrReplyAction: bindActionCreators(deleteCommentOrReply, dispatch),
+        setCommentLikeOrCancelAction: bindActionCreators(setCommentLikeOrCancel, dispatch),
         getShareAudioAction: bindActionCreators(getShareAudio, dispatch),
         globAlertAction: bindActionCreators(setGlobAlert, dispatch),
         getCommentsAction: bindActionCreators(getComments, dispatch),

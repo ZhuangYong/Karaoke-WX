@@ -58,6 +58,11 @@ class SongItem extends BaseComponent {
 
     pushSong() {
         const {song, onPushSongSuccess, onPushSongFail, userInfo, ottInfo, action_setGlobAlert} = this.props;
+        let {isWeixin} = window.sysInfo;
+        if (!isWeixin) {
+            action_setGlobAlert(intl.get("msg.operate.in.we.chat"));
+            return;
+        }
         if (super.validUserStatus(userInfo.userInfoData, ottInfo, action_setGlobAlert) !== true) return;
         this.state.pushIng[song.id || song.serialNo] = true;
         this.setState({

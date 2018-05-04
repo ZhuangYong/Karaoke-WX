@@ -494,7 +494,7 @@ class Barrage extends BaseComponent {
         if (super.validUserBindDevice(this.props.userInfoData, this.props.globAlertAction) !== true) return;
         if (super.validUserDeviceOnline(this.props.ottInfo, this.props.globAlertAction) !== true) return;
         const {inputValue, inputImage} = this.state;
-        const {data} = this.props.userInfo.userInfoData || {data: {}};
+        const data = this.props.userInfo.userInfoData || {data: {}};
         if (inputValue) type = "txt";
         if (inputImage) type = "img";
         if (type) {

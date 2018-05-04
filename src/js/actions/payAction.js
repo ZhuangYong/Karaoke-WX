@@ -41,14 +41,14 @@ export function alipayPay(data, headers, callback) {
     };
 }
 
-export function getWXPayParams(data, headers, callback) {
+export function getWXPayParams(data, headers, callback, fail) {
     const url = sysConfig.apiDomain + apiUrl.API_GET_WX_PAY_PARAMS;
     return (dispatch) => {
         comFetch(dispatch, data, {
             url: url,
             headers: headers,
             action: ActionTypes.Pay.API_GET_WX_PAY_PARAMS
-        }, callback);
+        }, callback, fail);
     };
 }
 

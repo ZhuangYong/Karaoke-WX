@@ -449,7 +449,7 @@ export function wxConfig(data = {}) {
 
 
 // 微信分享
-export function wxShare(shareData) {
+export function wxShare(shareData, success, fail) {
     // 分享到朋友圈
     window.wx && window.wx.onMenuShareTimeline({
         title: shareData.title + "---" + shareData.desc, // 分享标题
@@ -458,6 +458,7 @@ export function wxShare(shareData) {
         trigger: function () {
         },
         success: function () {
+            success && success();
         },
         cancel: function () {
         },
@@ -476,6 +477,7 @@ export function wxShare(shareData) {
         trigger: function () {
         },
         success: function () {
+            success && success();
         },
         cancel: function () {
         },
@@ -559,12 +561,12 @@ export function dynaPush(funcParam = {
 
 }) {
     const {ottInfo, userInfo, param, localNetIsWork, action_pushLocal, action_setLocalNet, action_push, action_setGlobAlert, success, fail} = funcParam;
-    const {data} = ottInfo || {};
+    const data = ottInfo || {};
     const {userInfoData} = userInfo || {};
     const {deviceIp, devicePort, networkType, systemTime, timeStamp} = data || {};
     const localParam = Object.assign({}, param, {
         debug: sysConfig.environment !== "master",
-        deviceId: userInfoData.data.deviceId
+        deviceId: userInfoData.deviceId
     });
     const header = reqHeader(param);
     const localHeader = reqHeader(localParam);
@@ -584,14 +586,9 @@ export function dynaPush(funcParam = {
         }
     }
     const renderPushResult = (res) => {
-        const {status} = res;
-        if (status === 1) {
-            success && success(res);
-        } else {
-            fail && fail("操作失败");
-        }
+        success && success(res);
     };
-    if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData && userInfoData.data) {
+    if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData) {
         action_pushLocal(localPri, localParam, localHeader, success, (msg, err, rejectCode) => {
             if (!window.handelErrs) window.handelErrs = {};
             if (window.handelErrs[rejectCode]) return;
@@ -627,16 +624,19 @@ export function wxAuthorizedUrl(appId, apiDomain, cbUrl) {
 
 // 检测是否获取用户信息
 export function isGetUserInfo() {
-    const pathNames = [
+    let {isWeixin} = window.sysInfo;
+    let pathNames = [
         '/pay',
         '/login/',
-        '/recordingPlay/',
         'deviceRegister',
         'protocol',
         'recharge',
         'logout',
-        'comment/list',
     ];
+    if (!isWeixin) {
+        pathNames = pathNames.concat(['/recordingPlay/', 'comment/list']);
+    }
+
     let bool = true;
 
     pathNames.map(pathName => {

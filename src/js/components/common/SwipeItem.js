@@ -5,8 +5,24 @@ import React from "react";
 import ReactGesture from 'react-gesture';
 import PropTypes from "prop-types";
 import blankImg from "../../../img/common/blank.png";
+import {deleteCommentOrReply} from "../../actions/commentActons";
+import {reqHeader} from "../../utils/comUtils";
 
 const RIGHT_MOVE_DIST = 75;
+const styles = {
+    loadingRotate: {
+        width: '.42rem',
+        height: '.42rem',
+        position: 'relative',
+        loadingCircle: {
+            stroke: '#FF9800',
+            strokeLinecap: 'round',
+            transition: 'all 850ms ease-in-out 0ms',
+            strokeDasharray: '80, 114',
+            strokeDashoffset: '-403.668'
+        }
+    },
+};
 export default class SwipeItem extends React.Component {
     constructor(props) {
         super(props);
@@ -16,7 +32,8 @@ export default class SwipeItem extends React.Component {
             currentX: 0,
             preCurrentX: 0,
             forceX: 0,
-            moveIng: false
+            moveIng: false,
+            loading: false
         };
         this.getMoveDist = this.getMoveDist.bind(this);
         this.touchStart = this.touchStart.bind(this);
@@ -48,7 +65,9 @@ export default class SwipeItem extends React.Component {
         let moveDist = !this.state.moveIng ? this.state.forceX : this.getMoveDist();
         return <div className="list-item">
             <span className="list-item-outer-pan">
-                <div className="list-item-swipe-pan" style={{marginLeft: moveDist + "px"}}>
+                <div className="list-item-swipe-pan" style={{marginLeft: moveDist + "px"}} onClick={() => {
+                    this.props.handelSelect(this.props.data);
+                }}>
                     <div className="list-item-inner-pan">
                         <img src={this.props.data.headerImg || blankImg} className="avatar"/>
                         <div className="nickname">{this.props.data.nickName}</div>
@@ -65,7 +84,7 @@ export default class SwipeItem extends React.Component {
                 {
                     this.props.canDel ? <div className="operator-pan">
                         <p className="del-button" onClick={this.handelDel}>
-                            删除
+                            {this.state.loading ? this.getLoading() : "删除"}
                         </p>
                     </div> : ""
                 }
@@ -136,18 +155,38 @@ export default class SwipeItem extends React.Component {
     }
 
     handelDel() {
-        this.props.handelDelete(this.props.data);
+        const params = {
+            type: this.props.type,
+            uuid: this.props.data.uuid
+        };
+        this.setState({loading: true});
+        this.props.handelDelete(params, reqHeader(params), res => {
+            this.setState({loading: false});
+            this.props.handelDeleteSuccess();
+        }, err => this.setState({loading: false}));
+    }
+
+    getLoading() {
+        return <svg className="rotate" viewBox="0 0 40 40" style={styles.loadingRotate}>
+            <circle cx="20" cy="20" r="18.25" fill="none" strokeWidth="3.5" strokeMiterlimit="20" style={styles.loadingRotate.loadingCircle}/>
+        </svg>;
     }
 }
 
 SwipeItem.propTypes = {
+    type: PropTypes.number,
     handelDelete: PropTypes.func,
+    handelDeleteSuccess: PropTypes.func,
     data: PropTypes.object,
     canDel: PropTypes.bool,
+    handelSelect: PropTypes.func,
 };
 
 SwipeItem.defaultProps = {
+    type: 1,
     handelDelete: f => f,
+    handelDeleteSuccess: f => f,
     data: {},
-    canDel: true
+    canDel: true,
+    handelSelect: f => f,
 };

@@ -62,23 +62,14 @@ class RedirectAudio extends BaseComponent {
      */
     loadAudioGetter(uid) {
         const { globAlertAction, getShareAudioAction } = this.props;
-
-        const openid = getQueryString('openid');
-        if (openid === null) {
-            globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
-            return;
-        }
-
         let params = {
             uid,
-            openid,
         };
 
         getShareAudioAction(params, reqHeader(params), res => {
-            const {status, data} = res;
             const {isWeixin} = window.sysInfo;
-            if (parseInt(status, 10) === 1 && isWeixin) {
-                this.replaceLink({...data, uid});
+            if (isWeixin) {
+                this.replaceLink({...res, uid});
             } else {
                 globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
             }

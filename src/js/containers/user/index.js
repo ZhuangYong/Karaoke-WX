@@ -98,7 +98,7 @@ class UserIndex extends BaseComponent {
         }
 
         const {userInfoData} = this.props.userInfo;
-        if (userInfoData && userInfoData.data && userInfoData.data.hasOwnProperty('time')) {
+        if (userInfoData && userInfoData.hasOwnProperty('time')) {
             this.gxTimer();
         }
     }
@@ -114,7 +114,7 @@ class UserIndex extends BaseComponent {
     }
 
     render() {
-        const {userInfoData} = this.props.userInfo;
+        const userInfoData = this.props.userInfo.userInfoData || {};
         let {headerImg, channel} = userInfoData;
         headerImg = headerImg || "";
         const actionSetGlobAlert = this.props.globAlertAction;
