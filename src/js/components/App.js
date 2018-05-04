@@ -211,7 +211,7 @@ class App extends BaseComponent {
         //     this.props.action_setGlobAlert("", "");
         // }
         if (prevProps.userInfo.userInfoStamp !== this.props.userInfo.userInfoStamp) {
-            const {userInfoData: data} = this.props.userInfo || {};
+            const data = this.props.userInfo.userInfoData || {};
             if (data) {
                 setSession("wxInfo", JSON.stringify(data));
                 this.props.action_getOttStatus({}, reqHeader({}));
@@ -452,7 +452,7 @@ class App extends BaseComponent {
         if (!isIos && this.pageFilterForConfigWX()) return;
         let param = {url: location.href.split('#')[0]};
         this.props.action_getUserConfig(param, reqHeader(param), (json) => {
-            const {data} = json;
+            const data = json;
             setTimeout(() => {
                 this.props.action_setWeixinConfigFinished(false);
                 wxConfig(data);
