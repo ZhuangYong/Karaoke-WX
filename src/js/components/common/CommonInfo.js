@@ -92,23 +92,14 @@ class CommonInfo extends React.Component {
                             };
 
                             this.props.action_bindDevice(params, reqHeader(params), (res) => {
-                                const {status} = res;
-                                if (status === 1) {
-                                    const getUserInfoParams = {
-                                        url: window.location.href.split("#")[0]
-                                    };
-                                    this.props.action_getUserInfo(getUserInfoParams, reqHeader(getUserInfoParams), (res) => {
-                                        const {status} = res;
-                                        if (status === 1) {
-                                            window.location.reload(true);
-                                        }
-                                    });
-                                    actionSetGlobAlert(intl.get("msg.bind.success"), "");
-
-                                } else {
-                                    actionSetGlobAlert(intl.get("msg.bind.fail"), "");
-                                }
-                            });
+                                const getUserInfoParams = {
+                                    url: window.location.href.split("#")[0]
+                                };
+                                this.props.action_getUserInfo(getUserInfoParams, reqHeader(getUserInfoParams), (res) => {
+                                    window.location.reload(true);
+                                });
+                                actionSetGlobAlert(intl.get("msg.bind.success"), "");
+                            }, err => actionSetGlobAlert(intl.get("msg.bind.fail"), ""));
                         },
                         fail: (res) => {
                             console.log(res);

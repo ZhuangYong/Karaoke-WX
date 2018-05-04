@@ -341,7 +341,7 @@ export function feedbackSubmit(data, headers, callback) {
 }
 
 // 绑定设备
-export function bindDevice(data, headers, callback) {
+export function bindDevice(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_BIND_DEVICE;
 
@@ -351,7 +351,7 @@ export function bindDevice(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_BIND_DEVICE
-        }, callback);
+        }, callback, fail);
     };
 }
 
