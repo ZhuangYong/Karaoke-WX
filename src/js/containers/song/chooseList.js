@@ -77,7 +77,7 @@ class ChooseList extends BaseComponent {
     }
 
     updateSong() {
-        const {data} = this.props.songs.chooseList || {data: {recordJson: '{"list":[],"playing":{}}'}};
+        const data = this.props.songs.chooseList || {recordJson: '{"list":[],"playing":{}}'};
         let {list, playing} = this.handelList(data.recordJson);
         if (typeof list === "string") list = JSON.parse(list);
         this.setState({

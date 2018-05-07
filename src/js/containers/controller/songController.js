@@ -729,7 +729,7 @@ class SongController extends BaseComponent {
      * 更新已点歌曲数据
      */
     updateSong() {
-        if (!this.props.songs.chooseList || !this.props.songs.chooseList.length) {
+        if (!this.props.songs.chooseList) {
             this.setState({
                 emptyChooseSongs: true
             });
