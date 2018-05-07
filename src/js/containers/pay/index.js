@@ -389,7 +389,7 @@ class Pay extends BaseComponent {
 
             const data = res;
             this.setState({getWxOption: false});
-            if (!data.paySign || !data.signType || !data.timeStamp || data.nonceStr) {
+            if (!data.paySign || !data.signType || !data.timeStamp || !data.nonceStr) {
                 actionSetGlobAlert("wx signature error!", "");
                 return;
             }
