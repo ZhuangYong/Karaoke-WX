@@ -386,6 +386,7 @@ class Pay extends BaseComponent {
         }
         this.setState({getWxOption: true});
         this.props.getWXPayParamsAction(params, header, (res) => {
+
             const data = res;
             this.setState({getWxOption: false});
             if (!data.paySign || !data.signType || !data.timeStamp || data.nonceStr) {
@@ -461,16 +462,14 @@ class Pay extends BaseComponent {
         const header = getEncryptHeader({
             deviceId: matchParams.deviceId
         });
-        this.props.alipayAction(params, reqHeader(params, header), (res) => {
-            const {data} = res;
-
+        this.props.alipayAction(params, reqHeader(params, header), (data) => {
             window.location.href = data.payUrl;
         });
     }
 
     // 更新支付列表
     updatePayList() {
-        const data = this.props.result.payListData || {data: []};
+        const data = this.props.result.payListData || [];
         const {defaultChooseProductId} = this.state;
         if (data && data[0]) {
             let defaultActiveItem = data[0];

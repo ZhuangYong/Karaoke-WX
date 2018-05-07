@@ -17,6 +17,14 @@ class CommentList extends BaseComponent {
         this.handelReplyClose = this.handelReplyClose.bind(this);
     }
 
+    componentDidMount() {
+        this.props.history.listen(() => {
+            if (location.hash.indexOf("reply") < 0) {
+                this.handelReplyClose();
+            }
+        });
+    }
+
     render() {
         return <div>
             <CommentCommonList shareId={this.state.shareId} type={1} handelSelect={this.handelSelectComment}/>
@@ -29,6 +37,9 @@ class CommentList extends BaseComponent {
     }
 
     handelSelectComment(data) {
+        if (location.hash.indexOf("reply") < 0) {
+            location.hash = "reply";
+        }
         this.setState({
             selectComment: data
         });
@@ -37,6 +48,9 @@ class CommentList extends BaseComponent {
         this.setState({
             selectComment: null
         });
+        if (location.hash.indexOf("reply") > 0) {
+            history.back();
+        }
     }
 }
 

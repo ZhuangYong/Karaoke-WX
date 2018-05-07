@@ -161,46 +161,39 @@ class Recharge extends BaseComponent {
             userUuid,
         };
 
-        rechargeSubmitAction(params, reqHeader(params), res => {
+        rechargeSubmitAction(params, reqHeader(params), data => {
             this.setState({
                 submitLoading: true,
             });
-            const {status, data} = res;
+            switch (parseInt(data.status, 10)) {
+                case 1:
+                    globAlertAction(intl.get('msg.recharge.invalidCardNo'));
+                    break;
+                case 2:
+                    globAlertAction(intl.get('msg.recharge.invalidPassword'));
+                    break;
+                case 3:
+                    globAlertAction(intl.get('msg.recharge.invalidDate'));
+                    break;
+                case 4:
+                    globAlertAction(intl.get('msg.recharge.used'));
+                    break;
+                case 5:
+                    globAlertAction(intl.get('msg.recharge.ok'));
 
-            if (parseInt(status, 10) === 1) {
-                switch (parseInt(data.status, 10)) {
-                    case 1:
-                        globAlertAction(intl.get('msg.recharge.invalidCardNo'));
-                        break;
-                    case 2:
-                        globAlertAction(intl.get('msg.recharge.invalidPassword'));
-                        break;
-                    case 3:
-                        globAlertAction(intl.get('msg.recharge.invalidDate'));
-                        break;
-                    case 4:
-                        globAlertAction(intl.get('msg.recharge.used'));
-                        break;
-                    case 5:
-                        globAlertAction(intl.get('msg.recharge.ok'));
+                    if (getQueryString('language') === null) {
+                        const getUserInfoParams = {
+                            url: location.href.split('#')[0],
+                        };
+                        getUserInfoAction(getUserInfoParams, reqHeader(getUserInfoParams));
+                    }
 
-                        if (getQueryString('language') === null) {
-                            const getUserInfoParams = {
-                                url: location.href.split('#')[0],
-                            };
-                            getUserInfoAction(getUserInfoParams, reqHeader(getUserInfoParams));
-                        }
-
-                        setTimeout(() => {
-                            getQueryString('language') !== null ? window.WeixinJSBridge.call('closeWindow') : window.history.go(-2);
-                        }, 800);
-                        break;
-                    default:
-                }
-            } else {
-                globAlertAction(intl.get('msg.network.die'));
+                    setTimeout(() => {
+                        getQueryString('language') !== null ? window.WeixinJSBridge.call('closeWindow') : window.history.go(-2);
+                    }, 800);
+                    break;
+                default:
             }
-
             this.refs.password.value = '';
             this.setState({
                 password: '',

@@ -112,7 +112,11 @@ class PlayAudio extends BaseComponent {
     }
 
     componentDidMount() {
-
+        this.props.history.listen(() => {
+            if (location.hash.indexOf("reply") < 0) {
+                this.handelReplyClose();
+            }
+        });
         this.loadAudioGetter();
     }
 
@@ -306,7 +310,7 @@ class PlayAudio extends BaseComponent {
                                 value={this.state.commentContent}
                                 onChange={(v, a) => {
                                     if (a) this.checkUserInfo();
-                                    this.setState({commentContent: a});
+                                    this.setState({commentContent: a.substr(0, 200)});
                                 }}
                             />
                             {
@@ -487,6 +491,9 @@ class PlayAudio extends BaseComponent {
     }
 
     handelSelectComment(data) {
+        if (location.hash.indexOf("reply") < 0) {
+            location.hash = "reply";
+        }
         this.setState({
             selectComment: data
         });
@@ -495,6 +502,9 @@ class PlayAudio extends BaseComponent {
         this.setState({
             selectComment: null
         });
+        if (location.hash.indexOf("reply") > 0) {
+            history.back();
+        }
     }
 
     checkUserInfo() {

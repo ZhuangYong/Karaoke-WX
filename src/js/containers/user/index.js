@@ -182,7 +182,7 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>
                                 <p style={{margin: "0"}}>{intl.get("device.connect")}</p>
                                 <p style={{margin: `${toRem(10)} 0 0`, fontSize: toRem(20), color: "#999"}}>
-                                    {parseInt(userInfoData.isReDevice, 10) === 1 ? intl.get("device.connected") + userInfoData.deviceId.replace(userInfoData.deviceId.slice(4, userInfoData.deviceId.length - 4), "***") : bindDeviceStatus}
+                                    {parseInt(userInfoData.isReDevice, 10) === 1 ? intl.get("device.connected") + userInfoData.deviceId.replace(userInfoData.deviceId.slice(4, userInfoData.deviceId.length - 4), "***") : bindDeviceStatus || intl.get("unbind.device")}
                                 </p>
                             </div>
                         </GridTile>
@@ -308,7 +308,7 @@ class UserIndex extends BaseComponent {
      * 加载录音数据
      */
     getRecordingsGetter() {
-        const userInfoData = this.props.userInfo.userInfoData;
+        const userInfoData = this.props.userInfo.userInfoData || {};
         const {openid, channel} = userInfoData;
         if (openid && channel !== CONFIG.NO_RECORDING_CHANNEL) {
 

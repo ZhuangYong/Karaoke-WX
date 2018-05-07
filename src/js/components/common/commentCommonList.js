@@ -124,7 +124,7 @@ class CommentList extends BaseComponent {
                         showNoWifi ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
                     {
-                        (!loading && dataLoaded && currentPage >= 1 && pageData.length === 0) ? <NoResult style={{position: 'absolute', top: '-1rem'}}/> : <div>
+                        (!loading && dataLoaded && currentPage >= 1 && pageData.length === 0) ? <p style={{textAlign: 'center', color: 'gray'}}>{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "暂无回复" : "暂无评论"}</p> : <div>
                             <div className="comment-list" style={{marginBottom: 0}}>
                                 <div>
                                     {
@@ -171,7 +171,7 @@ class CommentList extends BaseComponent {
                             value={this.state.commentContent}
                             onChange={(v, a) => {
                                 this.checkUserInfo();
-                                this.setState({commentContent: a});
+                                this.setState({commentContent: a.substr(0, 200)});
                             }}
                         />
                         {

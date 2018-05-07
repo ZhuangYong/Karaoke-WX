@@ -43,7 +43,7 @@ export default class BaseComponent extends Component {
      * @param actionSetGlobAlert actions/common/actions.js/setGlobAlert
      * @returns {*} 如果正在获取用户信息将返回字符串的提示，如果条件都满足将返回true，否则返回false并做出相应的提示
      */
-    validUserStatus(userInfoData, ottInfo, actionSetGlobAlert) {
+    validUserStatus(userInfoData = {}, ottInfo = {}, actionSetGlobAlert) {
         const {systemTime, timeStamp} = ottInfo || {};
         const isVip = this.isVip(userInfoData);
         const isBindDevice = this.isBindDevice(userInfoData);
@@ -87,7 +87,7 @@ export default class BaseComponent extends Component {
      * @param noAlert boolean
      * @returns {*}
      */
-    validUserBindDevice(userInfoData, actionSetGlobAlert, noAlert) {
+    validUserBindDevice(userInfoData = {}, actionSetGlobAlert, noAlert) {
         const isBindDevice = this.isBindDevice(userInfoData);
         if (typeof isBindDevice === 'string') {
             !noAlert && actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
@@ -100,7 +100,7 @@ export default class BaseComponent extends Component {
         }
     }
 
-   validUserDeviceOnline(ottInfo, actionSetGlobAlert) {
+   validUserDeviceOnline(ottInfo = {}, actionSetGlobAlert) {
        const {systemTime, timeStamp} = ottInfo || {};
        if (systemTime && timeStamp) {
            const online = !(systemTime - timeStamp > 12 * 60 * 1000);
@@ -119,7 +119,7 @@ export default class BaseComponent extends Component {
      * @param userInfoData
      * @returns {*}
      */
-    isFreeActivation(userInfoData) {
+    isFreeActivation(userInfoData = {}) {
         const {isFreeActivation} = userInfoData;
         // 是否可以免费激活1（可以）0（不可以）
         return isFreeActivation === 1;
@@ -147,7 +147,7 @@ export default class BaseComponent extends Component {
      * @param userInfoData
      * @returns {*}
      */
-    isVip(userInfoData) {
+    isVip(userInfoData = {}) {
         const {vipStatus, expireTime} = userInfoData;
         // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
         return vipStatus === 1 && new Date().getTime() < expireTime ;
@@ -158,7 +158,7 @@ export default class BaseComponent extends Component {
      * @param userInfoData
      * @returns {*}
      */
-    vipTime(userInfoData) {
+    vipTime(userInfoData = {}) {
         const {vipStatus, expireTime} = userInfoData;
         // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
         if (vipStatus === 1) {
