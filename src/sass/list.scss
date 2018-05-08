@@ -160,18 +160,19 @@
         display: flex;
         padding-left: .3rem!important;
         padding-right: .3rem!important;
-        align-items: baseline;
+        align-items: center;
         .comment-input{
             width: 100%!important;
             &>div:nth-child(1){
                 text-align: left!important;
-                padding: .16rem;
+                padding: .16rem 0 .16rem 1rem;
             }
             textarea{
+                font-size: .42rem!important;
                 border: none!important;
                 color: gray!important;
                 min-height: 1.02rem!important;
-                padding: 0.1rem 0.2rem!important;
+                padding: 0.3rem 0 0 0.2rem!important;
                 /* height: 24px; */
                 border-radius: .1rem!important;
                 background-color: rgba(128, 128, 128, 0.16)!important;

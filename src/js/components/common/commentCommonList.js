@@ -156,7 +156,7 @@ class CommentList extends BaseComponent {
                         <TextField
                             floatingLabelText=""
                             multiLine={true}
-                            rowsMax={12}
+                            rowsMax={4}
                             ref="input"
                             className="comment-input"
                             hintText={
