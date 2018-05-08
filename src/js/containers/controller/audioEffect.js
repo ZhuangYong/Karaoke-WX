@@ -66,7 +66,14 @@ class AudioEffect extends BaseComponent {
                 isNstManual = true;
             }
         }
-        return (
+        if (Const.EFFECT_K1_CHANNEL_LIST.indexOf(data.channel) >= 0) {
+            return <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%'}}>
+                {
+                    this.renderBottom("k1")
+                }
+                <MBottomNavigation selectedIndex={-1}/>
+            </div>;
+        } else return (
             isNstManual ? <div className="effect" style={{position: 'absolute', top: '-1rem', width: '100%', height: '100%', backgroundColor: '#1b1a1f'}}>
                 {
                     this.renderNstCenter()
@@ -190,10 +197,10 @@ class AudioEffect extends BaseComponent {
             </div>;
     }
 
-    renderBottom() {
+    renderBottom(className) {
         const {w, h} = this.props.common;
         const revert = w > h;
-        return <div className="bottom-area" style={revert ? {marginTop: '.2rem'} : {}}>
+        return <div className={`bottom-area ${className || ""}`} style={revert ? {marginTop: '.2rem'} : {}}>
             <div className="fun-button">
                 <div className="haf-top-button" onClick={() => {
                     this.state.controllerIng[AUDIO_EFFECT_MUSIC_ADD] !== true && this.sendEffect(AUDIO_EFFECT_MUSIC_ADD);

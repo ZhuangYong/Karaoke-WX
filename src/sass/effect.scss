@@ -123,6 +123,28 @@
         margin-top:.4rem;
         justify-content: center;
         align-items: center;
+        &.k1{
+            .fun-button {
+                .haf-top-button {
+                    -webkit-border-radius: 1.47rem 1.47rem 0 0;
+                    -moz-border-radius: 1.47rem 1.47rem 0 0;
+                    border-radius: 1.47rem 1.47rem 0 0;
+                    width: 1.47rem;
+                    height: 2.68rem;
+                }
+                .haf-bottom-button {
+                    -webkit-border-radius: 0 0 1.47rem 1.47rem;
+                    -moz-border-radius: 0 0 1.47rem 1.47rem;
+                    border-radius: 0 0 1.47rem 1.47rem;
+                    width: 1.47rem;
+                    height: 2.68rem;
+                }
+                svg{
+                    height: .8rem!important;
+                    width: .8rem!important;
+                }
+            }
+        }
         .fun-button {
             width: 33.33%;
             display: flex;

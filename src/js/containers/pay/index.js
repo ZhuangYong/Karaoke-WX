@@ -147,6 +147,7 @@ class Pay extends BaseComponent {
                                 <h2 style={styles.payResult.title}>{intl.get("msg.congratulations.pay.success")}</h2>
                                 <p style={styles.payResult.subTitle}>{payListActiveItem && payListActiveItem.productName}</p>
                                 <Paper
+                                    className="mall-index"
                                     zDepth={0}
                                     style={{position: 'fixed', bottom: '2rem', marginBottom: '2rem', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
                                 >

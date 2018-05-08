@@ -317,7 +317,7 @@ class Barrage extends BaseComponent {
             globAlertAction(msg);
         }).catch(err => {
             this.setState({uploadImgLoading: false});
-            globAlertAction(err.msg);
+            err.msg !== -1 && globAlertAction(err.msg);
         });
     }
 
@@ -360,7 +360,7 @@ class Barrage extends BaseComponent {
                     });
                 },
                 cancel: () => {
-                    const result = {msg: intl.get('msg.upload.fail')};
+                    const result = {msg: -1};
                     reject(result);
                 },
                 fail: () => {

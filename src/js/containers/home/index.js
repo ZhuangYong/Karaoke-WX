@@ -267,6 +267,7 @@ class Home extends BaseComponent {
 
                      <Paper
                     zDepth={0}
+                    className="mall-index"
                     style={{margin: '.3rem .267rem 0 .267rem'}}
                     >
                          <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
