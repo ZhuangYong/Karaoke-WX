@@ -323,7 +323,8 @@ class App extends BaseComponent {
             'login',
             'recharge',
             'effect',
-            'logout'
+            'logout',
+            'comment'
         ];
         let bool = true;
 

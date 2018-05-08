@@ -14,7 +14,7 @@ import sysConfig from "../../utils/sysConfig";
 import SwipeAbleViews from 'react-swipeable-views';
 import {autoPlay} from 'react-swipeable-views-utils';
 import PropTypes from "prop-types";
-import {FlatButton, Subheader, TextField} from "material-ui";
+import {FlatButton, RaisedButton, Subheader, TextField} from "material-ui";
 import BaseComponent from "../../components/common/BaseComponent";
 import SlidePng1 from "../../../img/album/1.png";
 import SlideK1Png1 from "../../../img/album/k1/1.png";
@@ -275,11 +275,14 @@ class PlayAudio extends BaseComponent {
                         <p>
                             评论
                         </p>
-                        <span className="comment-pen-icon"/>
+                       {/* <span className="comment-pen-icon"/>*/}
                     </Subheader>
+                    {
+                        (!this.state.loading['comment'] && commentList && commentList.length === 0) ? <p style={{textAlign: 'center', color: 'gray'}}>暂无评论</p> : ""
+                    }
                     <List className="comment-list">
                         {
-                            this.state.loading['audio'] || this.state.loading['comment'] ? this.getLoading() : ""
+                            this.state.loading['audio'] || this.state.loading['comment'] ? <p style={{textAlign: 'center', color: 'gray'}}>{this.getLoading()}</p> : ""
                         }
                         {
                             commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c} canDel={myUUID === c.unionid} handelSelect={this.handelSelectComment} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.getComment}/>)
@@ -303,7 +306,7 @@ class PlayAudio extends BaseComponent {
                                 className="comment-input"
                                 hintText={
                                     <div>
-                                        <font color="gray">评论该录音</font>
+                                        <font color="gray">评论录音</font>
                                     </div>
                                 }
                                 hintStyle={{color: "white", textAlign: "center", width: "100%"}}
@@ -313,9 +316,7 @@ class PlayAudio extends BaseComponent {
                                     this.setState({commentContent: a.substr(0, 200)});
                                 }}
                             />
-                            {
-                                !_.isEmpty(this.state.commentContent) ? <FlatButton label={this.state.loading["comment"] ? this.getLoading() : "提交"} labelStyle={{fontSize: '.5rem', color: 'gray'}} onClick={this.submitComment}/> : ""
-                            }
+                            <RaisedButton className="comment-submit-button" primary={true} label={this.state.loading["comment"] ? this.getLoading() : "提交"} disabled={this.state.loading["comment"] || !this.state.commentContent} onClick={this.submitComment}/>
                         </Subheader>
                     </section>
                 }

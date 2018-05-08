@@ -147,7 +147,7 @@
     margin-bottom: 2.3rem;
 }
 .more-comment-bottom{
-    padding-top: 0.533333rem;
+    //padding-top: 0.533333rem;
     box-shadow: -1px 0px 4px 5px rgba(128, 128, 128, 0.08);
     margin-top: .3rem;
     position: fixed;
@@ -158,9 +158,40 @@
     background-color: white;
     .comment-container{
         display: flex;
+        padding-left: .3rem!important;
+        padding-right: .3rem!important;
         align-items: baseline;
         .comment-input{
             width: 100%!important;
+            &>div:nth-child(1){
+                text-align: left!important;
+                padding: .16rem;
+            }
+            textarea{
+                border: none!important;
+                color: gray!important;
+                min-height: 1.02rem!important;
+                padding: 0.1rem 0.2rem!important;
+                /* height: 24px; */
+                border-radius: .1rem!important;
+                background-color: rgba(128, 128, 128, 0.16)!important;
+            }
+            hr{
+                display: none!important;
+            }
+        }
+        .comment-submit-button{
+            width: 1.6rem!important;
+            min-width: 1.6rem!important;
+            margin-left: .2rem!important;
+            box-shadow: none!important;
+            button,div{
+                height: 1rem!important;
+                line-height: 1rem!important;
+                span{
+                    padding: 0!important;
+                }
+            }
         }
     }
 }

@@ -3,20 +3,17 @@ import {connect} from "react-redux";
 import {withRouter} from "react-router-dom";
 import BaseComponent from "../../components/common/BaseComponent";
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
-import {AppBar, FlatButton, IconButton, Paper, Subheader, TextField} from "material-ui";
+import {IconButton, Paper, RaisedButton, Subheader, TextField} from "material-ui";
 import {bindActionCreators} from "redux";
 import {getEncryptHeader, reqHeader} from "../../utils/comUtils";
 import Const from "../../utils/const";
 import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
 import {setGlobAlert} from "../../actions/common/actions";
-import NoResult from "../../components/common/NoResult";
 import NoWifi from "../../components/common/NoWifi";
 import intl from 'react-intl-universal';
 import SwipeItem from "../../components/common/SwipeItem";
 import {deleteCommentOrReply, getCommentReplys, getComments, saveComments} from "../../actions/commentActons";
 import PropTypes from "prop-types";
-import Input from "./Input";
-import _ from "lodash";
 import {getUserInfo} from "../../actions/userActions";
 
 const style = {
@@ -164,7 +161,7 @@ class CommentList extends BaseComponent {
                             className="comment-input"
                             hintText={
                                 <div>
-                                    <font color="gray">{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复该评论" : "评论该录音"}</font>
+                                    <font color="gray">{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复 " + this.props.selectComment.nickName : "评论录音"}</font>
                                 </div>
                             }
                             hintStyle={{color: "white", textAlign: "center", width: "100%"}}
@@ -174,9 +171,7 @@ class CommentList extends BaseComponent {
                                 this.setState({commentContent: a.substr(0, 200)});
                             }}
                         />
-                        {
-                            !_.isEmpty(this.state.commentContent) ? <FlatButton label={this.state.loading ? this.getLoading() : "提交"} labelStyle={{fontSize: '.5rem', color: 'gray'}} onClick={this.submitComment}/> : ""
-                        }
+                        <RaisedButton className="comment-submit-button" primary={true} label={this.state.loading["comment"] ? this.getLoading() : "提交"} disabled={this.state.loading["comment"] || !this.state.commentContent} onClick={this.submitComment}/>
                     </Subheader>
                 </section>
 
