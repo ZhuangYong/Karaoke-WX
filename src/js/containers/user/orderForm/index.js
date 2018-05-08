@@ -84,7 +84,7 @@ class OrderForm extends BaseOrderList {
             id: id
         };
 
-        this.props.deleteAction(deleteOrderParam, reqHeader(deleteOrderParam, header), (res) => {
+        this.props.deleteAction(deleteOrderParam, reqHeader(deleteOrderParam, header), res => {
             let orderList = this.state.orderList.filter((item) => {
                 return item.id !== id;
             });

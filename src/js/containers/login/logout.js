@@ -43,10 +43,9 @@ class Logout extends BaseComponent {
                     deviceUuid: getQueryString('deviceUuid'),
                 };
                 ottLogoutAction(params, reqHeader(params), res => {
-                    const {status} = res;
-                    globAlertAction(parseInt(status, 10) === 1 ? '退出成功' : intl.get('msg.network.die'));
+                    globAlertAction('退出成功');
                     setTimeout(() => {
-                        parseInt(status, 10) === 1 && window.WeixinJSBridge.call('closeWindow');
+                        window.WeixinJSBridge.call('closeWindow');
                     }, 500);
                 });
             }}

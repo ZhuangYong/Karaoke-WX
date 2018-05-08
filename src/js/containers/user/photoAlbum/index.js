@@ -334,16 +334,15 @@ class PhotoAlbum extends BaseComponent {
         const {edit, shareId} = params;
 
         if (edit === 'cover') {
-            const {globAlertAction, changeFirstPageAction} = this.props;
+            const {changeFirstPageAction} = this.props;
             const params = {
                 shareId: shareId,
                 firstPageId: selectItemIds.join(',')
             };
             this.setState({deleteLoading: true});
             changeFirstPageAction(params, reqHeader(params), res => {
-                const {status} = res;
-                globAlertAction(parseInt(status, 10) === 1 ? intl.get('msg.upload.success') : intl.get('msg.upload.fail'));
-                parseInt(status, 10) === 1 && window.history.back();
+                intl.get('msg.upload.success');
+                window.history.back();
             });
         } else {
             albumFormData[edit] = this.pushImgObj();
@@ -460,30 +459,23 @@ class PhotoAlbum extends BaseComponent {
             uid: ids.join(',')
         };
         deleteImgActions(params, reqHeader(params), res => {
-            const {status} = res;
-
-            if (parseInt(status, 10) === 1) {
-                const newDataList = dataList.filter(item => {
-                   const idStr = `,${ids.join(',')},`;
-                   if (idStr.indexOf(`,${item.id},`) === -1) return item;
-                });
-
-                this.setState({
-                    dataList: newDataList,
-                    totalCount: newDataList.length,
-                    selectItemIds: [],
-                    deleteLoading: false,
-                    isDeletePage: newDataList.length > 0
-                });
-
-                globAlertAction(intl.get("msg.delete.success"));
-            } else {
-
-                globAlertAction(intl.get("msg.delete.fail"));
-                this.setState({
-                    deleteLoading: false
-                });
-            }
+            const newDataList = dataList.filter(item => {
+                const idStr = `,${ids.join(',')},`;
+                if (idStr.indexOf(`,${item.id},`) === -1) return item;
+            });
+            this.setState({
+                dataList: newDataList,
+                totalCount: newDataList.length,
+                selectItemIds: [],
+                deleteLoading: false,
+                isDeletePage: newDataList.length > 0
+            });
+            globAlertAction(intl.get("msg.delete.success"));
+        }, err => {
+            globAlertAction(intl.get("msg.delete.fail"));
+            this.setState({
+                deleteLoading: false
+            });
         });
     }
 

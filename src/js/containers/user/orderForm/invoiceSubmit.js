@@ -324,19 +324,15 @@ class InvoiceSubmit extends BaseComponent {
         }
 
         this.props.submitInvoiceAction(params, reqHeader(params), (res) => {
-
-            const {status} = res;
-            if (parseInt(status, 10) === 1) {
-                this.setState({
-                    openDialog: false
-                });
-                linkTo(`user/invoiceSubmitSuccess`, false, null);
-            } else {
-                this.setState({
-                    openDialog: false
-                });
-                this.props.action_setGlobAlert(intl.get("msg.network.die"));
-            }
+            this.setState({
+                openDialog: false
+            });
+            linkTo(`user/invoiceSubmitSuccess`, false, null);
+        }, err => {
+            this.setState({
+                openDialog: false
+            });
+            this.props.action_setGlobAlert(intl.get("msg.network.die"));
         });
     }
 

@@ -456,13 +456,7 @@ class Feedback extends BaseComponent {
         }
 
         this.props.feedbackSubmitAction(submitParams, header, (res) => {
-            const {status, msg} = res;
-
-            if (status === 1) {
-                navUtils.replace(`/user/feedback/success/${matchParams.state}`);
-            } else {
-                actionGlobAlert(intl.get("msg.network.die"));
-            }
+            navUtils.replace(`/user/feedback/success/${matchParams.state}`);
         });
     }
 
@@ -520,28 +514,20 @@ class Feedback extends BaseComponent {
             uid: id
         };
         this.props.deleteImgActions(params, reqHeader(params), res => {
-            const {status} = res;
-
-            if (parseInt(status, 10) === 1) {
-
-                let imgList = this.state.imgList.filter(tile => {
-                    if (parseInt(tile.id, 10) !== parseInt(id, 10))
-                        return tile;
-                });
-
-                this.setState({
-                    imgList: imgList,
-                    deleteLoading: false
-                });
-
-                globAlert(intl.get("msg.delete.success"));
-            } else {
-
-                globAlert(intl.get("msg.delete.fail"));
-                this.setState({
-                    deleteLoading: false
-                });
-            }
+            let imgList = this.state.imgList.filter(tile => {
+                if (parseInt(tile.id, 10) !== parseInt(id, 10))
+                    return tile;
+            });
+            this.setState({
+                imgList: imgList,
+                deleteLoading: false
+            });
+            globAlert(intl.get("msg.delete.success"));
+        }, err => {
+            globAlert(intl.get("msg.delete.fail"));
+            this.setState({
+                deleteLoading: false
+            });
         });
     }
 
@@ -615,17 +601,11 @@ class Feedback extends BaseComponent {
                                     keys: res.serverId // 返回图片的服务器端ID
                                 };
                                 ossUploadWxPicActions(params, reqHeader(params), res => {
-                                    console.log("======上传成功========");
-                                    const {status, data} = res;
-                                    if (parseInt(status, 10) === 1) {
-
-                                        result = {...data, msg: intl.get('msg.upload.success')};
-                                        resolve(result);
-                                    } else {
-
-                                        result = {msg: intl.get('msg.upload.fail')};
-                                        reject(result);
-                                    }
+                                    result = {...res, msg: intl.get('msg.upload.success')};
+                                    resolve(result);
+                                }, err => {
+                                    result = {msg: intl.get('msg.upload.fail')};
+                                    reject(err);
                                 });
                             }
                         });
@@ -646,15 +626,11 @@ class Feedback extends BaseComponent {
      */
     uploadImgGetter(file, name) {
         // console.log(file);
-
         return new Promise((resolve, reject) => {
             const userInfo = getWxinfoFromSession();
             let result = {};
-            if (userInfo.status === 1) {
-                const {data} = userInfo;
-
-                const storeAs = data.uuid + '/' + name;
-
+            if (userInfo) {
+                const storeAs = userInfo.uuid + '/' + name;
                 this.state.client.multipartUpload(storeAs, file).then(result => {
                     console.log(result);
                     const param = {
@@ -663,20 +639,14 @@ class Feedback extends BaseComponent {
                     };
 
                     this.props.uploadImgActions(param, reqHeader(param), res => {
-                        console.log("======上传成功========");
-                        const {status, data} = res;
-                        if (parseInt(status, 10) === 1) {
-
-                            result = {
-                                data: data,
-                                msg: "上传成功"
-                            };
-                            resolve(result);
-                        } else {
-
-                            result = {msg: "上传服务器失败"};
-                            reject(result);
-                        }
+                        result = {
+                            data: res,
+                            msg: "上传成功"
+                        };
+                        resolve(result);
+                    }, err => {
+                        result = {msg: "上传服务器失败"};
+                        reject(result);
                     });
                 }).catch(function (err) {
                     console.log(err);

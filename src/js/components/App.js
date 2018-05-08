@@ -197,7 +197,7 @@ class App extends BaseComponent {
     componentDidUpdate(prevProps) {
 
         //move to after initial user info
-        // this.configWxPath();
+        this.configWxPath();
 
         if (isGetUserInfo()) {
             if (window.noUserInfo === true) {

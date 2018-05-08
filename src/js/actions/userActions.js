@@ -89,7 +89,7 @@ export function getRecordsList(data, headers, callback, failBack) {
 }
 
 // 删除录音列表
-export function deleteRecording(data, headers, callback) {
+export function deleteRecording(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_DELETE_RECORDING;
     return (dispatch) => {
@@ -98,7 +98,7 @@ export function deleteRecording(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_DELETE_RECORDING
-        }, callback);
+        }, callback, fail);
     };
 }
 
@@ -132,7 +132,7 @@ export function getPhotoAlbumList(data, headers) {
 }
 
 // 我的相册上传图片
-export function uploadImg(data, headers, callback) {
+export function uploadImg(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_OSS_UPLOAD_ALBUM;
 
@@ -142,12 +142,12 @@ export function uploadImg(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_OSS_UPLOAD_ALBUM
-        }, callback);
+        }, callback, fail);
     };
 }
 
 // 上传已存储到微信服务器的图片（自建后台）
-export function ossUploadWxPic(data, headers, callback) {
+export function ossUploadWxPic(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_OSS_UPLOAD_WX_PIC;
 
@@ -157,12 +157,12 @@ export function ossUploadWxPic(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_OSS_UPLOAD_ALBUM
-        }, callback);
+        }, callback, fail);
     };
 }
 
 // 删除图片
-export function deleteImg(data, headers, callback) {
+export function deleteImg(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_PHOTO_ALBUM_DELETE;
 
@@ -172,7 +172,7 @@ export function deleteImg(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_PHOTO_ALBUM_DELETE
-        }, callback);
+        }, callback, fail);
     };
 }
 
@@ -267,7 +267,7 @@ export function getInvoiceOrderForDetail(data, headers, callback) {
 }
 
 // 提交电子发票开票信息
-export function submitInvoice(data, headers, callback) {
+export function submitInvoice(data, headers, callback, fali) {
 
     const url = sysConfig.apiDomain + apiUrl.API_GET_INVOICE_SUBMIT;
 
@@ -277,7 +277,7 @@ export function submitInvoice(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.USER.API_GET_INVOICE_SUBMIT
-        }, callback);
+        }, callback, fali);
     };
 }
 

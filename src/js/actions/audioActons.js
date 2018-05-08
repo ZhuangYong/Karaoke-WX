@@ -18,7 +18,7 @@ export function getAllPics(data, headers, callback) {
 }
 
 // 录音编辑提交
-export function uploadSoundAlbum(data, headers, callback) {
+export function uploadSoundAlbum(data, headers, callback, fail) {
 
     const url = sysConfig.apiDomain + apiUrl.API_UPLOAD_SOUND_ALBUM;
     return (dispatch) => {
@@ -27,7 +27,7 @@ export function uploadSoundAlbum(data, headers, callback) {
             type: "post",
             headers: headers,
             action: ActionTypes.AUDIO.API_UPLOAD_SOUND_ALBUM
-        }, callback);
+        }, callback, fail);
     };
 }
 

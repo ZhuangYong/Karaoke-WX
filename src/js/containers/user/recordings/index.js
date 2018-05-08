@@ -158,13 +158,15 @@ class Records extends BaseComponent {
         const {selectItem, recordingList} = this.state;
         const params = {uid: selectItem.uid};
         deleteRecordingAction(params, reqHeader(params), res => {
-            const {status} = res;
-            parseInt(status, 10) === 1 && this.setState({
+            this.setState({
                 recordingList: recordingList.filter((item) => {
                     return item.uid !== selectItem.uid;
                 })
             });
-            globAlertAction(parseInt(status, 10) === 1 ? intl.get("msg.delete.success") : intl.get("msg.delete.fail"));
+            globAlertAction(intl.get("msg.delete.success"));
+            this.setState({open: false, submitLoading: false});
+        }, err => {
+            globAlertAction(intl.get("msg.delete.fail"));
             this.setState({open: false, submitLoading: false});
         });
     }

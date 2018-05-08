@@ -403,15 +403,7 @@ class Pay extends BaseComponent {
                     // 支付成功后的回调函数
                     if (this.state.payType === Const.PAY_TYPE_GONG_XIANG) {
                         if (matchParams.openid === "") {
-                            const wxInfoSession = JSON.parse(window.sessionStorage.getItem("wxInfo") || "{}");
-                            const params = {
-                                url: `${location.origin}?uuid=${wxInfoSession.data.uuid}&userid=${wxInfoSession.data.userId}&deviceId=${wxInfoSession.data.deviceId}`
-                            };
-                            const wxInfo = {
-                                wxId: wxInfoSession.data.uuid || "",
-                                deviceId: wxInfoSession.data.deviceId || ""
-                            };
-                            getUserInfoAction(params, reqHeader(params, getEncryptHeader(wxInfo)));
+                            getUserInfoAction({}, reqHeader({}));
                         }
                         this.setState({
                             payResult: PAY_RESULT_SUCCESS

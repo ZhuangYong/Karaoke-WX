@@ -175,17 +175,11 @@ class Crop extends BaseComponent {
                     };
 
                     ossUploadWxPicActions(uploadParams, reqHeader(uploadParams), res => {
-                        console.log("======上传成功========");
-                        const {status, data} = res;
-                        if (parseInt(status, 10) === 1) {
-
-                            result = {...data, msg: intl.get('msg.upload.success')};
-                            resolve(result);
-                        } else {
-
-                            result = {msg: intl.get('msg.upload.fail')};
-                            reject(result);
-                        }
+                        result = {...res, msg: intl.get('msg.upload.success')};
+                        resolve(result);
+                    }, err => {
+                        result = {msg: intl.get('msg.upload.fail')};
+                        reject(err);
                     });
                 },
                 fail: () => {
@@ -207,13 +201,9 @@ class Crop extends BaseComponent {
         return new Promise((resolve, reject) => {
             const userInfo = getWxinfoFromSession();
             let result = {};
-            if (userInfo.status === 1) {
-                const {data} = userInfo;
-
-                const storeAs = data.uuid + '/' + name;
-
+            if (userInfo) {
+                const storeAs = userInfo.uuid + '/' + name;
                 this.state.client.put(storeAs, file).then(result => {
-
                     console.log(result);
                     const param = {
                         type: 1,
@@ -221,17 +211,11 @@ class Crop extends BaseComponent {
                     };
 
                     this.props.uploadImgActions(param, reqHeader(param), res => {
-                        console.log("======上传成功========");
-                        const {status, data} = res;
-                        if (parseInt(status, 10) === 1) {
-
-                            result = {...data, msg: "上传成功"};
-                            resolve(result);
-                        } else {
-
-                            result = {msg: "上传服务器失败"};
-                            reject(result);
-                        }
+                        result = {...res, msg: "上传成功"};
+                        resolve(result);
+                    }, err => {
+                        result = {msg: "上传服务器失败"};
+                        reject(result);
                     });
                 }).catch(function (err) {
                     console.log(err);

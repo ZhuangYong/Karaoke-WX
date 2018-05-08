@@ -289,9 +289,11 @@ class UserIndex extends BaseComponent {
         const {selectItem} = this.state;
         const params = {uid: selectItem.uid};
         deleteRecordingAction(params, reqHeader(params), res => {
-            const {status} = res;
-            parseInt(status, 10) === 1 && this.getRecordingsGetter();
-            globAlertAction(parseInt(status, 10) === 1 ? intl.get("msg.delete.success") : intl.get("msg.delete.fail"));
+            this.getRecordingsGetter();
+            globAlertAction(intl.get("msg.delete.success"));
+            this.setState({open: false, loading: false});
+        }, err => {
+            globAlertAction(intl.get("msg.delete.fail"));
             this.setState({open: false, loading: false});
         });
     }

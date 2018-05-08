@@ -55,14 +55,8 @@ class Login extends BaseComponent {
                     const params = {
                         uuid: uuid
                     };
-                    this.props.ottLoginAction(params, reqHeader(params), (res) => {
-                        const {status, data, msg} = res;
-
-                        if (parseInt(status, 10) === 302) {
-                            window.location.href = data;
-                        } else if (parseInt(status, 10) === 1) {
-                            navUtils.replace(`/login/success`);
-                        }
+                    this.props.ottLoginAction(params, reqHeader(params), res => {
+                        navUtils.replace(`/login/success`);
                     });
                 } else if (!isHome) {
                     window.WeixinJSBridge.call('closeWindow');

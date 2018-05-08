@@ -227,36 +227,31 @@ class EditRecord extends BaseComponent {
         const getAllPicsParams = {shareId: this.state.params.shareId};
 
         const {getAllPicsActions, globAlertAction} = this.props;
-        getAllPicsActions(getAllPicsParams, reqHeader(getAllPicsParams), res => {
-            const {status, data} = res;
-            if (parseInt(status, 10) === 1) {
-                const {albums, pagePictureId, pagePictureUrl, shareId} = data;
+        getAllPicsActions(getAllPicsParams, reqHeader(getAllPicsParams), data => {
+            const {albums, pagePictureId, pagePictureUrl, shareId} = data;
 
-                let recordingFormData = {pagePicture: [], albums: []};
+            let recordingFormData = {pagePicture: [], albums: []};
 
-                albums && albums.map(item => {
-                    recordingFormData.albums.push({
-                        id: item.picid,
-                        imgUrl: item.picurl,
-                        isShowBadge: true
-                    });
-                });
-
-                pagePictureId && recordingFormData.pagePicture.push({
-                    id: pagePictureId,
-                    imgUrl: pagePictureUrl,
+            albums && albums.map(item => {
+                recordingFormData.albums.push({
+                    id: item.picid,
+                    imgUrl: item.picurl,
                     isShowBadge: true
                 });
+            });
 
-                recordingFormData.isEdit = true;
-                recordingFormData.shareId = shareId;
+            pagePictureId && recordingFormData.pagePicture.push({
+                id: pagePictureId,
+                imgUrl: pagePictureUrl,
+                isShowBadge: true
+            });
 
-                this.setState({
-                    recordingFormData: recordingFormData
-                });
-            } else {
-                globAlertAction(intl.get('search.network.die'));
-            }
+            recordingFormData.isEdit = true;
+            recordingFormData.shareId = shareId;
+
+            this.setState({
+                recordingFormData: recordingFormData
+            });
         });
     }
 
@@ -283,12 +278,11 @@ class EditRecord extends BaseComponent {
         }
 
         uploadActions(uploadParams, reqHeader(uploadParams), res => {
-            const {status} = res;
-
-            parseInt(status, 10) === 1 && this.cancel();
+            this.cancel();
             this.setState({loading: false});
-            globAlertAction(parseInt(status, 10) === 1 ? intl.get('feedback.submit.success') : intl.get('feedback.submit.fail'));
-
+            globAlertAction(intl.get('feedback.submit.success'));
+        }, err => {
+            this.setState({loading: false});
         });
     }
 

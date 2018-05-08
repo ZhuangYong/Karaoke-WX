@@ -349,17 +349,11 @@ class Barrage extends BaseComponent {
                                     keys: res.serverId // 返回图片的服务器端ID
                                 };
                                 ossUploadWxPicActions(params, reqHeader(params), res => {
-                                    console.log("======上传成功========");
-                                    const {status, data} = res;
-                                    if (parseInt(status, 10) === 1) {
-
-                                        result = {...data, msg: intl.get('msg.upload.success')};
-                                        resolve(result);
-                                    } else {
-
-                                        result = {msg: intl.get('msg.upload.fail')};
-                                        reject(result);
-                                    }
+                                    result = {...res, msg: intl.get('msg.upload.success')};
+                                    resolve(result);
+                                }, err => {
+                                    result = {msg: intl.get('msg.upload.fail')};
+                                    reject(err);
                                 });
                             }
                         });
