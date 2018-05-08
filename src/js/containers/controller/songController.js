@@ -995,7 +995,7 @@ class SongController extends BaseComponent {
         // 新加一个版卡支持音效
         if (data.isReDevice === 1) {
             if (Const.EFFECT_NST_CHANNEL_LIST.indexOf(data.channel) >= 0) {
-                if (this.props.ottInfo.data.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION) {
+                if (this.props.ottInfo && this.props.ottInfo.appVersion >= Const.EFFECT_NST_MIN_OTT_VERSION) {
                     return true;
                 }
             }
