@@ -37,13 +37,13 @@ $trackSize: 40px;
 .audio-control_btn {
     top: 50%;
     left: 50%;
-    width: 28px;
-    height: 28px;
+    width: 1.2rem;
+    height: 1rem;
     z-index: 10;
     border: none;
     position: absolute;
     cursor: pointer;
-    border-radius: 50%;
+    //border-radius: 50%;
     transition: .25s all ease;
     background-color: $base_bg_color;
     transform: translate(-50%, -50%);

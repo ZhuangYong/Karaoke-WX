@@ -235,11 +235,12 @@ class App extends BaseComponent {
     }
 
     render() {
+        const {isIos} = window.sysInfo;
         const userInfoData = this.props.userInfo.userInfoData || {};
         return (
             this.state.initDone ? <div>
                 <MuiThemeProvider className={"App"} muiTheme={getMuiTheme(lightBaseTheme)}>
-                    <div className={`lan_${this.state.lan} ${this.state.showDialog ? "show-alert" : ""} channel_${userInfoData.channel}`}>
+                    <div className={`${isIos ? "os-ios" : "os-android"} lan_${this.state.lan} ${this.state.showDialog ? "show-alert" : ""} channel_${userInfoData.channel}`}>
                         <CommonInfo themeChange={theme => {
                             this.setState({
                                 theme: theme

@@ -33,6 +33,7 @@ import {List} from 'material-ui/List';
 import SwipeItem from "../../components/common/SwipeItem";
 import CommentCommonList from "../../components/common/commentCommonList";
 import {getUserInfo} from "../../actions/userActions";
+import CommentInput from "../../components/common/CommentInput";
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
@@ -97,7 +98,9 @@ class PlayAudio extends BaseComponent {
             commentCount: 0,
             loading: {},
             userLike: 0,
-            selectComment: null
+            selectComment: null,
+            canFocus: false,
+            commentFocus: false
         };
 
         this.loadAudioGetter = this.loadAudioGetter.bind(this);
@@ -118,6 +121,7 @@ class PlayAudio extends BaseComponent {
             }
         });
         this.loadAudioGetter();
+        setTimeout(() => this.setState({showComment: true}), 200);
     }
 
     componentDidUpdate() {
@@ -193,6 +197,7 @@ class PlayAudio extends BaseComponent {
 
         const { customerSliders, customerAd } = this.state;
 
+        const audioUUID = (this.props.audio.audioInfo || {}).uuid;
         let commentList = null;
         let myUUID = null;
         if (this.props.comment && this.props.comment.commentList && this.props.comment.commentList.result) {
@@ -223,7 +228,7 @@ class PlayAudio extends BaseComponent {
                             {nameNorm}
                         </p>
                         {
-                            !this.state.shareId || this.state.loading["likeCount"] || this.state.loading["like"] ? <div style={{float: 'right', marginRight: '.3rem', marginTop: '.3rem'}}>{this.getLoading()}</div> : <span className={`do-like-icon ${this.state.userLike ? "like" : ""}`} onClick={this.setCommentLike}>
+                            !this.state.shareId || this.state.loading["likeCount"] || this.state.loading["like"] ? <div style={{float: 'right'}}>{this.getLoading()}</div> : <span className={`do-like-icon ${this.state.userLike ? "like" : ""}`} onClick={this.setCommentLike}>
                                     <p>
                                         {
                                             this.state.commentCount
@@ -262,11 +267,11 @@ class PlayAudio extends BaseComponent {
                     </header>
 
 
-                    <Subheader style={{...styles.left, bottom: '.8rem'}}>
+                   {/* <Subheader style={{...styles.left, bottom: '.8rem'}}>
                         <p style={{margin: 0}}>{intl.get("audio.nice.song.to.share", {name: nameNorm || "..."})}</p>
-                    </Subheader>
+                    </Subheader>*/}
                     <Subheader style={{...styles.left, bottom: '.8rem'}}>
-                        <p style={{margin: 0}}>{customerAd}</p>
+                        <p style={{margin: 0, color: "#ff6832", fontSize: ".32rem"}}>{customerAd}</p>
                     </Subheader>
                 </div>
 
@@ -285,28 +290,32 @@ class PlayAudio extends BaseComponent {
                             this.state.loading['audio'] || this.state.loading['comment'] ? <p style={{textAlign: 'center', color: 'gray'}}>{this.getLoading()}</p> : ""
                         }
                         {
-                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c} canDel={myUUID === c.unionid} handelSelect={this.handelSelectComment} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.getComment}/>)
+                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c} canDel={myUUID === audioUUID || myUUID === c.unionid} handelSelect={this.handelSelectComment} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.getComment}/>)
                         }
                         {
-                            this.state.shareId && commentList && commentList.length >= 10 ? <span onClick={() => linkTo(`comment/list/${this.state.shareId}`, false, null)} style={{textAlign: 'center', width: '100%', display: 'block', padding: '1em', color: 'gray'}}>
+                            this.state.shareId && commentList && commentList.length >= 10 ? <span onClick={() => linkTo(`comment/list/${this.state.params.uid}/${this.state.shareId}`, false, null)} style={{textAlign: 'center', width: '100%', display: 'block', padding: '1em', color: 'gray'}}>
                                 查看更多评论
-                            </span> : ""
+                            </span> : <p style={{textAlign: 'center', color: 'gray', fontSize: '.34rem'}}>{intl.get("song.list.end")}</p>
                         }
                     </List>
                 </section>
 
-                {
-                    <section className="more-comment-bottom">
+                {/*{
+                    this.state.showComment ? <section className={`more-comment-bottom ${this.state.canFocus && this.state.commentFocus ? "focus" : ""}`}>
                         <Subheader style={styles.center} className="comment-container">
                             <TextField
+                                onClick={() => this.setState({canFocus: true})}
+                                onFocus={() => this.setState({commentFocus: true})}
+                                onBlur={() => this.setState({commentFocus: false})}
                                 floatingLabelText=""
                                 multiLine={true}
-                                rowsMax={4}
+                                rows={8}
+                                rowsMax={8}
                                 ref="input"
                                 className="comment-input"
                                 hintText={
                                     <div>
-                                        <font color="gray">评论录音</font>
+                                        <font color="gray">评论录音{this.state.canFocus + ":" + this.state.commentFocus}</font>
                                     </div>
                                 }
                                 hintStyle={{color: "white", textAlign: "center", width: "100%"}}
@@ -318,7 +327,11 @@ class PlayAudio extends BaseComponent {
                             />
                             <RaisedButton className="comment-submit-button" primary={true} label={this.state.loading["comment"] ? this.getLoading() : "提交"} disabled={this.state.loading["comment"] || !this.state.commentContent} onClick={this.submitComment}/>
                         </Subheader>
-                    </section>
+                    </section> : ""
+                }*/}
+
+                {
+                    this.state.showComment ? <CommentInput submitComment={this.submitComment}/> : ""
                 }
 
                 {
@@ -404,12 +417,10 @@ class PlayAudio extends BaseComponent {
             if (e.target.scrollTop > SHOW_COMMENT_OFFSET) {
                 this.setState({
                     scrollTop: e.target.scrollTop,
-                    showComment: true
                 });
             } else {
                 this.setState({
                     scrollTop: e.target.scrollTop,
-                    showComment: false
                 });
             }
 
@@ -427,24 +438,27 @@ class PlayAudio extends BaseComponent {
         });
     }
 
-    submitComment() {
+    submitComment(v, success, fail) {
         if (this.state.loading['comment']) return;
         const params = {
             type: 1,
             uuid: this.state.shareId,
-            content: this.state.commentContent
+            content: v
         };
         this.state.loading['comment'] = true;
         this.setState({loading: this.state.loading});
         this.props.saveCommentsAction(params, reqHeader(params), res => {
             this.state.loading['comment'] = false;
             this.setState({
-                commentContent: "",
                 loading: this.state.loading
             });
             this.props.globAlertAction("评论提交成功！");
             this.getComment();
-        }, err => this.state.loading['comment'] = false);
+            success();
+        }, err => {
+            this.state.loading['comment'] = false;
+            fail();
+        });
     }
 
     getCommentCount() {

@@ -54,7 +54,7 @@ export default class AudioControlButton extends React.Component {
                     <div className="duration">{this.formatTime(duration)}</div>
                 </div>
                 <div className="control-buttons-right">
-                    <button className="audio-control_btn video-control-btn" disabled={this.props.disabled} onClick={this.props.onClick}>
+                    <button className="audio-control_btn video-control-btn" disabled={this.props.disabled}>
                         <img src={mvIcon}/>
                     </button>
                 </div>

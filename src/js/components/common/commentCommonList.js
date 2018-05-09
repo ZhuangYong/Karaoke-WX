@@ -5,7 +5,7 @@ import BaseComponent from "../../components/common/BaseComponent";
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import {IconButton, Paper, RaisedButton, Subheader, TextField} from "material-ui";
 import {bindActionCreators} from "redux";
-import {getEncryptHeader, reqHeader} from "../../utils/comUtils";
+import {getEncryptHeader, getQueryString, reqHeader, wxShare} from "../../utils/comUtils";
 import Const from "../../utils/const";
 import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
 import {setGlobAlert} from "../../actions/common/actions";
@@ -15,6 +15,8 @@ import SwipeItem from "../../components/common/SwipeItem";
 import {deleteCommentOrReply, getCommentReplys, getComments, saveComments} from "../../actions/commentActons";
 import PropTypes from "prop-types";
 import {getUserInfo} from "../../actions/userActions";
+import CommentInput from "./CommentInput";
+import {getShareAudio} from "../../actions/audioActons";
 
 const style = {
     loadingRotate: {
@@ -49,11 +51,14 @@ class CommentList extends BaseComponent {
             shareId: this.props.shareId,
             cacheData: {},
             dataLoaded: false,
+            showComment: false,
+            commentFocus: false
         };
         this.onScroll = this.onScroll.bind(this);
         this.refreshPage = this.refreshPage.bind(this);
         this.loadMoreAction = this.loadMoreAction.bind(this);
         this.submitComment = this.submitComment.bind(this);
+        this.loadAudioGetter = this.loadAudioGetter.bind(this);
     }
 
     componentDidUpdate(preProps) {
@@ -85,7 +90,7 @@ class CommentList extends BaseComponent {
     }
 
     componentDidMount() {
-        if (this.state.currentPage === 0) this.loadMoreAction();
+        this.loadAudioGetter();
     }
 
     render() {
@@ -100,6 +105,11 @@ class CommentList extends BaseComponent {
             scrollTopStyle = {
                 opacity: 0
             };
+        }
+        const audioUUID = (this.props.audio.audioInfo || {}).uuid;
+        let myUUID = null;
+        if (pageData.length) {
+            myUUID = this.props.comment.commentList.unionId;
         }
         return (
             <Paper zDepth={0}>
@@ -125,7 +135,7 @@ class CommentList extends BaseComponent {
                             <div className="comment-list" style={{marginBottom: 0}}>
                                 <div>
                                     {
-                                        pageData.map(c => <SwipeItem key={c.uuid} data={c} handelSelect={this.props.handelSelect} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.refreshPage}/>)
+                                        pageData.map(c => <SwipeItem type={this.state.type} canDel={myUUID === audioUUID || myUUID === c.unionid} key={c.uuid} data={c} handelSelect={this.props.handelSelect} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.refreshPage}/>)
                                     }
                                 </div>
                             </div>
@@ -151,29 +161,38 @@ class CommentList extends BaseComponent {
                     }
                 </div>
 
-                <section className="more-comment-bottom">
-                    <Subheader className="comment-container" style={{padding: "0 16px"}}>
-                        <TextField
-                            floatingLabelText=""
-                            multiLine={true}
-                            rowsMax={4}
-                            ref="input"
-                            className="comment-input"
-                            hintText={
-                                <div>
-                                    <font color="gray">{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复 " + this.props.selectComment.nickName : "评论录音"}</font>
-                                </div>
-                            }
-                            hintStyle={{color: "white", textAlign: "center", width: "100%"}}
-                            value={this.state.commentContent}
-                            onChange={(v, a) => {
-                                this.checkUserInfo();
-                                this.setState({commentContent: a.substr(0, 200)});
-                            }}
-                        />
-                        <RaisedButton className="comment-submit-button" primary={true} label={this.state.loading["comment"] ? this.getLoading() : "提交"} disabled={this.state.loading["comment"] || !this.state.commentContent} onClick={this.submitComment}/>
-                    </Subheader>
-                </section>
+                {/*{
+                    this.state.showComment ? <section className={`more-comment-bottom ${this.state.canFocus && this.state.commentFocus ? "focus" : ""}`}>
+                        <Subheader className="comment-container" style={{padding: "0 16px"}}>
+                            <TextField
+                                onClick={() => this.state.canFocus = true}
+                                onFocus={() => this.setState({commentFocus: true})}
+                                onBlur={() => this.setState({commentFocus: false})}
+                                floatingLabelText=""
+                                multiLine={true}
+                                rowsMax={4}
+                                ref="input"
+                                className="comment-input"
+                                hintText={
+                                    <div>
+                                        <font color="gray">{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复 " + this.props.selectComment.nickName : "评论录音"}</font>
+                                    </div>
+                                }
+                                hintStyle={{color: "white", textAlign: "center", width: "100%"}}
+                                value={this.state.commentContent}
+                                onChange={(v, a) => {
+                                    this.checkUserInfo();
+                                    this.setState({commentContent: a.substr(0, 200)});
+                                }}
+                            />
+                            <RaisedButton className="comment-submit-button" primary={true} label={this.state.loading["comment"] ? this.getLoading() : "提交"} disabled={this.state.loading["comment"] || !this.state.commentContent} onClick={this.submitComment}/>
+                        </Subheader>
+                    </section> : ""
+                }*/}
+
+                {
+                    this.state.showComment ? <CommentInput placeholder={this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复 " + this.props.selectComment.nickName : "评论录音"} submitComment={this.submitComment}/> : ""
+                }
 
                 {
                     <div className="scroll-to-top-button" style={{...scrollTopStyle, bottom: '3rem'}} onTouchTap={() => {
@@ -234,6 +253,37 @@ class CommentList extends BaseComponent {
         });
     }
 
+    /**
+     * 获取录音分享数据
+     */
+    loadAudioGetter() {
+        if (this.state.type === COMMENT_TYPE_COMMENT) {
+            const {uid, shareId, getShareAudioAction} = this.props;
+            const params = {};
+            params.uid = uid;
+            params.shareId = shareId;
+            this.setState({loading: true});
+            getShareAudioAction(params, reqHeader(params), res => {
+                const {musicUrl, nameNorm, shareId, pagePictureUrl} = res;
+                this.setState({loading: false});
+                if (this.state.currentPage === 0) this.loadMoreAction();
+                setTimeout(() => this.setState({showComment: true}), 200);
+                window.wx && window.wx.ready(() => {
+                    wxShare({
+                        title: intl.get("audio.share.title", {name: nameNorm}),
+                        desc: intl.get("audio.share.from"),
+                        link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                        imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : 'http://wechat.j-make.cn/img/logo.png',
+                        dataUrl: musicUrl
+                    });
+                });
+            }, err => this.setState({loading: false}));
+        } else {
+            if (this.state.currentPage === 0) this.loadMoreAction();
+            setTimeout(() => this.setState({showComment: true}), 200);
+        }
+    }
+
     refreshPage() {
         this.setState({
             pageData: [],
@@ -244,13 +294,13 @@ class CommentList extends BaseComponent {
         this.loadMoreAction();
     }
 
-    submitComment() {
+    submitComment(v, success, fail) {
         this.checkUserInfo();
         if (this.state.loading['comment']) return;
         const params = {
             type: this.state.type === COMMENT_TYPE_COMMENT_REPLY ? 2 : 1,
             uuid: this.state.shareId,
-            content: this.state.commentContent
+            content: v
         };
         this.setState({loading: true});
         this.props.saveCommentsAction(params, reqHeader(params), res => {
@@ -258,9 +308,13 @@ class CommentList extends BaseComponent {
                 loading: false,
                 commentContent: ""
             });
-            this.props.globAlertAction("评论提交成功！");
+            this.props.globAlertAction(this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复提交成功！" : "评论提交成功！");
             this.refreshPage();
-        }, err => this.state.loading = false);
+            success();
+        }, err => {
+            fail();
+            this.state.loading = false;
+        });
     }
 
     getLoading() {
@@ -281,6 +335,7 @@ CommentList.defaultProps = {
     selectComment: {},
     type: 1,
     shareId: 0,
+    uid: 0,
     handelSelect: f => f,
     handelClose: f => f,
 };
@@ -289,6 +344,7 @@ CommentList.propTypes = {
     selectComment: PropTypes.any,
     type: PropTypes.number,
     shareId: PropTypes.any,
+    uid: PropTypes.any,
     handelSelect: PropTypes.func,
     handelClose: PropTypes.func
 };
@@ -296,11 +352,13 @@ CommentList.propTypes = {
 const mapStateToProps = (state, ownPorps) => {
     return {
         userInfo: state.app.user.userInfo,
+        audio: state.app.audio,
         comment: state.app.comment
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
+        getShareAudioAction: bindActionCreators(getShareAudio, dispatch),
         actionGetUserInfo: bindActionCreators(getUserInfo, dispatch),
         deleteCommentOrReplyAction: bindActionCreators(deleteCommentOrReply, dispatch),
         globAlertAction: bindActionCreators(setGlobAlert, dispatch),

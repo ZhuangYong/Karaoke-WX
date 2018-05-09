@@ -329,7 +329,7 @@ export default class router extends React.Component {
                 <Route path={`/catAlbum`} exact component={CatAlbumContainer}/>
                 <Route path={`/songs/:type/:id/:title?/:headImg?`} exact component={SongsListContainer}/>
                 <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>
-                <Route path={`/comment/list/:shareId/:title?`} exact component={commentListContainer}/>
+                <Route path={`/comment/list/:uid/:shareId/:title?`} exact component={commentListContainer}/>
                 <Route path="*" component={NotFound}/>
             </Switch>
         );

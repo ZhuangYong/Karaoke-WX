@@ -7,11 +7,12 @@ import {withRouter} from "react-router-dom";
 class CommentList extends BaseComponent {
     constructor(props) {
         super(props);
-        const {shareId, title} = this.props.match.params || {};
+        const {uid, shareId, title} = this.props.match.params || {};
         super.title(title || "");
         this.state = {
             selectComment: null,
-            shareId: parseInt(shareId, 10)
+            shareId: parseInt(shareId, 10),
+            uid: uid
         };
         this.handelSelectComment = this.handelSelectComment.bind(this);
         this.handelReplyClose = this.handelReplyClose.bind(this);
@@ -27,10 +28,10 @@ class CommentList extends BaseComponent {
 
     render() {
         return <div>
-            <CommentCommonList shareId={this.state.shareId} type={1} handelSelect={this.handelSelectComment}/>
+            <CommentCommonList uid={this.state.uid} shareId={this.state.shareId} type={1} handelSelect={this.handelSelectComment}/>
             {
                 this.state.selectComment ? <div className="comment-reply-container" style={{width: '100%', height: '100%', position: 'fixed', top: 0, overflowY: 'auto', backgroundColor: 'white', zIndex: 9999}}>
-                    <CommentCommonList shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose}/>
+                    <CommentCommonList uid={this.state.uid} shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose}/>
                 </div> : ""
             }
         </div>;
