@@ -290,12 +290,18 @@ class PlayAudio extends BaseComponent {
                             this.state.loading['audio'] || this.state.loading['comment'] ? <p style={{textAlign: 'center', color: 'gray'}}>{this.getLoading()}</p> : ""
                         }
                         {
-                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c} canDel={myUUID === audioUUID || myUUID === c.unionid} handelSelect={this.handelSelectComment} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.getComment}/>)
+                            commentList && commentList.map(c => <SwipeItem key={c.uuid} data={c} canDel={myUUID === audioUUID || myUUID === c.unionid} handelSelect={this.handelSelectComment} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={() => {
+                                this.props.globAlertAction(intl.get("msg.delete.success"));
+                                this.getComment();
+                            }}/>)
                         }
                         {
                             this.state.shareId && commentList && commentList.length >= 10 ? <span onClick={() => linkTo(`comment/list/${this.state.params.uid}/${this.state.shareId}`, false, null)} style={{textAlign: 'center', width: '100%', display: 'block', padding: '1em', color: 'gray'}}>
                                 查看更多评论
-                            </span> : <p style={{textAlign: 'center', color: 'gray', fontSize: '.34rem'}}>{intl.get("song.list.end")}</p>
+                            </span> : ""
+                        }
+                        {
+                            this.state.shareId && commentList && commentList.length && commentList.length < 10 ? <p style={{textAlign: 'center', color: 'gray', fontSize: '.34rem'}}>{intl.get("song.list.end")}</p> : ""
                         }
                     </List>
                 </section>

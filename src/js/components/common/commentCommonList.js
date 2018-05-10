@@ -135,7 +135,10 @@ class CommentList extends BaseComponent {
                             <div className="comment-list" style={{marginBottom: 0}}>
                                 <div>
                                     {
-                                        pageData.map(c => <SwipeItem type={this.state.type} canDel={myUUID === audioUUID || myUUID === c.unionid} key={c.uuid} data={c} handelSelect={this.props.handelSelect} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={this.refreshPage}/>)
+                                        pageData.map(c => <SwipeItem type={this.state.type} canDel={myUUID === audioUUID || myUUID === c.unionid} key={c.uuid} data={c} handelSelect={this.props.handelSelect} handelDelete={this.props.deleteCommentOrReplyAction} handelDeleteSuccess={() => {
+                                            this.props.globAlertAction(intl.get("msg.delete.success"));
+                                            this.refreshPage();
+                                        }}/>)
                                     }
                                 </div>
                             </div>
