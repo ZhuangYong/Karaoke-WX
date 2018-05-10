@@ -394,6 +394,11 @@ class Pay extends BaseComponent {
                 actionSetGlobAlert("wx signature error!", "");
                 return;
             }
+            if (data.hasOwnProperty("dealPrice") && data.dealPrice !== this.state.payListActiveItem.price) {
+                this.matchPages();
+                actionSetGlobAlert("支付套餐已调整，请重新操作！");
+                return;
+            }
             window.wx && window.wx.chooseWXPay({
                 timestamp: data.timeStamp, // 支付签名时间戳，注意微信jssdk中的所有使用timestamp字段均为小写。但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
                 nonceStr: data.nonceStr, // 支付签名随机串，不长于 32 位

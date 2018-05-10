@@ -24,7 +24,7 @@ class myOrder extends BaseComponent {
                  <img src={VipImg} style={{width: '100%', marginBottom: '.2rem'}} onClick={() => {
                      linkTo(`user/orderForm`, false, null);
                  }}/>
-                 <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallOrder}/>
+                 <img src={MallImg} style={{width: '100%'}} className="mall-index" onClick={f => location.href = sysConfig.mallOrder}/>
              </Paper>
         );
     }
