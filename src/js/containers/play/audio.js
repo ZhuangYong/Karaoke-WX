@@ -383,14 +383,14 @@ class PlayAudio extends BaseComponent {
         getShareAudioAction(params, reqHeader(params), res => {
             const {musicUrl, nameNorm, shareId, pagePictureUrl} = res;
             this.state.shareId = shareId;
-            this.state.loading['audio'] = false;
             this.getComment();
             this.getCommentCount();
             window.wx && window.wx.ready(() => {
+                this.state.loading['audio'] = false;
                 wxShare({
                     title: intl.get("audio.share.title", {name: nameNorm}),
                     desc: intl.get("audio.share.from"),
-                    link: `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`,
+                    link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`),
                     imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
                     dataUrl: musicUrl
                 });
