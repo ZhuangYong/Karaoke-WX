@@ -215,6 +215,14 @@
     "search.be.clear": "Be clear",
     "search.to.help.you.find.song": "To help you find the song",
 
+    "reply.to.comments": "Reply to comments",
+    "comments.no.reply": "No reply",
+    "comments.no.comment": "No comment yet",
+    "comments.reply": "Reply",
+    "comments.comment.record": "Comment record",
+    "comments.more.comments": "Read more comments",
+    "comments.comment": "Comment",
+
     "msg.deleting": "deleting",
     "msg.delete.success": "Delete success",
     "msg.delete.fail": "Delete fail",
@@ -241,6 +249,7 @@
     "msg.pay.success": "Pay success",
     "msg.pay.fail": "Pay fail",
     "msg.pay.cancel": "Cancel",
+    "msg.payment.change": "Payment options has been change, please try again",
     "msg.recharge.success": "Recharge success",
     "msg.recharge.fail.recharge": "Recharge failed, please retry",
     "msg.congratulations.vip.experience": "Congratulations, your have got a chance to experience being a J-MAkE VIP member",

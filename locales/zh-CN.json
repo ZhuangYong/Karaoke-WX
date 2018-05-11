@@ -216,6 +216,14 @@
     "search.be.clear": "再说清楚一点",
     "search.to.help.you.find.song": "才能帮你找到歌曲哟",
 
+    "reply.to.comments": "回复评论",
+    "comments.no.reply": "暂无回复",
+    "comments.no.comment": "暂无评论",
+    "comments.reply": "回复",
+    "comments.comment.record": "评论录音",
+    "comments.more.comments": "查看更多评论",
+    "comments.comment": "评论",
+
     "msg.deleting": "刪除中",
     "msg.delete.success": "删除成功",
     "msg.delete.fail": "删除失败",
@@ -242,6 +250,7 @@
     "msg.pay.success": "支付成功",
     "msg.pay.fail": "支付失败",
     "msg.pay.cancel": "取消支付",
+    "msg.payment.change": "支付套餐已调整，请重新操作",
     "msg.recharge.success": "支付成功",
     "msg.recharge.fail.recharge": "支付失败，请重新充值",
     "msg.congratulations.vip.experience": "恭喜你获得金麦客VIP体验资格哟",

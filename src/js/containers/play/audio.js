@@ -278,12 +278,12 @@ class PlayAudio extends BaseComponent {
                 <section style={{borderTop: `${toRem(20)} solid #f3f3f7`}}>
                     <Subheader className="comment-top">
                         <p>
-                            评论
+                            {intl.get("comments.comment")}
                         </p>
                        {/* <span className="comment-pen-icon"/>*/}
                     </Subheader>
                     {
-                        (!this.state.loading['comment'] && commentList && commentList.length === 0) ? <p style={{textAlign: 'center', color: 'gray'}}>暂无评论</p> : ""
+                        (!this.state.loading['comment'] && commentList && commentList.length === 0) ? <p style={{textAlign: 'center', color: 'gray'}}>{intl.get("comments.no.comment")}</p> : ""
                     }
                     <List className="comment-list">
                         {
@@ -297,7 +297,7 @@ class PlayAudio extends BaseComponent {
                         }
                         {
                             this.state.shareId && commentList && commentList.length >= 10 ? <span onClick={() => linkTo(`comment/list/${this.state.params.uid}/${this.state.shareId}`, false, null)} style={{textAlign: 'center', width: '100%', display: 'block', padding: '1em', color: 'gray'}}>
-                                查看更多评论
+                                    {intl.get("comments.more.comments")}
                             </span> : ""
                         }
                         {
@@ -458,7 +458,7 @@ class PlayAudio extends BaseComponent {
             this.setState({
                 loading: this.state.loading
             });
-            this.props.globAlertAction("评论提交成功！");
+            this.props.globAlertAction(intl.get("feedback.submit.success"));
             this.getComment();
             success();
         }, err => {

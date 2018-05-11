@@ -139,7 +139,7 @@ class Pay extends BaseComponent {
         const disableSubmitButton = isWeixin && !weixinConfigFinish;
 
         return (
-            <div>
+            <div className={`channel_${this.state.channel}`}>
                 {
                     this.state.payResult ? <div>
                         {
@@ -396,7 +396,7 @@ class Pay extends BaseComponent {
             }
             if (data.hasOwnProperty("dealPrice") && data.dealPrice !== this.state.payListActiveItem.price) {
                 this.matchPages();
-                actionSetGlobAlert("支付套餐已调整，请重新操作！");
+                actionSetGlobAlert(intl.get("msg.payment.change"));
                 return;
             }
             window.wx && window.wx.chooseWXPay({
@@ -467,7 +467,9 @@ class Pay extends BaseComponent {
 
     // 更新支付列表
     updatePayList() {
-        const data = this.props.result.payListData || [];
+        const payData = (this.props.result.payListData || {});
+        const channel = payData.channel;
+        const data = payData.list;
         const {defaultChooseProductId} = this.state;
         if (data && data[0]) {
             let defaultActiveItem = data[0];
@@ -486,6 +488,7 @@ class Pay extends BaseComponent {
                 payList: data,
                 payType: data[0]['productType']
             });
+            this.setState({channel: channel})
         }
     }
 

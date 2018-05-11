@@ -120,7 +120,7 @@ class CommentList extends BaseComponent {
                     {
                         this.state.type === COMMENT_TYPE_COMMENT_REPLY ? <div style={{borderBottom: "7px solid #f1f1f1"}}>
                             <div className="comment-reply-header">
-                                回复评论
+                                {intl.get("reply.to.comments")}
                                 <IconButton><NavigationClose onClick={this.props.handelClose}/></IconButton>
                             </div>
                             <div style={{marginTop: '1.6rem'}}/>
@@ -131,7 +131,7 @@ class CommentList extends BaseComponent {
                         showNoWifi ? <NoWifi style={{position: 'absolute', top: '-1rem'}}/> : ""
                     }
                     {
-                        (!loading && dataLoaded && currentPage >= 1 && pageData.length === 0) ? <p style={{textAlign: 'center', color: 'gray'}}>{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "暂无回复" : "暂无评论"}</p> : <div>
+                        (!loading && dataLoaded && currentPage >= 1 && pageData.length === 0) ? <p style={{textAlign: 'center', color: 'gray'}}>{this.state.type === COMMENT_TYPE_COMMENT_REPLY ? intl.get("comments.no.reply") : intl.get("comments.no.comment")}</p> : <div>
                             <div className="comment-list" style={{marginBottom: 0}}>
                                 <div>
                                     {
@@ -194,7 +194,7 @@ class CommentList extends BaseComponent {
                 }*/}
 
                 {
-                    this.state.showComment ? <CommentInput placeholder={this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复 " + this.props.selectComment.nickName : "评论录音"} submitComment={this.submitComment}/> : ""
+                    this.state.showComment ? <CommentInput placeholder={this.state.type === COMMENT_TYPE_COMMENT_REPLY ? intl.get("comments.reply") + ":" + this.props.selectComment.nickName : intl.get("comments.comment.record")} submitComment={this.submitComment}/> : ""
                 }
 
                 {
@@ -311,7 +311,7 @@ class CommentList extends BaseComponent {
                 loading: false,
                 commentContent: ""
             });
-            this.props.globAlertAction(this.state.type === COMMENT_TYPE_COMMENT_REPLY ? "回复提交成功！" : "评论提交成功！");
+            this.props.globAlertAction(intl.get("feedback.submit.success"));
             this.refreshPage();
             success();
         }, err => {

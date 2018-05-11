@@ -73,6 +73,8 @@ class RedirectAudio extends BaseComponent {
             } else {
                 globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
             }
+        }, err => {
+            globAlertAction(intl.get('msg.audio.can.not.get.the.recording'));
         });
     }
 }

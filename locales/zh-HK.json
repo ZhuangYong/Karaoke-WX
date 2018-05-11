@@ -216,6 +216,14 @@
     "search.be.clear": "再說清楚壹點",
     "search.to.help.you.find.song": "才能幫妳找到歌曲喲",
 
+    "reply.to.comments": "回復評論",
+    "comments.no.reply": "暫無回復",
+    "comments.no.comment": "暫無評論",
+    "comments.reply": "回復",
+    "comments.comment.record": "評論錄音",
+    "comments.more.comments": "查看更多評論",
+    "comments.comment": "評論",
+
     "msg.deleting": "刪除中",
     "msg.delete.success": "刪除成功",
     "msg.delete.fail": "刪除失敗",
@@ -242,6 +250,7 @@
     "msg.pay.success": "支付成功",
     "msg.pay.fail": "支付失敗",
     "msg.pay.cancel": "取消支付",
+    "msg.payment.change": "支付套餐已調整，請重新操作",
     "msg.recharge.success": "支付成功",
     "msg.recharge.fail.recharge": "支付失敗，請重新試",
     "msg.congratulations.vip.experience": "恭喜妳獲得金麥客VIP體驗資格喲",
