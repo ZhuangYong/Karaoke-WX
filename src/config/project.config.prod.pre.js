@@ -6,7 +6,7 @@
 module.exports = {
     appVersion: '1.1.1',
     environment: 'pre',
-    apiDomain: 'http://portal.j-make.cn/pre',
+    apiDomain: 'http://portalmy-pre.j-make.cn',
     contextPath: "/",
     appId: "wxb948b0bc6e5db6da"
 };
