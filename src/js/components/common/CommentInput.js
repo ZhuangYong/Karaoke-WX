@@ -48,7 +48,8 @@ export default class CommentInput extends React.Component {
                         <TextField
                             floatingLabelText=""
                             multiLine={true}
-                            rows={this.state.commentShow ? 8 : 22}
+                            // rows={this.state.commentShow ? 8 : 22}
+                            rows={8}
                             rowsMax={8}
                             ref="input"
                             className="comment-input"
