@@ -3,7 +3,7 @@ import ActionTypes from "../actions/actionTypes";
 import sysConfig from "../utils/sysConfig";
 import Const from "./const";
 import intl from 'react-intl-universal';
-import {getCode2Msg, getSession, removeSession, setSession} from "./comUtils";
+import {dieMsg, getCode2Msg, getSession, removeSession, setSession} from "./comUtils";
 
 export function cryptoFetch(options, succ, fail) {
     let url = options.url;
@@ -141,13 +141,16 @@ export function comFetch(dispatch, param, options = {
         }, options.timeout);
     }
 
+    dieMsg(JSON.stringify(options));
     fetch(url, fetchOption).then(function (response) {
+        dieMsg(">>" + url + "<<" + response.status);
         if (timeoutSing) {
             clearTimeout(timeoutSing);
             timeoutSing = null;
         }
         return response.json();
     }).then(function (json) {
+        if (url.indexOf(".json") < 0) dieMsg(">>" + url + "<<" + JSON.stringify(json));
         const {status, msg, data} = json;
         const isLanFile = /^\/locales\/[a-z-A-Z]*\.json/gi.test(url);
         if (status === 302) {

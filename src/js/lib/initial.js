@@ -69,5 +69,64 @@ var HYAPP = {
 
     HYAPP.allowSessionStorage = isSessionStorageNameSupported();
     HYAPP.allowLocalStorage = isLocalStorageNameSupported();
+
+    var hotkey = [];
+    var dieOn = false;
+    window.addEventListener("touchstart", function (e) {
+        var touch = ((e.touches || [])[0] || {});
+        var clientX = touch.clientX;
+        var clientY = touch.clientY;
+        var ww = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+        if (clientX < 50 && clientY < 50) {
+            hotkey.push(true);
+            if (hotkey.length === 12) {
+                if (window.sessionStorage.getItem("die")) {
+                    window.sessionStorage.removeItem("die");
+                } else {
+                    window.sessionStorage.setItem("die", 1);
+                }
+            }
+        } else {
+            hotkey = [];
+        }
+
+        if (clientX > ww - 50 && clientY < 50) {
+            // if (!window.sessionStorage.getItem("die")) return;
+            // var div = document.createElement("div");
+            // div.innerHTML = '<div class="die-panel"  style="position: fixed; width: 100% height: 50%; z-index: 999999;"><p class="die-title" style="margin: 0;padding: .4rem; background-color: white;border: 1px solid #e6e6e6;">&nbsp;</p><textarea id="dieTxt" style="width: 320px; height: 200px; border: 1px solid rgb(224, 224, 224); margin: 0px;"> </textarea></div>';
+            // document.body.append(div);
+            // var title = document.querySelector(".die-title");
+            // title.addEventListener("touchstart", function(e) {
+            //     if (dieOn) {
+            //         dieOn = false;
+            //         document.querySelector(".die-panel").style.top = 0;
+            //         document.querySelector(".die-panel").style.bottom = '';
+            //     } else {
+            //         dieOn = true;
+            //         document.querySelector(".die-panel").style.bottom = 0;
+            //         document.querySelector(".die-panel").style.top = '';
+            //     }
+            // });
+        }
+    });
+
+    if (window.sessionStorage.getItem("die")) {
+        var div = document.createElement("div");
+        div.innerHTML = '<div class="die-panel"  style="position: fixed; width: 100% height: 50%; z-index: 999999;"><p class="die-title" style="margin: 0;padding: .4rem; background-color: white;border: 1px solid #e6e6e6;">&nbsp;</p><textarea id="dieTxt" style="width: 320px; height: 200px; border: 1px solid rgb(224, 224, 224); margin: 0px;"> </textarea></div>';
+        document.body.append(div);
+        var title = document.querySelector(".die-title");
+        title.addEventListener("click", function(e) {
+            if (dieOn) {
+                dieOn = false;
+                document.querySelector(".die-panel").style.top = 0;
+                document.querySelector(".die-panel").style.bottom = '';
+            } else {
+                dieOn = true;
+                document.querySelector(".die-panel").style.bottom = 0;
+                document.querySelector(".die-panel").style.top = '';
+            }
+        });
+    }
 })();
 window.HYAPP = HYAPP;
