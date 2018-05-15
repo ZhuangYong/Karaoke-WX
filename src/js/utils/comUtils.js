@@ -711,6 +711,7 @@ export function getLanguageCookie() {
             lan = 'EN';
             break;
         default:
+            lan = 'CN';
             break;
     }
     return lan;
