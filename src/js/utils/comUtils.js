@@ -809,3 +809,11 @@ export function convertSong (song) {
     song.charge = charge;
     return song;
 }
+
+export function dieMsg(msg) {
+    const debug = window.sessionStorage.getItem("die");
+    const debugPanel = document.querySelector("#dieTxt");
+    if (debug && debugPanel) {
+        debugPanel.value = debugPanel.value + "\r\n\n" + msg;
+    }
+}

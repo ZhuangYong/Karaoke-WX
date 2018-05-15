@@ -203,6 +203,8 @@ class App extends BaseComponent {
             if (window.noUserInfo === true) {
                 this.updateUserInfo();
                 window.noUserInfo = false;
+            } else {
+                this.configWxPath();
             }
         } else {
             this.configWxPath();

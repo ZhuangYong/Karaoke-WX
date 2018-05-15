@@ -385,6 +385,8 @@ class PlayAudio extends BaseComponent {
             this.state.shareId = shareId;
             this.getComment();
             this.getCommentCount();
+            const {isWeixin} = window.sysInfo;
+            if (!isWeixin) this.state.loading['audio'] = false;
             window.wx && window.wx.ready(() => {
                 this.state.loading['audio'] = false;
                 wxShare({

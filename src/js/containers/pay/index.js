@@ -488,7 +488,7 @@ class Pay extends BaseComponent {
                 payList: data,
                 payType: data[0]['productType']
             });
-            this.setState({channel: channel})
+            this.setState({channel: channel});
         }
     }
 
