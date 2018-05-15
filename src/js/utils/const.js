@@ -57,4 +57,7 @@ export default{
     // 相册中选中图片缓存信息key值
     ALBUM_SESSION_KEY: 'albumFormData',
 
+    // 不显示商城入口机型值
+    NOT_SHOW_SHOP_CHANNELS: ['gx_gg_k1', 'switch_gx_gg_k1', 'gg_k1_haiwai', 'switch_gg_k1'],
+
 };

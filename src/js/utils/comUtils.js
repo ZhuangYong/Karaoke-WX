@@ -5,6 +5,7 @@ import sysConfig from "./sysConfig";
 import navUtils from "./navUtils";
 import ActionTypes from "../actions/actionTypes";
 import Base64 from "Base64";
+import intl from 'react-intl-universal';
 
 /**
  * 返回特定格式时间字符串
@@ -561,6 +562,10 @@ export function dynaPush(funcParam = {
 
 }) {
     const {ottInfo, userInfo, param, localNetIsWork, action_pushLocal, action_setLocalNet, action_push, action_setGlobAlert, success, fail} = funcParam;
+    if (!window.navigator.onLine) {
+        action_setGlobAlert(intl.get('msg.network.die') + '!!!');
+        return;
+    }
     const data = ottInfo || {};
     const {userInfoData} = userInfo || {};
     const {deviceIp, devicePort, networkType, systemTime, timeStamp} = data || {};
@@ -588,6 +593,14 @@ export function dynaPush(funcParam = {
     const renderPushResult = (res) => {
         success && success(res);
     };
+
+    // 自建后台测试服务暂时关闭内网推送，只做外网推送
+    const env = process.env.NODE_ENV;
+    if (env === "expand" || env === "expandTest") {
+        action_push(param, header, renderPushResult, fail);
+        return;
+    }
+
     if (localNetIsWork && (networkType === 'wifi' || networkType === 'eth') && deviceIp && devicePort && userInfoData) {
         action_pushLocal(localPri, localParam, localHeader, success, (msg, err, rejectCode) => {
             if (!window.handelErrs) window.handelErrs = {};

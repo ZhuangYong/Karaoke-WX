@@ -187,6 +187,11 @@ class MBottomNavigation extends BaseComponent {
     }
 
     validUserVipDialog(callback) {
+        const data = this.props.userInfoData || {};
+        if (data.hasOwnProperty('time')) {
+            callback && callback();
+            return "";
+        }
         const isBindDevice = this.isBindDevice(this.props.userInfoData);
         const vipAlert = JSON.parse(getCookie("vipAlert") || "{}");
         if (isBindDevice !== true || (vipAlert.lastShowAlertTime && new Date(vipAlert.lastShowAlertTime).getDay() === new Date().getDay())) {

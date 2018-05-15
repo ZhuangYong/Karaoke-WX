@@ -146,13 +146,13 @@ class Pay extends BaseComponent {
                             this.state.payResult === PAY_RESULT_SUCCESS ? <div>
                                 <h2 style={styles.payResult.title}>{intl.get("msg.congratulations.pay.success")}</h2>
                                 <p style={styles.payResult.subTitle}>{payListActiveItem && payListActiveItem.productName}</p>
-                                <Paper
+                                {/*<Paper
                                     className="mall-index"
                                     zDepth={0}
                                     style={{position: 'fixed', bottom: '2rem', marginBottom: '2rem', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}
                                 >
                                     <img src={MallImg} style={{maxWidth: 320}} onClick={f => location.href = sysConfig.mallIndex}/>
-                                </Paper>
+                                </Paper>*/}
                                 <RaisedButton
                                     backgroundColor="#ff6832"
                                     buttonStyle={styles.submitButton}

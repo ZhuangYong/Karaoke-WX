@@ -254,13 +254,15 @@ class UserIndex extends BaseComponent {
 
                 </section>)}
 
-                <Paper
-                    zDepth={0}
-                    className="mall-index"
-                    style={{margin: '.3rem .267rem 2.2rem .267rem'}}
-                >
-                    <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
-                </Paper>
+                {
+                    channel && Const.NOT_SHOW_SHOP_CHANNELS.indexOf(channel) < 0 && <Paper
+                        zDepth={0}
+                        className="mall-index"
+                        style={{margin: '.3rem .267rem 2.2rem .267rem'}}
+                    >
+                        <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
+                    </Paper>
+                }
 
                 <MBottomNavigation selectedIndex={2}/>
 
