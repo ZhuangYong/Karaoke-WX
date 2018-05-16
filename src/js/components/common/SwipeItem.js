@@ -76,7 +76,7 @@ export default class SwipeItem extends React.Component {
                                 {this.props.data.content}
                             </p>
                             <p className="footer">
-                            {this.props.data.createTime} &nbsp;&nbsp;{this.props.type === 1 ? "回复ta" : ""}
+                            {this.props.data.createTime} &nbsp;&nbsp;{this.props.type === 1 ? (this.props.data.replyNum ? this.props.data.replyNum + "条回复" : "回复ta") : ""}
                             </p>
                         </span>
                     </div>

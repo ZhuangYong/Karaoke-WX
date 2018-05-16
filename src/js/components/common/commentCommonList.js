@@ -313,6 +313,9 @@ class CommentList extends BaseComponent {
             });
             this.props.globAlertAction(intl.get("feedback.submit.success"));
             this.refreshPage();
+            if (this.state.type === COMMENT_TYPE_COMMENT_REPLY) {
+                this.props.handelReplySuccess();
+            }
             success();
         }, err => {
             fail();
@@ -341,6 +344,7 @@ CommentList.defaultProps = {
     uid: 0,
     handelSelect: f => f,
     handelClose: f => f,
+    handelReplySuccess: f => f,
 };
 
 CommentList.propTypes = {
@@ -349,7 +353,8 @@ CommentList.propTypes = {
     shareId: PropTypes.any,
     uid: PropTypes.any,
     handelSelect: PropTypes.func,
-    handelClose: PropTypes.func
+    handelClose: PropTypes.func,
+    handelReplySuccess: PropTypes.func
 };
 
 const mapStateToProps = (state, ownPorps) => {

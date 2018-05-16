@@ -54,7 +54,8 @@ export default class BaseComponent extends Component {
         };
         if (typeof isBindDevice === 'string') {
             actionSetGlobAlert && actionSetGlobAlert(isBindDevice, ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
-            return intl.get("getting.user.info");
+            return false;
+            // return intl.get("getting.user.info");
         } else if (isBindDevice === false) {
             actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_BIND_DEVICE);
             return false;

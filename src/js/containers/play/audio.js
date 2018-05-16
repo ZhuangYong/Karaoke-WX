@@ -342,7 +342,7 @@ class PlayAudio extends BaseComponent {
 
                 {
                     this.state.selectComment ? <div className="comment-reply-container" style={{width: '100%', height: '100%', position: 'fixed', top: 0, overflowY: 'auto', backgroundColor: 'white', zIndex: 9999}}>
-                        <CommentCommonList shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose}/>
+                        <CommentCommonList shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose} handelReplySuccess={() => this.state.selectComment.replyNum += 1}/>
                     </div> : ""
                 }
 
