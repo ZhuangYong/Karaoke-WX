@@ -31,7 +31,7 @@ class CommentList extends BaseComponent {
             <CommentCommonList uid={this.state.uid} shareId={this.state.shareId} type={1} handelSelect={this.handelSelectComment}/>
             {
                 this.state.selectComment ? <div className="comment-reply-container" style={{width: '100%', height: '100%', position: 'fixed', top: 0, overflowY: 'auto', backgroundColor: 'white', zIndex: 9999}}>
-                    <CommentCommonList uid={this.state.uid} shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose}/>
+                    <CommentCommonList uid={this.state.uid} shareId={this.state.selectComment.uuid} selectComment={this.state.selectComment} type={2} handelClose={this.handelReplyClose} handelReplySuccess={() => this.this.state.selectComment.replyNum += 1}/>
                 </div> : ""
             }
         </div>;
