@@ -1,4 +1,6 @@
 export default {
+    // 第三方支付
+    "API_THIRD_PAY_THIRD_WX_AUTH": "/thirdPay/thirdWxAuth",
     // OTT登录
     "API_OTT_LOGIN": "/user/loginAuth",
     // OTT退出登录

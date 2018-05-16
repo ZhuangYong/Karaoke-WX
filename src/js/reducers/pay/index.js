@@ -10,6 +10,13 @@ let initialState = {
 
 export default (state = initialState, action = {}) => {
     switch (action.type) {
+        case ActionTypes.Pay.API_THIRD_PAY_THIRD_WX_AUTH:
+            return fetchProcess(state, action, {
+                data: "thirdPayData",
+                msg: "thirdPayMsg",
+                loading: "thirdPayLoading",
+                stamp: "thirdPayStamp"
+            });
         case ActionTypes.Pay.API_GET_PAY_LIST:
             return fetchProcess(state, action, {
                 data: "payListData",

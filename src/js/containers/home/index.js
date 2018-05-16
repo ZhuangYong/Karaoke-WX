@@ -25,6 +25,7 @@ import sysConfig from "../../utils/sysConfig";
 import intl from 'react-intl-universal';
 import { comFetch } from '../../utils/fetchUtils';
 import apiUrl from '../../actions/apiUrl';
+import { thirdPayWxAuth } from '../../actions/payAction';
 
 const style = {
     home: {
@@ -202,13 +203,13 @@ class Home extends BaseComponent {
                             </span>
                         </div>
                     </Paper>
-                    {/*<button onClick={() => {
+                    <button onClick={() => {
                         const params = {
                             sn: 'WS0017050010100068',
                             mac: '28070d0000db',
                         };
-                        this.props.actionTest(params);
-                    }}>测试</button>*/}
+                        this.props.actionTest(params, reqHeader(params));
+                    }}>测试</button>
 
                     <Paper
                         zDepth={0}
@@ -439,17 +440,7 @@ const mapStateToProps = (state, ownProps) => {
 // 映射dispatch到props
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
-        actionTest: bindActionCreators((params) => {
-            const url = sysConfig.apiDomain + '/thirdPay/thirdWxAuth';
-            return (dispatch) => {
-                comFetch(dispatch, params, {
-                    url: url,
-                    type: "post",
-                    headers: reqHeader(params),
-                    action: '',
-                });
-            };
-        }, dispatch),
+        actionTest: bindActionCreators(thirdPayWxAuth, dispatch),
         action_getRecommend: bindActionCreators(getRecommend, dispatch),
         action_getAlbumRecommend: bindActionCreators(getAlbumRecommend, dispatch),
         action_getRanking: bindActionCreators(getRanking, dispatch)

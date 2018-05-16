@@ -7,6 +7,18 @@ import {comFetch} from "../utils/fetchUtils";
 import apiUrl from "./apiUrl";
 import sysConfig from "../utils/sysConfig";
 
+// 第三方支付
+export function thirdPayWxAuth(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_THIRD_PAY_THIRD_WX_AUTH;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.Pay.API_THIRD_PAY_THIRD_WX_AUTH
+        }, callback);
+    };
+}
+
 // 充值接口
 export function rechargeSubmit(data, headers, callback) {
     const url = sysConfig.apiDomain + apiUrl.API_RECHARGE_SUBMIT;
