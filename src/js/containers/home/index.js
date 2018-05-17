@@ -203,13 +203,13 @@ class Home extends BaseComponent {
                             </span>
                         </div>
                     </Paper>
-                    <button onClick={() => {
-                        const params = {
-                            sn: 'WS0017050010100068',
-                            mac: '28070d0000db',
-                        };
-                        this.props.actionTest(params, reqHeader(params));
-                    }}>测试</button>
+                    {/*<button onClick={() => {*/}
+                        {/*const params = {*/}
+                            {/*sn: 'WS0017050010100068',*/}
+                            {/*mac: '28070d0000db',*/}
+                        {/*};*/}
+                        {/*this.props.actionTest(params, reqHeader(params));*/}
+                    {/*}}>测试</button>*/}
 
                     <Paper
                         zDepth={0}
