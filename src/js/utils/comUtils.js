@@ -373,7 +373,6 @@ export function reqHeader(data, header, isReturnSign) {
     header.sign = md5(str);
     header.sessionId = getQueryString("sessionId") || "";
     header.token = getSession("token") || "";
-    console.log(header);
     return header;
 }
 
