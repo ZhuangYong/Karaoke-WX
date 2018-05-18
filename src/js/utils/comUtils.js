@@ -353,7 +353,7 @@ export function getEncryptHeader(Oid) {
         timeStamp: new Date().getTime().toString(),
         version: 'v1.0',
         channel: 'official',
-        language: getLanguageCookie()
+        language: getLanguageCookie() || "CN"
     };
 }
 
@@ -724,7 +724,6 @@ export function getLanguageCookie() {
             lan = 'EN';
             break;
         default:
-            lan = 'CN';
             break;
     }
     return lan;
