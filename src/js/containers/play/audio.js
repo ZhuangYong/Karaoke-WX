@@ -205,7 +205,7 @@ class PlayAudio extends BaseComponent {
             myUUID = this.props.comment.commentList.unionId;
         }
         return (
-            <div className="audio-play" onScroll={this.onScroll.bind(this)} onTouchEnd={this.onScroll.bind(this)}>
+            <div className="audio-play">
                 <div className="top-panel" style={topPanelStyle}>
                     <AutoPlaySwipeAbleViews disabled className="swipe-panel" style={{overflow: 'hidden', ...swipePanelStyle}}>
                         {
@@ -303,6 +303,11 @@ class PlayAudio extends BaseComponent {
                         {
                             this.state.shareId && commentList && commentList.length && commentList.length < 10 ? <p style={{textAlign: 'center', color: 'gray', fontSize: '.34rem'}}>{intl.get("song.list.end")}</p> : ""
                         }
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
                     </List>
                 </section>
 
