@@ -21,7 +21,7 @@ class OrderForm extends BaseOrderList {
         this.state = {
             ...this.defaultState,
             title: intl.get("order.all"),
-            // rightTitle: intl.get("invoice.i.go"),
+            rightTitle: intl.get("invoice.i.go"),
             dataKey: 'orderForm',
             deleteItem: null,
             itemRules: [
