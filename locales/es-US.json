@@ -105,7 +105,7 @@
     "order.device.no": "Número de dispositivo ",
     "order.payment.amount": "Monto del pago ",
     "order.payment.package": "Paquete de pago",
-    "order.delete.order": "Eliminar orden",
+    "order.delete.order": "Eliminar",
     "order.sure.or.not.delete.order": "Confirmar eliminación？",
     "order.electronic.invoice": "Factura electrónica ",
     "invoice.done": "Facturado",
