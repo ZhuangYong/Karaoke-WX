@@ -191,7 +191,7 @@
     "getting.user.info": "Obteniendo información del usuario ",
     "user.we.chat.operate": "Por favor manejar por Wechat ",
     "bind.expired.re.bind": "La vinculación del dispositivo expiró, vuelva a vincular ",
-    "unbind.device": "Dispositivo desvinculado ",
+    "unbind.device": "Desvinculado",
     "get.user.info.fail.try.again": "Error al obtener información del usuario. ¡Volver a inténtalo más tarde!",
 
     "device.bind.expired": "Vinculación expirada ",
@@ -200,7 +200,7 @@
     "device.anonymous": "Anónimo ",
     "device.connected.add.song": "Dispositivo vinculado, comienza a pedir canciones ",
     "device.connect": "Dispositivo",
-    "device.connected": "Dispositivo vinculado ",
+    "device.connected": "Vinculado ",
     "release.will.stop": "Soltar la pausa ",
     "press.and.say": "Mantenga presionado y hable ",
 

@@ -4,6 +4,7 @@
 import React from "react";
 import {RaisedButton, Subheader, TextField} from "material-ui";
 import PropTypes from "prop-types";
+import intl from 'react-intl-universal';
 
 const styles = {
     loadingRotate: {
@@ -66,8 +67,8 @@ export default class CommentInput extends React.Component {
                         />
                         {
                             this.state.commentShow ? <div>
-                                <RaisedButton className="comment-submit-button" labelColor="white" backgroundColor="#ff6832" label={this.state.loading ? this.getLoading() : "提交"} disabled={this.state.loading || !this.state.value} onClick={this.handelSubmit}/>
-                                <RaisedButton className="comment-submit-button" backgroundColor="#d8d8d8" label="取消" onClick={this.handelCloseComment}/>
+                                <RaisedButton className="comment-submit-button" labelColor="white" backgroundColor="#ff6832" labelStyle={{fontSize: '.36rem'}} label={this.state.loading ? this.getLoading() : intl.get("button.submit")} disabled={this.state.loading || !this.state.value} onClick={this.handelSubmit}/>
+                                <RaisedButton className="comment-submit-button" backgroundColor="#d8d8d8" label={intl.get("button.cancel")} onClick={this.handelCloseComment}/>
                             </div> : ""
                         }
                     </Subheader>
@@ -100,8 +101,8 @@ export default class CommentInput extends React.Component {
                     value={this.state.value}
                     onChange={this.handelChange}
                 />
-                <RaisedButton className="comment-submit-button" backgroundColor="#ff6832" labelColor="white" label={this.state.loading ? this.getLoading() : "提交"} disabled={this.state.loading || !this.state.value} onTouchTap={this.handelSubmit}/>
-                <RaisedButton className="comment-submit-button cancel-button" backgroundColor="#d8d8d8" label="取消" onClick={this.handelCloseComment}/>
+                <RaisedButton className="comment-submit-button" backgroundColor="#ff6832" labelStyle={{fontSize: '.36rem'}} labelColor="white" label={this.state.loading ? this.getLoading() : intl.get("button.submit")} disabled={this.state.loading || !this.state.value} onTouchTap={this.handelSubmit}/>
+                <RaisedButton className="comment-submit-button cancel-button" backgroundColor="#d8d8d8" label={intl.get("button.cancel")} onClick={this.handelCloseComment}/>
             </Subheader>
         </section>;
     }
@@ -149,7 +150,7 @@ CommentInput.defaultProps = {
     value: "",
     onChange: f => f,
     submitComment: f => f,
-    placeholder: "评论录音",
+    placeholder: intl.get("comments.comment.record"),
 };
 
 CommentInput.propTypes = {
