@@ -80,10 +80,15 @@ const style = {
         fontSize: '.32rem',
         paddingTop: '.08rem',
         height: '.6rem',
-        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        textAlign: "center"
+        textAlign: "center",
+        overflow: 'hidden',
+        width: '4.27rem',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis',
+        display: 'block',
+        padding: 0,
     },
     loadingBar: {
         boxShadow: "none",

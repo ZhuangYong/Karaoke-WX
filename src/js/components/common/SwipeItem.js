@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import blankImg from "../../../img/common/blank.png";
 import {deleteCommentOrReply} from "../../actions/commentActons";
 import {reqHeader} from "../../utils/comUtils";
+import intl from "react-intl-universal";
 
 const RIGHT_MOVE_DIST = 75;
 const styles = {
@@ -76,7 +77,7 @@ export default class SwipeItem extends React.Component {
                                 {this.props.data.content}
                             </p>
                             <p className="footer">
-                            {this.props.data.createTime} &nbsp;&nbsp;{this.props.type === 1 ? (this.props.data.replyNum ? this.props.data.replyNum + "条回复" : "回复ta") : ""}
+                            {this.props.data.createTime} &nbsp;&nbsp;{this.props.type === 1 ? (this.props.data.replyNum ? this.props.data.replyNum + intl.get("comments.reply") : intl.get("comments.reply") + " ta") : ""}
                             </p>
                         </span>
                     </div>
@@ -84,7 +85,7 @@ export default class SwipeItem extends React.Component {
                 {
                     this.props.canDel ? <div className="operator-pan">
                         <p className="del-button" onClick={this.handelDel}>
-                            {this.state.loading ? this.getLoading() : "删除"}
+                            {this.state.loading ? this.getLoading() : intl.get("button.delete")}
                         </p>
                     </div> : ""
                 }

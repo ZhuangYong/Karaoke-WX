@@ -303,11 +303,6 @@ class PlayAudio extends BaseComponent {
                         {
                             this.state.shareId && commentList && commentList.length && commentList.length < 10 ? <p style={{textAlign: 'center', color: 'gray', fontSize: '.34rem'}}>{intl.get("song.list.end")}</p> : ""
                         }
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <br/>
                     </List>
                 </section>
 

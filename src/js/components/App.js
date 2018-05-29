@@ -155,6 +155,8 @@ class App extends BaseComponent {
 
     componentDidMount() {
         //move to after initial user info
+        const paramLan = getQueryString("language");
+        if (paramLan) setCookie("language", paramLan);
         // this.loadLocales();
         if (isGetUserInfo()) {
             this.updateUserInfo();
