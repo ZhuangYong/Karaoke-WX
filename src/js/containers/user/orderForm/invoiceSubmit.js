@@ -77,7 +77,7 @@ class InvoiceSubmit extends BaseComponent {
         this.state = {
 
             // 总金额数，从url参数中获取
-            totalMoney: this.props.match.params.totalMoney.replace("-", "."),
+            totalMoney: this.props.match.params.totalMoney.replace(/-/g, "."),
 
             // 对话框状态
             openDialog: false,
@@ -93,7 +93,7 @@ class InvoiceSubmit extends BaseComponent {
              * gfyx: 开票人邮箱
              */
             submitParams: {
-                ids: this.props.match.params.ids.replace("-", ","),
+                ids: this.props.match.params.ids.replace(/-/g, ","),
                 gflx: "01",
                 gfmc: "",
                 gfsh: "",
