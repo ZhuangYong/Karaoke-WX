@@ -163,7 +163,8 @@ class PlayAudio extends BaseComponent {
                 wxShare({
                     title: intl.get("audio.we.chat.song"),
                     desc: intl.get("audio.share.from"),
-                    link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                    // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                    link: location.protocol + "//" + location.host,
                     imgUrl: defaultCover,
                     dataUrl: null
                 });
@@ -392,7 +393,7 @@ class PlayAudio extends BaseComponent {
                 wxShare({
                     title: intl.get("audio.share.title", {name: nameNorm}),
                     desc: intl.get("audio.share.from"),
-                    link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`),
+                    // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`),
                     imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
                     dataUrl: musicUrl
                 });

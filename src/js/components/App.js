@@ -187,7 +187,8 @@ class App extends BaseComponent {
             wxShare({
                 title: intl.get("index.we.chat.song"),
                 desc: intl.get("audio.share.from"),
-                link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                link: location.protocol + "//" + location.host,
                 imgUrl: 'http://wechat.j-make.cn/img/logo.png',
                 dataUrl: null
             });

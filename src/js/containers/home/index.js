@@ -127,7 +127,8 @@ const defaultGetRankingData = defaultGetAlbumRecommendData;
 class Home extends BaseComponent {
     constructor(props) {
         super(props);
-        super.title(intl.get("title.home"));
+        super.title(intl.get("index.we.chat.song"));
+        // super.title(intl.get("title.home"));
         this.state = {
             defaultBack: '/',
             showMsg: false,
