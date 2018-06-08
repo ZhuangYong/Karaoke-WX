@@ -192,6 +192,9 @@ class Recharge extends BaseComponent {
                         getQueryString('language') !== null ? window.WeixinJSBridge.call('closeWindow') : window.history.go(-2);
                     }, 800);
                     break;
+                case 6:
+                    globAlertAction(intl.get('msg.recharge.invalid.device'));
+                    break;
                 default:
             }
             this.refs.password.value = '';

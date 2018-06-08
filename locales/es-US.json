@@ -281,6 +281,7 @@
     "msg.recharge.invalidCardNo": "El número de tarjeta no existe",
     "msg.recharge.invalidPassword": "El número de tarjeta y la contraseña no coinciden, vuelva a ingresar",
     "msg.recharge.invalidDate": "La tarjeta de recarga no está dentro del período de validez",
+    "msg.recharge.invalid.device": "Este modelo no se puede recargar usando temporalmente una tarjeta prepaga.",
     "msg.recharge.used": "Esta tarjeta de recarga ya está en uso",
     "msg.recharge.ok": "Recarga el éxito",
     "label.recharge.payOnline": "Recargar en línea",

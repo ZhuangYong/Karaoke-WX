@@ -281,6 +281,7 @@
     "msg.recharge.invalidCardNo": "Card number does not exist",
     "msg.recharge.invalidPassword": "Card number and password  not match, please retry",
     "msg.recharge.invalidDate": "The recharge card is expired.",
+    "msg.recharge.invalid.device": "This model can't be recharged by using a prepaid card temporarily.",
     "msg.recharge.used": "This recharge card is used up",
     "msg.recharge.ok": "Recharge success",
     "label.recharge.payOnline": "Pay online",
