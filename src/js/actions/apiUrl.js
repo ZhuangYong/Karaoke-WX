@@ -48,6 +48,8 @@ export default {
     // 获取微信js sdk config参数
     "API_GET_USER_CONFIG": "/user/config",
 
+    "API_GET_SYS_CONFIG": "/config/listConfigs",
+
     // 录音分享播放详情
     "API_QUERY_USER_SOUND": "/user/qryUserSound",
     // 录音编辑提交
@@ -146,6 +148,10 @@ export default {
     "API_SET_SONG_TOP": "/music/msgPush",
     // 搜索
     "API_SEARCH": "/music/search",
+
+    "API_FAV_LIST": "/favorite/listFavorites",
+
+    "API_FAV_OR_CANCEL": "/favorite/favoriteOrCancel",
 
     /**
      * 已点列表

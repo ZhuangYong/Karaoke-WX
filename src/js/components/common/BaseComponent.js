@@ -8,6 +8,7 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import ActionTypes from "../../actions/actionTypes";
 import intl from "react-intl-universal";
+import {getCookie} from "../../utils/comUtils";
 
 export default class BaseComponent extends Component {
 
@@ -15,6 +16,7 @@ export default class BaseComponent extends Component {
         super(props);
         this.bindState.bind(this);
         this.title = this.title.bind(this);
+        this.showInCurrentChannel = this.showInCurrentChannel.bind(this);
         navUtils.setHistory(this.props.history);
     }
 
@@ -168,4 +170,41 @@ export default class BaseComponent extends Component {
             return '0';
         }
     }
+
+    showInCurrentChannel(moduleId) {
+        const {channel} = this.props.userInfo.userInfoData || {channel: getCookie("channel") || ""};
+        const {confValue} = ((this.props.channelConfig || []).find(c => c.confName === 'channelConfig')) || {};
+        if (confValue) {
+            try {
+                const config = JSON.parse(confValue);
+                const {show, channelList} = config[moduleId] || {};
+                if (channel && channelList && channelList.indexOf && channelList.indexOf(channel) >= 0) {
+                    return show ? "show" : "hidden";
+                }
+            } catch (e) {
+                console.log("parse json str err:", e);
+            }
+        }
+        return "show";
+    }
+
+    getValueInCurrentChannel(moduleId) {
+        const {channel} = this.props.userInfo.userInfoData || {channel: getCookie("channel") || ""};
+        const {confValue} = ((this.props.channelConfig || []).find(c => c.confName === 'channelConfig')) || {};
+        if (confValue) {
+            try {
+                const config = JSON.parse(confValue);
+                const {values} = config[moduleId] || {};
+                if (typeof values === "string") {
+                    return values;
+                } else {
+                    return values[channel];
+                }
+            } catch (e) {
+                console.log("parse json str err:", e);
+            }
+        }
+        return "";
+    }
+
 }

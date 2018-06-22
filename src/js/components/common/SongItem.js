@@ -3,13 +3,13 @@
  */
 
 import React from "react";
-import {CircularProgress, ListItem} from "material-ui";
+import {CircularProgress, IconButton, ListItem} from "material-ui";
 import {withRouter} from "react-router-dom";
 import {bindActionCreators} from "redux";
 import PropTypes from "prop-types";
-import {push, pushLocal} from "../../actions/audioActons";
+import {favSong, push, pushLocal} from "../../actions/audioActons";
 import BaseComponent from "./BaseComponent";
-import {dynaPush} from "../../utils/comUtils";
+import {dynaPush, reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import VIPIcon from "../../../img/common/icon_vip.png";
 import {setGlobAlert, setLocalNet} from "../../actions/common/actions";
@@ -17,6 +17,7 @@ import SucIcon from "material-ui/svg-icons/navigation/check";
 import FailIcon from "material-ui/svg-icons/navigation/close";
 import Const from "../../utils/const";
 import intl from "react-intl-universal";
+import FavIcon from "../../../img/me/fav.png";
 // import sysConfig from "../../utils/sysConfig";
 
 class SongItem extends BaseComponent {
@@ -25,11 +26,15 @@ class SongItem extends BaseComponent {
         this.state = {
             pushIng: {},
             showSuc: {},
-            showFail: {}
+            showFail: {},
+            faved: this.props.song.mediaIsFavorite,
+            favIng: false
         };
         this.pushSong = this.pushSong.bind(this);
         this.pushSuccess = this.pushSuccess.bind(this);
         this.pushFail = this.pushFail.bind(this);
+        this.favOrCancel = this.favOrCancel.bind(this);
+        this.getFavBut = this.getFavBut.bind(this);
     }
 
     render() {
@@ -50,7 +55,14 @@ class SongItem extends BaseComponent {
                     </div>
                 }
                 rightToggle={
-                    this.getBut(song.id || song.serialNo)
+                    <span style={{top: '50%'}}>
+                        {
+                            this.getFavBut()
+                        }
+                        {
+                            this.getBut(song.id || song.serialNo)
+                        }
+                    </span>
                 }
             />
         );
@@ -139,6 +151,23 @@ class SongItem extends BaseComponent {
 
     }
 
+    favOrCancel() {
+        const song = this.props.song;
+        let param = {favoriteNo: song.serialNo, type: 1};
+        this.setState({favIng: true});
+        this.props.action_favSong(param, reqHeader(param), res => {
+            this.setState({favIng: false});
+            if (this.state.faved) {
+                this.setState({faved: 0});
+                this.props.onUnFav(song);
+                this.props.action_setGlobAlert("取消收藏成功");
+            } else {
+                this.setState({faved: 1});
+                this.props.action_setGlobAlert("收藏成功");
+            }
+        }, err => this.setState({favIng: false}));
+    }
+
     getBut(serialNo) {
         if (this.state.pushIng[serialNo]) {
             return (
@@ -155,6 +184,24 @@ class SongItem extends BaseComponent {
         } else {
             return (
                 <div className="choose-button" onClick={this.pushSong}>{intl.get("add.song")}</div>
+            );
+        }
+    }
+
+    getFavBut() {
+        if (this.state.favIng) {
+            return (
+                <div className="fav-ing">
+                    <CircularProgress color="#ff6932" size={16} thickness={1}/>
+                </div>
+            );
+        } else {
+            return (
+                <div className={`fav-button ${this.state.faved ? "faved" : ""}`} onClick={this.favOrCancel}>
+                    <IconButton touch={true} >
+                        <img src={FavIcon}/>
+                    </IconButton>
+                </div>
             );
         }
     }
@@ -194,11 +241,13 @@ class SongItem extends BaseComponent {
 SongItem.propTypes = {
     song: PropTypes.object,
     onPushSongSuccess: PropTypes.func,
-    onPushSongFail: PropTypes.func
+    onPushSongFail: PropTypes.func,
+    onUnFav: PropTypes.func
 };
 
 SongItem.defaultProps = {
-    song: {}
+    song: {},
+    onUnFav: f => f
 };
 
 // 映射state到props
@@ -216,7 +265,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_push: bindActionCreators(push, dispatch),
         action_pushLocal: bindActionCreators(pushLocal, dispatch),
         action_setGlobAlert: bindActionCreators(setGlobAlert, dispatch),
-        action_setLocalNet: bindActionCreators(setLocalNet, dispatch)
+        action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
+        action_favSong: bindActionCreators(favSong, dispatch)
     };
 };
 

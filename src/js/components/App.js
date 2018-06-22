@@ -4,7 +4,7 @@ import {bindActionCreators} from "redux";
 import "../../sass/main.scss";
 import {bindDevice, getUserConfig, getUserInfo} from "../actions/userActions";
 import {
-    getLocalesData,
+    getLocalesData, getSysConfig,
     getUserInfoFromSession,
     setGlobAlert,
     setLocalNet,
@@ -148,6 +148,7 @@ class App extends BaseComponent {
         this.gxTimer = this.gxTimer.bind(this);
         this.configWxPath = this.configWxPath.bind(this);
         this.loadLocales = this.loadLocales.bind(this);
+        this.loadChannelConfig = this.loadChannelConfig.bind(this);
     }
 
     componentWillMount() {
@@ -236,6 +237,9 @@ class App extends BaseComponent {
                     this.updateTheme(data.tag);
                 }
 
+                if (data.channel) {
+                    setCookie("channel", data.channel);
+                }
                 this.initail();
             }
         }
@@ -578,6 +582,11 @@ class App extends BaseComponent {
         });
     }
 
+    loadChannelConfig() {
+        const param = {type: 6};
+        this.props.action_getSysConfig(param, reqHeader(param));
+    }
+
     /**
      * 更新主题
      * @param tag
@@ -593,6 +602,7 @@ class App extends BaseComponent {
     }
 
     initail() {
+        this.loadChannelConfig();
         this.loadLocales();
         this.runCheckLocal();
         const {isIos} = window.sysInfo;
@@ -623,7 +633,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_setLocalNet: bindActionCreators(setLocalNet, dispatch),
         action_setWeixinConfigFinished: bindActionCreators(setWeixinConfigFinished, dispatch),
         action_bindDevice: bindActionCreators(bindDevice, dispatch),
-        action_getLocalesData: bindActionCreators(getLocalesData, dispatch)
+        action_getLocalesData: bindActionCreators(getLocalesData, dispatch),
+        action_getSysConfig: bindActionCreators(getSysConfig, dispatch)
     };
 };
 

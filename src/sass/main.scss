@@ -49,6 +49,32 @@
             text-overflow: ellipsis;
             overflow: hidden;
         }
+        .fav-button{
+            position: absolute;
+            top: -.3rem;
+            right: 1.8rem;
+            button,div,svg{
+                padding: 0!important;
+                height: .6rem!important;
+                width: .6rem!important;
+            }
+            img{
+                height: 100%;
+                -webkit-filter: drop-shadow(0 0 .04rem white);
+                filter: drop-shadow(0 0 .04rem white);
+            }
+            &.faved{
+                img{
+                    background-size: cover;
+                    background-image: url("../img/me/fav-on.png");
+                }
+            }
+        }
+        .fav-ing{
+            position: absolute;
+            top: -.2rem;
+            right: 1.8rem;
+        }
         .choose-button {
             width: 1.333rem !important;
             height: .8rem !important;
