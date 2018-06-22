@@ -18,7 +18,8 @@ let initState = {
     getAlbumRecommendSongListStamp: 0,
     recordsListStamp: 0,
     getSingerCategoryAlbumStamp: 0,
-    getSingerAlbumStamp: 0
+    getSingerAlbumStamp: 0,
+    getFavListStamp: 0
 };
 export default (state = initState, action = {}) => {
     switch (action.type) {
@@ -134,6 +135,13 @@ export default (state = initState, action = {}) => {
             return fetchProcess(state, action, {
                 data: "getRanking",
                 msg: "getRankingMsg",
+                loading: "loading"
+            });
+        case ActionTypes.SONG.API_FAV_LIST:
+            return fetchProcess(state, action, {
+                data: "getFavList",
+                stamp: "getFavListStamp",
+                msg: "getFavListMsg",
                 loading: "loading"
             });
         default:

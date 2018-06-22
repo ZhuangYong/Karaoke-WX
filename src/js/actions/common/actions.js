@@ -93,3 +93,16 @@ export function setCommonInfo(data) {
         commonInfo: data
     };
 }
+
+export function getSysConfig(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_GET_SYS_CONFIG;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            type: "post",
+            headers: headers,
+            action: ActionTypes.COMMON.API_GET_SYS_CONFIG
+        }, callback);
+    };
+
+}

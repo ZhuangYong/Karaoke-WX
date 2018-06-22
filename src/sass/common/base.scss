@@ -29,3 +29,7 @@ a {
 inupt,textarea{
     -webkit-user-select:text!important;
 }
+
+[data-show="hidden"]{
+    display: none!important;
+}

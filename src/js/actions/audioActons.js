@@ -318,3 +318,39 @@ export function getRanking(data, headers, callback) {
         }, callback);
     };
 }
+
+/**
+ * 获取收藏
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function getListFavorites(data, headers, callback) {
+    const url = sysConfig.apiDomain + apiUrl.API_FAV_LIST;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_FAV_LIST
+        }, callback);
+    };
+}
+
+/**
+ * 收藏
+ * @param data
+ * @param headers
+ * @param callback
+ * @returns {function(*=)}
+ */
+export function favSong(data, headers, callback, fail) {
+    const url = sysConfig.apiDomain + apiUrl.API_FAV_OR_CANCEL;
+    return (dispatch) => {
+        comFetch(dispatch, data, {
+            url: url,
+            headers: headers,
+            action: ActionTypes.SONG.API_FAV_OR_CANCEL
+        }, callback, fail);
+    };
+}

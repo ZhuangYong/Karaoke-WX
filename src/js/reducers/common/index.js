@@ -55,6 +55,13 @@ let common = function (state = initialState, action = {}) {
                 msg: "languageMsg",
                 loading: "loading"
             });
+        case ActionTypes.COMMON.API_GET_SYS_CONFIG:
+            return fetchProcess(state, action, {
+                data: "channelConfig",
+                stamp: "channelConfigStamp",
+                msg: "channelConfigMsg",
+                loading: "loading"
+            });
         default:
             return state;
     }

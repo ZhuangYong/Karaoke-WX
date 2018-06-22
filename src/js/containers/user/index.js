@@ -11,8 +11,10 @@ import {
 import BaseComponent from "../../components/common/BaseComponent";
 import MBottomNavigation from "../../components/common/MBottomNavigation";
 import RecordingGrid from "../../components/recordingGrid/index";
-import {Avatar, GridList, GridTile, FlatButton, Paper} from "material-ui";
+import {Avatar, GridList, GridTile, FlatButton, Paper, List, ListItem, FontIcon} from "material-ui";
 import SvgIcon from 'material-ui/SvgIcon';
+import ArrowRightIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import '../../../sass/me.scss';
 
 import FeedbackIcon from "../../../img/to_feedback.png";
 import DeviceIcon from "../../../img/user_device.png";
@@ -23,11 +25,18 @@ import VIPIcon from "../../../img/user_vip.png";
 import VIPGrayIcon from "../../../img/user_vip_gray.png";
 import VIPPayContent from "../../../img/vip_pay_content.png";
 import PayIcon from "../../../img/common/icon_pay.png";
+import FavIcon from "../../../img/me/fav.png";
+import SalProxyIcon from "../../../img/me/salproxy.png";
+import JoinUsIcon from "../../../img/me/joinus.png";
+import UseTipIcon from "../../../img/me/usetip.png";
+import ContactUsIcon from "../../../img/me/contectus.png";
 import { setGlobAlert } from '../../actions/common/actions';
 
 import defaultAvatar from "../../../img/default_avatar.png";
+// import ArrowRightIcon from "../../../img/common/icon_arror_right.png";
 import BottomDrawer from "../../components/recordingGrid/bottomDrawer";
 import MallImg from "../../../img/mall/me.png";
+import MallK1Img from "../../../img/mall/mall-k1.png";
 import sysConfig from "../../utils/sysConfig";
 import intl from 'react-intl-universal';
 import ButtonHeader from '../../components/common/header/ButtonHeader';
@@ -67,6 +76,11 @@ const RightIcon = (props) => (<SvgIcon
 
 const CONFIG = {
   NO_RECORDING_CHANNEL: "nst_yinba"
+};
+
+const MallImgs = {
+    "default": MallImg,
+    "k1": MallK1Img
 };
 
 class UserIndex extends BaseComponent {
@@ -122,8 +136,12 @@ class UserIndex extends BaseComponent {
         let bindDeviceStatus = parseInt(userInfoData.isReDevice, 10);
         if (bindDeviceStatus === 3) bindDeviceStatus = intl.get("device.bind.expired");
         if (bindDeviceStatus === 2) bindDeviceStatus = intl.get("device.disconnected");
+
+        const mallIndex = this.getValueInCurrentChannel('module-me-mall-index') || [];
+        const mallIndexImg = MallImgs[mallIndex[0]] || MallImgs['default'];
+        const mallIndexUrl = mallIndex[1] || sysConfig.mallIndex;
         return (
-            <div>
+            <div style={{marginBottom: '2.2rem'}}>
                 <section className="user-section">
                     <header className="user-header" style={{
                         width: "100%",
@@ -164,11 +182,113 @@ class UserIndex extends BaseComponent {
                         }}/>}
                     </header>
 
-                    <GridList
+                    <List className="me-menu-list">
+                        {/*绑定设备*/}
+                        <ListItem primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={DeviceIcon} /></span>
+                                <span>{intl.get("device.connect")}</span>
+                                <span>
+                                    {parseInt(userInfoData.isReDevice, 10) === 1 ? intl.get("device.connected") + userInfoData.deviceId.replace(userInfoData.deviceId.slice(4, userInfoData.deviceId.length - 4), "***") : bindDeviceStatus || intl.get("unbind.device")}
+                                </span>
+                            </div>
+                        } onClick={() => {
+                            if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
+                            actionSetGlobAlert(intl.get("device.connected.add.song"));
+                        }} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*我的相册*/}
+                        <ListItem primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={MyAlbumIcon} /></span>
+                                <span>{intl.get('title.photoAlbum')}</span>
+                            </div>
+                        } onClick={() => {
+                            linkTo(`user/photoAlbum`, false, null);
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*我的订单*/}
+                        <ListItem primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={MyOrderingsIcon} /></span>
+                                <span>{intl.get("title.my.order")}</span>
+                            </div>
+                        } onClick={() => {
+                            linkTo(`user/orderForm`, false, null);
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*我的收藏*/}
+                        <ListItem primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={FavIcon} /></span>
+                                <span>{"我的收藏"}</span>
+                            </div>
+                        } onClick={() => {
+                            linkTo(`songs/favList/1/我的收藏/`, false, null);
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*代理销售*/}
+                        <ListItem data-show={this.showInCurrentChannel('module-me-proxy')} primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={SalProxyIcon} /></span>
+                                <span>{"代理销售"}</span>
+                            </div>
+                        } onClick={() => {
+                            window.location.href = this.getValueInCurrentChannel('module-me-proxy') || "http://mp.weixin.qq.com/s/jxNWbK4wzvEU1VsBmKtfWQ";
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*共享加盟*/}
+                        <ListItem data-show={this.showInCurrentChannel('module-me-share-join')} primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={JoinUsIcon} /></span>
+                                <span>{"共享加盟"}</span>
+                            </div>
+                        } onClick={() => {
+                            window.location.href = this.getValueInCurrentChannel('module-me-share-join') || "http://mp.weixin.qq.com/mp/homepage?__biz=MzI1OTQ4MTM4Mg==&hid=1&sn=ffa5f5d64ab8d430d339393986a91fdb#wechat_redirect";
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*使用指南*/}
+                        <ListItem data-show={this.showInCurrentChannel('module-me-use-tip')} primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={UseTipIcon} /></span>
+                                <span>{"使用指南"}</span>
+                            </div>
+                        } onClick={() => {
+                            window.location.href = this.getValueInCurrentChannel('module-me-use-tip') || "http://mp.weixin.qq.com/s/Xql3A6m0PJPFv5fyATTN5A";
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*联系客服*/}
+                        <ListItem data-show={this.showInCurrentChannel('module-me-contact-us')} primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={ContactUsIcon} /></span>
+                                <span>{"联系客服"}</span>
+                            </div>
+                        } onClick={() => {
+                            window.location.href = this.getValueInCurrentChannel('module-me-contact-us') || "http://mp.weixin.qq.com/s/ftuvXL064YVuQlDVmywYPA";
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+
+                        {/*意见反馈*/}
+                        <ListItem data-show={this.showInCurrentChannel('module-me-feedback')} primaryText={
+                            <div className="me-menu-list-item">
+                                <span><img src={FeedbackIcon} /></span>
+                                <span>{intl.get("title.feedback")}</span>
+                            </div>
+                        } onClick={() => {
+                            const feedbackUrl = this.getValueInCurrentChannel('module-me-contact-us');
+                            if (feedbackUrl) {
+                                window.location.href = feedbackUrl;
+                            } else {
+                                if (super.validUserBindDevice(userInfoData, actionSetGlobAlert) !== true) return;
+                                linkTo(`user/feedback/webHome`, false, null);
+                            }
+                        }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
+                    </List>
+
+                    {/*<GridList
                         cellHeight={"auto"}
                         style={{margin: 0, clear: "both"}}
                         cols={4}>
-                        {/*cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>*/}
+                        cols={(userInfoData && typeof userInfoData.data.time !== 'undefined') ? 2 : 3}>
 
                         <GridTile
                             onTouchTap={() => {
@@ -223,7 +343,7 @@ class UserIndex extends BaseComponent {
                             <div style={styles.headerDesc}>{intl.get("title.my.order")}</div>
                         </GridTile>
 
-                    </GridList>
+                    </GridList>*/}
 
                 </section>
 
@@ -254,15 +374,16 @@ class UserIndex extends BaseComponent {
 
                 </section>)}
 
-                {
-                    channel && Const.NOT_SHOW_SHOP_CHANNELS.indexOf(channel) < 0 && <Paper
-                        zDepth={0}
-                        className="mall-index"
-                        style={{margin: '.3rem .267rem 2.2rem .267rem'}}
-                    >
-                        <img src={MallImg} style={{width: '100%'}} onClick={f => location.href = sysConfig.mallIndex}/>
-                    </Paper>
-                }
+                <Paper
+                    data-show={this.showInCurrentChannel('module-me-mall-index')}
+                    zDepth={0}
+                    className="mall-index"
+                    style={{margin: '.3rem .267rem 2.2rem .267rem'}}
+                >
+                    <img src={mallIndexImg} style={{width: '100%'}} onClick={f => {
+                        location.href = mallIndexUrl;
+                    }}/>
+                </Paper>
 
                 <MBottomNavigation selectedIndex={2}/>
 
@@ -495,7 +616,8 @@ UserIndex.propTypes = {
 const mapStateToProps = (state, ownPorps) => {
     return {
         userInfo: state.app.user.userInfo,
-        recordsList: state.app.songs
+        recordsList: state.app.songs,
+        channelConfig: state.app.common.channelConfig
     };
 };
 const mapDispatchToProps = (dispatch, ownProps) => {

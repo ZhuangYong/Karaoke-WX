@@ -11,7 +11,10 @@ import {reqHeader} from "../../utils/comUtils";
 import {connect} from "react-redux";
 import SongItem from "./SongItem";
 import "../../../sass/common/Scroller.scss";
-import {getActorsAlbum, getCatSongList, getRankAlbum, getAlbumRecommendSongList} from "../../actions/audioActons";
+import {
+    getActorsAlbum, getCatSongList, getRankAlbum, getAlbumRecommendSongList,
+    getListFavorites
+} from "../../actions/audioActons";
 import {search} from "../../actions/searchActons";
 import ScrollToTopIcon from "material-ui/svg-icons/editor/vertical-align-top";
 import Const from "../../utils/const";
@@ -77,6 +80,10 @@ class SongList extends BaseComponent {
             dataKey = "searchResult";
             stamp = "searchResultStamp";
             queryFun = this.props.action_searchResult;
+        } else if (this.props.favList) {// 收藏列表
+            dataKey = "getFavList";
+            stamp = "getFavListStamp";
+            queryFun = this.props.action_getListFavorites;
         }
         this.state = {
             pageSize: 20,
@@ -94,6 +101,7 @@ class SongList extends BaseComponent {
         };
         this.getContent = this.getContent.bind(this);
         this.scrollTo = this.scrollTo.bind(this);
+        this.onUnFav = this.onUnFav.bind(this);
     }
     componentDidMount() {
         if (this.props.search) {
@@ -226,6 +234,7 @@ class SongList extends BaseComponent {
                     song={song}
                     onPushSongSuccess={this.props.onPushSongSuccess}
                     onPushSongFail={this.props.onPushSongFail}
+                    onUnFav={this.onUnFav}
                 />
             )
         );
@@ -244,6 +253,8 @@ class SongList extends BaseComponent {
         if (this.props.search) {
             param.type = 'actorAndMedias';
             param.keyword = this.props.keyword;
+        } else if (this.props.favList) {
+            param.type = 1;
         } else {
             param.id = id;
         }
@@ -260,7 +271,7 @@ class SongList extends BaseComponent {
                     });
                 }, 2000);
             }
-        });
+        }, this.setState({loading: false}));
     }
 
     /**
@@ -336,6 +347,15 @@ class SongList extends BaseComponent {
         }, 100);
     }
 
+    onUnFav(unFavSong) {
+        if (this.props.favList) {
+            const pageData = this.state.pageData.filter(song => song.serialNo !== unFavSong.serialNo);
+            this.setState({
+                pageData: pageData,
+            });
+        }
+    }
+
 }
 
 SongList.defaultProps = {
@@ -371,7 +391,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         action_getCatSongList: bindActionCreators(getCatSongList, dispatch),
         action_getRankAlbum: bindActionCreators(getRankAlbum, dispatch),
         action_searchResult: bindActionCreators(search, dispatch),
-        action_getAlbumRecommendSongList: bindActionCreators(getAlbumRecommendSongList, dispatch)
+        action_getAlbumRecommendSongList: bindActionCreators(getAlbumRecommendSongList, dispatch),
+        action_getListFavorites: bindActionCreators(getListFavorites, dispatch)
     };
 };
 
