@@ -55,8 +55,8 @@ class InvoiceDetail extends BaseComponent {
     }
 
     render() {
-        const {data} = this.props.orderForm.invoiceDetailData || {};
-        const {time, orderNum, startTime, endTime, id, imgurl} = data || {};
+        // const {data} = this.props.orderForm.invoiceDetailData || {};
+        const {time, orderNum, startTime, endTime, id, imgurl} = this.props.orderForm.invoiceDetailData || {};
 
         return (
             <div style={{
