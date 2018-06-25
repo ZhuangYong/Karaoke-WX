@@ -244,7 +244,7 @@ class UserIndex extends BaseComponent {
                                 <span>{"共享加盟"}</span>
                             </div>
                         } onClick={() => {
-                            window.location.href = this.getValueInCurrentChannel('module-me-share-join') || "http://mp.weixin.qq.com/mp/homepage?__biz=MzI1OTQ4MTM4Mg==&hid=1&sn=ffa5f5d64ab8d430d339393986a91fdb#wechat_redirect";
+                            window.location.href = this.getValueInCurrentChannel('module-me-share-join') || "http://lwurl.to/gzoTB";
                         }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
 
                         {/*使用指南*/}
