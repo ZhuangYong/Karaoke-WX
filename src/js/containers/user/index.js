@@ -377,7 +377,6 @@ class UserIndex extends BaseComponent {
                 <Paper
                     data-show={this.showInCurrentChannel('module-me-mall-index')}
                     zDepth={0}
-                    className="mall-index"
                     style={{margin: '.3rem .267rem 2.2rem .267rem'}}
                 >
                     <img src={mallIndexImg} style={{width: '100%'}} onClick={f => {
