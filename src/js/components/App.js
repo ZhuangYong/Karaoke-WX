@@ -584,7 +584,7 @@ class App extends BaseComponent {
 
     loadChannelConfig() {
         const param = {type: 6};
-        this.props.action_getSysConfig(param, reqHeader(param));
+        this.props.action_getSysConfig(param, reqHeader(param), res => setCookie("sysConfig", JSON.stringify(res)));
     }
 
     /**

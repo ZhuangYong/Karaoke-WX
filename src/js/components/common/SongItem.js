@@ -183,7 +183,7 @@ class SongItem extends BaseComponent {
             );
         } else {
             return (
-                <div className="choose-button" onClick={this.pushSong}>{intl.get("add.song")}</div>
+                <div className="choose-button" onTouchTap={this.pushSong}>{intl.get("add.song")}</div>
             );
         }
     }
@@ -197,7 +197,7 @@ class SongItem extends BaseComponent {
             );
         } else {
             return (
-                <div className={`fav-button ${this.state.faved ? "faved" : ""}`} onClick={this.favOrCancel}>
+                <div className={`fav-button ${this.state.faved ? "faved" : ""}`} onTouchTap={this.favOrCancel}>
                     <IconButton touch={true} >
                         <img src={FavIcon}/>
                     </IconButton>

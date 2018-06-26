@@ -763,6 +763,13 @@ export function linkToPayment (userInfoData) {
     const {type} = data;
     const linkPath = parseInt(type, 10) === 1 ? `payMode` : `pay?state=home`;
 
+    const config = getSysConfig();
+    const {channel} = userInfoData || {channel: getCookie("channel") || ""};
+    const {channelList} = config["no-jump-vip-charge-when-in-vip"] || {};
+    if (channel && channelList && channelList.indexOf && channelList.indexOf(channel) >= 0) {
+        return;
+    }
+
     linkTo(linkPath, false, null);
 
     /*const {isIos} = window.sysInfo;
@@ -829,4 +836,15 @@ export function dieMsg(msg) {
     if (debug && debugPanel) {
         debugPanel.value = debugPanel.value + "\r\n\n" + msg;
     }
+}
+
+export function getSysConfig() {
+    let cookieSysConfig;
+    try {
+        cookieSysConfig = JSON.parse(getCookie("sysConfig"));
+    } catch (e) {
+        cookieSysConfig = [];
+    }
+    const {confValue} = (cookieSysConfig.find(c => c.confName === 'channelConfig')) || {};
+    return JSON.parse(confValue || "{}");
 }
