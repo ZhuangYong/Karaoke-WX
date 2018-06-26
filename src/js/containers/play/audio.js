@@ -124,7 +124,7 @@ class PlayAudio extends BaseComponent {
         setTimeout(() => this.setState({showComment: true}), 200);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         const {autoPlayEd, params} = this.state;
         const {audioInfo: data} = this.props.audio;
         if (data && !autoPlayEd) {
@@ -141,17 +141,25 @@ class PlayAudio extends BaseComponent {
                 });
             }
 
-            // k1特性
-            const {channel} = data;
-            if (Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0) {
-                const sliderImgs = [SlideK1Png1, SlideK1Png2];
-                if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
+            if (prevProps.audio.audioInfoStamp !== this.props.audio.audioInfoStamp) {
+                // k1特性
+                const {channel} = data;
+                if (Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0) {
+                    const sliderImgs = [SlideK1Png1, SlideK1Png2];
+                    if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
+                        this.setState({
+                            customerAd: intl.get("audio.share.from.k1"),
+                            customerSliders: sliderImgs
+                        });
+                    }
+                } else {
                     this.setState({
-                        customerAd: intl.get("audio.share.from.k1"),
-                        customerSliders: sliderImgs
+                        customerAd: intl.get("msg.from.j.make"),
+                        customerSliders: []
                     });
                 }
             }
+
         }
     }
 

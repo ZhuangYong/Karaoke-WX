@@ -4,6 +4,7 @@ import {fetchProcess} from "../../utils/fetchUtils";
 let initialState = {
     audioInfo: {},
     allPicsData: {},
+    audioInfoStamp: 0
 };
 
 export default (state = initialState, action = {}) => {
@@ -12,6 +13,7 @@ export default (state = initialState, action = {}) => {
             return fetchProcess(state, action, {
                 data: "audioInfo",
                 msg: "msg",
+                stamp: "audioInfoStamp",
                 loading: "loading"
             });
         case ActionTypes.AUDIO.API_UPLOAD_SOUND_ALBUM:
