@@ -4,7 +4,7 @@
 
 import React from "react";
 import {BottomNavigation, BottomNavigationItem, Dialog, FlatButton} from "material-ui";
-import { getCookie, linkTo, linkToPayment, setCookie } from '../../utils/comUtils';
+import {getCookie, getSysConfig, linkTo, linkToPayment, setCookie} from '../../utils/comUtils';
 import PropTypes from "prop-types";
 import BaseComponent from "./BaseComponent";
 import {withRouter} from "react-router";
@@ -140,9 +140,17 @@ class MBottomNavigation extends BaseComponent {
                         }
                         onTouchTap={
                             () => {
-                                this.validUserVipDialog(() => {
+                                // 如果设备channel在“非过期不能进入充值页面”
+                                const config = getSysConfig();
+                                const {channel} = this.props.userInfoData || {channel: getCookie("channel") || ""};
+                                const {channelList} = config["no-jump-vip-charge-when-in-vip"] || {};
+                                if (channel && channelList && channelList.indexOf && channelList.indexOf(channel) >= 0) {
                                     selectedIndex !== 2 && this.navSelect(2);
-                                });
+                                } else {
+                                    this.validUserVipDialog(() => {
+                                        selectedIndex !== 2 && this.navSelect(2);
+                                    });
+                                }
                                 //selectedIndex !== 2 && this.navSelect(2);
                             }
                         }

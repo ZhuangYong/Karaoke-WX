@@ -763,10 +763,11 @@ export function linkToPayment (userInfoData) {
     const {type} = data;
     const linkPath = parseInt(type, 10) === 1 ? `payMode` : `pay?state=home`;
 
+    // 在vip有效期内不跳转到充值页面
     const config = getSysConfig();
     const {channel} = userInfoData || {channel: getCookie("channel") || ""};
     const {channelList} = config["no-jump-vip-charge-when-in-vip"] || {};
-    if (channel && channelList && channelList.indexOf && channelList.indexOf(channel) >= 0) {
+    if (isVip(userInfoData) && channel && channelList && channelList.indexOf && channelList.indexOf(channel) >= 0) {
         return;
     }
 
@@ -779,6 +780,17 @@ export function linkToPayment (userInfoData) {
     } else {
         linkTo(`pay/home`, false, null);
     }*/
+}
+
+/**
+ * 是否是vip
+ * @param userInfoData
+ * @returns {boolean}
+ */
+export function isVip(userInfoData = {}) {
+    const {vipStatus, expireTime} = userInfoData;
+    // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
+    return vipStatus === 1 && new Date().getTime() < expireTime ;
 }
 
 /**

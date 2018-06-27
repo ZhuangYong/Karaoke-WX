@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import ActionTypes from "../../actions/actionTypes";
 import intl from "react-intl-universal";
-import {getCookie, getSysConfig} from "../../utils/comUtils";
+import {getCookie, getSysConfig, isVip} from "../../utils/comUtils";
 
 export default class BaseComponent extends Component {
 
@@ -47,7 +47,7 @@ export default class BaseComponent extends Component {
      */
     validUserStatus(userInfoData = {}, ottInfo = {}, actionSetGlobAlert) {
         const {systemTime, timeStamp} = ottInfo || {};
-        const isVip = this.isVip(userInfoData);
+        const isvip = isVip(userInfoData);
         const isBindDevice = this.isBindDevice(userInfoData);
         const isFreeActivation = this.isFreeActivation(userInfoData);
         const ottIsOnLine = () => {
@@ -63,7 +63,7 @@ export default class BaseComponent extends Component {
             return false;
         } else if (isBindDevice === true) {
             if (ottIsOnLine()) {
-                if (isVip === false) {
+                if (isvip === false) {
 
                     if (isFreeActivation === true) {
                         actionSetGlobAlert && actionSetGlobAlert("", ActionTypes.COMMON.ALERT_TYPE_FREE_ACTIVE);
@@ -150,11 +150,11 @@ export default class BaseComponent extends Component {
      * @param userInfoData
      * @returns {*}
      */
-    isVip(userInfoData = {}) {
-        const {vipStatus, expireTime} = userInfoData;
-        // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
-        return vipStatus === 1 && new Date().getTime() < expireTime ;
-    }
+    // isVip(userInfoData = {}) {
+    //     const {vipStatus, expireTime} = userInfoData;
+    //     // vip状态-1（从未开通过vip）0（vip已过期）1（在vip有效期）
+    //     return vipStatus === 1 && new Date().getTime() < expireTime ;
+    // }
 
     /**
      * vip 时间剩余
