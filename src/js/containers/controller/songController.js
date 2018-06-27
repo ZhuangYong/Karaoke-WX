@@ -752,6 +752,7 @@ class SongController extends BaseComponent {
         const historyPlayList = this.props.songs.getHistorySongList;
         let historySongList = [];
         if (historyPlayList) {
+            const {serialNos} = historyPlayList || {serialNos: []};
             let {list} = this.handelList(historyPlayList.recordJson);
             if (typeof list === "string") list = JSON.parse(list);
             if (!list) return;
@@ -764,6 +765,8 @@ class SongController extends BaseComponent {
                 const musicNo = song.musicNo;
                 const vipStutas = song.vipStutas;
                 const fileMark = song.fileMark;
+                const mediaIsFavorite = serialNos.find(no => song.serialNo === no) ? 1 : 0;
+                song.mediaIsFavorite = mediaIsFavorite;
                 if (!musicNo) return song;
                 return {
                     "nameNorm": musicName,
@@ -772,6 +775,7 @@ class SongController extends BaseComponent {
                     "charge": vipStutas,
                     "serialNo": musicNo,
                     "fileMark": fileMark,
+                    "mediaIsFavorite": mediaIsFavorite,
                     "actor": [
                         {
                             "actorNo": actorNo,
