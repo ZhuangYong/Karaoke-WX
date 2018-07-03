@@ -125,7 +125,11 @@ class CommonInfo extends React.Component {
                 alertStr = intl.get("msg.recharge.as.vip");
                 //TODO VIP
                 doAction = () => {
-                    linkToPayment(this.props.userInfo.userInfoData);
+                    if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+                        linkTo(`deviceRegister`, false, null);
+                    } else {
+                        linkToPayment(this.props.userInfo.userInfoData);
+                    }
                 };
                 break;
             case ActionTypes.COMMON.ALERT_TYPE_GONG_XIANG_DONE:
