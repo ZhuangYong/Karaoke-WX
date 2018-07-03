@@ -6,7 +6,8 @@ import "../../../sass/audio/playAudio.scss";
 import {getShareAudio} from "../../actions/audioActons";
 import Audio from "../../components/audio";
 import {
-    getEncryptHeader, getQueryString, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl,
+    getCookie,
+    getEncryptHeader, getQueryString, getSysConfig, linkTo, parseTime, reqHeader, toRem, wxAuthorizedUrl,
     wxShare
 } from '../../utils/comUtils';
 import sysConfig from "../../utils/sysConfig";
@@ -145,7 +146,9 @@ class PlayAudio extends BaseComponent {
         if (prevProps.audio.audioInfoStamp !== this.props.audio.audioInfoStamp) {
             // k1特性
             const {channel} = data;
-            if (Const.CHANNEL_CODE_K1_LIST.indexOf(channel) >= 0) {
+            const config = getSysConfig();
+            const {k1} = config["channel-types"] || {k1: []};
+            if (k1.indexOf(channel) >= 0) {
                 const sliderImgs = [SlideK1Png1, SlideK1Png2];
                 if (!_.isEqual(sliderImgs, this.state.customerSliders)) {
                     this.setState({
@@ -196,7 +199,7 @@ class PlayAudio extends BaseComponent {
             topPanelStyle.marginTop = ".4rem";
         }
 
-        super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
+        // super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
 
         const ableEdit = window.sessionStorage.getItem('isRecordingEdit') === 'true';
         // const ableEdit = params.edit === false;
@@ -389,19 +392,36 @@ class PlayAudio extends BaseComponent {
 
         this.state.loading['audio'] = true;
         getShareAudioAction(params, reqHeader(params), res => {
-            const {musicUrl, nameNorm, shareId, pagePictureUrl} = res;
+            const {musicUrl, nameNorm, shareId, pagePictureUrl, channel} = res;
             this.state.shareId = shareId;
             this.getComment();
             this.getCommentCount();
             const {isWeixin} = window.sysInfo;
             if (!isWeixin) this.state.loading['audio'] = false;
+
+            const config = getSysConfig();
+            const {k1} = config["channel-types"] || {k1: []};
+            if (k1.indexOf(channel) >= 0) {
+                super.title("即唱--把“不扰民”智慧KTV搬回家！");
+            } else {
+                super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
+            }
             window.wx && window.wx.ready(() => {
                 this.state.loading['audio'] = false;
+
+                let title = intl.get("audio.share.title", {name: nameNorm});
+                let imgUrl = typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover;
+                let desc = intl.get("audio.share.from");
+                if (k1.indexOf(channel) >= 0) {
+                    imgUrl = window.location.protocol + "//" + window.location.host + "/img/k1/k1-icon.png";
+                    title = "一首《" + nameNorm + "》，给您好心情";
+                    desc = "即唱智慧KTV\n分享全世界！";
+                }
                 wxShare({
-                    title: intl.get("audio.share.title", {name: nameNorm}),
-                    desc: intl.get("audio.share.from"),
+                    title: title,
+                    desc: desc,
                     // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, `${location.protocol}//${location.host}/recordingPlay/${params.uid}/${shareId}?language=${getQueryString('language')}`),
-                    imgUrl: typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover,
+                    imgUrl: imgUrl,
                     dataUrl: musicUrl
                 });
             });

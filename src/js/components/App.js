@@ -242,6 +242,17 @@ class App extends BaseComponent {
                 }
                 this.initail();
             }
+
+            window.wx && window.wx.ready(() => {
+                wxShare({
+                    title: intl.get("index.we.chat.song"),
+                    desc: intl.get("audio.share.from"),
+                    // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                    link: location.protocol + "//" + location.host,
+                    imgUrl: 'http://wechat.j-make.cn/img/logo.png',
+                    dataUrl: null
+                });
+            });
         }
     }
 
