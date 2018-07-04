@@ -413,7 +413,7 @@ class PlayAudio extends BaseComponent {
                 let imgUrl = typeof pagePictureUrl !== 'undefined' ? pagePictureUrl : defaultCover;
                 let desc = intl.get("audio.share.from");
                 if (k1.indexOf(channel) >= 0) {
-                    imgUrl = window.location.protocol + "//" + window.location.host + "/img/k1/k1-icon.png";
+                    imgUrl = "http://portal-resource.oss-cn-shanghai.aliyuncs.com/feedback/ohSltv9SfEzcVi8WXDqW0rRFUIjg/kloDiUvvDPpkAeCA44NeRvSVtxs4PZV3BBKjkEygD964GP6y8CAISuR-8csj1qq7.jpg";
                     title = "一首《" + nameNorm + "》，给您好心情";
                     desc = "即唱智慧KTV\n分享全世界！";
                 }

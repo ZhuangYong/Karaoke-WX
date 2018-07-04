@@ -453,7 +453,7 @@ export function wxConfig(data = {}) {
 export function wxShare(shareData, success, fail) {
     // 分享到朋友圈
     window.wx && window.wx.onMenuShareTimeline({
-        title: shareData.title + "---" + shareData.desc, // 分享标题
+        title: shareData.title + "---" + shareData.desc.replace("\n", "·"), // 分享标题
         link: shareData.link, // 分享链接
         imgUrl: shareData.imgUrl, // 分享图标
         trigger: function () {

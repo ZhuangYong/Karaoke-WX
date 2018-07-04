@@ -241,18 +241,27 @@ class App extends BaseComponent {
                     setCookie("channel", data.channel);
                 }
                 this.initail();
-            }
-
-            window.wx && window.wx.ready(() => {
-                wxShare({
-                    title: intl.get("index.we.chat.song"),
-                    desc: intl.get("audio.share.from"),
-                    // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
-                    link: location.protocol + "//" + location.host,
-                    imgUrl: 'http://wechat.j-make.cn/img/logo.png',
-                    dataUrl: null
+                window.wx && window.wx.ready(() => {
+                    const config = getSysConfig();
+                    const {k1} = config["channel-types"] || {k1: []};
+                    let title = intl.get("index.we.chat.song");
+                    let imgUrl = 'http://wechat.j-make.cn/img/logo.png';
+                    let desc = intl.get("audio.share.from");
+                    if (k1.indexOf(data.channel) >= 0) {
+                        imgUrl = "http://portal-resource.oss-cn-shanghai.aliyuncs.com/feedback/ohSltv9SfEzcVi8WXDqW0rRFUIjg/kloDiUvvDPpkAeCA44NeRvSVtxs4PZV3BBKjkEygD964GP6y8CAISuR-8csj1qq7.jpg";
+                        title = "即唱KTV微信点歌";
+                        desc = "即唱智慧KTV·分享全世界！";
+                    }
+                    wxShare({
+                        title: title,
+                        desc: desc,
+                        // link: wxAuthorizedUrl(sysConfig.appId, sysConfig.apiDomain, location.protocol + "//" + location.host),
+                        link: location.protocol + "//" + location.host,
+                        imgUrl: imgUrl,
+                        dataUrl: null
+                    });
                 });
-            });
+            }
         }
     }
 
