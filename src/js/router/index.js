@@ -53,6 +53,7 @@ import InvoiceOrderForDetail from "../containers/user/orderForm/invoiceOrderForD
 import InvoiceSubmitSuccess from "../containers/user/orderForm/invoiceSubmitSuccess";
 import myOrder from "../containers/user/orderForm/myOrder";
 import commentList from "../containers/comment/commentList";
+import p1 from "../containers/product/p1";
 
 const LoginContainer = () => (
     <Bundle load={Login}>
@@ -259,6 +260,11 @@ const commentListContainer = () => (
         {Component => <Component />}
     </Bundle>
 );
+const ProductPage1 = () => (
+    <Bundle load={p1}>
+        {Component => <Component />}
+    </Bundle>
+);
 
 export default class router extends React.Component {
     render() {
@@ -330,6 +336,8 @@ export default class router extends React.Component {
                 <Route path={`/songs/:type/:id/:title?/:headImg?`} exact component={SongsListContainer}/>
                 <Route path={`/voiceSearch`} exact component={VoiceSearchContainer}/>
                 <Route path={`/comment/list/:uid/:shareId/:title?`} exact component={commentListContainer}/>
+
+                <Route path={`/product/show/1`} exact component={ProductPage1}/>
                 <Route path="*" component={NotFound}/>
             </Switch>
         );

@@ -35,6 +35,7 @@ import SwipeItem from "../../components/common/SwipeItem";
 import CommentCommonList from "../../components/common/commentCommonList";
 import {getUserInfo} from "../../actions/userActions";
 import CommentInput from "../../components/common/CommentInput";
+import ArrowRightIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 
 const AutoPlaySwipeAbleViews = autoPlay(SwipeAbleViews);
 
@@ -286,6 +287,20 @@ class PlayAudio extends BaseComponent {
                     </Subheader>
                 </div>
 
+                <section data-show={this.showInCurrentChannel('module-me-mall-audio-fast')} style={{borderTop: `${toRem(20)} solid #f3f3f7`}} onClick={f => linkTo(`product/show/1`, false, null)}>
+                    <p style={{margin: '.2rem', alignContent: 'center'}}>
+                        <span style={{float: 'left'}}>
+                            <font style={{border: '1px solid #ff6832', borderRadius: 3, fontSize: '.32rem', padding: '0.04rem 0.06rem', marginRight: '.3rem'}}>
+                                抢鲜
+                            </font>
+                        </span>
+                        <font style={{fontSize: '.46rem'}}>
+                            把我带回加，你就可以超越他
+                        </font>
+
+                        <ArrowRightIcon style={{float: 'right'}}/>
+                    </p>
+                </section>
                 <section style={{borderTop: `${toRem(20)} solid #f3f3f7`}}>
                     <Subheader className="comment-top">
                         <p>
