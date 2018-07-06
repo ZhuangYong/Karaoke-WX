@@ -239,7 +239,11 @@ class MBottomNavigation extends BaseComponent {
                 showAlert: false
             });
             setCookie("vipAlert", JSON.stringify({lastShowAlertTime: new Date()}));
-            linkToPayment(this.props.userInfoData);
+            if (super.isFreeActivation(this.props.userInfoData)) {
+                linkTo(`deviceRegister`, false, null);
+            } else {
+                linkToPayment(this.props.userInfoData);
+            }
         };
         this.state.actions = [
             <FlatButton
