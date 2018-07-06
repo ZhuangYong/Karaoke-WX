@@ -8,7 +8,7 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import ActionTypes from "../../actions/actionTypes";
 import intl from "react-intl-universal";
-import {getCookie, getSysConfig, isVip} from "../../utils/comUtils";
+import {getCookie, getSysConfig, getWxinfoFromSession, isVip} from "../../utils/comUtils";
 
 export default class BaseComponent extends Component {
 
@@ -172,7 +172,7 @@ export default class BaseComponent extends Component {
     }
 
     showInCurrentChannel(moduleId) {
-        const {channel} = this.props.userInfo.userInfoData || {channel: getCookie("channel") || ""};
+        const {channel} = getWxinfoFromSession() || {channel: getCookie("channel") || ""};
         // const {confValue} = ((this.props.channelConfig || []).find(c => c.confName === 'channelConfig')) || {};
         const config = getSysConfig();
         // if (confValue) {

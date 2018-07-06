@@ -9,8 +9,9 @@ import {bindActionCreators} from "redux";
 import {bindDevice, getUserInfo} from "../../actions/userActions";
 import {withRouter} from "react-router";
 import {Dialog, FlatButton, Snackbar} from "material-ui";
+import BaseComponent from "./BaseComponent";
 
-class CommonInfo extends React.Component {
+class CommonInfo extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -125,7 +126,7 @@ class CommonInfo extends React.Component {
                 alertStr = intl.get("msg.recharge.as.vip");
                 //TODO VIP
                 doAction = () => {
-                    if (super.isFreeActivation(this.props.userInfo.userInfoData)) {
+                    if (super.isFreeActivation(this.props.userInfo.userInfoData || {})) {
                         linkTo(`deviceRegister`, false, null);
                     } else {
                         linkToPayment(this.props.userInfo.userInfoData);
@@ -190,13 +191,13 @@ class CommonInfo extends React.Component {
                 label={intl.get("button.cancel")}
                 className="cancel-button"
                 primary={true}
-                onClick={handleClose}
+                onTouchTap={handleClose}
             />,
             <FlatButton
                 label={intl.get("button.sure")}
                 className="sure-button"
                 primary={true}
-                onClick={handleSure}
+                onTouchTap={handleSure}
             />,
         ];
         return (
