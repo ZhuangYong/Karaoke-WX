@@ -42,7 +42,7 @@ class Login extends BaseComponent {
             disabled={isHome && typeof uuid === "undefined"}
             content={this.matchPages()}
             imgStyle={{width: "100px"}}
-            buttonLabel={isHome ? intl.get("login.sure.login") : "关闭"}
+            buttonLabel={isHome ? intl.get("login.sure.login") : intl.get("button.close")}
             touchTap={() => {
 
                 const {isWeixin} = window.sysInfo;
