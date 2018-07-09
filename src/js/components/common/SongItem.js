@@ -160,10 +160,10 @@ class SongItem extends BaseComponent {
             if (this.state.faved) {
                 this.setState({faved: 0});
                 this.props.onUnFav(song);
-                this.props.action_setGlobAlert("取消收藏成功");
+                this.props.action_setGlobAlert(intl.get("msg.cancel.fav.success"));
             } else {
                 this.setState({faved: 1});
-                this.props.action_setGlobAlert("收藏成功");
+                this.props.action_setGlobAlert(intl.get("msg.fav.success"));
             }
         }, err => this.setState({favIng: false}));
     }

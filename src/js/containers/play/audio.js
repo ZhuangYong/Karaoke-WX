@@ -290,11 +290,11 @@ class PlayAudio extends BaseComponent {
                 <section data-show={this.showInCurrentChannel('module-me-mall-audio-fast')} style={{borderTop: `${toRem(20)} solid #f3f3f7`}} onClick={f => linkTo(`product/show/1`, false, null)}>
                     <p style={{margin: '.2rem', alignContent: 'center', display: 'flex', justifyContent: 'space-between'}}>
                         <span style={{display: 'flex', alignItems: 'center'}}>
-                            <font style={{border: '1px solid #ff6832', borderRadius: 3, fontSize: '.32rem', padding: '0.04rem 0.06rem', marginRight: '.3rem', lineHeight: '.32rem'}}>
-                                抢鲜
+                            <font style={{border: '1px solid orange', color: 'orange', borderRadius: 3, fontSize: '.32rem', padding: '0.04rem 0.06rem', marginRight: '.3rem', lineHeight: '.32rem'}}>
+                                {intl.get("audio.fresh")}
                             </font>
                             <font style={{fontSize: '.46rem'}}>
-                                把我带回加，你就可以超越他
+                                {intl.get("audio.Take.me.home.you.can.surpass.him")}
                             </font>
                         </span>
                         <ArrowRightIcon style={{float: 'right'}}/>

@@ -68,6 +68,8 @@
     "audio.empty": "No hay grabaciones todavía ",
     "audio.total": "{number} canciones en total",
     "audio.text.edit": "Cantaste excelente，puede compartirla directamente sin editar",
+    "audio.fresh": "Fresco",
+    "audio.Take.me.home.you.can.surpass.him": "Llévame a casa, puedes superarlo",
     "recording.chose.cover": "Seleccionar la imagen de portada ",
     "recording.chose.carousel": "seleccionar la lista de reproducción de imagen ",
     "song.loading": "Cargando ",
@@ -141,6 +143,12 @@
     "feedback.thanks.feedback": "Muchas gracias por su comentario, procesaremos su información lo antes posible！",
     "feedback.least.one.question": "Seleccione al menos un tipo de pregunta ",
     "feedback.word.least": "Pon su atención, sólo faltan unas palabras ",
+
+    "me.my.favorites": "Mis favoritos",
+    "me.my.sales.agent": "Agente de ventas",
+    "me.my.sharing.joining": "Compartir unir",
+    "me.my.user.guidance": "Guía del usuario",
+    "me.my.contact.customer.service": "Contacte al servicio al cliente",
 
     "barrage": "Barrage",
     "barrage.quick": "Barrage",
@@ -284,6 +292,8 @@
     "msg.recharge.invalid.device": "Este modelo no se puede recargar usando temporalmente una tarjeta prepaga.",
     "msg.recharge.used": "Esta tarjeta de recarga ya está en uso",
     "msg.recharge.ok": "Recarga el éxito",
+    "msg.fav.success": "Agregar a favoritos exitosos",
+    "msg.cancel.fav.success": "Eliminar de favoritos exitosos",
     "label.recharge.payOnline": "Recargar en línea",
     "label.recharge.payRecharge": "Tarjeta prepaga"
 }

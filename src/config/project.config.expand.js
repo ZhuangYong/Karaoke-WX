@@ -12,7 +12,7 @@ module.exports = {
     contextPath: "/",
     // mallIndex: 'https://jmake.haitai.tv/haitai-weisite/shop/index',
     // mallOrder: 'https://jmake.haitai.tv/haitai-weisite/shop/order_list',
-    mallIndex: 'https://jmake.huo.so/shop/index',
+    mallIndex: '/product/show/1',
     mallOrder: 'https://jmake.huo.so/shop/order_list',
     appId: "wxbe6ace8e9367703b"
 };

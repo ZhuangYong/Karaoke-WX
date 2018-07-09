@@ -4,6 +4,9 @@
     .me-menu-list-item{
         display: flex;
         align-items: center;
+        span{
+            white-space: nowrap;
+        }
         span:nth-child(1){
             img{
                 width: .4rem;

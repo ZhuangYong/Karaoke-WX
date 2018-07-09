@@ -20,7 +20,7 @@
         align-items: center;
         .song-title {
             font-size: .4rem;
-            width: 7rem;
+            width: 6.4rem;
             display: inline-flex;
             height: .7rem;
             align-items: center;
@@ -52,7 +52,7 @@
         .fav-button{
             position: absolute;
             top: -.24rem;
-            right: 1.8rem;
+            right: 1.7rem;
             button,div,svg{
                 padding: 0!important;
                 height: .5rem!important;
@@ -89,6 +89,7 @@
             justify-content: center;
             top: 50% !important;
             margin-top: -.4rem;
+            margin-left: .4rem;
         }
     }
 }

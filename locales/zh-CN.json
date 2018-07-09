@@ -68,6 +68,8 @@
     "audio.empty": "暂无录音",
     "audio.total": "共 {number} 首",
     "audio.text.edit": "唱得太棒了，不用编辑也可以直接分享哦",
+    "audio.fresh": "抢鲜",
+    "audio.Take.me.home.you.can.surpass.him": "把我带回家，你就可以超越他",
     "recording.chose.cover": "选择封面图",
     "recording.chose.carousel": "选择轮播图",
     "song.loading": "正在加载",
@@ -142,6 +144,12 @@
     "feedback.thanks.feedback": "我们将会在第一时间处理，感谢您的反馈！",
     "feedback.least.one.question": "至少选择一个问题类型",
     "feedback.word.least": "认真点！还差几个字",
+
+    "me.my.favorites": "我的收藏",
+    "me.my.sales.agent": "代理销售",
+    "me.my.sharing.joining": "共享加盟",
+    "me.my.user.guidance": "使用指南",
+    "me.my.contact.customer.service": "联系客服",
 
     "barrage": "弹幕",
     "barrage.quick": "快速弹幕",
@@ -285,6 +293,8 @@
     "msg.recharge.invalid.device": "该机型暂不能使用充值卡充值",
     "msg.recharge.used": "该充值卡已使用",
     "msg.recharge.ok": "充值成功",
+    "msg.fav.success": "收藏成功",
+    "msg.cancel.fav.success": "取消收藏成功",
     "label.recharge.payOnline": "在线充值",
     "label.recharge.payRecharge": "充值卡充值"
 }

@@ -68,6 +68,8 @@
     "audio.empty": "Empty",
     "audio.total": "{number} in total",
     "audio.text.edit": "It's a great, you are able to share it without edit.",
+    "audio.fresh": "Fresh",
+    "audio.Take.me.home.you.can.surpass.him": "Take me home, you can surpass him",
     "recording.chose.cover": "Chose a Cover",
     "recording.chose.carousel": "Chose rotation pictures",
     "song.loading": "Loading",
@@ -142,6 +144,12 @@
     "feedback.thanks.feedback": "We will deal with it soon, thanks for your feedback!",
     "feedback.least.one.question": "Choose at least one question type",
     "feedback.word.least": "Be serious, We still need a few words",
+
+    "me.my.favorites": "My favorites",
+    "me.my.sales.agent": "Sales agent",
+    "me.my.sharing.joining": "Sharing joining",
+    "me.my.user.guidance": "User's guidance",
+    "me.my.contact.customer.service": "Contact customer service",
 
     "barrage": "Barrage",
     "barrage.quick": "Barrage",
@@ -284,6 +292,8 @@
     "msg.recharge.invalid.device": "This model can't be recharged by using a prepaid card temporarily.",
     "msg.recharge.used": "This recharge card is used up",
     "msg.recharge.ok": "Recharge success",
+    "msg.fav.success": "Add to favorites successful",
+    "msg.cancel.fav.success": "Remove from favorites successful",
     "label.recharge.payOnline": "Pay online",
     "label.recharge.payRecharge": "Recharge"
 }

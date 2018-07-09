@@ -221,17 +221,17 @@ class UserIndex extends BaseComponent {
                         <ListItem primaryText={
                             <div className="me-menu-list-item">
                                 <span><img src={FavIcon} /></span>
-                                <span>{"我的收藏"}</span>
+                                <span>{intl.get("me.my.favorites")}</span>
                             </div>
                         } onClick={() => {
-                            linkTo(`songs/favList/1/我的收藏/`, false, null);
+                            linkTo(`songs/favList/1/${intl.get("me.my.favorites")}/`, false, null);
                         }} rightIcon={<ArrowRightIcon/>} innerDivStyle={{padding: '0.4rem 1.6rem 0.4rem 0.4rem', borderBottom: '1px solid #bfbfbf'}}/>
 
                         {/*代理销售*/}
                         <ListItem data-show={this.showInCurrentChannel('module-me-proxy')} primaryText={
                             <div className="me-menu-list-item">
                                 <span><img src={SalProxyIcon} /></span>
-                                <span>{"代理销售"}</span>
+                                <span>{intl.get("me.my.sales.agent")}</span>
                             </div>
                         } onClick={() => {
                             window.location.href = this.getValueInCurrentChannel('module-me-proxy') || "http://mp.weixin.qq.com/s/jxNWbK4wzvEU1VsBmKtfWQ";
@@ -241,7 +241,7 @@ class UserIndex extends BaseComponent {
                         <ListItem data-show={this.showInCurrentChannel('module-me-share-join')} primaryText={
                             <div className="me-menu-list-item">
                                 <span><img src={JoinUsIcon} /></span>
-                                <span>{"共享加盟"}</span>
+                                <span>{intl.get("me.my.sharing.joining")}</span>
                             </div>
                         } onClick={() => {
                             window.location.href = this.getValueInCurrentChannel('module-me-share-join') || "http://lwurl.to/gzoTB";
@@ -251,7 +251,7 @@ class UserIndex extends BaseComponent {
                         <ListItem data-show={this.showInCurrentChannel('module-me-use-tip')} primaryText={
                             <div className="me-menu-list-item">
                                 <span><img src={UseTipIcon} /></span>
-                                <span>{"使用指南"}</span>
+                                <span>{intl.get("me.my.user.guidance")}</span>
                             </div>
                         } onClick={() => {
                             window.location.href = this.getValueInCurrentChannel('module-me-use-tip') || "http://mp.weixin.qq.com/s/Xql3A6m0PJPFv5fyATTN5A";
@@ -261,7 +261,7 @@ class UserIndex extends BaseComponent {
                         <ListItem data-show={this.showInCurrentChannel('module-me-contact-us')} primaryText={
                             <div className="me-menu-list-item">
                                 <span><img src={ContactUsIcon} /></span>
-                                <span>{"联系客服"}</span>
+                                <span>{intl.get("me.my.contact.customer.service")}</span>
                             </div>
                         } onClick={() => {
                             window.location.href = this.getValueInCurrentChannel('module-me-contact-us') || "http://mp.weixin.qq.com/s/ftuvXL064YVuQlDVmywYPA";
