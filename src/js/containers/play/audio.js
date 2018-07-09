@@ -416,7 +416,7 @@ class PlayAudio extends BaseComponent {
             const config = getSysConfig();
             const {k1} = config["channel-types"] || {k1: []};
             if (k1.indexOf(channel) >= 0) {
-                super.title("即唱--把“不扰民”智慧KTV搬回家！");
+                super.title(intl.get("title.k1"));
             } else {
                 super.title((nameNorm || intl.get("title.audio.share")) + "-" + intl.get("audio.bring.karaoke.home"));
             }
@@ -428,8 +428,8 @@ class PlayAudio extends BaseComponent {
                 let desc = intl.get("audio.share.from");
                 if (k1.indexOf(channel) >= 0) {
                     imgUrl = "http://portal-resource.oss-cn-shanghai.aliyuncs.com/feedback/ohSltv9SfEzcVi8WXDqW0rRFUIjg/kloDiUvvDPpkAeCA44NeRvSVtxs4PZV3BBKjkEygD964GP6y8CAISuR-8csj1qq7.jpg";
-                    title = "一首《" + nameNorm + "》，给您好心情";
-                    desc = "即唱智慧KTV\n分享全世界！";
+                    title = intl.get("title.k1.audio", {name: nameNorm});
+                    desc = intl.get("title.k1.desc.share");
                 }
                 wxShare({
                     title: title,
